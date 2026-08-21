@@ -693,6 +693,14 @@ export namespace VxeTablePropTypes {
      */
     height?: number
     /**
+     * 单元格最小高度
+     */
+    minHeight?: number
+    /**
+     * 单元格最大高度
+     */
+    maxHeight?: number
+    /**
      * 是否显示间距
      */
     padding?: VxeColumnPropTypes.Padding
