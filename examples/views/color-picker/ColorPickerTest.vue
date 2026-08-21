@@ -2,9 +2,9 @@
   <div>
     <div>{{ val2 }}</div>
     <vxe-color-picker v-model="val1" clearable readonly></vxe-color-picker>
-    <vxe-color-picker v-model="val2" show-alpha clearable default-color="#FF00FF"></vxe-color-picker>
+    <vxe-color-picker v-model="val2" show-alpha clearable default-color="#FF00FF" showEyeDropper></vxe-color-picker>
     <vxe-color-picker v-model="val3" type="rgb" show-alpha clearable></vxe-color-picker>
-    <vxe-color-picker v-model="val4" clearable :colors="list1"></vxe-color-picker>
+    <vxe-color-picker v-model="val4" clearable :colors="list1" showEyeDropper></vxe-color-picker>
     <vxe-color-picker v-model="val5" clearable :colors="list1" showEyeDropper transfer></vxe-color-picker>
     <vxe-color-picker v-model="val6" type="rgb" show-alpha clearable :colors="list2" showEyeDropper transfer></vxe-color-picker>
   </div>
