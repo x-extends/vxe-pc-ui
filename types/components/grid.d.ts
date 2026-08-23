@@ -201,7 +201,7 @@ export namespace VxeGridPropTypes {
      */
     ajax?: {
       /**
-       * 查询列表数据之前方法，用与在查询之前执行的方法
+       * 查询列表数据之前方法，可以返回 false 阻止本次操作
        */
       beforeQuery?(params: ProxyAjaxQueryParams<D>, ...args: any[]): boolean | Promise<boolean>
       /**
@@ -222,7 +222,7 @@ export namespace VxeGridPropTypes {
       queryError?(params: ProxyAjaxQueryParams<D> & ProxyAjaxResponseParams): void
 
       /**
-       * 查询全量数据之前方法，用与在查询之前执行的方法
+       * 查询全量数据之前方法，可以返回 false 阻止本次操作
        */
       beforeQueryAll?(params: ProxyAjaxQueryAllParams<D>): boolean | Promise<boolean>
       /**
@@ -243,7 +243,7 @@ export namespace VxeGridPropTypes {
       queryAllError?(params: ProxyAjaxQueryAllParams<D> & ProxyAjaxResponseParams): void
 
       /**
-       * 查询表尾数据之前方法，用与在查询之前执行的方法
+       * 查询表尾数据之前方法，可以返回 false 阻止本次操作
        */
       beforeQueryFooter?(params: ProxyAjaxQueryFooterParams<D>, ...args: any[]): boolean | Promise<boolean>
       /**
@@ -264,7 +264,7 @@ export namespace VxeGridPropTypes {
       queryFooterError?(params: ProxyAjaxQueryFooterParams<D> & ProxyAjaxResponseParams): void
 
       /**
-       * 删除列表数据之前方法，用与在删除之前执行的方法
+       * 删除列表数据之前方法，可以返回 false 阻止本次操作
        */
       beforeDelete?(params: ProxyAjaxDeleteParams<D>, ...args: any[]): boolean | Promise<boolean>
       /**
@@ -285,7 +285,7 @@ export namespace VxeGridPropTypes {
       deleteError?(params: ProxyAjaxDeleteParams<D> & ProxyAjaxResponseParams): void
 
       /**
-       * 保存数据之前方法，用与在保存之前执行的方法
+       * 保存数据之前方法，可以返回 false 阻止本次操作
        */
       beforeSave?(params: ProxyAjaxSaveParams<D>, ...args: any[]): boolean | Promise<boolean>
       /**
