@@ -106,6 +106,9 @@ declare module '@vxe-ui/core' {
     CHECKBOX_UNCHECKED?: string
     CHECKBOX_DISABLED_UNCHECKED?: string
 
+    // textarea
+    TEXTAREA_CLEAR?: string
+
     // input
     INPUT_CLEAR?: string
     INPUT_SEARCH?: string

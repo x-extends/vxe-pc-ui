@@ -3065,6 +3065,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
           'is--visible': visiblePanel,
+          'is--clear': isClearable,
           'is--count': isWordCount,
           'is--disabled': isDisabled,
           'is--active': isActivated,
