@@ -1,14 +1,14 @@
 <template>
   <div>
     <p>
-      <vxe-textarea v-model="demo1.value1" placeholder="默认尺寸"></vxe-textarea>
+      <vxe-textarea v-model="demo1.value1" placeholder="默认尺寸" trim></vxe-textarea>
       <vxe-textarea v-model="demo1.value2" placeholder="中等尺寸" size="medium"></vxe-textarea>
       <vxe-textarea v-model="demo1.value3" placeholder="小型尺寸" size="small"></vxe-textarea>
       <vxe-textarea v-model="demo1.value4" placeholder="超小尺寸" size="mini"></vxe-textarea>
     </p>
 
     <p>
-      <vxe-textarea v-model="demo1.value5" placeholder="多行文本域"></vxe-textarea>
+      <vxe-textarea v-model="demo1.value5" placeholder="多行文本域" clearable></vxe-textarea>
       <vxe-textarea v-model="demo1.value6" placeholder="只读的" readonly></vxe-textarea>
       <vxe-textarea v-model="demo1.value7" placeholder="禁用的" disabled></vxe-textarea>
       <vxe-textarea v-model="demo1.value8" placeholder="显示字数统计" maxlength="100" show-word-count></vxe-textarea>

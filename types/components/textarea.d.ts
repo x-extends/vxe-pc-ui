@@ -33,6 +33,8 @@ export namespace VxeTextareaPropTypes {
   export type Readonly = boolean
   export type Editable = boolean
   export type Disabled = boolean
+  export type Clearable = boolean
+  export type AutoFocus = boolean
   export type Placeholder = string
   export type MaxLength = string | number | null
   export type Trim = boolean
@@ -94,6 +96,8 @@ export type VxeTextareaProps = {
    * 是否禁用
    */
   disabled?: VxeTextareaPropTypes.Disabled
+  clearable?: VxeTextareaPropTypes.Clearable
+  autoFocus?: VxeTextareaPropTypes.AutoFocus
   /**
    * 当值为空时，显示的占位符
    */
@@ -180,6 +184,7 @@ export type VxeTextareaEmits = [
   'change',
   'focus',
   'blur',
+  'clear',
   'lazy-change'
 ]
 

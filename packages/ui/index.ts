@@ -550,6 +550,9 @@ setIcon({
   CHECKBOX_UNCHECKED: iconPrefix + 'checkbox-unchecked',
   CHECKBOX_DISABLED_UNCHECKED: iconPrefix + 'checkbox-unchecked-fill',
 
+  // textarea
+  TEXTAREA_CLEAR: iconPrefix + 'error-circle-fill',
+
   // input
   INPUT_CLEAR: iconPrefix + 'error-circle-fill',
   INPUT_SEARCH: iconPrefix + 'search',

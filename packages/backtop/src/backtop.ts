@@ -211,11 +211,8 @@ export default defineVxeComponent({
           return
         }
         if (XEUtils.isString(target)) {
-          const tEl = document.querySelector<HTMLElement>(target)
-          if (!tEl) {
-            errLog('vxe.error.errProp', [`target=${target}`, 'body'])
-          }
           const { targetEl } = internalData
+          const tEl = document.querySelector<HTMLElement>(target) || document.body
           if (targetEl !== tEl) {
             removeScrollEvent()
             internalData.targetEl = tEl

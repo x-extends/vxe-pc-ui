@@ -110,7 +110,7 @@
   &.show--clear {
     &:hover {
       .vxe-input--clear-icon {
-        display: block;
+        visibility: visible;
       }
     }
   }
@@ -158,7 +158,7 @@
   cursor: pointer;
 }
 .vxe-input--clear-icon {
-  display: none;
+  visibility: hidden;
   &:hover {
     color: var(--vxe-ui-font-color);
   }

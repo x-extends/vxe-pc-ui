@@ -918,6 +918,8 @@ export default defineVxeComponent({
       const value = inputValue
       if (!inpImmediate) {
         handleChange(value, evnt)
+      } else {
+        updateDomValue()
       }
       afterCheckValue()
       if (!reactData.visiblePanel) {
@@ -2703,6 +2705,7 @@ export default defineVxeComponent({
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
           'is--visible': visiblePanel,
+          'is--clear': isClearable,
           'is--count': isWordCount,
           'is--disabled': isDisabled,
           'is--active': isActivated,
