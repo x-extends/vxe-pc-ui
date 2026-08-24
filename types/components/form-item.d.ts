@@ -85,6 +85,8 @@ export namespace VxeFormItemPropTypes {
     data: any
     item: VxeFormDefines.ItemInfo
     field: string
+    currentField: string
+    currentValue: any
   }) => any)
   export type Visible = boolean
   export type VisibleMethod = (params: FormItemVisibleParams) => boolean

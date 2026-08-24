@@ -431,10 +431,18 @@ export default defineVxeComponent({
       return nextTick()
     }
 
-    const getResetValue = (item: VxeFormDefines.ItemInfo, data: any, itemValue: any) => {
+    const getResetValue = (item: VxeFormDefines.ItemInfo, data: any, itemValue: any, currentField?: string) => {
       const { field, resetValue } = item
       if (XEUtils.isFunction(resetValue)) {
-        return resetValue({ field, item, data, $form: $xeForm, $grid: $xeGrid })
+        return resetValue({
+          field,
+          item,
+          data,
+          currentField: currentField || field || '',
+          currentValue: itemValue,
+          $form: $xeForm,
+          $grid: $xeGrid
+        })
       } else if (XEUtils.eqNull(resetValue)) {
         // 默认
         if (XEUtils.isArray(itemValue)) {
@@ -479,9 +487,16 @@ export default defineVxeComponent({
               XEUtils.set(data, field, getResetValue(item, data, itemValue))
             }
             if (startField && endField) {
-              XEUtils.set(data, startField, getResetValue(item, data, XEUtils.get(data, startField)))
-              XEUtils.set(data, endField, getResetValue(item, data, XEUtils.get(data, endField)))
+              XEUtils.set(data, startField, getResetValue(item, data, XEUtils.get(data, startField), startField))
+              XEUtils.set(data, endField, getResetValue(item, data, XEUtils.get(data, endField), endField))
             }
+
+            if (field === 'startxxxx') {
+              return ''
+            } else if (field === 'endxxx') {
+              return ''
+            }
+            return ''
           }
         })
       }
