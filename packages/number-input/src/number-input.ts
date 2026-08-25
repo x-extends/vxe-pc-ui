@@ -67,6 +67,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeNumberInputPropTypes.Exponential>,
       default: () => getConfig().numberInput.exponential
     },
+    negative: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.Negative>,
+      default: () => getConfig().numberInput.negative
+    },
     showCurrency: {
       type: Boolean as PropType<VxeNumberInputPropTypes.ShowCurrency>,
       default: () => getConfig().numberInput.showCurrency
@@ -527,11 +531,15 @@ export default defineVxeComponent({
     }
 
     const afterCheckValue = () => {
-      const { type, min, max, exponential } = props
+      const { type, min, max, negative, exponential, clearable } = props
       const { inputValue } = reactData
       const inputReadonly = computeInputReadonly.value
       if (!inputReadonly) {
         if (eqEmptyValue(inputValue)) {
+          if (clearable) {
+            handleChange(null, '', { type: 'check' })
+            return
+          }
           let inpNumVal = null
           let inpValue = inputValue
           if (min || min === 0) {
@@ -547,6 +555,9 @@ export default defineVxeComponent({
             inpNumVal = min as number
           } else if (!validMaxNum(inpNumVal)) {
             inpNumVal = max as number
+          }
+          if (!negative) {
+            inpNumVal = Math.abs(inpNumVal)
           }
           if (exponential) {
             const inpStringVal = handleNumberString(inputValue).toLowerCase()
@@ -637,19 +648,26 @@ export default defineVxeComponent({
     }
 
     const keydownEvent = (evnt: KeyboardEvent & { type: 'keydown' }) => {
-      const { type, exponential, controls } = props
+      const { type, negative, exponential, controls } = props
       const controlOpts = computeControlOpts.value
       const { isArrow } = controlOpts
       const inputReadonly = computeInputReadonly.value
       const isControlKey = hasControlKey(evnt)
       const isShiftKey = evnt.shiftKey
       const isAltKey = evnt.altKey
+      const key = evnt.key
       const keyCode = evnt.keyCode
       const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
       const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
       const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
       if (!isControlKey && !isShiftKey && !isAltKey) {
-        if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || (type === 'integer' && keyCode === 110) || ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191) {
+        if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) ||
+          (!negative && key === '-') ||
+          (type === 'integer' && key === '.') ||
+          ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) ||
+          (keyCode >= 186 && keyCode <= 188) ||
+          keyCode >= 191
+        ) {
           evnt.preventDefault()
         }
       }

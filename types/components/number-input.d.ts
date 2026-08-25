@@ -42,6 +42,7 @@ export namespace VxeNumberInputPropTypes {
   export type Min = string | number | null
   export type Max = string | number | null
   export type Step = string | number | null
+  export type Negative = boolean
   export type Exponential = boolean
   /**
    * @deprecated
@@ -143,6 +144,10 @@ export interface VxeNumberInputProps {
    * 是否允许输入科学计数
    */
   exponential?: VxeNumberInputPropTypes.Exponential
+  /**
+   * 是否允许输入负数
+   */
+  negative?: VxeNumberInputPropTypes.Negative
 
   /**
    * 已废弃，请使用 control-config.showButton
