@@ -677,7 +677,7 @@ export namespace VxeTablePropTypes {
     /**
      * 是否显示间距
      */
-    padding?: VxeColumnPropTypes.Padding
+    padding?: VxeColumnPropTypes.Padding | VxeTableDefines.PaddingConfig
     /**
      * 垂直对齐方式
      */
@@ -695,7 +695,7 @@ export namespace VxeTablePropTypes {
     /**
      * 是否显示间距
      */
-    padding?: boolean
+    padding?: boolean | VxeTableDefines.PaddingConfig
   }
 
   /**
@@ -709,7 +709,7 @@ export namespace VxeTablePropTypes {
     /**
      * 是否显示间距
      */
-    padding?: boolean
+    padding?: boolean | VxeTableDefines.PaddingConfig
   }
 
   /**
@@ -6292,6 +6292,13 @@ export namespace VxeTableDefines {
   export interface RowCacheFormatObj {
     value: any
     label: any
+  }
+
+  export interface PaddingConfig {
+    top?: boolean
+    bottom?: boolean
+    left?: boolean
+    right?: boolean
   }
 
   export interface RowCacheItem<D = any> {
