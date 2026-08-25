@@ -298,6 +298,7 @@ setConfig({
     // transfer: false
     digits: 2,
     autoFill: true,
+    negative: true,
     controlConfig: {
       enabled: true,
       layout: 'right',
