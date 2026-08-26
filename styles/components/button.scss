@@ -308,6 +308,13 @@
   @include placement.createPlacementPanel();
 }
 
+.vxe-button.type--button+.vxe-button.type--button,
+.vxe-button.type--button+.vxe-button--dropdown,
+.vxe-button--dropdown+.vxe-button.type--button,
+.vxe-button--dropdown+.vxe-button--dropdown {
+  margin-left: var(--vxe-ui-button-current-margin-left);
+}
+
 .vxe-button--dropdown-wrapper {
   padding: 5px;
   background-color: var(--vxe-ui-layout-background-color);
@@ -332,11 +339,10 @@
       margin-bottom: 0;
     }
   }
-}
-
-.vxe-button.type--button+.vxe-button.type--button,
-.vxe-button.type--button+.vxe-button--dropdown,
-.vxe-button--dropdown+.vxe-button.type--button,
-.vxe-button--dropdown+.vxe-button--dropdown {
-  margin-left: var(--vxe-ui-button-current-margin-left);
+  .vxe-button.type--button+.vxe-button.type--button,
+  .vxe-button.type--button+.vxe-button--dropdown,
+  .vxe-button--dropdown+.vxe-button.type--button,
+  .vxe-button--dropdown+.vxe-button--dropdown {
+    margin-left: 0;
+  }
 }

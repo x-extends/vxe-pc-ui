@@ -33,9 +33,9 @@
       </vxe-button>
       <vxe-button content="固定向下" placement="bottom">
         <template #dropdowns>
-          <vxe-button mode="text" content="下拉按钮1"></vxe-button>
-          <vxe-button mode="text" status="danger" content="下拉按钮2"></vxe-button>
-          <vxe-button mode="text" content="下拉按钮3"></vxe-button>
+          <vxe-button content="下拉按钮1"></vxe-button>
+          <vxe-button status="danger" content="下拉按钮2"></vxe-button>
+          <vxe-button content="下拉按钮3"></vxe-button>
         </template>
       </vxe-button>
     </p>
