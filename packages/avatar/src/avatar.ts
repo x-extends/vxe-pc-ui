@@ -81,14 +81,14 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $avatar: $xeAvatar }, params))
     }
 
-    const collapsePaneMethods: AvatarMethods = {
+    const avatarMethods: AvatarMethods = {
       dispatchEvent
     }
 
-    const collapsePanePrivateMethods: AvatarPrivateMethods = {
+    const avatarPrivateMethods: AvatarPrivateMethods = {
     }
 
-    Object.assign($xeAvatar, collapsePaneMethods, collapsePanePrivateMethods)
+    Object.assign($xeAvatar, avatarMethods, avatarPrivateMethods)
 
     const renderContent = () => {
       const { icon, content, src } = props

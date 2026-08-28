@@ -83,7 +83,7 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $watermark: $xeWatermark }, params))
     }
 
-    const collapsePaneMethods: WatermarkMethods = {
+    const watermarkMethods: WatermarkMethods = {
       dispatchEvent
     }
 
@@ -105,10 +105,10 @@ export default defineVxeComponent({
       }
     }
 
-    const collapsePanePrivateMethods: WatermarkPrivateMethods = {
+    const watermarkPrivateMethods: WatermarkPrivateMethods = {
     }
 
-    Object.assign($xeWatermark, collapsePaneMethods, collapsePanePrivateMethods)
+    Object.assign($xeWatermark, watermarkMethods, watermarkPrivateMethods)
 
     const renderVN = () => {
       const wrapperStyle = computeWrapperStyle.value

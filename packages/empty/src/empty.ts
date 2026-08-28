@@ -47,14 +47,14 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $empty: $xeEmpty }, params))
     }
 
-    const collapsePaneMethods: EmptyMethods = {
+    const emptyMethods: EmptyMethods = {
       dispatchEvent
     }
 
-    const collapsePanePrivateMethods: EmptyPrivateMethods = {
+    const emptyPrivateMethods: EmptyPrivateMethods = {
     }
 
-    Object.assign($xeEmpty, collapsePaneMethods, collapsePanePrivateMethods)
+    Object.assign($xeEmpty, emptyMethods, emptyPrivateMethods)
 
     const renderVN = () => {
       const { imageUrl, imageStyle, icon, status, content } = props

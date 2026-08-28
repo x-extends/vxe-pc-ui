@@ -105,6 +105,7 @@ const componentList = [
   'split',
   'split-pane',
   'slider',
+  'space',
   'steps',
   'switch',
   'tab-pane',

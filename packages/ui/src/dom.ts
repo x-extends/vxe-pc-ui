@@ -17,6 +17,10 @@ export function getTpImg () {
   return tpImgEl
 }
 
+export function getPropClass (property: any, params: any) {
+  return property ? (XEUtils.isFunction(property) ? property(params) : property) || '' : ''
+}
+
 const reClsMap: { [key: string]: any } = {}
 
 function getClsRE (cls: any) {

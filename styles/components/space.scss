@@ -1,0 +1,37 @@
+// 局部变量
+.vxe-space {
+  --vxe-ui-space-current-row-gap: var(--vxe-ui-space-row-gap-default);
+  --vxe-ui-space-current-column-gap: var(--vxe-ui-space-column-gap-default);
+  &.size--xlarge {
+    --vxe-ui-space-current-row-gap: var(--vxe-ui-space-row-gap-xlarge);
+    --vxe-ui-space-current-column-gap: var(--vxe-ui-space-column-gap-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-space-current-row-gap: var(--vxe-ui-space-row-gap-large);
+    --vxe-ui-space-current-column-gap: var(--vxe-ui-space-column-gap-large);
+  }
+  &.size--medium {
+    --vxe-ui-space-current-row-gap: var(--vxe-ui-space-row-gap-medium);
+    --vxe-ui-space-current-column-gap: var(--vxe-ui-space-column-gap-medium);
+  }
+  &.size--small {
+    --vxe-ui-space-current-row-gap: var(--vxe-ui-space-row-gap-small);
+    --vxe-ui-space-current-column-gap: var(--vxe-ui-space-column-gap-small);
+  }
+  &.size--mini {
+    --vxe-ui-space-current-row-gap: var(--vxe-ui-space-row-gap-mini);
+    --vxe-ui-space-current-column-gap: var(--vxe-ui-space-column-gap-mini);
+  }
+}
+
+.vxe-space {
+  display: inline-flex;
+  flex-direction: row;
+  gap: var(--vxe-ui-space-current-row-gap) var(--vxe-ui-space-current-column-gap);
+  &.is--wrap {
+    flex-wrap: wrap;
+  }
+  &.is--vertical {
+    flex-direction: column;
+  }
+}

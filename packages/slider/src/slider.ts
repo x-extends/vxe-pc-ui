@@ -1,9 +1,22 @@
-import { ref, h, reactive, PropType, watch, computed, inject, onMounted } from 'vue'
+import { ref, h, reactive, PropType, watch, computed, inject, onMounted, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, renderEmptyElement, useSize } from '../../ui'
 
-import type { SliderReactData, VxeSliderEmits, VxeSliderPropTypes, SliderMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, SliderPrivateMethods, ValueOf, SliderPrivateRef, VxeSliderPrivateComputed, VxeSliderConstructor, VxeSliderPrivateMethods } from '../../../types'
+import type { SliderReactData, SliderInternalData, VxeSliderEmits, VxeSliderPropTypes, SliderMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, SliderPrivateMethods, ValueOf, SliderPrivateRef, VxeSliderPrivateComputed, VxeSliderConstructor, VxeSliderPrivateMethods } from '../../../types'
+
+function createInternalData (): SliderInternalData {
+  return {
+    // _isUp: false
+  }
+}
+
+function createReactData (): SliderReactData {
+  return {
+    startValue: 0,
+    endValue: 0
+  }
+}
 
 export default defineVxeComponent({
   name: 'VxeSlider',
@@ -37,6 +50,10 @@ export default defineVxeComponent({
     disabled: {
       type: Boolean as PropType<VxeSliderPropTypes.Disabled>,
       default: null
+    },
+    immediate: {
+      type: Boolean as PropType<VxeSliderPropTypes.Immediate>,
+      default: () => getConfig().slider.immediate
     }
   },
   emits: [
@@ -62,10 +79,8 @@ export default defineVxeComponent({
     const refStartBtnElem = ref<HTMLDivElement>()
     const refEndBtnElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<SliderReactData>({
-      startValue: 0,
-      endValue: 0
-    })
+    const reactData = reactive(createReactData())
+    const internalData = createInternalData()
 
     const refMaps: SliderPrivateRef = {
       refElem
@@ -115,6 +130,7 @@ export default defineVxeComponent({
     } as unknown as VxeSliderConstructor & VxeSliderPrivateMethods
 
     const emitModel = (value: any) => {
+      internalData._isUp = true
       emit('update:modelValue', value)
     }
 
@@ -191,6 +207,7 @@ export default defineVxeComponent({
     }
 
     const handleMousedownEvent = (evnt: MouseEvent, isEnd: boolean) => {
+      const { immediate } = props
       const formReadonly = computeFormReadonly.value
       const isDisabled = computeIsDisabled.value
       const maxNum = computeMaxNum.value
@@ -210,6 +227,9 @@ export default defineVxeComponent({
               reactData.startValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum))))
             }
             dispatchEvent('track-dragover', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
+          }
+          if (immediate) {
+            changeEvent(evnt)
           }
           updateBarStyle()
         }
@@ -285,11 +305,19 @@ export default defineVxeComponent({
     }
 
     watch(() => props.modelValue, () => {
-      updateModel()
+      if (!internalData._isUp) {
+        updateModel()
+      }
+      internalData._isUp = false
     })
 
     onMounted(() => {
       updateBarStyle()
+    })
+
+    onBeforeUnmount(() => {
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
     })
 
     updateModel()

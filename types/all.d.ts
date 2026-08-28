@@ -72,6 +72,7 @@ import VxeSplitterPanel from './components/splitter-panel'
 import VxeSplit from './components/split'
 import VxeSplitPane from './components/split-pane'
 import VxeSlider from './components/slider'
+import VxeSpace from './components/space'
 import VxeRate from './components/rate'
 import VxeSteps from './components/steps'
 import VxeSwitch from './components/switch'
@@ -344,6 +345,7 @@ interface UIComponents {
   VxeSplit: typeof VxeSplit
   VxeSplitPane: typeof VxeSplitPane
   VxeSlider: typeof VxeSlider
+  VxeSpace: typeof VxeSpace
   VxeSteps: typeof VxeSteps
   VxeSwitch: typeof VxeSwitch
   VxeTabPane: typeof VxeTabPane
@@ -518,6 +520,7 @@ export * from './components/splitter-panel'
 export * from './components/split'
 export * from './components/split-pane'
 export * from './components/slider'
+export * from './components/space'
 export * from './components/steps'
 export * from './components/switch'
 export * from './components/tab-pane'

@@ -101,11 +101,11 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $rate: $xeRate }, params))
     }
 
-    const collapsePaneMethods: RateMethods = {
+    const rateMethods: RateMethods = {
       dispatchEvent
     }
 
-    const collapsePanePrivateMethods: RatePrivateMethods = {
+    const ratePrivateMethods: RatePrivateMethods = {
     }
 
     const emitModel = (value: any) => {
@@ -139,7 +139,7 @@ export default defineVxeComponent({
       }
     }
 
-    Object.assign($xeRate, collapsePaneMethods, collapsePanePrivateMethods)
+    Object.assign($xeRate, rateMethods, ratePrivateMethods)
 
     const renderVN = () => {
       const { status } = props

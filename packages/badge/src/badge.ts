@@ -56,14 +56,14 @@ export default defineVxeComponent({
       emit(type, createEvent(evnt, { $badge: $xeBadge }, params))
     }
 
-    const collapsePaneMethods: BadgeMethods = {
+    const badgeMethods: BadgeMethods = {
       dispatchEvent
     }
 
-    const collapsePanePrivateMethods: BadgePrivateMethods = {
+    const badgePrivateMethods: BadgePrivateMethods = {
     }
 
-    Object.assign($xeBadge, collapsePaneMethods, collapsePanePrivateMethods)
+    Object.assign($xeBadge, badgeMethods, badgePrivateMethods)
 
     const renderVN = () => {
       const { dot, content } = props
