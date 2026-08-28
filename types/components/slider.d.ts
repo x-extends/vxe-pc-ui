@@ -7,6 +7,7 @@ export type VxeSliderComponent = DefineVxeComponentOptions<VxeSliderProps>
 
 export type VxeSliderInstance = DefineVxeComponentInstance<{
   reactData: SliderReactData
+  internalData: SliderInternalData
 }, VxeSliderProps, VxeSliderPrivateComputed, VxeSliderMethods>
 
 export type VxeSliderConstructor = VxeSliderInstance
@@ -26,6 +27,7 @@ export namespace VxeSliderPropTypes {
   export type Step = number | string
   export type Readonly = boolean
   export type Disabled = boolean
+  export type Immediate = boolean
 }
 
 export interface VxeSliderProps {
@@ -39,6 +41,7 @@ export interface VxeSliderProps {
   step?: VxeSliderPropTypes.Step
   readonly?: VxeSliderPropTypes.Readonly
   disabled?: VxeSliderPropTypes.Disabled
+  immediate?: VxeSliderPropTypes.Immediate
 }
 
 export interface SliderPrivateComputed {
@@ -48,6 +51,9 @@ export interface VxeSliderPrivateComputed extends SliderPrivateComputed { }
 export interface SliderReactData {
   startValue: number
   endValue: number
+}
+export interface SliderInternalData {
+  _isUp?: boolean
 }
 
 export interface SliderMethods {

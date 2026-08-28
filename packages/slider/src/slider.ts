@@ -3,7 +3,20 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, renderEmptyElement } from '../../ui'
 
-import type { SliderReactData, VxeSliderEmits, ValueOf, VxeSliderPropTypes, VxeFormDefines, VxeComponentSizeType, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type { SliderReactData, SliderInternalData, VxeSliderEmits, ValueOf, VxeSliderPropTypes, VxeFormDefines, VxeComponentSizeType, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+
+function createInternalData (): SliderInternalData {
+  return {
+    // _isUp: false
+  }
+}
+
+function createReactData (): SliderReactData {
+  return {
+    startValue: 0,
+    endValue: 0
+  }
+}
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSlider',
@@ -41,6 +54,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     disabled: {
       type: Boolean as PropType<VxeSliderPropTypes.Disabled>,
       default: null
+    },
+    immediate: {
+      type: Boolean as PropType<VxeSliderPropTypes.Immediate>,
+      default: () => getConfig().slider.immediate
     }
   },
   inject: {
@@ -54,11 +71,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data () {
     const xID = XEUtils.uniqueId()
-    const reactData: SliderReactData = {
-      startValue: 0,
-      endValue: 0
-    }
+    const reactData = createReactData()
     return {
+      ...({} as {
+        internalData: SliderInternalData,
+      }),
       xID,
       reactData
     }
@@ -120,8 +137,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     emitModel (value: any) {
       const $xeSlider = this
+      const internalData = $xeSlider.internalData
 
       const { _events } = $xeSlider as any
+      internalData._isUp = true
       if (_events && _events.modelValue) {
         $xeSlider.$emit('modelValue', value)
       } else {
@@ -208,8 +227,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     handleMousedownEvent (evnt: MouseEvent, isEnd: boolean) {
       const $xeSlider = this
+      const props = $xeSlider
       const reactData = $xeSlider.reactData
 
+      const { immediate } = props
       const formReadonly = $xeSlider.computeFormReadonly
       const isDisabled = $xeSlider.computeIsDisabled
       const maxNum = $xeSlider.computeMaxNum
@@ -228,6 +249,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
               reactData.startValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum))))
             }
             $xeSlider.dispatchEvent('track-dragover', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
+          }
+          if (immediate) {
+            $xeSlider.changeEvent(evnt)
           }
           $xeSlider.updateBarStyle()
         }
@@ -312,12 +336,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
   watch: {
     value () {
       const $xeSlider = this
+      const internalData = $xeSlider.internalData
 
-      $xeSlider.updateModel()
+      if (!internalData._isUp) {
+        $xeSlider.updateModel()
+      }
+      internalData._isUp = false
     }
   },
   created () {
     const $xeSlider = this
+
+    $xeSlider.internalData = createInternalData()
 
     $xeSlider.updateModel()
   },
@@ -325,6 +355,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const $xeSlider = this
 
     $xeSlider.updateBarStyle()
+  },
+  beforeDestroy () {
+    const $xeSlider = this
+    const reactData = $xeSlider.reactData
+    const internalData = $xeSlider.internalData
+
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)

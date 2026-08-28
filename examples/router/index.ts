@@ -331,6 +331,21 @@ const routes: Array<RouteConfig> = [
     path: '/component/table-transfer',
     name: 'TableTransferTest',
     component: () => import('../views/table-transfer/TableTransferTest.vue')
+  },
+  {
+    path: '/component/table',
+    name: 'TableTest',
+    component: () => import('../views/table/TableTest.vue')
+  },
+  {
+    path: '/component/gantt',
+    name: 'GanttTest',
+    component: () => import('../views/gantt/GanttTest.vue')
+  },
+  {
+    path: '/component/space',
+    name: 'SpaceTest',
+    component: () => import('../views/space/SpaceTest.vue')
   }
 ]
 

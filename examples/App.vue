@@ -156,7 +156,10 @@ export default Vue.extend({
         { name: 'BacktopTest', routerLink: { name: 'BacktopTest' } },
         { name: 'ContextMenuTest', routerLink: { name: 'ContextMenuTest' } },
         { name: 'TransferTest', routerLink: { name: 'TransferTest' } },
-        { name: 'TableTransferTest', routerLink: { name: 'TableTransferTest' } }
+        { name: 'TableTransferTest', routerLink: { name: 'TableTransferTest' } },
+        { name: 'TableTest', routerLink: { name: 'TableTest' } },
+        { name: 'GanttTest', routerLink: { name: 'GanttTest' } },
+        { name: 'SpaceTest', routerLink: { name: 'SpaceTest' } }
       ]
     }
   },

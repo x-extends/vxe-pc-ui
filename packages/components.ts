@@ -74,6 +74,7 @@ import VxeSplitterPanel from './splitter-panel'
 import VxeSplit from './split'
 import VxeSplitPane from './split-pane'
 import VxeSlider from './slider'
+import VxeSpace from './space'
 import VxeSteps from './steps'
 import VxeSwitch from './switch'
 import VxeTabPane from './tab-pane'
@@ -174,6 +175,7 @@ const components = [
   VxeSplit,
   VxeSplitPane,
   VxeSlider,
+  VxeSpace,
   VxeSteps,
   VxeSwitch,
   VxeTabPane,
@@ -208,13 +210,40 @@ setI18n(defaultLanguage, zhCN)
 setLanguage(defaultLanguage)
 setTheme('light')
 
-// 兼容老版本
+/**
+ * 已废弃，被 VxeUI.loading 替换
+ * @deprecated
+ */
 export const loading = LoadingController
+/**
+ * 已废弃，被 VxeUI.modal 替换
+ * @deprecated
+ */
 export const modal = ModalController
+/**
+ * 已废弃，被 VxeUI.drawer 替换
+ * @deprecated
+ */
 export const drawer = DrawerController
+/**
+ * 已废弃，被 VxeUI.watermark 替换
+ * @deprecated
+ */
 export const watermark = WatermarkController
+/**
+ * 已废弃，被 VxeUI.print 替换
+ * @deprecated
+ */
 export const print = printHtml
+/**
+ * 已废弃，被 VxeUI.saveFile 替换
+ * @deprecated
+ */
 export const saveFile = saveLocalFile
+/**
+ * 已废弃，被 VxeUI.readFile 替换
+ * @deprecated
+ */
 export const readFile = readLocalFile
 
 export * from './ui'
@@ -291,6 +320,7 @@ export * from './splitter-panel'
 export * from './split'
 export * from './split-pane'
 export * from './slider'
+export * from './space'
 export * from './steps'
 export * from './switch'
 export * from './tab-pane'
