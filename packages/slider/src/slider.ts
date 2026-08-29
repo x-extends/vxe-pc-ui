@@ -162,7 +162,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const maxNum = $xeSlider.computeMaxNum
       const minNum = $xeSlider.computeMinNum
-      return XEUtils.floor(currValue / XEUtils.toNumber(maxNum - minNum) * 100)
+      if (maxNum === minNum) {
+        return 0
+      }
+      if (currValue < minNum) {
+        currValue = minNum
+      }
+      if (currValue > maxNum) {
+        currValue = maxNum
+      }
+      return ((currValue - minNum) / (maxNum - minNum)) * 100
     },
     parseFields (startValue?: VxeSliderPropTypes.StartValue, endValue?: VxeSliderPropTypes.EndValue) {
       const $xeSlider = this
@@ -290,6 +299,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
       }
     },
+    getValueByLeft (offsetLeft: number, barWidth: number) {
+      const $xeSlider = this
+
+      const maxNum = $xeSlider.computeMaxNum
+      const minNum = $xeSlider.computeMinNum
+      if (barWidth === 0) {
+        return minNum
+      }
+      const clamped = Math.max(0, Math.min(barWidth, offsetLeft))
+      const ratio = clamped / barWidth
+      const raw = minNum + ratio * (maxNum - minNum)
+      return Math.floor(raw)
+    },
     handleBtnMousedownEvent (evnt: MouseEvent) {
       const $xeSlider = this
       const props = $xeSlider
@@ -299,8 +321,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const btnElem = evnt.currentTarget as HTMLDivElement
       const formReadonly = $xeSlider.computeFormReadonly
       const isDisabled = $xeSlider.computeIsDisabled
-      const maxNum = $xeSlider.computeMaxNum
-      const minNum = $xeSlider.computeMinNum
       if (!(formReadonly || isDisabled)) {
         evnt.preventDefault()
         document.onmousemove = evnt => {
@@ -310,9 +330,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (el && barElem) {
             const btnType = btnElem.getAttribute('data-type')
             const barRect = barElem.getBoundingClientRect()
-            const offsetLeft = Math.min(barRect.width, Math.max(0, evnt.clientX - barRect.left))
-            const currPercent = XEUtils.floor(offsetLeft / barRect.width * 100)
-            const currValue = XEUtils.floor(currPercent / 100 * (maxNum - minNum))
+            const barWidth = barRect.width
+            const offsetLeft = Math.min(barWidth, Math.max(0, evnt.clientX - barRect.left))
+            const currValue = $xeSlider.getValueByLeft(offsetLeft, barWidth)
             if (range) {
               if (btnType === '1') {
                 internalData.startValue = currValue
@@ -321,7 +341,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               }
             }
             internalData.currValue = currValue
-            btnElem.style.left = currPercent + '%'
+            btnElem.style.left = $xeSlider.getBarPercent(currValue) + '%'
             $xeSlider.dispatchEvent('track-dragover', {
               currentValue: internalData.currValue,
               startValue: internalData.startValue,
