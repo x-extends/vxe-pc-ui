@@ -7,14 +7,15 @@ import type { SliderReactData, SliderInternalData, VxeSliderEmits, ValueOf, VxeS
 
 function createInternalData (): SliderInternalData {
   return {
-    // _isUp: false
+    // _isUp: false,
+    currValue: 0,
+    startValue: 0,
+    endValue: 0
   }
 }
 
 function createReactData (): SliderReactData {
   return {
-    startValue: 0,
-    endValue: 0
   }
 }
 
@@ -26,6 +27,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   props: {
     value: [String, Number, Array] as PropType<VxeSliderPropTypes.ModelValue>,
+    startValue: [String, Number] as PropType<VxeSliderPropTypes.StartValue>,
+    endValue: [String, Number] as PropType<VxeSliderPropTypes.EndValue>,
     vertical: Boolean as PropType<VxeSliderPropTypes.Vertical>,
     max: {
       type: [String, Number] as PropType<VxeSliderPropTypes.Max>,
@@ -125,6 +128,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSlider
 
       return XEUtils.toNumber(props.min || 0)
+    },
+    computeMVal () {
+      const $xeSlider = this
+      const props = $xeSlider
+
+      const { range, startValue, endValue } = props
+      return range ? `${startValue || ''}${endValue || ''}` : ''
     }
   },
   methods: {
@@ -147,90 +157,146 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSlider.$emit('model-value', value)
       }
     },
-    getStartPercent (startValue: number) {
+    getBarPercent (currValue: number) {
       const $xeSlider = this
-      const props = $xeSlider
 
-      const { range } = props
       const maxNum = $xeSlider.computeMaxNum
       const minNum = $xeSlider.computeMinNum
-      return range ? XEUtils.floor((startValue - minNum) / XEUtils.toNumber(maxNum - minNum) * 100) : 0
+      return XEUtils.floor(currValue / XEUtils.toNumber(maxNum - minNum) * 100)
     },
-    getEndPercent (startValue: number, endValue: number) {
+    parseFields (startValue?: VxeSliderPropTypes.StartValue, endValue?: VxeSliderPropTypes.EndValue) {
+      const $xeSlider = this
+      const internalData = $xeSlider.internalData
+
+      const [sVal, eVal] = XEUtils.orderBy([XEUtils.toNumber(startValue), XEUtils.toNumber(endValue)])
+      const currValue = XEUtils.floor(XEUtils.toNumber(sVal || 0))
+      internalData.currValue = currValue
+      internalData.startValue = currValue
+      internalData.endValue = XEUtils.floor(XEUtils.toNumber(eVal || 0))
+    },
+    parseArrs (arrVals: number[]) {
+      const $xeSlider = this
+      const internalData = $xeSlider.internalData
+
+      const [sVal, eVal] = XEUtils.orderBy(arrVals)
+      const currValue = XEUtils.floor(XEUtils.toNumber(sVal || 0))
+      internalData.currValue = currValue
+      internalData.startValue = currValue
+      internalData.endValue = XEUtils.floor(XEUtils.toNumber(eVal || 0))
+    },
+    parseNum (val: VxeSliderPropTypes.ModelValue | undefined) {
+      const $xeSlider = this
+      const internalData = $xeSlider.internalData
+
+      const currValue = XEUtils.floor(XEUtils.toNumber(val || 0))
+      internalData.currValue = currValue
+      internalData.startValue = 0
+      internalData.endValue = currValue
+    },
+    updateModelValue (umType?: 1 | 2) {
       const $xeSlider = this
       const props = $xeSlider
 
-      const { range } = props
-      const maxNum = $xeSlider.computeMaxNum
-      const minNum = $xeSlider.computeMinNum
-      return XEUtils.floor((endValue - (range ? startValue : 0) - minNum) / XEUtils.toNumber(maxNum - minNum) * 100)
-    },
-    updateModel () {
-      const $xeSlider = this
-      const props = $xeSlider
-      const reactData = $xeSlider.reactData
-
-      const { value } = props
-      if (XEUtils.isArray(value)) {
-        const [sVal, eVal] = XEUtils.clone(value, true).sort()
-        reactData.startValue = XEUtils.floor(XEUtils.toNumber(sVal || 0))
-        reactData.endValue = XEUtils.floor(XEUtils.toNumber(eVal || 0))
+      const { range, value: modelValue, startValue, endValue } = props
+      if (!umType) {
+        if (range) {
+          if (XEUtils.eqNull(modelValue)) {
+            if (startValue || endValue) {
+              $xeSlider.parseFields(startValue, endValue)
+            }
+          } else {
+            if (XEUtils.isArray(modelValue)) {
+              $xeSlider.parseArrs(modelValue.map(num => XEUtils.toNumber(num)))
+            } else {
+              $xeSlider.parseNum(modelValue)
+            }
+          }
+        } else {
+          $xeSlider.parseNum(modelValue)
+        }
+      } else if (range && umType === 2) {
+        $xeSlider.parseFields(startValue, endValue)
       } else {
-        reactData.startValue = 0
-        reactData.endValue = XEUtils.floor(XEUtils.toNumber(value || 0))
+        if (XEUtils.isArray(modelValue)) {
+          $xeSlider.parseArrs(modelValue.map(num => XEUtils.toNumber(num)))
+        } else {
+          $xeSlider.parseNum(modelValue)
+        }
       }
+      $xeSlider.updateBarStyle()
+      $xeSlider.updateTrackStyle()
     },
     updateBarStyle () {
       const $xeSlider = this
-      const reactData = $xeSlider.reactData
+      const props = $xeSlider
+      const internalData = $xeSlider.internalData
 
-      const { startValue, endValue } = reactData
-      const trackElem = $xeSlider.$refs.refTrackElem as HTMLDivElement
+      const { range } = props
+      const { currValue, startValue, endValue } = internalData
       const startBtnElem = $xeSlider.$refs.refStartBtnElem as HTMLDivElement
       const endBtnElem = $xeSlider.$refs.refEndBtnElem as HTMLDivElement
-      let startPercent = 0
-      let endPercent = 0
-      if (startValue > endValue) {
-        startPercent = $xeSlider.getStartPercent(endValue)
-        endPercent = $xeSlider.getEndPercent(endValue, startValue)
+      if (range) {
+        const [sVal, eVal] = XEUtils.orderBy([startValue, endValue])
+        if (startBtnElem) {
+          startBtnElem.style.left = $xeSlider.getBarPercent(sVal) + '%'
+        }
+        if (endBtnElem) {
+          endBtnElem.style.left = $xeSlider.getBarPercent(eVal) + '%'
+        }
       } else {
-        startPercent = $xeSlider.getStartPercent(startValue)
-        endPercent = $xeSlider.getEndPercent(startValue, endValue)
+        if (endBtnElem) {
+          endBtnElem.style.left = $xeSlider.getBarPercent(currValue) + '%'
+        }
       }
+    },
+    updateTrackStyle () {
+      const $xeSlider = this
+      const props = $xeSlider
+      const internalData = $xeSlider.internalData
+
+      const { range } = props
+      const { currValue, startValue, endValue } = internalData
+      const trackElem = $xeSlider.$refs.refTrackElem as HTMLDivElement
       if (trackElem) {
-        trackElem.style.left = `${startPercent}%`
-        trackElem.style.width = `${endPercent}%`
-      }
-      if (startBtnElem) {
-        startBtnElem.style.left = `${startPercent}%`
-      }
-      if (endBtnElem) {
-        endBtnElem.style.left = `${XEUtils.floor(startPercent + endPercent)}%`
+        if (range) {
+          const [sVal, eVal] = XEUtils.orderBy([startValue, endValue])
+          trackElem.style.left = $xeSlider.getBarPercent(sVal) + '%'
+          trackElem.style.width = $xeSlider.getBarPercent(eVal - sVal) + '%'
+        } else {
+          trackElem.style.left = '0'
+          trackElem.style.width = $xeSlider.getBarPercent(currValue) + '%'
+        }
       }
     },
     changeEvent (evnt: MouseEvent) {
       const $xeSlider = this
       const props = $xeSlider
-      const reactData = $xeSlider.reactData
+      const internalData = $xeSlider.internalData
       const $xeForm = $xeSlider.$xeForm
       const formItemInfo = $xeSlider.formItemInfo
 
       const { range } = props
-      const { startValue, endValue } = reactData
-      const value = range ? [startValue, endValue].sort() : endValue
+      const { currValue, startValue, endValue } = internalData
+      const vals = range ? XEUtils.orderBy([startValue, endValue]) : []
+      const value = range ? vals : currValue
       $xeSlider.emitModel(value)
+      if (range) {
+        $xeSlider.$emit('update:startValue', vals[0] || 0)
+        $xeSlider.$emit('update:endValue', vals[1] || 0)
+      }
       $xeSlider.dispatchEvent('change', { value }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
       }
     },
-    handleMousedownEvent (evnt: MouseEvent, isEnd: boolean) {
+    handleBtnMousedownEvent (evnt: MouseEvent) {
       const $xeSlider = this
       const props = $xeSlider
-      const reactData = $xeSlider.reactData
+      const internalData = $xeSlider.internalData
 
-      const { immediate } = props
+      const { range, immediate } = props
+      const btnElem = evnt.currentTarget as HTMLDivElement
       const formReadonly = $xeSlider.computeFormReadonly
       const isDisabled = $xeSlider.computeIsDisabled
       const maxNum = $xeSlider.computeMaxNum
@@ -239,45 +305,51 @@ export default /* define-vxe-component start */ defineVxeComponent({
         evnt.preventDefault()
         document.onmousemove = evnt => {
           evnt.preventDefault()
+          const el = $xeSlider.$refs.refElem as HTMLDivElement
           const barElem = $xeSlider.$refs.refBarElem as HTMLDivElement
-          if (barElem) {
+          if (el && barElem) {
+            const btnType = btnElem.getAttribute('data-type')
             const barRect = barElem.getBoundingClientRect()
-            const trackWidth = (evnt.clientX - barRect.left) / barRect.width
-            if (isEnd) {
-              reactData.endValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum) + minNum)))
-            } else {
-              reactData.startValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum))))
+            const offsetLeft = Math.min(barRect.width, Math.max(0, evnt.clientX - barRect.left))
+            const currPercent = XEUtils.floor(offsetLeft / barRect.width * 100)
+            const currValue = XEUtils.floor(currPercent / 100 * (maxNum - minNum))
+            if (range) {
+              if (btnType === '1') {
+                internalData.startValue = currValue
+              } else {
+                internalData.endValue = currValue
+              }
             }
-            $xeSlider.dispatchEvent('track-dragover', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
+            internalData.currValue = currValue
+            btnElem.style.left = currPercent + '%'
+            $xeSlider.dispatchEvent('track-dragover', {
+              currentValue: internalData.currValue,
+              startValue: internalData.startValue,
+              endValue: internalData.endValue
+            }, evnt)
           }
           if (immediate) {
             $xeSlider.changeEvent(evnt)
           }
-          $xeSlider.updateBarStyle()
+          $xeSlider.updateTrackStyle()
         }
         document.onmouseup = (evnt: MouseEvent) => {
           document.onmousemove = null
           document.onmouseup = null
-          $xeSlider.dispatchEvent('track-dragend', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
+          $xeSlider.dispatchEvent('track-dragend', {
+            currentValue: internalData.currValue,
+            startValue: internalData.startValue,
+            endValue: internalData.endValue
+          }, evnt)
           $xeSlider.changeEvent(evnt)
-          $xeSlider.updateBarStyle()
+          $xeSlider.updateTrackStyle()
         }
-        $xeSlider.dispatchEvent('track-dragstart', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
+        $xeSlider.dispatchEvent('track-dragstart', {
+          currentValue: internalData.currValue,
+          startValue: internalData.startValue,
+          endValue: internalData.endValue
+        }, evnt)
       }
-    },
-    handleStartMousedownEvent (evnt: MouseEvent) {
-      const $xeSlider = this
-
-      const endBtnElem = $xeSlider.$refs.refEndBtnElem as HTMLDivElement
-      const startBtnElem = evnt.currentTarget as HTMLDivElement
-      $xeSlider.handleMousedownEvent(evnt, endBtnElem ? endBtnElem.offsetLeft < startBtnElem.offsetLeft : false)
-    },
-    handleEndMousedownEvent (evnt: MouseEvent) {
-      const $xeSlider = this
-
-      const startBtnElem = $xeSlider.$refs.refStartBtnElem as HTMLDivElement
-      const endBtnElem = evnt.currentTarget as HTMLDivElement
-      $xeSlider.handleMousedownEvent(evnt, startBtnElem ? endBtnElem.offsetLeft > startBtnElem.offsetLeft : true)
     },
 
     //
@@ -315,18 +387,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
             ? renderEmptyElement($xeSlider)
             : h('div', {
               ref: 'refStartBtnElem',
-              class: 'vxe-slider--bar-btn vxe-slider--start-btn',
+              class: 'vxe-slider--bar-btn',
+              attrs: {
+                'data-type': '1'
+              },
               on: {
-                mousedown: $xeSlider.handleStartMousedownEvent
+                mousedown: $xeSlider.handleBtnMousedownEvent
               }
             }),
           formReadonly
             ? renderEmptyElement($xeSlider)
             : h('div', {
               ref: 'refEndBtnElem',
-              class: 'vxe-slider--bar-btn vxe-slider--end-btn',
+              class: 'vxe-slider--bar-btn',
+              attrs: {
+                'data-type': '2'
+              },
               on: {
-                mousedown: $xeSlider.handleEndMousedownEvent
+                mousedown: $xeSlider.handleBtnMousedownEvent
               }
             })
         ])
@@ -339,7 +417,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeSlider.internalData
 
       if (!internalData._isUp) {
-        $xeSlider.updateModel()
+        $xeSlider.updateModelValue(1)
+      }
+      internalData._isUp = false
+    },
+    computeMVal () {
+      const $xeSlider = this
+      const internalData = $xeSlider.internalData
+
+      if (!internalData._isUp) {
+        $xeSlider.updateModelValue(2)
       }
       internalData._isUp = false
     }
@@ -349,12 +436,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     $xeSlider.internalData = createInternalData()
 
-    $xeSlider.updateModel()
+    $xeSlider.updateModelValue()
   },
   mounted () {
     const $xeSlider = this
 
     $xeSlider.updateBarStyle()
+    $xeSlider.updateTrackStyle()
   },
   beforeDestroy () {
     const $xeSlider = this

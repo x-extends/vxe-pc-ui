@@ -41,6 +41,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     separator: {
       type: String as PropType<VxeSpacePropTypes.Separator>,
       default: () => getConfig().space.separator
+    },
+    align: {
+      type: String as PropType<VxeSpacePropTypes.Align>,
+      default: () => getConfig().space.align
     }
   },
   data () {
@@ -62,7 +66,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSpace = this
       const props = $xeSpace
 
-      const { gap } = props
+      const { align, gap } = props
       const stys: VxeComponentStyleType = {}
       let rowGap: string | number = ''
       let columGap: string | number = ''
@@ -77,6 +81,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
           rowGap = gap.rowGap || ''
           columGap = gap.columGap || ''
         }
+      }
+      if (align) {
+        stys['align-items'] = align
       }
       if (!eqEmptyValue(rowGap)) {
         stys['--vxe-ui-space-current-row-gap'] = toCssUnit(rowGap)
@@ -99,15 +106,42 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderItems (h: CreateElement) {
       const $xeSpace = this
       const props = $xeSpace
       const slots = $xeSpace.$scopedSlots
 
-      const { vertical, wrap, className, itemClassName } = props
+      const { separator, itemClassName } = props
+      const itemVNs: VNode[] = []
+      const defaultSlot = slots.default
+      const separatorSlot = slots.separator
+      if (defaultSlot) {
+        XEUtils.each(defaultSlot({}), (itemVN, index, items) => {
+          itemVNs.push(
+            h('div', {
+              key: 'i' + index,
+              class: ['vxe-space--item', getPropClass(itemClassName, { index })]
+            }, [itemVN])
+          )
+          if ((separator || separatorSlot) && index < items.length - 1) {
+            itemVNs.push(
+              h('div', {
+                key: 's' + index,
+                class: 'vxe-space--separator'
+              }, separatorSlot ? separatorSlot({}) : ('' + separator))
+            )
+          }
+        })
+      }
+      return itemVNs
+    },
+    renderVN (h: CreateElement): VNode {
+      const $xeSpace = this
+      const props = $xeSpace
+
+      const { vertical, wrap, className } = props
       const wrapperStyle = $xeSpace.computeWrapperStyle
       const vSize = $xeSpace.computeSize
-      const defaultSlot = slots.default
       return h('div', {
         ref: 'refElem',
         class: ['vxe-space', getPropClass(className, {}), {
@@ -116,14 +150,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--vertical': vertical
         }],
         style: wrapperStyle
-      }, defaultSlot
-        ? (defaultSlot({}) || []).map((itemVN, index) => {
-            return h('div', {
-              key: index,
-              class: ['vxe-space--item', getPropClass(itemClassName, { index })]
-            }, [itemVN])
-          })
-        : [])
+      }, $xeSpace.renderItems(h))
     }
   },
   render (this: any, h) {
