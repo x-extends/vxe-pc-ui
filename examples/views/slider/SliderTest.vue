@@ -4,6 +4,8 @@
     <vxe-slider v-model="val1"></vxe-slider>
     <div>{{ val3 }}</div>
     <vxe-slider v-model="val3" min="20" max="180" immediate></vxe-slider>
+    <div>{{ val7 }}</div>
+    <vxe-slider v-model="val7" min="10" max="20"></vxe-slider>
     <div>{{ val2 }}</div>
     <vxe-slider v-model="val2" range></vxe-slider>
     <vxe-slider v-model="val4" readonly></vxe-slider>
@@ -26,6 +28,7 @@ const val3 = ref(50)
 const val4 = ref(40)
 const val5 = ref(40)
 const val6 = ref()
+const val7 = ref(15)
 const startVal7 = ref(10)
 const endVal7 = ref(20)
 const startVal8 = ref()
