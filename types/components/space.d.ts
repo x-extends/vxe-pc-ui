@@ -30,6 +30,7 @@ export namespace VxeSpacePropTypes {
   export type ClassName = string
   export type ItemClassName = string
   export type Separator = string
+  export type Align = 'stretch' | 'start' | 'end' | 'center' | 'baseline' | '' | null
 }
 
 export interface VxeSpaceProps {
@@ -52,6 +53,7 @@ export interface VxeSpaceProps {
    * 分隔符
    */
   separator?: VxeSpacePropTypes.Separator
+  align?: VxeSpacePropTypes.Align
 }
 
 export interface SpacePrivateComputed {

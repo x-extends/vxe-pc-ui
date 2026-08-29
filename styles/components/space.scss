@@ -27,6 +27,7 @@
 .vxe-space {
   display: inline-flex;
   flex-direction: row;
+  align-items: center;
   gap: var(--vxe-ui-space-current-row-gap) var(--vxe-ui-space-current-column-gap);
   &.is--wrap {
     flex-wrap: wrap;

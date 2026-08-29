@@ -7,14 +7,15 @@ import type { SliderReactData, SliderInternalData, VxeSliderEmits, VxeSliderProp
 
 function createInternalData (): SliderInternalData {
   return {
-    // _isUp: false
+    // _isUp: false,
+    currValue: 0,
+    startValue: 0,
+    endValue: 0
   }
 }
 
 function createReactData (): SliderReactData {
   return {
-    startValue: 0,
-    endValue: 0
   }
 }
 
@@ -22,6 +23,8 @@ export default defineVxeComponent({
   name: 'VxeSlider',
   props: {
     modelValue: [String, Number, Array] as PropType<VxeSliderPropTypes.ModelValue>,
+    startValue: [String, Number] as PropType<VxeSliderPropTypes.StartValue>,
+    endValue: [String, Number] as PropType<VxeSliderPropTypes.EndValue>,
     vertical: Boolean as PropType<VxeSliderPropTypes.Vertical>,
     max: {
       type: [String, Number] as PropType<VxeSliderPropTypes.Max>,
@@ -58,6 +61,8 @@ export default defineVxeComponent({
   },
   emits: [
     'update:modelValue',
+    'update:startValue',
+    'update:endValue',
     'change',
     'track-dragstart',
     'track-dragover',
@@ -116,6 +121,11 @@ export default defineVxeComponent({
       return XEUtils.toNumber(props.min || 0)
     })
 
+    const computeMVal = computed(() => {
+      const { range, startValue, endValue } = props
+      return range ? `${startValue || ''}${endValue || ''}` : ''
+    })
+
     const computeMaps: VxeSliderPrivateComputed = {
     }
 
@@ -142,63 +152,112 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const getStartPercent = (startValue: number) => {
-      const { range } = props
+    const getBarPercent = (currValue: number) => {
       const maxNum = computeMaxNum.value
       const minNum = computeMinNum.value
-      return range ? XEUtils.floor((startValue - minNum) / XEUtils.toNumber(maxNum - minNum) * 100) : 0
+      return XEUtils.floor(currValue / XEUtils.toNumber(maxNum - minNum) * 100)
     }
 
-    const getEndPercent = (startValue: number, endValue: number) => {
-      const { range } = props
-      const maxNum = computeMaxNum.value
-      const minNum = computeMinNum.value
-      return XEUtils.floor((endValue - (range ? startValue : 0) - minNum) / XEUtils.toNumber(maxNum - minNum) * 100)
+    const parseFields = (startValue?: VxeSliderPropTypes.StartValue, endValue?: VxeSliderPropTypes.EndValue) => {
+      const [sVal, eVal] = XEUtils.orderBy([XEUtils.toNumber(startValue), XEUtils.toNumber(endValue)])
+      const currValue = XEUtils.floor(XEUtils.toNumber(sVal || 0))
+      internalData.currValue = currValue
+      internalData.startValue = currValue
+      internalData.endValue = XEUtils.floor(XEUtils.toNumber(eVal || 0))
     }
 
-    const updateModel = () => {
-      const { modelValue } = props
-      if (XEUtils.isArray(modelValue)) {
-        const [sVal, eVal] = XEUtils.clone(modelValue, true).sort()
-        reactData.startValue = XEUtils.floor(XEUtils.toNumber(sVal || 0))
-        reactData.endValue = XEUtils.floor(XEUtils.toNumber(eVal || 0))
+    const parseArrs = (arrVals: number[]) => {
+      const [sVal, eVal] = XEUtils.orderBy(arrVals)
+      const currValue = XEUtils.floor(XEUtils.toNumber(sVal || 0))
+      internalData.currValue = currValue
+      internalData.startValue = currValue
+      internalData.endValue = XEUtils.floor(XEUtils.toNumber(eVal || 0))
+    }
+
+    const parseNum = (val: VxeSliderPropTypes.ModelValue | undefined) => {
+      const currValue = XEUtils.floor(XEUtils.toNumber(val || 0))
+      internalData.currValue = currValue
+      internalData.startValue = 0
+      internalData.endValue = currValue
+    }
+
+    const updateModelValue = (umType?: 1 | 2) => {
+      const { range, modelValue, startValue, endValue } = props
+      if (!umType) {
+        if (range) {
+          if (XEUtils.eqNull(modelValue)) {
+            if (startValue || endValue) {
+              parseFields(startValue, endValue)
+            }
+          } else {
+            if (XEUtils.isArray(modelValue)) {
+              parseArrs(modelValue.map(num => XEUtils.toNumber(num)))
+            } else {
+              parseNum(modelValue)
+            }
+          }
+        } else {
+          parseNum(modelValue)
+        }
+      } else if (range && umType === 2) {
+        parseFields(startValue, endValue)
       } else {
-        reactData.startValue = 0
-        reactData.endValue = XEUtils.floor(XEUtils.toNumber(modelValue || 0))
+        if (XEUtils.isArray(modelValue)) {
+          parseArrs(modelValue.map(num => XEUtils.toNumber(num)))
+        } else {
+          parseNum(modelValue)
+        }
       }
+      updateBarStyle()
+      updateTrackStyle()
     }
 
     const updateBarStyle = () => {
-      const { startValue, endValue } = reactData
-      const trackElem = refTrackElem.value
+      const { range } = props
+      const { currValue, startValue, endValue } = internalData
       const startBtnElem = refStartBtnElem.value
       const endBtnElem = refEndBtnElem.value
-      let startPercent = 0
-      let endPercent = 0
-      if (startValue > endValue) {
-        startPercent = getStartPercent(endValue)
-        endPercent = getEndPercent(endValue, startValue)
+      if (range) {
+        const [sVal, eVal] = XEUtils.orderBy([startValue, endValue])
+        if (startBtnElem) {
+          startBtnElem.style.left = getBarPercent(sVal) + '%'
+        }
+        if (endBtnElem) {
+          endBtnElem.style.left = getBarPercent(eVal) + '%'
+        }
       } else {
-        startPercent = getStartPercent(startValue)
-        endPercent = getEndPercent(startValue, endValue)
+        if (endBtnElem) {
+          endBtnElem.style.left = getBarPercent(currValue) + '%'
+        }
       }
+    }
+
+    const updateTrackStyle = () => {
+      const { range } = props
+      const { currValue, startValue, endValue } = internalData
+      const trackElem = refTrackElem.value
       if (trackElem) {
-        trackElem.style.left = `${startPercent}%`
-        trackElem.style.width = `${endPercent}%`
-      }
-      if (startBtnElem) {
-        startBtnElem.style.left = `${startPercent}%`
-      }
-      if (endBtnElem) {
-        endBtnElem.style.left = `${XEUtils.floor(startPercent + endPercent)}%`
+        if (range) {
+          const [sVal, eVal] = XEUtils.orderBy([startValue, endValue])
+          trackElem.style.left = getBarPercent(sVal) + '%'
+          trackElem.style.width = getBarPercent(eVal - sVal) + '%'
+        } else {
+          trackElem.style.left = '0'
+          trackElem.style.width = getBarPercent(currValue) + '%'
+        }
       }
     }
 
     const changeEvent = (evnt: MouseEvent) => {
       const { range } = props
-      const { startValue, endValue } = reactData
-      const value = range ? [startValue, endValue].sort() : endValue
+      const { currValue, startValue, endValue } = internalData
+      const vals = range ? XEUtils.orderBy([startValue, endValue]) : []
+      const value = range ? vals : currValue
       emitModel(value)
+      if (range) {
+        emit('update:startValue', vals[0] || 0)
+        emit('update:endValue', vals[1] || 0)
+      }
       dispatchEvent('change', { value }, evnt)
       // 自动更新校验状态
       if ($xeForm && formItemInfo) {
@@ -206,8 +265,9 @@ export default defineVxeComponent({
       }
     }
 
-    const handleMousedownEvent = (evnt: MouseEvent, isEnd: boolean) => {
-      const { immediate } = props
+    const handleBtnMousedownEvent = (evnt: MouseEvent) => {
+      const { range, immediate } = props
+      const btnElem = evnt.currentTarget as HTMLDivElement
       const formReadonly = computeFormReadonly.value
       const isDisabled = computeIsDisabled.value
       const maxNum = computeMaxNum.value
@@ -219,41 +279,48 @@ export default defineVxeComponent({
           const el = refElem.value
           const barElem = refBarElem.value
           if (el && barElem) {
+            const btnType = btnElem.getAttribute('data-type')
             const barRect = barElem.getBoundingClientRect()
-            const trackWidth = (evnt.clientX - barRect.left) / barRect.width
-            if (isEnd) {
-              reactData.endValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum) + minNum)))
-            } else {
-              reactData.startValue = XEUtils.floor(Math.max(minNum, Math.min(maxNum, trackWidth * (maxNum - minNum))))
+            const offsetLeft = Math.min(barRect.width, Math.max(0, evnt.clientX - barRect.left))
+            const currPercent = XEUtils.floor(offsetLeft / barRect.width * 100)
+            const currValue = XEUtils.floor(currPercent / 100 * (maxNum - minNum))
+            if (range) {
+              if (btnType === '1') {
+                internalData.startValue = currValue
+              } else {
+                internalData.endValue = currValue
+              }
             }
-            dispatchEvent('track-dragover', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
+            internalData.currValue = currValue
+            btnElem.style.left = currPercent + '%'
+            dispatchEvent('track-dragover', {
+              currentValue: internalData.currValue,
+              startValue: internalData.startValue,
+              endValue: internalData.endValue
+            }, evnt)
           }
           if (immediate) {
             changeEvent(evnt)
           }
-          updateBarStyle()
+          updateTrackStyle()
         }
         document.onmouseup = (evnt: MouseEvent) => {
           document.onmousemove = null
           document.onmouseup = null
-          dispatchEvent('track-dragend', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
+          dispatchEvent('track-dragend', {
+            currentValue: internalData.currValue,
+            startValue: internalData.startValue,
+            endValue: internalData.endValue
+          }, evnt)
           changeEvent(evnt)
-          updateBarStyle()
+          updateTrackStyle()
         }
-        dispatchEvent('track-dragstart', { startValue: reactData.startValue, endValue: reactData.endValue }, evnt)
+        dispatchEvent('track-dragstart', {
+          currentValue: internalData.currValue,
+          startValue: internalData.startValue,
+          endValue: internalData.endValue
+        }, evnt)
       }
-    }
-
-    const handleStartMousedownEvent = (evnt: MouseEvent) => {
-      const endBtnElem = refEndBtnElem.value
-      const startBtnElem = evnt.currentTarget as HTMLDivElement
-      handleMousedownEvent(evnt, endBtnElem ? endBtnElem.offsetLeft < startBtnElem.offsetLeft : false)
-    }
-
-    const handleEndMousedownEvent = (evnt: MouseEvent) => {
-      const startBtnElem = refStartBtnElem.value
-      const endBtnElem = evnt.currentTarget as HTMLDivElement
-      handleMousedownEvent(evnt, startBtnElem ? endBtnElem.offsetLeft > startBtnElem.offsetLeft : true)
     }
 
     const collapsePanePrivateMethods: SliderPrivateMethods = {
@@ -290,15 +357,17 @@ export default defineVxeComponent({
             ? renderEmptyElement($xeSlider)
             : h('div', {
               ref: refStartBtnElem,
-              class: 'vxe-slider--bar-btn vxe-slider--start-btn',
-              onMousedown: handleStartMousedownEvent
+              class: 'vxe-slider--bar-btn',
+              'data-type': '1',
+              onMousedown: handleBtnMousedownEvent
             }),
           formReadonly
             ? renderEmptyElement($xeSlider)
             : h('div', {
               ref: refEndBtnElem,
-              class: 'vxe-slider--bar-btn vxe-slider--end-btn',
-              onMousedown: handleEndMousedownEvent
+              class: 'vxe-slider--bar-btn',
+              'data-type': '2',
+              onMousedown: handleBtnMousedownEvent
             })
         ])
       ])
@@ -306,13 +375,21 @@ export default defineVxeComponent({
 
     watch(() => props.modelValue, () => {
       if (!internalData._isUp) {
-        updateModel()
+        updateModelValue(1)
+      }
+      internalData._isUp = false
+    })
+
+    watch(computeMVal, () => {
+      if (!internalData._isUp) {
+        updateModelValue(2)
       }
       internalData._isUp = false
     })
 
     onMounted(() => {
       updateBarStyle()
+      updateTrackStyle()
     })
 
     onBeforeUnmount(() => {
@@ -320,7 +397,7 @@ export default defineVxeComponent({
       XEUtils.assign(internalData, createInternalData())
     })
 
-    updateModel()
+    updateModelValue()
 
     $xeSlider.renderVN = renderVN
 

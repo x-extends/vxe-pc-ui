@@ -26,6 +26,8 @@ export interface VxeSliderPrivateRef extends SliderPrivateRef { }
 export namespace VxeSliderPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = number | string | null | (number | string | null)[]
+  export type StartValue = number | string | null
+  export type EndValue = number | string | null
   export type Max = number | string
   export type Min = number | string
   export type Vertical = boolean
@@ -40,6 +42,8 @@ export namespace VxeSliderPropTypes {
 export interface VxeSliderProps {
   size?: VxeSliderPropTypes.Size
   modelValue?: VxeSliderPropTypes.ModelValue
+  startValue?: VxeSliderPropTypes.StartValue
+  endValue?: VxeSliderPropTypes.EndValue
   max?: VxeSliderPropTypes.Max
   min?: VxeSliderPropTypes.Min
   vertical?: VxeSliderPropTypes.Vertical
@@ -56,11 +60,12 @@ export interface SliderPrivateComputed {
 export interface VxeSliderPrivateComputed extends SliderPrivateComputed { }
 
 export interface SliderReactData {
-  startValue: number
-  endValue: number
 }
 export interface SliderInternalData {
   _isUp?: boolean
+  currValue: number
+  startValue: number
+  endValue: number
 }
 
 export interface SliderMethods {
@@ -72,6 +77,8 @@ export interface VxeSliderPrivateMethods extends SliderPrivateMethods { }
 
 export type VxeSliderEmits = [
   'update:modelValue',
+  'update:startValue',
+  'update:endValue',
   'change',
   'track-dragstart',
   'track-dragover',

@@ -50,7 +50,7 @@ $sliderThemeList: (
 .vxe-slider {
   position: relative;
   display: block;
-  padding: 0.5em 1em;
+  padding: 0.8em;
   @for $index from 0 to list.length($sliderThemeList) {
     $item: list.nth($sliderThemeList, $index + 1);
     &.theme--#{map.get($item, name)} {
@@ -80,10 +80,10 @@ $sliderThemeList: (
     }
     .vxe-slider--bar-btn {
       &:hover {
-        transform: scale(1.2);
+        transform: translate(-50%, -50%) scale(1.2);
       }
       &:active {
-        transform: scale(1.1);
+        transform: translate(-50%, -50%) scale(1.1);
       }
     }
   }
@@ -122,19 +122,14 @@ $sliderThemeList: (
 
 .vxe-slider--bar-btn {
   position: absolute;
-  width: 0.9em;
-  height: 0.9em;
-  top: -0.3em;
+  width: 1.2em;
+  height: 1.2em;
+  top: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
-  border: 0.15em solid  var(--vxe-ui-font-primary-color);
+  border: 2px solid  var(--vxe-ui-font-primary-color);
   background-color: #fff;
   cursor: pointer;
   z-index: 1;
   @include baseMixin.createAnimationTransition(transform, 0.1s);
-}
-.vxe-slider--start-btn {
-  left: -0.45em;
-}
-.vxe-slider--end-btn {
-  right: -0.45em;
 }
