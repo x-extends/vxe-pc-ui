@@ -100,7 +100,6 @@
   border-radius: var(--vxe-ui-base-border-radius);
   width: 180px;
   border: 1px solid var(--vxe-ui-input-border-color);
-  overflow: hidden;
   &.is--active {
     border: 1px solid var(--vxe-ui-font-primary-color);
   }
@@ -155,6 +154,16 @@
   &:active {
     color: var(--vxe-ui-font-primary-color);
   }
+}
+
+.vxe-number-input--float-wrapper {
+  position: absolute;
+  left: 1em;
+  top: -0.5em;
+  line-height: 1;
+  padding: 0 0.2em;
+  color: var(--vxe-ui-input-placeholder-color);
+  background-color: var(--vxe-ui-layout-background-color);
 }
 
 // 统计字数
@@ -234,10 +243,24 @@
   }
 }
 .vxe-number-input {
-  &.is--controls {
+  &.ctl--default {
     & > .vxe-number-input--input-wrapper {
       .vxe-number-input--input {
         border-radius: 0;
+      }
+    }
+  }
+  &.ctl--left {
+    & > .vxe-number-input--input-wrapper {
+      .vxe-number-input--input {
+        border-radius: 0 var(--vxe-ui-base-border-radius) var(--vxe-ui-base-border-radius) 0;
+      }
+    }
+  }
+  &.ctl--right {
+    & > .vxe-number-input--input-wrapper {
+      .vxe-number-input--input {
+        border-radius: var(--vxe-ui-base-border-radius) 0 0 var(--vxe-ui-base-border-radius);
       }
     }
   }

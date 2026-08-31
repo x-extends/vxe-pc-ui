@@ -24,6 +24,10 @@ export default defineVxeComponent({
     disabled: Boolean as PropType<VxePasswordInputPropTypes.Disabled>,
     maxLength: [String, Number] as PropType<VxePasswordInputPropTypes.MaxLength>,
     placeholder: String as PropType<VxePasswordInputPropTypes.Placeholder>,
+    floatContent: {
+      type: String as PropType<VxePasswordInputPropTypes.FloatContent>,
+      default: () => getConfig().passwordInput.floatContent
+    },
     autoComplete: {
       type: String as PropType<VxePasswordInputPropTypes.AutoComplete>,
       default: 'off'
@@ -368,7 +372,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { className, inputClassName, name, readonly, autocomplete, autoComplete, maxLength } = props
+      const { className, inputClassName, name, readonly, floatContent, autocomplete, autoComplete, maxLength } = props
       const { inputValue, isActivated } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -385,6 +389,7 @@ export default defineVxeComponent({
       const inputReadonly = computeInputReadonly.value
       const prefix = renderPrefixIcon()
       const suffix = renderSuffixIcon()
+      const floatSlot = slots.float
       return h('div', {
         ref: refElem,
         class: ['vxe-password-input', className, {
@@ -419,7 +424,12 @@ export default defineVxeComponent({
             onBlur: blurEvent
           })
         ]),
-        suffix || renderEmptyElement($xePasswordInput)
+        suffix || renderEmptyElement($xePasswordInput),
+        floatContent || floatSlot
+          ? h('span', {
+            class: 'vxe-password-input--float-wrapper'
+          }, floatSlot ? floatSlot({}) : getText(floatContent))
+          : renderEmptyElement($xePasswordInput)
       ])
     }
 

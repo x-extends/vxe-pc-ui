@@ -103,6 +103,9 @@
     <p>
       <vxe-input v-model="demo1.value900" readonly></vxe-input>
     </p>
+    <p>
+      <vxe-input v-model="demo1.value900" float-content="万" ></vxe-input>
+    </p>
   </div>
 </template>
 
