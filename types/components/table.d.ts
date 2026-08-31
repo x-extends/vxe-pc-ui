@@ -377,6 +377,10 @@ export namespace VxeTablePropTypes {
      */
     isCurrent?: boolean
     /**
+     * 当鼠标点击的行存在合并时，是否合并高亮显示
+     */
+    // isMergeCurrent?: boolean
+    /**
      * 已废弃，请使用 current-row-config.beforeSelectMethod
      * @deprecated
      */
@@ -387,6 +391,10 @@ export namespace VxeTablePropTypes {
      * 当鼠标移到行时，是否要高亮当前行
      */
     isHover?: boolean
+    /**
+     * 当鼠标移到行存在合并时，是否合并高亮显示
+     */
+    // isMergeHover?: boolean
     /**
      * 每一行开启调整行高度
      */
@@ -3168,6 +3176,13 @@ export namespace VxeTablePropTypes {
      * 排除列
      */
     excludeFields?: string[]
+    /**
+     * 是否允许列选中的方法，该方法的返回值用来决定这一列的 checkbox 是否可以选中
+     */
+    checkMethod?(params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo<D>
+    }): boolean
     /**
      * 列过滤方法
      */
@@ -6216,6 +6231,7 @@ export namespace VxeTableDefines {
   }
 
   export interface FilterStoreObj {
+    targetEl: HTMLDivElement | null
     isAllSelected: boolean
     isIndeterminate: boolean
     style: any

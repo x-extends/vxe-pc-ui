@@ -128,6 +128,10 @@ export interface TableFilterPrivateMethods<D = any> {
    * @private
    */
   handleFilterResetFilter (evnt: Event | null, column: VxeTableDefines.ColumnInfo | null): void
+  /**
+   * @private
+   */
+  handleFilterStyle(): Promise<any>
 }
 
 declare module '../grid' {
