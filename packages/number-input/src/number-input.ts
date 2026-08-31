@@ -2,7 +2,7 @@ import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils, { CommafyOptions } from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getFuncText, eqEmptyValue, isEnableConf } from '../../ui/src/utils'
+import { getFuncText, eqEmptyValue, isEnableConf, getText } from '../../ui/src/utils'
 import { hasClass, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
@@ -49,6 +49,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     },
     placeholder: String as PropType<VxeNumberInputPropTypes.Placeholder>,
+    floatContent: {
+      type: String as PropType<VxeNumberInputPropTypes.FloatContent>,
+      default: () => getConfig().numberInput.floatContent
+    },
     maxLength: {
       type: [String, Number] as PropType<VxeNumberInputPropTypes.MaxLength>,
       default: () => getConfig().numberInput.maxLength
@@ -1178,6 +1182,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.renderMinusBtn(h)
       ])
     },
+    renderFloat (h: CreateElement) {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+      const slots = $xeNumberInput.$scopedSlots
+
+      const { floatContent } = props
+      const floatSlot = slots.float
+      if (floatContent || floatSlot) {
+        return h('span', {
+          class: 'vxe-number-input--float-wrapper'
+        }, floatSlot ? floatSlot({}) : getText(floatContent))
+      }
+      return renderEmptyElement($xeNumberInput)
+    },
     renderVN (h: CreateElement): VNode {
       const $xeNumberInput = this
       const props = $xeNumberInput
@@ -1205,7 +1223,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isControls = isEnableConf(controlOpts) && (controls === false ? controls : showButton)
       return h('div', {
         ref: 'refElem',
-        class: ['vxe-number-input', `type--${type}`, `ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}`, className, {
+        class: ['vxe-number-input', `type--${type}`, isControls ? (`ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}`) : '', className, {
           [`size--${vSize}`]: vSize,
           [`is--${align}`]: align,
           'is--controls': isControls && !inputReadonly,
@@ -1222,20 +1240,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ? (layout === 'right'
             ? [
                 $xeNumberInput.renderInput(h),
-                $xeNumberInput.renderSideControl(h)
+                $xeNumberInput.renderSideControl(h),
+                $xeNumberInput.renderFloat(h)
               ]
             : (layout === 'left'
                 ? [
                     $xeNumberInput.renderSideControl(h),
-                    $xeNumberInput.renderInput(h)
+                    $xeNumberInput.renderInput(h),
+                    $xeNumberInput.renderFloat(h)
                   ]
                 : [
                     $xeNumberInput.renderMinusBtn(h),
                     $xeNumberInput.renderInput(h),
-                    $xeNumberInput.renderPlusBtn(h)
+                    $xeNumberInput.renderPlusBtn(h),
+                    $xeNumberInput.renderFloat(h)
                   ]))
         : [
-            $xeNumberInput.renderInput(h)
+            $xeNumberInput.renderInput(h),
+            $xeNumberInput.renderFloat(h)
           ])
     }
   },

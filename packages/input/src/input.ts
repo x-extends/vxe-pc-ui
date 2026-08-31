@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue } from '../../ui/src/utils'
+import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue, getText } from '../../ui/src/utils'
 import { hasClass, getAbsolutePos, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from '../../date-panel/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
@@ -57,6 +57,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     placeholder: {
       type: String as PropType<VxeInputPropTypes.Placeholder>,
       default: null
+    },
+    floatContent: {
+      type: String as PropType<VxeInputPropTypes.FloatContent>,
+      default: () => getConfig().input.floatContent
     },
     maxLength: {
       type: [String, Number] as PropType<VxeInputPropTypes.MaxLength>,
@@ -3033,9 +3037,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     renderVN (h: CreateElement): VNode {
       const $xeInput = this
       const props = $xeInput
+      const slots = $xeInput.$scopedSlots
       const reactData = $xeInput.reactData
 
-      const { className, inputClassName, controls, type, title, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
+      const { className, inputClassName, controls, type, title, floatContent, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
       const { inputValue, visiblePanel, isActivated } = reactData
       const vSize = $xeInput.computeSize
       const isDisabled = $xeInput.computeIsDisabled
@@ -3056,6 +3061,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isWordCount = showWordCount && ['text', 'search'].includes(type)
       const prefix = $xeInput.renderPrefixIcon(h)
       const suffix = $xeInput.renderSuffixIcon(h)
+      const floatSlot = slots.float
       return h('div', {
         ref: 'refElem',
         class: ['vxe-input', `type--${type}`, className, {
@@ -3111,6 +3117,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
           })
         ]),
         suffix || renderEmptyElement($xeInput),
+        floatContent || floatSlot
+          ? h('span', {
+            class: 'vxe-input--float-wrapper'
+          }, floatSlot ? floatSlot({}) : getText(floatContent))
+          : renderEmptyElement($xeInput),
         // 下拉面板
         $xeInput.renderPanel(h),
         // 字数统计

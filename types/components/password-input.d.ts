@@ -27,6 +27,7 @@ export namespace VxePasswordInputPropTypes {
   export type Disabled = boolean
   export type MaxLength = string | number
   export type Placeholder = string
+  export type FloatContent = string
   export type AutoComplete = string
   export type PrefixIcon = string
   export type SuffixIcon = string
@@ -52,6 +53,7 @@ export interface VxePasswordInputProps {
   maxLength?: VxePasswordInputPropTypes.MaxLength
   autoComplete?: VxePasswordInputPropTypes.AutoComplete
   placeholder?: VxePasswordInputPropTypes.Placeholder
+  floatContent?: VxePasswordInputPropTypes.FloatContent
   prefixIcon?: VxePasswordInputPropTypes.PrefixIcon
   suffixIcon?: VxePasswordInputPropTypes.SuffixIcon
   controls?: VxePasswordInputPropTypes.Controls
@@ -127,6 +129,7 @@ export interface VxePasswordInputSlots {
   default?: (params: VxePasswordInputSlotTypes.DefaultSlotParams) => any
   prefix: (params: VxePasswordInputSlotTypes.DefaultSlotParams) => any
   suffix: (params: VxePasswordInputSlotTypes.DefaultSlotParams) => any
+  float: (params: VxePasswordInputSlotTypes.DefaultSlotParams) => any
 }
 
 export const PasswordInput: typeof VxePasswordInput

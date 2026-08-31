@@ -31,6 +31,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     disabled: Boolean as PropType<VxePasswordInputPropTypes.Disabled>,
     maxLength: [String, Number] as PropType<VxePasswordInputPropTypes.MaxLength>,
     placeholder: String as PropType<VxePasswordInputPropTypes.Placeholder>,
+    floatContent: {
+      type: String as PropType<VxePasswordInputPropTypes.FloatContent>,
+      default: () => getConfig().passwordInput.floatContent
+    },
     autoComplete: {
       type: String as PropType<VxePasswordInputPropTypes.AutoComplete>,
       default: 'off'
@@ -431,8 +435,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xePasswordInput = this
       const props = $xePasswordInput
       const reactData = $xePasswordInput.reactData
+      const slots = $xePasswordInput.$scopedSlots
 
-      const { className, inputClassName, name, autocomplete, autoComplete, maxLength } = props
+      const { className, inputClassName, name, floatContent, autocomplete, autoComplete, maxLength } = props
       const { inputValue, isActivated } = reactData
       const isDisabled = $xePasswordInput.computeIsDisabled
       const formReadonly = $xePasswordInput.computeFormReadonly
@@ -449,6 +454,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const inputReadonly = $xePasswordInput.computeInputReadonly
       const prefix = $xePasswordInput.renderPrefixIcon(h)
       const suffix = $xePasswordInput.renderSuffixIcon(h)
+      const floatSlot = slots.float
       return h('div', {
         ref: 'refElem',
         class: ['vxe-password-input', className, {
@@ -492,7 +498,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
           })
         ]),
-        suffix || renderEmptyElement($xePasswordInput)
+        suffix || renderEmptyElement($xePasswordInput),
+        floatContent || floatSlot
+          ? h('span', {
+            class: 'vxe-password-input--float-wrapper'
+          }, floatSlot ? floatSlot({}) : getText(floatContent))
+          : renderEmptyElement($xePasswordInput)
       ])
     }
   },

@@ -27,6 +27,7 @@ export namespace VxeNumberInputPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
+  export type FloatContent = string
   export type MaxLength = string | number | null
   export type Multiple = boolean
   export type AutoComplete = string
@@ -115,6 +116,7 @@ export interface VxeNumberInputProps {
   readonly?: VxeNumberInputPropTypes.Readonly
   disabled?: VxeNumberInputPropTypes.Disabled
   placeholder?: VxeNumberInputPropTypes.Placeholder
+  floatContent?: VxeNumberInputPropTypes.FloatContent
   maxLength?: VxeNumberInputPropTypes.MaxLength
   multiple?: VxeNumberInputPropTypes.Multiple
   autoComplete?: VxeNumberInputPropTypes.AutoComplete
@@ -312,6 +314,7 @@ export interface VxeNumberInputSlots {
   default?: (params: VxeNumberInputSlotTypes.DefaultSlotParams) => any
   prefix: (params: VxeNumberInputSlotTypes.DefaultSlotParams) => any
   suffix: (params: VxeNumberInputSlotTypes.DefaultSlotParams) => any
+  float: (params: VxeNumberInputSlotTypes.DefaultSlotParams) => any
 }
 
 export const NumberInput: typeof VxeNumberInput

@@ -30,6 +30,7 @@ export namespace VxeInputPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type Placeholder = string
+  export type FloatContent = string
   export type MaxLength = string | number | null
   export type Multiple = boolean
   export type ShowWordCount = boolean
@@ -102,6 +103,7 @@ export interface VxeInputProps {
   readonly?: VxeInputPropTypes.Readonly
   disabled?: VxeInputPropTypes.Disabled
   placeholder?: VxeInputPropTypes.Placeholder
+  floatContent?: VxeInputPropTypes.FloatContent
   maxLength?: VxeInputPropTypes.MaxLength
   multiple?: VxeInputPropTypes.Multiple
   /**
@@ -427,6 +429,7 @@ export interface VxeInputSlots {
   default: (params: VxeInputSlotTypes.DefaultSlotParams) => any
   prefix: (params: VxeInputSlotTypes.DefaultSlotParams) => any
   suffix: (params: VxeInputSlotTypes.DefaultSlotParams) => any
+  float: (params: VxeInputSlotTypes.DefaultSlotParams) => any
 }
 
 export const Input: typeof VxeInput

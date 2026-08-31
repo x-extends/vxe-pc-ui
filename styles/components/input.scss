@@ -103,7 +103,6 @@
   border-radius: var(--vxe-ui-base-border-radius);
   width: 180px;
   border: 1px solid var(--vxe-ui-input-border-color);
-  overflow: hidden;
   &.is--active {
     border: 1px solid var(--vxe-ui-font-primary-color);
   }
@@ -165,6 +164,16 @@
   &:active {
     color: var(--vxe-ui-font-primary-color);
   }
+}
+
+.vxe-input--float-wrapper {
+  position: absolute;
+  left: 1em;
+  top: -0.5em;
+  line-height: 1;
+  padding: 0 0.2em;
+  color: var(--vxe-ui-input-placeholder-color);
+  background-color: var(--vxe-ui-layout-background-color);
 }
 
 .vxe-input--number-btn {
