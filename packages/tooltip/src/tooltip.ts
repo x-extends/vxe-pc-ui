@@ -43,7 +43,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeTooltipPropTypes.Size>,
       default: () => getConfig().tooltip.size || getConfig().size
     },
-    selector: String as PropType<VxeTooltipPropTypes.Selector>,
+    selector: [String, Element] as PropType<VxeTooltipPropTypes.Selector>,
     trigger: {
       type: String as PropType<VxeTooltipPropTypes.Trigger>,
       default: () => getConfig().tooltip.trigger || 'hover'
@@ -447,6 +447,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     wheelEvent (evnt: Event) {
       evnt.stopPropagation()
+    },
+    // pooltipPrivateMethods
+    handleCloseEvent () {
+      const $xeTooltip = this
+
+      $xeTooltip.targetMouseleaveEvent()
     },
 
     //

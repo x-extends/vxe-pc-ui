@@ -1,7 +1,7 @@
 import Vue, { CreateElement } from 'vue'
 import { VxeUI, renderEmptyElement } from '@vxe-ui/core'
 
-import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps, VxeContextMenuProps, VxeContextMenuDefines } from '../../types'
+import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps, VxeContextMenuProps, VxeContextMenuDefines, VxeTooltipProps } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
@@ -20,9 +20,11 @@ export const DynamicApp = Vue.extend({
     return {
       modals,
       drawers,
-      globalLoading: null as null | VxeLoadingProps,
-      globalWatermark: null as null | VxeWatermarkProps,
-      globalContextMenu: null as null |(VxeContextMenuProps & VxeContextMenuDefines.ContextMenuOpenOptions)
+      globalLoading: null as VxeLoadingProps | null,
+      globalWatermark: null as VxeWatermarkProps | null,
+      globalContextMenu: null as (VxeContextMenuProps & VxeContextMenuDefines.ContextMenuOpenOptions) | null,
+      globalTooltip: null as VxeTooltipProps | null,
+      isTipInit: false
     }
   },
   methods: {
@@ -34,8 +36,9 @@ export const DynamicApp = Vue.extend({
       const VxeUILoadingComponent = VxeUI.getComponent('vxe-loading')
       const VxeUIWatermarkComponent = VxeUI.getComponent('vxe-watermark')
       const VxeUIContextMenuComponent = VxeUI.getComponent('vxe-context-menu')
+      const VxeUITooltipComponent = VxeUI.getComponent('vxe-tooltip')
 
-      const { modals, drawers, globalLoading, globalWatermark, globalContextMenu } = $xeDynamicApp
+      const { modals, drawers, globalLoading, globalWatermark, globalContextMenu, globalTooltip } = $xeDynamicApp
       let cmOns: {
         show: any
         hide: any
@@ -66,10 +69,20 @@ export const DynamicApp = Vue.extend({
           }
         }
       }
+
+      let tpOOns = {}
+      if (globalTooltip) {
+        tpOOns = {
+          modelValue (value: boolean) {
+            globalTooltip.value = value
+          }
+        }
+      }
+
       return h('div', {}, [
         modals.length
           ? h('div', {
-            key: 1,
+            key: 'ml',
             class: 'vxe-dynamics--modal'
           }, modals.map((item) => h(VxeUIModalComponent, {
             key: item.key,
@@ -79,7 +92,7 @@ export const DynamicApp = Vue.extend({
           : renderEmptyElement($xeDynamicApp),
         drawers.length
           ? h('div', {
-            key: 2,
+            key: 'dr',
             class: 'vxe-dynamics--drawer'
           }, drawers.map((item) => h(VxeUIDrawerComponent, {
             key: item.key,
@@ -104,6 +117,14 @@ export const DynamicApp = Vue.extend({
             key: 'cm',
             props: globalContextMenu,
             on: cmOns
+          })
+          : renderEmptyElement($xeDynamicApp),
+        dynamicStore.isTipInit
+          ? h(VxeUITooltipComponent, {
+            key: 'tip',
+            ref: 'refTooltip',
+            props: globalTooltip || {},
+            on: tpOOns
           })
           : renderEmptyElement($xeDynamicApp)
       ])

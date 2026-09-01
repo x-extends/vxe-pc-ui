@@ -20,9 +20,11 @@ export const LoadingController = {
       icon: opts.icon
     }
     checkDynamic()
+    return Promise.resolve()
   },
   close () {
     dynamicStore.globalLoading = null
+    return Promise.resolve()
   }
 }
 

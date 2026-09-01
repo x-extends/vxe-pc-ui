@@ -23,11 +23,18 @@
         <vxe-button @mouseenter="demo1.value1 = true" @mouseleave="demo1.value1 = false">手动模式</vxe-button>
       </vxe-tooltip>
     </p>
+
+    <p>
+      <vxe-button @mouseenter="mouseenterEvent" @mouseleave="mouseleaveEvent">全局提示1</vxe-button>
+      <vxe-button @mouseenter="mouseenterEvent" @mouseleave="mouseleaveEvent">全局提示2</vxe-button>
+    </p>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import { VxeUI } from '../../../packages'
+import type { VxeButtonDefines } from '../../../types'
 
 export default Vue.extend({
   data () {
@@ -35,6 +42,17 @@ export default Vue.extend({
       demo1: {
         value1: false
       }
+    }
+  },
+  methods: {
+    mouseenterEvent ({ $event }: VxeButtonDefines.MouseenterEventParams) {
+      VxeUI.tooltip.open($event.target, {
+        content: 'dd',
+        enterable: true
+      })
+    },
+    mouseleaveEvent () {
+      VxeUI.tooltip.close()
     }
   }
 })
