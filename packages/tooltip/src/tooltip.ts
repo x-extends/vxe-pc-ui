@@ -6,7 +6,7 @@ import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipInternalData, TooltipReactData, TooltipMethods, TooltipPrivateRef, VxeComponentStyleType, ValueOf } from '../../../types'
+import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipInternalData, TooltipPrivateMethods, TooltipReactData, TooltipMethods, TooltipPrivateRef, VxeComponentStyleType, ValueOf } from '../../../types'
 
 function createReactData (): TooltipReactData {
   return {
@@ -40,7 +40,7 @@ export default defineVxeComponent({
       type: String as PropType<VxeTooltipPropTypes.Size>,
       default: () => getConfig().tooltip.size || getConfig().size
     },
-    selector: String as PropType<VxeTooltipPropTypes.Selector>,
+    selector: [String, Element] as PropType<VxeTooltipPropTypes.Selector>,
     trigger: {
       type: String as PropType<VxeTooltipPropTypes.Trigger>,
       default: () => getConfig().tooltip.trigger || 'hover'
@@ -392,7 +392,11 @@ export default defineVxeComponent({
       evnt.stopPropagation()
     }
 
-    Object.assign($xeTooltip, tooltipMethods)
+    const tooltipPrivateMethods: TooltipPrivateMethods = {
+      handleCloseEvent: targetMouseleaveEvent
+    }
+
+    Object.assign($xeTooltip, tooltipMethods, tooltipPrivateMethods)
 
     const renderContent = () => {
       const { useHtml, useHTML } = props

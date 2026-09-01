@@ -142,7 +142,9 @@ export interface TooltipMethods {
 }
 export interface VxeTooltipMethods extends TooltipMethods { }
 
-export interface TooltipPrivateMethods { }
+export interface TooltipPrivateMethods {
+  handleCloseEvent(): void
+}
 export interface VxeTooltipPrivateMethods extends TooltipPrivateMethods { }
 
 export type VxeTooltipEmits = [
@@ -194,6 +196,24 @@ export namespace VxeTooltipSlotTypes {
 export interface VxeTooltipSlots {
   default?: (params: VxeTooltipSlotTypes.DefaultSlotParams) => any
   content?: (params: VxeTooltipSlotTypes.DefaultSlotParams) => any
+}
+
+/**
+ * 全局工具提示
+ */
+export interface TooltipController {
+  /**
+   * 打开
+   */
+  open(target: EventTarget | HTMLElement | null, options: Omit<VxeTooltipProps, 'transfer' | 'appendTo'>): Promise<void>
+  /**
+   * 关闭
+   */
+  close(): Promise<void>
+  /**
+   * 销毁
+   */
+  destroy(): Promise<void>
 }
 
 export const Tooltip: typeof VxeTooltip

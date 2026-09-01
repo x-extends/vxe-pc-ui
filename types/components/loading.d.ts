@@ -92,11 +92,11 @@ export interface LoadingController {
   open(options?: {
     icon?: VxeLoadingPropTypes.Icon
     text?: VxeLoadingPropTypes.Text
-  }): void
+  }): Promise<void>
   /**
    * 关闭
    */
-  close(): void
+  close(): Promise<void>
 }
 
 export const Loading: typeof VxeLoading

@@ -29,15 +29,33 @@
         <vxe-button @mouseenter="demo1.value3 = true" @mouseleave="demo1.value3 = false">手动模式手动模式手动模式手动模式手动模式手动模式</vxe-button>
       </vxe-tooltip>
     </p>
+
+    <p>
+      <vxe-button @mouseenter="mouseenterEvent" @mouseleave="mouseleaveEvent">全局提示1</vxe-button>
+      <vxe-button @mouseenter="mouseenterEvent" @mouseleave="mouseleaveEvent">全局提示2</vxe-button>
+    </p>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive } from 'vue'
+import { VxeUI } from '../../../packages'
+import type { VxeButtonEvents } from '../../../types'
 
 const demo1 = reactive({
   value1: false,
   value2: false,
   value3: false
 })
+
+const mouseenterEvent: VxeButtonEvents.Mouseenter = ({ $event }) => {
+  VxeUI.tooltip.open($event.target, {
+    content: 'dd',
+    enterable: true
+  })
+}
+
+const mouseleaveEvent = () => {
+  VxeUI.tooltip.close()
+}
 </script>

@@ -17,7 +17,9 @@ VxeUI.component(VxeWatermarkComponent)
 export const WatermarkController = {
   load (options: VxeWatermarkProps) {
     checkDynamic()
-    dynamicStore.globalWatermark = Object.assign({}, options)
+    dynamicStore.globalWatermark = Object.assign({}, options, {
+      key: 'gw'
+    })
     return Promise.resolve()
   },
   clear () {

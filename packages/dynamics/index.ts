@@ -1,24 +1,32 @@
-import { h, createApp, reactive, createCommentVNode } from 'vue'
+import { h, createApp, reactive, createCommentVNode, ref } from 'vue'
 import { defineVxeComponent } from '../ui/src/comp'
 import { VxeUI } from '@vxe-ui/core'
 
-import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps, VxeContextMenuProps, VxeContextMenuDefines, VxeContextMenuEventProps } from '../../types'
+import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkProps, VxeContextMenuProps, VxeContextMenuDefines, VxeContextMenuEventProps, VxeTooltipInstance, TooltipPrivateMethods, VxeTooltipProps } from '../../types'
 
 let dynamicContainerElem: HTMLElement
 
-export const dynamicStore = reactive<{
+export const refTooltip = ref<VxeTooltipInstance & TooltipPrivateMethods>()
+
+interface DynamicStoreData {
   modals: VxeModalDefines.ModalOptions[]
   drawers: VxeDrawerDefines.DrawerOptions[]
-  globalLoading: null | VxeLoadingProps
-  globalWatermark: null | VxeWatermarkProps
-  globalContextMenu: null |(VxeContextMenuProps & VxeContextMenuDefines.ContextMenuOpenOptions)
-    }>({
-      modals: [],
-      drawers: [],
-      globalLoading: null,
-      globalWatermark: null,
-      globalContextMenu: null
-    })
+  globalLoading: VxeLoadingProps | null
+  globalWatermark: VxeWatermarkProps | null
+  globalContextMenu:|(VxeContextMenuProps & VxeContextMenuDefines.ContextMenuOpenOptions) | null
+  globalTooltip: VxeTooltipProps | null
+  isTipInit: boolean
+}
+
+export const dynamicStore = reactive<DynamicStoreData>({
+  modals: [],
+  drawers: [],
+  globalLoading: null,
+  globalWatermark: null,
+  globalContextMenu: null,
+  globalTooltip: null,
+  isTipInit: false
+})
 
 /**
  * 动态组件
@@ -30,14 +38,17 @@ const VxeDynamics = defineVxeComponent({
     const VxeUILoadingComponent = VxeUI.getComponent('vxe-loading')
     const VxeUIWatermarkComponent = VxeUI.getComponent('vxe-watermark')
     const VxeUIContextMenuComponent = VxeUI.getComponent('vxe-context-menu')
+    const VxeUITooltipComponent = VxeUI.getComponent('vxe-tooltip')
 
     return () => {
-      const { modals, drawers, globalWatermark, globalLoading, globalContextMenu } = dynamicStore
+      const { modals, drawers, globalWatermark, globalLoading, globalContextMenu, globalTooltip } = dynamicStore
+
       let cmOpts: (VxeContextMenuProps & VxeContextMenuEventProps) | null = globalContextMenu
       if (globalContextMenu) {
         const events = globalContextMenu.events || {}
         const { optionClick, show, hide } = events
         cmOpts = Object.assign({}, globalContextMenu, {
+          key: 'cm',
           onShow (params: VxeContextMenuDefines.ShowEventParams) {
             if (show) {
               show(params)
@@ -56,22 +67,39 @@ const VxeDynamics = defineVxeComponent({
           }
         }, { events: undefined })
       }
+
+      let tpOpts = globalTooltip || {}
+      if (globalTooltip) {
+        tpOpts = Object.assign({}, globalTooltip, {
+          'onUpdate:modelValue' (value: boolean) {
+            globalTooltip.modelValue = value
+          }
+        })
+      }
+
       return [
         modals.length
           ? h('div', {
-            key: 1,
+            key: 'ml',
             class: 'vxe-dynamics--modal'
           }, modals.map((item) => h(VxeUIModalComponent, item)))
           : createCommentVNode(),
         drawers.length
           ? h('div', {
-            key: 2,
+            key: 'dr',
             class: 'vxe-dynamics--drawer'
           }, drawers.map((item) => h(VxeUIDrawerComponent, item)))
           : createCommentVNode(),
-        globalWatermark ? h(VxeUIWatermarkComponent, globalWatermark) : createCommentVNode(),
-        globalLoading ? h(VxeUILoadingComponent, globalLoading) : createCommentVNode(),
-        globalContextMenu ? h(VxeUIContextMenuComponent, cmOpts) : createCommentVNode()
+        globalWatermark
+          ? h(VxeUIWatermarkComponent, globalWatermark)
+          : createCommentVNode(),
+        globalLoading
+          ? h(VxeUILoadingComponent, globalLoading)
+          : createCommentVNode(),
+        globalContextMenu ? h(VxeUIContextMenuComponent, cmOpts) : createCommentVNode(),
+        dynamicStore.isTipInit
+          ? h(VxeUITooltipComponent, { ref: refTooltip, ...tpOpts })
+          : createCommentVNode()
       ]
     }
   }

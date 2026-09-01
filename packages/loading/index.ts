@@ -14,15 +14,17 @@ export const VxeLoading = Object.assign({}, VxeLoadingComponent, {
 export const LoadingController = {
   open (options?: VxeLoadingProps) {
     const opts = Object.assign({}, options)
-    dynamicStore.globalLoading = {
+    dynamicStore.globalLoading = Object.assign({
       modelValue: true,
       text: opts.text,
       icon: opts.icon
-    }
+    }, { key: 'gl' })
     checkDynamic()
+    return Promise.resolve()
   },
   close () {
     dynamicStore.globalLoading = null
+    return Promise.resolve()
   }
 }
 
