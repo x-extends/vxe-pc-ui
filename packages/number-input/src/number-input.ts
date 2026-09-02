@@ -42,6 +42,10 @@ export default defineVxeComponent({
       type: String as PropType<VxeNumberInputPropTypes.FloatContent>,
       default: () => getConfig().numberInput.floatContent
     },
+    floatAlign: {
+      type: String as PropType<VxeNumberInputPropTypes.FloatAlign>,
+      default: () => getConfig().numberInput.floatAlign
+    },
     maxLength: {
       type: [String, Number] as PropType<VxeNumberInputPropTypes.MaxLength>,
       default: () => getConfig().numberInput.maxLength
@@ -462,7 +466,6 @@ export default defineVxeComponent({
         reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
         reactData.isFocus = true
         reactData.isActivated = true
-        handleShowTip()
         triggerEvent(evnt)
       }
     }
@@ -608,13 +611,12 @@ export default defineVxeComponent({
       }
     }
 
+    const mouseenterEvent = () => {
+      handleShowTip()
+    }
+
     const mouseleaveEvent = () => {
-      const { showTooltip } = props
-      if (showTooltip) {
-        if (VxeUI.tooltip) {
-          VxeUI.tooltip.close()
-        }
-      }
+      handleHideTip()
     }
 
     // 数值
@@ -679,7 +681,7 @@ export default defineVxeComponent({
     }
 
     const handleShowTip = () => {
-      const { showTooltip } = props
+      const { type, showTooltip } = props
       const { inputValue } = reactData
       if (showTooltip) {
         if (VxeUI.tooltip) {
@@ -689,6 +691,8 @@ export default defineVxeComponent({
           const inputElem = refInputTarget.value
           const content = getText(contentMethod
             ? contentMethod({
+              $mumberInput: $xeNumberInput,
+              type,
               inputValue: inputElem.value,
               value: inputValue || '',
               label: numLabel
@@ -704,6 +708,15 @@ export default defineVxeComponent({
           } else {
             VxeUI.tooltip.close()
           }
+        }
+      }
+    }
+
+    const handleHideTip = () => {
+      const { showTooltip } = props
+      if (showTooltip) {
+        if (VxeUI.tooltip) {
+          VxeUI.tooltip.close()
         }
       }
     }
@@ -863,6 +876,7 @@ export default defineVxeComponent({
             handleChange(value, handleNumberString(inputValue), evnt)
           }
           afterCheckValue()
+          handleHideTip()
         }
       }
     }
@@ -1036,7 +1050,8 @@ export default defineVxeComponent({
             onChange: changeEvent,
             onFocus: focusEvent,
             onBlur: blurEvent
-          })
+          }),
+          renderFloat()
         ]),
         renderSuffixIcon()
       ])
@@ -1104,7 +1119,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { className, controls, type, align, prefixIcon, suffixIcon } = props
+      const { className, controls, type, align, prefixIcon, suffixIcon, floatContent, floatAlign } = props
       const { inputValue, isActivated } = reactData
       const vSize = computeSize.value
       const controlOpts = computeControlOpts.value
@@ -1125,7 +1140,7 @@ export default defineVxeComponent({
       const isControls = isEnableConf(controlOpts) && (controls === false ? controls : showButton)
       return h('div', {
         ref: refElem,
-        class: ['vxe-number-input', `type--${type}`, isControls ? (`ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}`) : '', className, {
+        class: ['vxe-number-input', `type--${type}`, isControls ? (`ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}`) : '', floatContent ? (`fla--${floatAlign || 'center'}`) : '', className, {
           [`size--${vSize}`]: vSize,
           [`is--${align}`]: align,
           'is--controls': isControls && !inputReadonly,
@@ -1136,29 +1151,26 @@ export default defineVxeComponent({
           'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }],
         spellcheck: false,
+        onMouseenter: mouseenterEvent,
         onMouseleave: mouseleaveEvent
       }, isControls
         ? (layout === 'right'
             ? [
                 renderInput(),
-                renderSideControl(),
-                renderFloat()
+                renderSideControl()
               ]
             : (layout === 'left'
                 ? [
                     renderSideControl(),
-                    renderInput(),
-                    renderFloat()
+                    renderInput()
                   ]
                 : [
                     renderMinusBtn(),
                     renderInput(),
-                    renderPlusBtn(),
-                    renderFloat()
+                    renderPlusBtn()
                   ]))
         : [
-            renderInput(),
-            renderFloat()
+            renderInput()
           ])
     }
 

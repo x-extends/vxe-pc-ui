@@ -28,6 +28,10 @@ export default defineVxeComponent({
       type: String as PropType<VxePasswordInputPropTypes.FloatContent>,
       default: () => getConfig().passwordInput.floatContent
     },
+    floatAlign: {
+      type: String as PropType<VxePasswordInputPropTypes.FloatAlign>,
+      default: () => getConfig().passwordInput.floatAlign
+    },
     autoComplete: {
       type: String as PropType<VxePasswordInputPropTypes.AutoComplete>,
       default: 'off'
@@ -372,7 +376,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { className, inputClassName, name, readonly, floatContent, autocomplete, autoComplete, maxLength } = props
+      const { className, inputClassName, name, readonly, floatContent, autocomplete, autoComplete, maxLength, floatAlign } = props
       const { inputValue, isActivated } = reactData
       const isDisabled = computeIsDisabled.value
       const formReadonly = computeFormReadonly.value
@@ -392,7 +396,7 @@ export default defineVxeComponent({
       const floatSlot = slots.float
       return h('div', {
         ref: refElem,
-        class: ['vxe-password-input', className, {
+        class: ['vxe-password-input', floatContent ? (`fla--${floatAlign || 'center'}`) : '', className, {
           [`size--${vSize}`]: vSize,
           'is--prefix': !!prefix,
           'is--suffix': !!suffix,
@@ -422,14 +426,14 @@ export default defineVxeComponent({
             onChange: changeEvent,
             onFocus: focusEvent,
             onBlur: blurEvent
-          })
+          }),
+          floatContent || floatSlot
+            ? h('span', {
+              class: 'vxe-password-input--float-wrapper'
+            }, floatSlot ? floatSlot({}) : getText(floatContent))
+            : renderEmptyElement($xePasswordInput)
         ]),
-        suffix || renderEmptyElement($xePasswordInput),
-        floatContent || floatSlot
-          ? h('span', {
-            class: 'vxe-password-input--float-wrapper'
-          }, floatSlot ? floatSlot({}) : getText(floatContent))
-          : renderEmptyElement($xePasswordInput)
+        suffix || renderEmptyElement($xePasswordInput)
       ])
     }
 

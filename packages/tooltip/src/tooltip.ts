@@ -1,7 +1,7 @@
-import { h, ref, nextTick, onBeforeUnmount, onMounted, computed, reactive, watch, PropType, VNode, onUnmounted } from 'vue'
+import { h, ref, nextTick, onBeforeUnmount, onMounted, computed, reactive, watch, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { getConfig, createEvent, useSize, globalEvents } from '../../ui'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -251,7 +251,7 @@ export default defineVxeComponent({
       tipStore.placement = 'top'
       tipStore.style = { width: 'auto', left: 0, top: 0, zIndex: props.zIndex || reactData.tipZindex }
       tipStore.arrowStyle = { left: '50%' }
-      return tooltipMethods.updatePlacement()
+      return $xeTooltip.updatePlacement()
     }
 
     const handleDelayFn = () => {
@@ -399,6 +399,16 @@ export default defineVxeComponent({
       evnt.stopPropagation()
     }
 
+    const handleGlobalScrollEvent = () => {
+      if (reactData.visible) {
+        $xeTooltip.updatePlacement()
+      }
+    }
+
+    const handleGlobalBlurEvent = () => {
+      $xeTooltip.close()
+    }
+
     const tooltipPrivateMethods: TooltipPrivateMethods = {
       handleCloseEvent: targetMouseleaveEvent
     }
@@ -534,6 +544,8 @@ export default defineVxeComponent({
           }
         }
       })
+      globalEvents.on($xeTooltip, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeTooltip, 'scroll', handleGlobalScrollEvent)
     })
 
     onBeforeUnmount(() => {
@@ -554,9 +566,8 @@ export default defineVxeComponent({
           parentNode.removeChild(panelElem)
         }
       }
-    })
-
-    onUnmounted(() => {
+      globalEvents.off($xeTooltip, 'blur')
+      globalEvents.off($xeTooltip, 'scroll')
       XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })
