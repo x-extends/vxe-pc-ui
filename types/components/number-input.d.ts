@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentAlignType } from '@vxe-ui/core'
 import { VxeTooltipProps } from './tooltip'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
@@ -29,6 +29,7 @@ export namespace VxeNumberInputPropTypes {
   export type Disabled = boolean
   export type Placeholder = string
   export type FloatContent = string
+  export type FloatAlign = VxeComponentAlignType
   export type MaxLength = string | number | null
   export type Multiple = boolean
   export type AutoComplete = string
@@ -93,6 +94,8 @@ export namespace VxeNumberInputPropTypes {
   export type ShowTooltip = boolean
   export interface TooltipConfig extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
     contentMethod?: (params: {
+      $mumberInput: VxeNumberInputConstructor
+      type: VxeNumberInputPropTypes.Type
       value: VxeNumberInputPropTypes.ModelValue
       label: string
       inputValue: string
@@ -127,6 +130,7 @@ export interface VxeNumberInputProps {
   disabled?: VxeNumberInputPropTypes.Disabled
   placeholder?: VxeNumberInputPropTypes.Placeholder
   floatContent?: VxeNumberInputPropTypes.FloatContent
+  floatAlign?: VxeNumberInputPropTypes.FloatAlign
   maxLength?: VxeNumberInputPropTypes.MaxLength
   multiple?: VxeNumberInputPropTypes.Multiple
   autoComplete?: VxeNumberInputPropTypes.AutoComplete

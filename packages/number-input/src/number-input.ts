@@ -56,6 +56,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeNumberInputPropTypes.FloatContent>,
       default: () => getConfig().numberInput.floatContent
     },
+    floatAlign: {
+      type: String as PropType<VxeNumberInputPropTypes.FloatAlign>,
+      default: () => getConfig().numberInput.floatAlign
+    },
     maxLength: {
       type: [String, Number] as PropType<VxeNumberInputPropTypes.MaxLength>,
       default: () => getConfig().numberInput.maxLength
@@ -545,7 +549,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
         reactData.isFocus = true
         reactData.isActivated = true
-        $xeNumberInput.handleShowTip()
         $xeNumberInput.triggerEvent(evnt)
       }
     },
@@ -712,17 +715,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
       }
     },
+    mouseenterEvent () {
+      const $xeNumberInput = this
+
+      $xeNumberInput.handleShowTip()
+    },
     mouseleaveEvent () {
       const $xeNumberInput = this
-      const props = $xeNumberInput
 
-      const { showTooltip } = props
-      if (showTooltip) {
-        if (VxeUI.tooltip) {
-          VxeUI.tooltip.close()
-        }
-      }
+      $xeNumberInput.handleHideTip()
     },
+
     // 数值
     numberChange  (isPlus: boolean, evnt: Event) {
       const $xeNumberInput = this
@@ -797,7 +800,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
 
-      const { showTooltip } = props
+      const { type, showTooltip } = props
       const { inputValue } = reactData
       if (showTooltip) {
         if (VxeUI.tooltip) {
@@ -807,6 +810,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const inputElem = $xeNumberInput.$refs.refInputTarget as HTMLInputElement
           const content = getText(contentMethod
             ? contentMethod({
+              $mumberInput: $xeNumberInput,
+              type,
               inputValue: inputElem.value,
               value: inputValue || '',
               label: numLabel
@@ -822,6 +827,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
           } else {
             VxeUI.tooltip.close()
           }
+        }
+      }
+    },
+    handleHideTip () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      const { showTooltip } = props
+      if (showTooltip) {
+        if (VxeUI.tooltip) {
+          VxeUI.tooltip.close()
         }
       }
     },
@@ -1003,6 +1019,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeNumberInput.handleChange(value, handleNumberString(inputValue), evnt)
           }
           $xeNumberInput.afterCheckValue()
+          $xeNumberInput.handleHideTip()
         }
       }
     },
@@ -1268,7 +1285,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeNumberInput.reactData
       const slots = $xeNumberInput.$scopedSlots
 
-      const { className, controls, type, align, prefixIcon, suffixIcon } = props
+      const { className, controls, type, align, prefixIcon, suffixIcon, floatContent, floatAlign } = props
       const { inputValue, isActivated } = reactData
       const vSize = $xeNumberInput.computeSize
       const controlOpts = $xeNumberInput.computeControlOpts
@@ -1289,7 +1306,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isControls = isEnableConf(controlOpts) && (controls === false ? controls : showButton)
       return h('div', {
         ref: 'refElem',
-        class: ['vxe-number-input', `type--${type}`, isControls ? (`ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}`) : '', className, {
+        class: ['vxe-number-input', `type--${type}`, isControls ? (`ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}`) : '', floatContent ? (`fla--${floatAlign || 'center'}`) : '', className, {
           [`size--${vSize}`]: vSize,
           [`is--${align}`]: align,
           'is--controls': isControls && !inputReadonly,
@@ -1303,6 +1320,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           spellcheck: false
         },
         on: {
+          mouseenter: $xeNumberInput.mouseenterEvent,
           mouseleave: $xeNumberInput.mouseleaveEvent
         }
       }, isControls

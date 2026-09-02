@@ -32,8 +32,8 @@
   display: inline-flex;
 }
 .vxe-input--wrapper {
+  position: relative;
   flex-grow: 1;
-  overflow: hidden;
 }
 .vxe-input--inner {
   display: block;
@@ -168,12 +168,30 @@
 
 .vxe-input--float-wrapper {
   position: absolute;
-  left: 1em;
   top: -0.5em;
   line-height: 1;
   padding: 0 0.2em;
+  white-space: nowrap;
   color: var(--vxe-ui-input-placeholder-color);
   background-color: var(--vxe-ui-layout-background-color);
+}
+.vxe-input {
+  &.fla--left {
+    .vxe-input--float-wrapper {
+      left: 1em;
+    }
+  }
+  &.fla--center {
+    .vxe-input--float-wrapper {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  &.fla--right {
+    .vxe-input--float-wrapper {
+      right: 1em;
+    }
+  }
 }
 
 .vxe-input--number-btn {

@@ -31,6 +31,7 @@ export namespace VxeInputPropTypes {
   export type Disabled = boolean
   export type Placeholder = string
   export type FloatContent = string
+  export type FloatAlign = VxeComponentAlignType
   export type MaxLength = string | number | null
   export type Multiple = boolean
   export type ShowWordCount = boolean
@@ -104,6 +105,7 @@ export interface VxeInputProps {
   disabled?: VxeInputPropTypes.Disabled
   placeholder?: VxeInputPropTypes.Placeholder
   floatContent?: VxeInputPropTypes.FloatContent
+  floatAlign?: VxeInputPropTypes.FloatAlign
   maxLength?: VxeInputPropTypes.MaxLength
   multiple?: VxeInputPropTypes.Multiple
   /**

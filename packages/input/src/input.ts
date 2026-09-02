@@ -62,6 +62,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeInputPropTypes.FloatContent>,
       default: () => getConfig().input.floatContent
     },
+    floatAlign: {
+      type: String as PropType<VxeInputPropTypes.FloatAlign>,
+      default: () => getConfig().input.floatAlign
+    },
     maxLength: {
       type: [String, Number] as PropType<VxeInputPropTypes.MaxLength>,
       default: () => getConfig().input.maxLength
@@ -3040,7 +3044,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeInput.$scopedSlots
       const reactData = $xeInput.reactData
 
-      const { className, inputClassName, controls, type, title, floatContent, align, showWordCount, countMethod, name, autoComplete, autocomplete } = props
+      const { className, inputClassName, controls, type, title, floatContent, align, showWordCount, countMethod, name, autoComplete, autocomplete, floatAlign } = props
       const { inputValue, visiblePanel, isActivated } = reactData
       const vSize = $xeInput.computeSize
       const isDisabled = $xeInput.computeIsDisabled
@@ -3064,7 +3068,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const floatSlot = slots.float
       return h('div', {
         ref: 'refElem',
-        class: ['vxe-input', `type--${type}`, className, {
+        class: ['vxe-input', `type--${type}`, floatContent ? (`fla--${floatAlign || 'center'}`) : '', className, {
           [`size--${vSize}`]: vSize,
           [`is--${align}`]: align,
           'is--controls': controls,
@@ -3114,14 +3118,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
               focus: $xeInput.focusEvent,
               blur: $xeInput.blurEvent
             }
-          })
+          }),
+          floatContent || floatSlot
+            ? h('span', {
+              class: 'vxe-input--float-wrapper'
+            }, floatSlot ? floatSlot({}) : getText(floatContent))
+            : renderEmptyElement($xeInput)
         ]),
         suffix || renderEmptyElement($xeInput),
-        floatContent || floatSlot
-          ? h('span', {
-            class: 'vxe-input--float-wrapper'
-          }, floatSlot ? floatSlot({}) : getText(floatContent))
-          : renderEmptyElement($xeInput),
         // 下拉面板
         $xeInput.renderPanel(h),
         // 字数统计

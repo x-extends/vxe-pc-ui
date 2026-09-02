@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { getConfig, createEvent, globalMixins, globalEvents } from '../../ui'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -453,6 +453,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
     wheelEvent (evnt: Event) {
       evnt.stopPropagation()
     },
+    handleGlobalScrollEvent () {
+      const $xeTooltip = this
+      const reactData = $xeTooltip.reactData
+
+      if (reactData.visible) {
+        $xeTooltip.updatePlacement()
+      }
+    },
+    handleGlobalBlurEvent () {
+      const $xeTooltip = this
+
+      $xeTooltip.close()
+    },
     // pooltipPrivateMethods
     handleCloseEvent () {
       const $xeTooltip = this
@@ -578,6 +591,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     $xeTooltip.internalData = createInternalData()
 
     $xeTooltip.handleDelayFn()
+    globalEvents.on($xeTooltip, 'blur', $xeTooltip.handleGlobalBlurEvent)
+    globalEvents.on($xeTooltip, 'scroll', $xeTooltip.handleGlobalScrollEvent)
   },
   mounted () {
     const $xeTooltip = this
@@ -624,6 +639,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   beforeDestroy () {
     const $xeTooltip = this
     const reactData = $xeTooltip.reactData
+    const internalData = $xeTooltip.internalData
 
     const { target } = reactData
     const panelElem = $xeTooltip.$refs.refElem as HTMLElement
@@ -642,12 +658,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         parentNode.removeChild(panelElem)
       }
     }
-  },
-  destroyed () {
-    const $xeTooltip = this
-    const reactData = $xeTooltip.reactData
-    const internalData = $xeTooltip.internalData
 
+    globalEvents.off($xeTooltip, 'blur')
+    globalEvents.off($xeTooltip, 'scroll')
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },

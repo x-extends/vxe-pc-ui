@@ -35,6 +35,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxePasswordInputPropTypes.FloatContent>,
       default: () => getConfig().passwordInput.floatContent
     },
+    floatAlign: {
+      type: String as PropType<VxePasswordInputPropTypes.FloatAlign>,
+      default: () => getConfig().passwordInput.floatAlign
+    },
     autoComplete: {
       type: String as PropType<VxePasswordInputPropTypes.AutoComplete>,
       default: 'off'
@@ -496,14 +500,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
               focus: $xePasswordInput.focusEvent,
               blur: $xePasswordInput.blurEvent
             }
-          })
+          }),
+          floatContent || floatSlot
+            ? h('span', {
+              class: 'vxe-password-input--float-wrapper'
+            }, floatSlot ? floatSlot({}) : getText(floatContent))
+            : renderEmptyElement($xePasswordInput)
         ]),
-        suffix || renderEmptyElement($xePasswordInput),
-        floatContent || floatSlot
-          ? h('span', {
-            class: 'vxe-password-input--float-wrapper'
-          }, floatSlot ? floatSlot({}) : getText(floatContent))
-          : renderEmptyElement($xePasswordInput)
+        suffix || renderEmptyElement($xePasswordInput)
       ])
     }
   },

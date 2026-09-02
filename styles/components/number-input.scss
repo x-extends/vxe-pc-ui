@@ -32,8 +32,8 @@
   display: inline-flex;
 }
 .vxe-number-input--input-inner {
+  position: relative;
   flex-grow: 1;
-  overflow: hidden;
 }
 .vxe-number-input--input {
   display: block;
@@ -73,7 +73,6 @@
 .vxe-number-input--input-wrapper {
   display: flex;
   flex-grow: 1;
-  overflow: hidden;
 }
 
 // 禁用
@@ -158,12 +157,30 @@
 
 .vxe-number-input--float-wrapper {
   position: absolute;
-  left: 1em;
   top: -0.5em;
   line-height: 1;
   padding: 0 0.2em;
+  white-space: nowrap;
   color: var(--vxe-ui-input-placeholder-color);
   background-color: var(--vxe-ui-layout-background-color);
+}
+.vxe-number-input {
+  &.fla--left {
+    .vxe-number-input--float-wrapper {
+      left: 1em;
+    }
+  }
+  &.fla--center {
+    .vxe-number-input--float-wrapper {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  &.fla--right {
+    .vxe-number-input--float-wrapper {
+      right: 1em;
+    }
+  }
 }
 
 // 统计字数

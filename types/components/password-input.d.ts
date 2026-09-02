@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentAlignType } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -28,6 +28,7 @@ export namespace VxePasswordInputPropTypes {
   export type MaxLength = string | number
   export type Placeholder = string
   export type FloatContent = string
+  export type FloatAlign = VxeComponentAlignType
   export type AutoComplete = string
   export type PrefixIcon = string
   export type SuffixIcon = string
@@ -54,6 +55,7 @@ export interface VxePasswordInputProps {
   autoComplete?: VxePasswordInputPropTypes.AutoComplete
   placeholder?: VxePasswordInputPropTypes.Placeholder
   floatContent?: VxePasswordInputPropTypes.FloatContent
+  floatAlign?: VxePasswordInputPropTypes.FloatAlign
   prefixIcon?: VxePasswordInputPropTypes.PrefixIcon
   suffixIcon?: VxePasswordInputPropTypes.SuffixIcon
   controls?: VxePasswordInputPropTypes.Controls
