@@ -202,8 +202,7 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
   const stys: Record<string, string> = {}
   if (panelElem && targetElem) {
     const bodyEl = document.body
-    const parentEl = panelElem.parentElement
-    const parentWrapperEl = parentEl === bodyEl ? document.documentElement : parentEl
+    const parentWrapperEl = getPopupWrapperElement(panelElem)
     if (parentWrapperEl) {
       const targetWidth = targetElem.offsetWidth
       const targetHeight = targetElem.offsetHeight
@@ -326,6 +325,15 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
     style: stys,
     placement: panelPlacement
   }
+}
+
+export function getPopupWrapperElement (panelElem: HTMLElement | null | undefined) {
+  if (!panelElem) {
+    return null
+  }
+  const bodyEl = document.body
+  const parentEl = panelElem.parentElement
+  return (parentEl === bodyEl ? document.documentElement : parentEl) || null
 }
 
 export function getPopupContainer (appendTo: string | HTMLElement | ((params: any) => string | HTMLElement) | undefined) {
