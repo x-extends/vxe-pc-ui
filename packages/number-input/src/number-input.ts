@@ -1,13 +1,16 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils, { CommafyOptions } from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, eqEmptyValue, isEnableConf, getText } from '../../ui/src/utils'
+import { createComponentLog } from '../../ui/src/log'
 import { hasClass, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
 
 import type { NumberInputInternalData, VxeNumberInputEmits, NumberInputReactData, VxeNumberInputPropTypes, VxeComponentSizeType, VxeFormConstructor, ValueOf, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+
+const { errLog } = createComponentLog('number-input')
 
 const handleNumberString = (val: any) => {
   if (XEUtils.eqNull(val)) {
@@ -122,6 +125,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     prefixConfig: Object as PropType<VxeNumberInputPropTypes.PrefixConfig>,
     suffixIcon: String as PropType<VxeNumberInputPropTypes.SuffixIcon>,
     suffixConfig: Object as PropType<VxeNumberInputPropTypes.SuffixConfig>,
+    showTooltip: {
+      type: Boolean as PropType<VxeNumberInputPropTypes.ShowTooltip>,
+      default: () => getConfig().numberInput.showTooltip
+    },
+    tooltipConfig: Object as PropType<VxeNumberInputPropTypes.TooltipConfig>,
 
     // 已废弃
     controls: {
@@ -228,6 +236,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeNumberInput
 
       return Object.assign({}, getConfig().numberInput.suffixConfig, props.suffixConfig)
+    },
+    computeTooltipOpts () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      return Object.assign({}, getConfig().numberInput.tooltipConfig, props.tooltipConfig)
     },
     computeDecimalsType () {
       const $xeNumberInput = this
@@ -531,6 +545,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.inputValue = eqEmptyValue(inputValue) ? '' : `${XEUtils.toNumber(inputValue)}`
         reactData.isFocus = true
         reactData.isActivated = true
+        $xeNumberInput.handleShowTip()
         $xeNumberInput.triggerEvent(evnt)
       }
     },
@@ -551,6 +566,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeNumberInput.handleChange(null, '', evnt)
       $xeNumberInput.dispatchEvent('clear', { value }, evnt)
       $xeNumberInput.dispatchEvent('lazy-change', { value }, evnt)
+      $xeNumberInput.$nextTick(() => {
+        $xeNumberInput.handleShowTip()
+      })
     },
     clickSuffixEvent (evnt: Event) {
       const $xeNumberInput = this
@@ -694,6 +712,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
       }
     },
+    mouseleaveEvent () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      const { showTooltip } = props
+      if (showTooltip) {
+        if (VxeUI.tooltip) {
+          VxeUI.tooltip.close()
+        }
+      }
+    },
     // 数值
     numberChange  (isPlus: boolean, evnt: Event) {
       const $xeNumberInput = this
@@ -726,6 +755,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.numberChange(true, evnt)
       }
       reactData.isActivated = true
+      $xeNumberInput.handleShowTip()
       $xeNumberInput.dispatchEvent('plus-number', { value: reactData.inputValue }, evnt)
       $xeNumberInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
       // 已废弃
@@ -742,6 +772,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.numberChange(false, evnt)
       }
       reactData.isActivated = true
+      $xeNumberInput.handleShowTip()
       $xeNumberInput.dispatchEvent('minus-number', { value: reactData.inputValue }, evnt)
       $xeNumberInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
       // 已废弃
@@ -758,6 +789,39 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $xeNumberInput.numberPlusEvent(evnt)
         } else {
           $xeNumberInput.numberMinusEvent(evnt)
+        }
+      }
+    },
+    handleShowTip () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+      const reactData = $xeNumberInput.reactData
+
+      const { showTooltip } = props
+      const { inputValue } = reactData
+      if (showTooltip) {
+        if (VxeUI.tooltip) {
+          const numLabel = $xeNumberInput.computeNumLabel
+          const tooltipOpts = $xeNumberInput.computeTooltipOpts
+          const { contentMethod } = tooltipOpts
+          const inputElem = $xeNumberInput.$refs.refInputTarget as HTMLInputElement
+          const content = getText(contentMethod
+            ? contentMethod({
+              inputValue: inputElem.value,
+              value: inputValue || '',
+              label: numLabel
+            })
+            : numLabel)
+          if (content) {
+            VxeUI.tooltip.open(inputElem, Object.assign({}, {
+              ...tooltipOpts,
+              content
+            }, {
+              contentMethod: undefined
+            }))
+          } else {
+            VxeUI.tooltip.close()
+          }
         }
       }
     },
@@ -800,6 +864,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     keyupEvent  (evnt: KeyboardEvent & { type: 'keyup' }) {
       const $xeNumberInput = this
 
+      $xeNumberInput.handleShowTip()
       $xeNumberInput.triggerEvent(evnt)
     },
     // 数值
@@ -915,6 +980,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     clickEvent  (evnt: Event & { type: 'click' }) {
       const $xeNumberInput = this
 
+      $xeNumberInput.handleShowTip()
       $xeNumberInput.triggerEvent(evnt)
     },
     // 全局事件
@@ -1235,6 +1301,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }],
         attrs: {
           spellcheck: false
+        },
+        on: {
+          mouseleave: $xeNumberInput.mouseleaveEvent
         }
       }, isControls
         ? (layout === 'right'
@@ -1292,7 +1361,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   mounted () {
     const $xeNumberInput = this
+    const props = $xeNumberInput
 
+    if (props.showTooltip) {
+      if (!VxeUI.tooltip) {
+        errLog('vxe.error.reqComp', ['vxe-tooltip'])
+      }
+    }
     const targetElem = $xeNumberInput.$refs.refInputTarget as HTMLInputElement
     if (targetElem) {
       targetElem.addEventListener('wheel', $xeNumberInput.wheelEvent, { passive: false })

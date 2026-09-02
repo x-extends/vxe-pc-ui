@@ -56,6 +56,9 @@ export interface VxeTooltipProps {
   trigger?: VxeTooltipPropTypes.Trigger
   theme?: VxeTooltipPropTypes.Theme
   content?: VxeTooltipPropTypes.Content
+  /**
+   * 显示为 HTML 标签
+   */
   useHtml?: VxeTooltipPropTypes.UseHtml
   /**
    * 已废弃，请使用 useHtml
@@ -73,8 +76,17 @@ export interface VxeTooltipProps {
   placement?: VxeTooltipPropTypes.Placement
   defaultPlacement?: VxeTooltipPropTypes.DefaultPlacement
   isArrow?: VxeTooltipPropTypes.IsArrow
+  /**
+   * 鼠标是否可进入到 tooltip 中
+   */
   enterable?: VxeTooltipPropTypes.Enterable
+  /**
+   * 鼠标移入后延时多少才显示 tooltip
+   */
   enterDelay?: VxeTooltipPropTypes.EnterDelay
+  /**
+   * 鼠标移出后延时多少才隐藏 tooltip
+   */
   leaveDelay?: VxeTooltipPropTypes.LeaveDelay
   leaveMethod?: VxeTooltipPropTypes.LeaveMethod
   transfer?: VxeTooltipPropTypes.Transfer
@@ -143,7 +155,9 @@ export interface VxeTooltipPrivateMethods extends TooltipPrivateMethods { }
 export type VxeTooltipEmits = [
   'model-value',
   'modelValue',
-  'input'
+  'input',
+  'show',
+  'hide'
 ]
 
 export namespace VxeTooltipDefines {

@@ -305,6 +305,10 @@ setConfig({
       showButton: true,
       isWheel: true,
       isArrow: true
+    },
+    tooltipConfig: {
+      enterable: true,
+      enterDelay: 0
     }
   },
   optgroup: {},

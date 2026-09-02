@@ -1,4 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeTooltipProps } from './tooltip'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -87,6 +88,15 @@ export namespace VxeNumberInputPropTypes {
     icon?: string
     content?: string
     status?: VxeComponentSizeType
+  }
+
+  export type ShowTooltip = boolean
+  export interface TooltipConfig extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
+    contentMethod?: (params: {
+      value: VxeNumberInputPropTypes.ModelValue
+      label: string
+      inputValue: string
+    }) => string | number | null | undefined
   }
 
   export type ShowCurrency = boolean
@@ -185,6 +195,12 @@ export interface VxeNumberInputProps {
   prefixConfig?: VxeNumberInputPropTypes.PrefixConfig
   suffixIcon?: VxeNumberInputPropTypes.SuffixIcon
   suffixConfig?: VxeNumberInputPropTypes.SuffixConfig
+
+  /**
+   * 是否在输入时显示工具提示
+   */
+  showTooltip?: VxeNumberInputPropTypes.ShowTooltip
+  tooltipConfig?: VxeNumberInputPropTypes.TooltipConfig
 
   /**
    * 只对 type=amount 有效，是否显示前缀货币符号

@@ -221,6 +221,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         arrowStyle: null
       })
       $xeTooltip.updateValue(false)
+      $xeTooltip.dispatchEvent('hide', {}, null)
       return $xeTooltip.$nextTick()
     },
     toVisible (target: HTMLElement, content?: VxeTooltipPropTypes.Content) {
@@ -267,6 +268,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         defaultLeft: left,
         placement: placement,
         defaultPlacement: defaultPlacement,
+        isMinWidth: false,
         teleportTo: true
       })
       const panelStyle = Object.assign(ppObj.style, {
@@ -274,7 +276,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       tipStore.placement = ppObj.placement
       tipStore.style = panelStyle
-      tipStore.arrowStyle.left = `${ppObj.arrowLeft}px`
+      tipStore.arrowStyle.left = ppObj.arrowLeft ? `${ppObj.arrowLeft}px` : ''
     },
     updatePlacement () {
       const $xeTooltip = this
@@ -439,8 +441,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (showDelayTip) {
             showDelayTip()
           }
+          $xeTooltip.dispatchEvent('show', {}, evnt || null)
         } else {
-          return $xeTooltip.showTip()
+          const rest = $xeTooltip.showTip()
+          $xeTooltip.dispatchEvent('show', {}, evnt || null)
+          return rest
         }
       }
       return $xeTooltip.$nextTick()
