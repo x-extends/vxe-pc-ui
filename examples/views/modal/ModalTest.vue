@@ -8,7 +8,7 @@
       <vxe-button content="question" @click="openMessage({ content: 'question 消息提示', status: 'question' })"></vxe-button>
       <vxe-button content="success" @click="openMessage({ content: 'success 消息提示', status: 'success' })"></vxe-button>
       <vxe-button content="error" @click="openMessage({ content: 'error 消息提示', status: 'error' })"></vxe-button>
-      <vxe-button content="loading" @click="openMessage({ content: 'loading 消息提示', status: 'loading' })"></vxe-button>
+      <vxe-button content="loading" @click="openMessage({ content: 'loading 消息提示', status: 'loading',duration:60000 })"></vxe-button>
     </p>
 
     <p>
@@ -74,28 +74,30 @@
       <vxe-button content="锁界面不要遮罩层" @click="openAlert({ content: '锁界面不要遮罩层', mask: false })"></vxe-button>
     </p>
 
-    <p>
-      <vxe-button content="自定义模板" @click="demo1.value5 = true"></vxe-button>
-      <vxe-modal v-model="demo1.value5" width="600" :lock-view="false" :mask="false" show-zoom>
-        <template #title>
-          <span style="color:red">自定义标题</span>
-        </template>
-        <template #corner>
-          <VxeIcon name="bell-fill"></VxeIcon>
-        </template>
-        <template #default>
-          <vxe-table
-            show-overflow
-            height="300"
-            :sync-resize="demo1.value5"
-            :data="demo1.tableData">
-            <vxe-column type="seq" width="60"></vxe-column>
-            <vxe-column field="name" title="Name"></vxe-column>
-            <vxe-column field="sex" title="Sex"></vxe-column>
-            <vxe-column field="age" title="Age"></vxe-column>
-          </vxe-table>
-        </template>
-      </vxe-modal>
+    <div>
+      <vxe-button content="自定义模板-范围内" @click="demo1.value5 = true"></vxe-button>
+      <div style="width: 1000px;height: 500px;position: relative;">
+        <vxe-modal v-model="demo1.value5" width="400" height="300" :lock-view="false" is-within-append-to show-zoom>
+          <template #title>
+            <span style="color:red">自定义标题</span>
+          </template>
+          <template #corner>
+            <VxeIcon name="bell-fill"></VxeIcon>
+          </template>
+          <template #default>
+            <vxe-table
+              show-overflow
+              height="300"
+              :sync-resize="demo1.value5"
+              :data="demo1.tableData">
+              <vxe-column type="seq" width="60"></vxe-column>
+              <vxe-column field="name" title="Name"></vxe-column>
+              <vxe-column field="sex" title="Sex"></vxe-column>
+              <vxe-column field="age" title="Age"></vxe-column>
+            </vxe-table>
+          </template>
+        </vxe-modal>
+      </div>
 
       <vxe-button content="窗口初始位置" @click="demo1.value6 = true"></vxe-button>
       <vxe-modal v-model="demo1.value6" width="600" :position="{top: 200, left: 200}">
@@ -199,7 +201,7 @@
           </vxe-grid>
         </template>
       </vxe-modal>
-    </p>
+    </div>
 
     <p>
       <vxe-button content="横向排列" @click="openHorizontalEvent"></vxe-button>

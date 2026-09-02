@@ -115,6 +115,7 @@ export namespace VxeModalPropTypes {
   export type ShowTitleOverflow = boolean
   export type Transfer = boolean
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
+  export type IsWithinAppendTo = boolean
   export type Storage = boolean
   export type StorageKey = string
   export type Animat = boolean
@@ -180,6 +181,10 @@ export interface VxeModalProps {
    * 挂载到指定元素下
    */
   appendTo?: VxeModalPropTypes.AppendTo
+  /**
+   * 是否在指定元素 append-to 的范围内显示
+   */
+  isWithinAppendTo?: VxeModalPropTypes.IsWithinAppendTo
   storage?: VxeModalPropTypes.Storage
   storageKey?: VxeModalPropTypes.StorageKey
   animat?: VxeModalPropTypes.Animat

@@ -1,7 +1,7 @@
 import { h, Teleport, ref, Ref, inject, computed, reactive, provide, nextTick, watch, PropType, VNode, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getDomNode, getEventTargetNode, getPopupContainer, toCssUnit } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupContainer, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import VxeButtonComponent from '../../button'
@@ -166,6 +166,10 @@ export default defineVxeComponent({
     appendTo: {
       type: [String, Function] as PropType<VxeModalPropTypes.AppendTo>,
       default: () => getConfig().modal.appendTo
+    },
+    isWithinAppendTo: {
+      type: Boolean as PropType<VxeModalPropTypes.IsWithinAppendTo>,
+      default: () => getConfig().modal.isWithinAppendTo
     },
     storage: {
       type: Boolean as PropType<VxeModalPropTypes.Storage>,
@@ -339,14 +343,20 @@ export default defineVxeComponent({
 
     const updatePosition = () => {
       return nextTick().then(() => {
-        const { position } = props
-        const marginSize = XEUtils.toNumber(props.marginSize)
+        const { position, isWithinAppendTo } = props
+        const btnTransfer = computeBtnTransfer.value
+        const el = refElem.value
         const boxElem = getBox()
         if (!boxElem) {
           return
         }
-        const clientVisibleWidth = document.documentElement.clientWidth || document.body.clientWidth
-        const clientVisibleHeight = document.documentElement.clientHeight || document.body.clientHeight
+        const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+        if (!parentWrapperEl) {
+          return
+        }
+        const clientVisibleWidth = parentWrapperEl.clientWidth
+        const clientVisibleHeight = parentWrapperEl.clientHeight
+        const marginSize = XEUtils.toNumber(props.marginSize)
         const isPosCenter = position === 'center'
         const { top, left } = XEUtils.isString(position) ? { top: position, left: position } : Object.assign({}, position)
         const topCenter = isPosCenter || top === 'center'
@@ -536,6 +546,8 @@ export default defineVxeComponent({
     }
 
     const handleMinimize = () => {
+      const { isWithinAppendTo } = props
+      const btnTransfer = computeBtnTransfer.value
       const zoomOpts = computeZoomOpts.value
       const { minimizeLayout, minimizeMaxSize, minimizeHorizontalOffset, minimizeVerticalOffset, minimizeOffsetMethod } = zoomOpts
       const isHorizontalLayout = minimizeLayout === 'horizontal'
@@ -568,6 +580,7 @@ export default defineVxeComponent({
       reactData.prevZoomStatus = prevZoomStatus
       reactData.zoomStatus = 'minimize'
       return nextTick().then(() => {
+        const el = refElem.value
         const boxElem = getBox()
         if (!boxElem) {
           return {
@@ -580,7 +593,13 @@ export default defineVxeComponent({
             status: false
           }
         }
-        const { visibleHeight } = getDomNode()
+        const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+        if (!parentWrapperEl) {
+          return {
+            status: false
+          }
+        }
+        const visibleHeight = parentWrapperEl.clientHeight
         // 如果当前处于复原状态
         if (!prevZoomStatus) {
           reactData.revertLocat = {
@@ -639,6 +658,8 @@ export default defineVxeComponent({
     }
 
     const handleMaximize = () => {
+      const { isWithinAppendTo } = props
+      const btnTransfer = computeBtnTransfer.value
       const prevZoomStatus = reactData.zoomStatus
       reactData.prevZoomStatus = prevZoomStatus
       reactData.zoomStatus = 'maximize'
@@ -647,9 +668,16 @@ export default defineVxeComponent({
         if (boxElem) {
           // 如果当前处于复原状态
           if (!prevZoomStatus) {
+            const el = refElem.value
+            const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+            if (!parentWrapperEl) {
+              return {
+                status: false
+              }
+            }
+            const clientVisibleWidth = parentWrapperEl.clientWidth
+            const clientVisibleHeight = parentWrapperEl.clientHeight
             const marginSize = XEUtils.toNumber(props.marginSize)
-            const clientVisibleWidth = document.documentElement.clientWidth || document.body.clientWidth
-            const clientVisibleHeight = document.documentElement.clientHeight || document.body.clientHeight
             reactData.revertLocat = {
               top: Math.max(marginSize, clientVisibleHeight / 2 - boxElem.offsetHeight / 2),
               left: Math.max(marginSize, clientVisibleWidth / 2 - boxElem.offsetWidth / 2),
@@ -935,8 +963,9 @@ export default defineVxeComponent({
     }
 
     const mousedownEvent = (evnt: MouseEvent) => {
-      const { storage } = props
+      const { resize, storage, isWithinAppendTo } = props
       const { zoomStatus } = reactData
+      const btnTransfer = computeBtnTransfer.value
       const marginSize = XEUtils.toNumber(props.marginSize)
       const boxElem = getBox()
       if (!boxElem) {
@@ -944,9 +973,15 @@ export default defineVxeComponent({
       }
       if (zoomStatus !== 'maximize' && evnt.button === 0 && !getEventTargetNode(evnt, boxElem, 'trigger--btn').flag) {
         evnt.preventDefault()
+        const el = refElem.value
+        const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+        if (!parentWrapperEl) {
+          return
+        }
+        const visibleWidth = parentWrapperEl.clientWidth - (resize && isWithinAppendTo ? 8 : 0)
+        const visibleHeight = parentWrapperEl.clientHeight - (resize && isWithinAppendTo ? 8 : 0)
         const disX = evnt.clientX - boxElem.offsetLeft
         const disY = evnt.clientY - boxElem.offsetTop
-        const { visibleHeight, visibleWidth } = getDomNode()
         document.onmousemove = evnt => {
           evnt.preventDefault()
           const offsetWidth = boxElem.offsetWidth
@@ -993,8 +1028,15 @@ export default defineVxeComponent({
 
     const dragEvent = (evnt: MouseEvent) => {
       evnt.preventDefault()
-      const { storage } = props
-      const { visibleHeight, visibleWidth } = getDomNode()
+      const { resize, storage, isWithinAppendTo } = props
+      const btnTransfer = computeBtnTransfer.value
+      const el = refElem.value
+      const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+      if (!parentWrapperEl) {
+        return
+      }
+      const visibleWidth = parentWrapperEl.clientWidth - (resize && isWithinAppendTo ? 8 : 0)
+      const visibleHeight = parentWrapperEl.clientHeight - (resize && isWithinAppendTo ? 8 : 0)
       const marginSize = XEUtils.toNumber(props.marginSize)
       const targetElem = evnt.target as HTMLSpanElement
       const type = targetElem.getAttribute('data-type')
@@ -1381,7 +1423,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { slots: propSlots = {}, className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize, appendTo } = props
+      const { slots: propSlots = {}, className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize, appendTo, isWithinAppendTo } = props
       const { initialized, modalTop, contentVisible, visible, zoomStatus } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
@@ -1399,7 +1441,7 @@ export default defineVxeComponent({
       }, [
         h('div', {
           ref: refElem,
-          class: ['vxe-modal--wrapper', `type--${type}`, `zoom--${zoomStatus || 'revert'}`, className || '', position ? `pos--${position}` : '', {
+          class: ['vxe-modal--wrapper', `type--${type}`, `zoom--${zoomStatus || 'revert'}`, className || '', position ? `pos--${position}` : '', isWithinAppendTo ? 'ctx--within' : 'ctx--free', {
             [`size--${vSize}`]: vSize,
             [`status--${status}`]: status,
             'is--padding': padding,
