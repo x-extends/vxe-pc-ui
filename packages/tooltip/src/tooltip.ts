@@ -118,7 +118,9 @@ export default defineVxeComponent({
     }
   },
   emits: [
-    'update:modelValue'
+    'update:modelValue',
+    'show',
+    'hide'
   ] as VxeTooltipEmits,
   setup (props, context) {
     const { slots, emit } = context
@@ -288,8 +290,11 @@ export default defineVxeComponent({
           if (showDelayTip) {
             showDelayTip()
           }
+          dispatchEvent('show', {}, evnt || null)
         } else {
-          return showTip()
+          const rest = showTip()
+          dispatchEvent('show', {}, evnt || null)
+          return rest
         }
       }
       return nextTick()
@@ -343,6 +348,7 @@ export default defineVxeComponent({
         defaultLeft: left,
         placement: placement,
         defaultPlacement: defaultPlacement,
+        isMinWidth: false,
         teleportTo: true
       })
       const panelStyle = Object.assign(ppObj.style, {
@@ -350,7 +356,7 @@ export default defineVxeComponent({
       })
       tipStore.placement = ppObj.placement
       tipStore.style = panelStyle
-      tipStore.arrowStyle.left = `${ppObj.arrowLeft}px`
+      tipStore.arrowStyle.left = ppObj.arrowLeft ? `${ppObj.arrowLeft}px` : ''
     }
 
     const tooltipMethods: TooltipMethods = {
@@ -371,6 +377,7 @@ export default defineVxeComponent({
           arrowStyle: null
         })
         updateValue(false)
+        dispatchEvent('hide', {}, null)
         return nextTick()
       },
       toVisible (target: HTMLElement, content?: VxeTooltipPropTypes.Content) {

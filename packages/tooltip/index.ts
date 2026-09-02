@@ -31,11 +31,14 @@ export const TooltipController = {
     return Promise.resolve()
   },
   close () {
+    const { globalTooltip } = dynamicStore
+    if (!globalTooltip || !globalTooltip.modelValue) {
+      return Promise.resolve()
+    }
     const $tooltip = refTooltip.value
     if ($tooltip) {
       $tooltip.handleCloseEvent()
     } else {
-      const { globalTooltip } = dynamicStore
       if (globalTooltip) {
         globalTooltip.modelValue = false
       }
@@ -43,6 +46,10 @@ export const TooltipController = {
     return Promise.resolve()
   },
   destroy () {
+    const { globalTooltip } = dynamicStore
+    if (!globalTooltip || !globalTooltip.modelValue) {
+      return Promise.resolve()
+    }
     const $tooltip = refTooltip.value
     if ($tooltip) {
       return $tooltip.close().then(() => {
@@ -50,7 +57,6 @@ export const TooltipController = {
         dynamicStore.isTipInit = false
       })
     }
-    const { globalTooltip } = dynamicStore
     if (globalTooltip) {
       globalTooltip.modelValue = false
     }

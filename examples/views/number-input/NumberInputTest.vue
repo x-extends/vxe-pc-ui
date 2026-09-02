@@ -74,6 +74,9 @@
     <p>
       <vxe-number-input v-model="demo1.value908" type="float" auto-fill float-content="千"></vxe-number-input>
     </p>
+    <p>
+      <vxe-number-input v-model="demo1.value909" type="float" show-tooltip></vxe-number-input>
+    </p>
   </div>
 </template>
 
@@ -107,7 +110,8 @@ const demo1 = reactive({
   value903: '3.5',
   value904: '3.6',
   value905: '3.7',
-  value908: 0
+  value908: 0,
+  value909: null
 })
 
 // setTimeout(() => {
