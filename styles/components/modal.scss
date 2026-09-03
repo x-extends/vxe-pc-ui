@@ -13,7 +13,6 @@ html[data-vxe-lock-scroll] {
   width: 420px;
   background-color: var(--vxe-ui-layout-background-color);
   border-radius: var(--vxe-ui-base-border-radius);
-  border: 1px solid var(--vxe-ui-base-popup-border-color);
   text-align: left;
   pointer-events: auto;
   opacity: 0;
@@ -430,16 +429,25 @@ html[data-vxe-lock-scroll] {
   &.type--modal,
   &.type--alert,
   &.type--confirm {
+    &.is--title-bg {
+      .vxe-modal--header {
+        background-color: var(--vxe-ui-modal-header-background-color);
+      }
+    }
+    &.is--border {
+      .vxe-modal--header {
+        border-bottom: 1px solid var(--vxe-ui-input-border-color);
+      }
+      .vxe-modal--box {
+        border: 1px solid var(--vxe-ui-base-popup-border-color);
+      }
+    }
     .vxe-modal--box {
       display: flex;
       flex-direction: row;
       left: 50%;
       top: 0;
       box-shadow: var(--vxe-ui-base-popup-box-shadow);
-    }
-    .vxe-modal--header {
-      border-bottom: 1px solid var(--vxe-ui-input-border-color);
-      background-color: var(--vxe-ui-modal-header-background-color);
     }
     .vxe-modal--body {
       overflow: auto;

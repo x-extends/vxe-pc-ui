@@ -1008,13 +1008,19 @@ export default defineVxeComponent({
       if (formReadonly) {
         return h('div', {
           ref: refElem,
-          class: ['vxe-color-picker--readonly', className]
+          class: ['vxe-color-picker--readonly', className, {
+            [`size--${vSize}`]: vSize
+          }]
         }, [
           h('div', {
-            class: 'vxe-color-picker--readonly-color',
-            style: {
-              backgroundColor: modelValue
-            }
+            class: ['vxe-color-picker--readonly-color', {
+              'is--empty': !modelValue
+            }],
+            style: modelValue
+              ? {
+                  backgroundColor: modelValue
+                }
+              : undefined
           })
         ])
       }

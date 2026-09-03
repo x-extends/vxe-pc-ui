@@ -37,6 +37,7 @@ export namespace VxeDrawerPropTypes {
   export type ModelValue = boolean
   export type ID = string | null
   export type Loading = boolean
+  export type Border = boolean
   export type ClassName = string
   export type Position = DrawerPosition
   export type Title = string | number
@@ -60,6 +61,7 @@ export namespace VxeDrawerPropTypes {
   export type Width = number | string
   export type Height = number | string
   export type Resize = boolean
+  export type ShowTitleBackground = boolean
   export type ZIndex = number
   export type DestroyOnClose = boolean
   export type ShowTitleOverflow = boolean
@@ -75,6 +77,7 @@ export interface VxeDrawerProps {
   modelValue?: VxeDrawerPropTypes.ModelValue
   id?: VxeDrawerPropTypes.ID
   loading?: VxeDrawerPropTypes.Loading
+  border?: VxeDrawerPropTypes.Border
   className?: VxeDrawerPropTypes.ClassName
   position?: VxeDrawerPropTypes.Position
   title?: VxeDrawerPropTypes.Title
@@ -91,6 +94,7 @@ export interface VxeDrawerProps {
   escClosable?: VxeDrawerPropTypes.EscClosable
   cancelClosable?: VxeDrawerPropTypes.CancelClosable
   confirmClosable?: VxeDrawerPropTypes.ConfirmClosable
+  showTitleBackground?: VxeDrawerPropTypes.ShowTitleBackground
   showHeader?: VxeDrawerPropTypes.ShowHeader
   showFooter?: VxeDrawerPropTypes.ShowFooter
   showClose?: VxeDrawerPropTypes.ShowClose

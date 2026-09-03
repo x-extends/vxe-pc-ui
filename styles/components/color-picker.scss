@@ -1,6 +1,34 @@
 @use '../helpers/baseMixin.scss';
 @use '../helpers/placement.scss';
 
+// 局部变量
+.vxe-color-picker,
+.vxe-color-picker--readonly,
+.vxe-color-picker--panel {
+  --vxe-ui-color-picker-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-color-picker-current-height: var(--vxe-ui-input-height-default);
+  &.size--xlarge {
+    --vxe-ui-color-picker-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-color-picker-current-height: var(--vxe-ui-input-height-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-color-picker-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-color-picker-current-height: var(--vxe-ui-input-height-large);
+  }
+  &.size--medium {
+    --vxe-ui-color-picker-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-color-picker-current-height: var(--vxe-ui-input-height-medium);
+  }
+  &.size--small {
+    --vxe-ui-color-picker-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-color-picker-current-height: var(--vxe-ui-input-height-small);
+  }
+  &.size--mini {
+    --vxe-ui-color-picker-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-color-picker-current-height: var(--vxe-ui-input-height-mini);
+  }
+}
+
 .vxe-color-picker {
   &.is--selected {
     .vxe-color-picker--inner-color {
@@ -24,8 +52,10 @@
 
 .vxe-color-picker--inner,
 .vxe-color-picker--preview-btn,
-.vxe-color-picker--bar-alpha-slider {
-  background: #fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAWElEQVRIiWM8fubkfwYygKWJOSM5+mCAhRLNoxaPWjxq8ajFoxbTyeL/DAfJ0Xjs3Cl7Siwmu4Yht1aDgZEYx6MWj1o8avGoxaMWD3qLya5X//4nqx6HAQC7RBGFzolqTAAAAABJRU5ErkJggg==);
+.vxe-color-picker--bar-alpha-slider,
+.vxe-color-picker--readonly-color.is--empty {
+  background-color: #ffffff;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAWElEQVRIiWM8fubkfwYygKWJOSM5+mCAhRLNoxaPWjxq8ajFoxbTyeL/DAfJ0Xjs3Cl7Siwmu4Yht1aDgZEYx6MWj1o8avGoxaMWD3qLya5X//4nqx6HAQC7RBGFzolqTAAAAABJRU5ErkJggg==);
 }
 
 .vxe-color-picker--inner,
@@ -378,33 +408,12 @@
 
 .vxe-color-picker,
 .vxe-color-picker--readonly {
-  height: var(--vxe-ui-input-height-default);
-  line-height: var(--vxe-ui-input-height-default);
-  &.size--medium {
-    height: var(--vxe-ui-input-height-medium);
-    line-height: var(--vxe-ui-input-height-medium);
-  }
-  &.size--small {
-    height: var(--vxe-ui-input-height-small);
-    line-height: var(--vxe-ui-input-height-small);
-  }
-  &.size--mini {
-    height: var(--vxe-ui-input-height-mini);
-    line-height: var(--vxe-ui-input-height-mini);
-  }
+  height: var(--vxe-ui-color-picker-current-height);
+  line-height: var(--vxe-ui-color-picker-current-height);
 }
 
 .vxe-color-picker,
 .vxe-color-picker--readonly,
 .vxe-color-picker--panel {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
+  font-size: var(--vxe-ui-color-picker-current-font-size);
 }
