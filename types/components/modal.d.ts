@@ -44,6 +44,7 @@ export namespace VxeModalPropTypes {
   export type Loading = boolean
   export type Status = ModalStatus
   export type IconStatus = string
+  export type Border = boolean
   export type ClassName = string
   export type Top = number | string
   export type Position = 'center' | 'top-left' | 'top-right' | ModalPosition
@@ -68,6 +69,7 @@ export namespace VxeModalPropTypes {
   export type CancelClosable = boolean
   export type ConfirmClosable = boolean
   export type Resize = boolean
+  export type ShowTitleBackground = boolean
   export type ShowHeader = boolean
   export type ShowFooter = boolean
   export type ShowZoom = boolean
@@ -128,6 +130,7 @@ export interface VxeModalProps {
   loading?: VxeModalPropTypes.Loading
   status?: VxeModalPropTypes.Status
   iconStatus?: VxeModalPropTypes.IconStatus
+  border?: VxeModalPropTypes.Border
   className?: VxeModalPropTypes.ClassName
   top?: VxeModalPropTypes.Top
   position?: VxeModalPropTypes.Position
@@ -147,6 +150,7 @@ export interface VxeModalProps {
   cancelClosable?: VxeModalPropTypes.CancelClosable
   confirmClosable?: VxeModalPropTypes.ConfirmClosable
   resize?: VxeModalPropTypes.Resize
+  showTitleBackground?: VxeModalPropTypes.ShowTitleBackground
   showHeader?: VxeModalPropTypes.ShowHeader
   showFooter?: VxeModalPropTypes.ShowFooter
   showZoom?: VxeModalPropTypes.ShowZoom

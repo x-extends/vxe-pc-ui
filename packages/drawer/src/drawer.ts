@@ -105,6 +105,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeDrawerPropTypes.Resize>,
       default: () => getConfig().drawer.resize
     },
+    border: {
+      type: Boolean as PropType<VxeDrawerPropTypes.Border>,
+      default: () => getConfig().drawer.border
+    },
+    showTitleBackground: {
+      type: Boolean as PropType<VxeDrawerPropTypes.ShowTitleBackground>,
+      default: () => getConfig().drawer.showTitleBackground
+    },
     zIndex: Number as PropType<VxeDrawerPropTypes.ZIndex>,
     transfer: {
       type: Boolean as PropType<VxeDrawerPropTypes.Transfer>,
@@ -668,7 +676,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeDrawer.$scopedSlots
       const reactData = $xeDrawer.reactData
 
-      const { slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, destroyOnClose } = props
+      const { border, showTitleBackground, slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, destroyOnClose } = props
       const { initialized, contentVisible, visible } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = $xeDrawer.computeSize
@@ -678,6 +686,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         class: ['vxe-drawer--wrapper', `pos--${position}`, className || '', {
           [`size--${vSize}`]: vSize,
           'is--padding': padding,
+          'is--border': border,
+          'is--title-bg': showTitleBackground,
           'lock--scroll': lockScroll,
           'lock--view': lockView,
           'is--mask': mask,

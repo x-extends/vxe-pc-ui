@@ -98,6 +98,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().modal.confirmClosable
     },
     resize: Boolean as PropType<VxeModalPropTypes.Resize>,
+    border: {
+      type: Boolean as PropType<VxeModalPropTypes.Border>,
+      default: () => getConfig().modal.border
+    },
+    showTitleBackground: {
+      type: Boolean as PropType<VxeModalPropTypes.ShowTitleBackground>,
+      default: () => getConfig().modal.showTitleBackground
+    },
     showHeader: {
       type: Boolean as PropType<VxeModalPropTypes.ShowHeader>,
       default: () => getConfig().modal.showHeader
@@ -503,13 +511,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return $xeModal.$nextTick().then(() => {
         const { position, isWithinAppendTo } = props
-        const btnTransfer = $xeModal.computeBtnTransfer
         const el = $xeModal.$refs.refElem as HTMLDivElement
         const boxElem = $xeModal.getBox()
         if (!boxElem) {
           return
         }
-        const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+        const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo ? el : document.body)
         if (!parentWrapperEl) {
           return
         }
@@ -731,7 +738,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeModal.reactData
 
       const { isWithinAppendTo } = props
-      const btnTransfer = $xeModal.computeBtnTransfer
       const zoomOpts = $xeModal.computeZoomOpts
       const { minimizeLayout, minimizeMaxSize, minimizeHorizontalOffset, minimizeVerticalOffset, minimizeOffsetMethod } = zoomOpts
       const isHorizontalLayout = minimizeLayout === 'horizontal'
@@ -777,7 +783,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             status: false
           }
         }
-        const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+        const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo ? el : document.body)
         if (!parentWrapperEl) {
           return {
             status: false
@@ -846,7 +852,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeModal.reactData
 
       const { isWithinAppendTo } = props
-      const btnTransfer = $xeModal.computeBtnTransfer
       const prevZoomStatus = reactData.zoomStatus
       reactData.prevZoomStatus = prevZoomStatus
       reactData.zoomStatus = 'maximize'
@@ -856,7 +861,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           // 如果当前处于复原状态
           if (!prevZoomStatus) {
             const el = $xeModal.$refs.refElem as HTMLDivElement
-            const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+            const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo ? el : document.body)
             if (!parentWrapperEl) {
               return {
                 status: false
@@ -1146,7 +1151,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { resize, storage, isWithinAppendTo } = props
       const { zoomStatus } = reactData
-      const btnTransfer = $xeModal.computeBtnTransfer
       const marginSize = XEUtils.toNumber(props.marginSize)
       const boxElem = $xeModal.getBox()
       if (!boxElem) {
@@ -1155,7 +1159,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (zoomStatus !== 'maximize' && evnt.button === 0 && !getEventTargetNode(evnt, boxElem, 'trigger--btn').flag) {
         evnt.preventDefault()
         const el = $xeModal.$refs.refElem as HTMLDivElement
-        const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+        const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo ? el : document.body)
         if (!parentWrapperEl) {
           return
         }
@@ -1213,9 +1217,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       evnt.preventDefault()
       const { resize, storage, isWithinAppendTo } = props
-      const btnTransfer = $xeModal.computeBtnTransfer
       const el = $xeModal.$refs.refElem as HTMLDivElement
-      const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo && btnTransfer ? el : document.body)
+      const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo ? el : document.body)
       if (!parentWrapperEl) {
         return
       }
@@ -1605,7 +1608,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeModal.$scopedSlots
       const reactData = $xeModal.reactData
 
-      const { slots: propSlots = {}, className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize, isWithinAppendTo } = props
+      const { border, showTitleBackground, slots: propSlots = {}, className, type, animat, draggable, iconStatus, position, loading, destroyOnClose, status, lockScroll, padding, lockView, mask, resize, isWithinAppendTo } = props
       const { initialized, modalTop, contentVisible, visible, zoomStatus } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = $xeModal.computeSize
@@ -1622,6 +1625,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           [`size--${vSize}`]: vSize,
           [`status--${status}`]: status,
           'is--padding': padding,
+          'is--border': border,
+          'is--title-bg': showTitleBackground,
           'is--animat': animat,
           'lock--scroll': lockScroll,
           'lock--view': lockView,

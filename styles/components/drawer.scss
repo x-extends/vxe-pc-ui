@@ -128,7 +128,6 @@
   flex-direction: row;
   position: fixed;
   background-color: var(--vxe-ui-layout-background-color);
-  border: 1px solid var(--vxe-ui-base-popup-border-color);
   text-align: left;
   pointer-events: auto;
   opacity: 0;
@@ -204,12 +203,26 @@
   flex-shrink: 0;
   font-size: 1.1em;
   font-weight: 700;
-  border-bottom: 1px solid var(--vxe-ui-base-popup-border-color);
   &.is--ellipsis {
     .vxe-drawer--header-title {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+  }
+}
+.vxe-drawer--wrapper {
+  &.is--title-bg {
+    .vxe-drawer--header {
+      background-color: var(--vxe-ui-drawer-header-background-color);
+    }
+  }
+  &.is--border {
+    .vxe-drawer--header {
+      border-bottom: 1px solid var(--vxe-ui-base-popup-border-color);
+    }
+    .vxe-drawer--box {
+      border: 1px solid var(--vxe-ui-base-popup-border-color);
     }
   }
 }
