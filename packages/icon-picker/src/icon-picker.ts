@@ -362,21 +362,6 @@ export default defineVxeComponent({
       dispatchEvent('click', {}, evnt)
     }
 
-    const handleGlobalMousewheelEvent = (evnt: MouseEvent) => {
-      const { visiblePanel } = reactData
-      const isDisabled = computeIsDisabled.value
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelElem = refOptionPanel.value
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            updatePlacement()
-          } else {
-            hideOptionPanel()
-          }
-        }
-      }
-    }
-
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
       const { visiblePanel } = reactData
       const isDisabled = computeIsDisabled.value
@@ -448,6 +433,20 @@ export default defineVxeComponent({
         if ($input) {
           $input.blur()
         }
+      }
+    }
+
+    const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
+    const handleGlobalScrollEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
       }
     }
 
@@ -725,10 +724,11 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
-      globalEvents.on($xeIconPicker, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeIconPicker, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeIconPicker, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeIconPicker, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xeIconPicker, 'resize', handleGlobalResizeEvent)
+      globalEvents.on($xeIconPicker, 'scroll', handleGlobalScrollEvent)
     })
 
     onBeforeUnmount(() => {
@@ -736,6 +736,8 @@ export default defineVxeComponent({
       globalEvents.off($xeIconPicker, 'mousedown')
       globalEvents.off($xeIconPicker, 'keydown')
       globalEvents.off($xeIconPicker, 'blur')
+      globalEvents.off($xeIconPicker, 'resize')
+      globalEvents.off($xeIconPicker, 'scroll')
       XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })

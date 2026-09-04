@@ -973,22 +973,6 @@ export default defineVxeComponent({
       }
     }
 
-    const handleGlobalMousewheelEvent = (evnt: Event) => {
-      const { visiblePanel } = reactData
-      const isDisabled = computeIsDisabled.value
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelWrapperElem = refPanelWrapper.value
-          if (getEventTargetNode(evnt, panelWrapperElem).flag) {
-            updatePlacement()
-          } else {
-            checkValue()
-            hidePanel()
-          }
-        }
-      }
-    }
-
     const handleGlobalBlurEvent = () => {
       const { visiblePanel, isActivated } = reactData
       if (visiblePanel) {
@@ -1007,6 +991,13 @@ export default defineVxeComponent({
     }
 
     const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
+    const handleGlobalScrollEvent = () => {
       const { visiblePanel } = reactData
       if (visiblePanel) {
         updatePlacement()
@@ -1557,11 +1548,11 @@ export default defineVxeComponent({
     updateModelValue(true)
 
     nextTick(() => {
-      globalEvents.on($xeDateRangePicker, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeDateRangePicker, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeDateRangePicker, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeDateRangePicker, 'blur', handleGlobalBlurEvent)
       globalEvents.on($xeDateRangePicker, 'resize', handleGlobalResizeEvent)
+      globalEvents.on($xeDateRangePicker, 'scroll', handleGlobalScrollEvent)
     })
 
     onDeactivated(() => {
@@ -1573,10 +1564,11 @@ export default defineVxeComponent({
     })
 
     onUnmounted(() => {
-      globalEvents.off($xeDateRangePicker, 'mousewheel')
       globalEvents.off($xeDateRangePicker, 'mousedown')
+      globalEvents.off($xeDateRangePicker, 'keydown')
       globalEvents.off($xeDateRangePicker, 'blur')
       globalEvents.off($xeDateRangePicker, 'resize')
+      globalEvents.off($xeDateRangePicker, 'scroll')
       XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })

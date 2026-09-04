@@ -13,9 +13,9 @@
     <div>{{ val6 }}</div>
     <vxe-slider v-model="val6" range immediate></vxe-slider>
     <div>{{ startVal7 }}，{{ endVal7 }}</div>
-    <vxe-slider v-model:startValue="startVal7" v-model:endValue="endVal7" range immediate showTooltip></vxe-slider>
+    <vxe-slider v-model:startValue="startVal7" v-model:endValue="endVal7" status="error" range immediate showTooltip></vxe-slider>
     <div>{{ startVal8 }}，{{ endVal8 }}</div>
-    <vxe-slider v-model:startValue="startVal8" v-model:endValue="endVal8" range immediate showTooltip></vxe-slider>
+    <vxe-slider v-model:startValue="startVal8" v-model:endValue="endVal8" status="primary" range immediate showTooltip></vxe-slider>
   </div>
 </template>
 

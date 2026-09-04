@@ -1155,21 +1155,6 @@ export default defineVxeComponent({
       }
     }
 
-    const handleGlobalMousewheelEvent = (evnt: Event) => {
-      const { visiblePanel } = reactData
-      const isDisabled = computeIsDisabled.value
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelWrapperElem = refPanelWrapper.value
-          if (getEventTargetNode(evnt, panelWrapperElem).flag) {
-            updatePlacement()
-          } else {
-            hidePanel()
-          }
-        }
-      }
-    }
-
     const handleGlobalBlurEvent = () => {
       const { isActivated, visiblePanel } = reactData
       if (visiblePanel) {
@@ -1188,6 +1173,13 @@ export default defineVxeComponent({
     }
 
     const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
+    const handleGlobalScrollEvent = () => {
       const { visiblePanel } = reactData
       if (visiblePanel) {
         updatePlacement()
@@ -1683,11 +1675,11 @@ export default defineVxeComponent({
     updateModelValue()
 
     nextTick(() => {
-      globalEvents.on($xeDatePicker, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeDatePicker, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeDatePicker, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeDatePicker, 'blur', handleGlobalBlurEvent)
       globalEvents.on($xeDatePicker, 'resize', handleGlobalResizeEvent)
+      globalEvents.on($xeDatePicker, 'scroll', handleGlobalScrollEvent)
     })
 
     onMounted(() => {
@@ -1703,11 +1695,11 @@ export default defineVxeComponent({
     })
 
     onUnmounted(() => {
-      globalEvents.off($xeDatePicker, 'mousewheel')
       globalEvents.off($xeDatePicker, 'mousedown')
       globalEvents.off($xeDatePicker, 'keydown')
       globalEvents.off($xeDatePicker, 'blur')
       globalEvents.off($xeDatePicker, 'resize')
+      globalEvents.off($xeDatePicker, 'scroll')
       XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })

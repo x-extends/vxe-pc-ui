@@ -57,6 +57,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeSliderPropTypes.Disabled>,
       default: null
     },
+    status: {
+      type: String as PropType<VxeSliderPropTypes.Status>,
+      default: () => getConfig().slider.status
+    },
     immediate: {
       type: Boolean as PropType<VxeSliderPropTypes.Immediate>,
       default: () => getConfig().slider.immediate
@@ -420,7 +424,7 @@ export default defineVxeComponent({
     Object.assign($xeSlider, collapsePaneMethods, collapsePanePrivateMethods)
 
     const renderVN = () => {
-      const { vertical, range } = props
+      const { status, vertical, range } = props
       const vSize = computeSize.value
       const formReadonly = computeFormReadonly.value
       const isDisabled = computeIsDisabled.value
@@ -428,6 +432,7 @@ export default defineVxeComponent({
         ref: refElem,
         class: ['vxe-slider', {
           [`size--${vSize}`]: vSize,
+          [`theme--${status}`]: status,
           'is--vertical': vertical,
           'is--readonly': formReadonly,
           'is--disabled': isDisabled

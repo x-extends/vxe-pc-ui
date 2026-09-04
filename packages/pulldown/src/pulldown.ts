@@ -258,26 +258,6 @@ export default defineVxeComponent({
       dispatchEvent('click', { $pulldown: $xePulldown }, evnt)
     }
 
-    const handleGlobalMousewheelEvent = (evnt: Event) => {
-      const { trigger, disabled } = props
-      const { visiblePanel } = reactData
-      const panelElem = refPulldownPanel.value
-      const popupOpts = computePopupOpts.value
-      const currTrigger = trigger || popupOpts.trigger
-      if (!disabled) {
-        if (visiblePanel) {
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            updatePlacement()
-          } else {
-            if (currTrigger !== 'manual') {
-              hideOptionPanel()
-              dispatchEvent('hide-panel', {}, evnt)
-            }
-          }
-        }
-      }
-    }
-
     const handleGlobalMousedownEvent = (evnt: Event) => {
       const { trigger, disabled } = props
       const { visiblePanel } = reactData
@@ -319,6 +299,13 @@ export default defineVxeComponent({
       }
     }
 
+    const handleGlobalScrollEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
     const dispatchEvent = (type: ValueOf<VxePulldownEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $pulldown: $xePulldown }, params))
     }
@@ -332,32 +319,6 @@ export default defineVxeComponent({
     }
 
     Object.assign($xePulldown, pulldownMethods)
-
-    watch(() => props.modelValue, (value) => {
-      reactData.isActivated = !!value
-      if (value) {
-        showPanel()
-      } else {
-        hideOptionPanel()
-      }
-    })
-
-    nextTick(() => {
-      if (props.modelValue) {
-        showPanel()
-      }
-      globalEvents.on($xePulldown, 'mousewheel', handleGlobalMousewheelEvent)
-      globalEvents.on($xePulldown, 'mousedown', handleGlobalMousedownEvent)
-      globalEvents.on($xePulldown, 'blur', handleGlobalBlurEvent)
-      globalEvents.on($xePulldown, 'resize', handleGlobalResizeEvent)
-    })
-
-    onUnmounted(() => {
-      globalEvents.off($xePulldown, 'mousewheel')
-      globalEvents.off($xePulldown, 'mousedown')
-      globalEvents.off($xePulldown, 'blur')
-      globalEvents.off($xePulldown, 'resize')
-    })
 
     const renderDefaultPanel = (options?: VxePulldownPropTypes.Options) => {
       const optionSlot = slots.option
@@ -446,6 +407,32 @@ export default defineVxeComponent({
         ])
       ])
     }
+
+    watch(() => props.modelValue, (value) => {
+      reactData.isActivated = !!value
+      if (value) {
+        showPanel()
+      } else {
+        hideOptionPanel()
+      }
+    })
+
+    nextTick(() => {
+      if (props.modelValue) {
+        showPanel()
+      }
+      globalEvents.on($xePulldown, 'mousedown', handleGlobalMousedownEvent)
+      globalEvents.on($xePulldown, 'blur', handleGlobalBlurEvent)
+      globalEvents.on($xePulldown, 'resize', handleGlobalResizeEvent)
+      globalEvents.on($xePulldown, 'scroll', handleGlobalScrollEvent)
+    })
+
+    onUnmounted(() => {
+      globalEvents.off($xePulldown, 'mousedown')
+      globalEvents.off($xePulldown, 'blur')
+      globalEvents.off($xePulldown, 'resize')
+      globalEvents.off($xePulldown, 'scroll')
+    })
 
     $xePulldown.renderVN = renderVN
 

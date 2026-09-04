@@ -642,21 +642,6 @@ export default defineVxeComponent({
       }
     }
 
-    const handleGlobalMousewheelEvent = (evnt: MouseEvent) => {
-      const { visiblePanel } = reactData
-      const isDisabled = computeIsDisabled.value
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelElem = refOptionPanel.value
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            updatePlacement()
-          } else {
-            hideOptionPanel()
-          }
-        }
-      }
-    }
-
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
       const { visiblePanel } = reactData
       const isDisabled = computeIsDisabled.value
@@ -687,6 +672,13 @@ export default defineVxeComponent({
     }
 
     const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
+    const handleGlobalScrollEvent = () => {
       const { visiblePanel } = reactData
       if (visiblePanel) {
         updatePlacement()
@@ -1107,17 +1099,17 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
-      globalEvents.on($xeColorPicker, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeColorPicker, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeColorPicker, 'blur', handleGlobalBlurEvent)
       globalEvents.on($xeColorPicker, 'resize', handleGlobalResizeEvent)
+      globalEvents.on($xeColorPicker, 'scroll', handleGlobalScrollEvent)
     })
 
     onUnmounted(() => {
-      globalEvents.off($xeColorPicker, 'mousewheel')
       globalEvents.off($xeColorPicker, 'mousedown')
       globalEvents.off($xeColorPicker, 'blur')
       globalEvents.off($xeColorPicker, 'resize')
+      globalEvents.off($xeColorPicker, 'scroll')
     })
 
     updateType()

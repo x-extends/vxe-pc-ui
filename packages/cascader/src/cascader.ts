@@ -961,21 +961,6 @@ export default defineVxeComponent({
       hideOptionPanel($event)
     }
 
-    const handleGlobalMousewheelEvent = (evnt: MouseEvent) => {
-      const { visiblePanel } = reactData
-      const isDisabled = computeIsDisabled.value
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelElem = refOptionPanel.value
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            updatePlacement()
-          } else {
-            hideOptionPanel(evnt)
-          }
-        }
-      }
-    }
-
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
       const { visiblePanel } = reactData
       const isDisabled = computeIsDisabled.value
@@ -1006,6 +991,13 @@ export default defineVxeComponent({
     }
 
     const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
+    const handleGlobalScrollEvent = () => {
       const { visiblePanel } = reactData
       if (visiblePanel) {
         updatePlacement()
@@ -1876,17 +1868,17 @@ export default defineVxeComponent({
     loadData(props.options || [])
 
     onMounted(() => {
-      globalEvents.on($xeCascader, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeCascader, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeCascader, 'blur', handleGlobalBlurEvent)
       globalEvents.on($xeCascader, 'resize', handleGlobalResizeEvent)
+      globalEvents.on($xeCascader, 'scroll', handleGlobalScrollEvent)
     })
 
     onUnmounted(() => {
-      globalEvents.off($xeCascader, 'mousewheel')
       globalEvents.off($xeCascader, 'mousedown')
       globalEvents.off($xeCascader, 'blur')
       globalEvents.off($xeCascader, 'resize')
+      globalEvents.off($xeCascader, 'scroll')
       XEUtils.assign(reactData, createReactData())
       XEUtils.assign(internalData, createInternalData())
     })

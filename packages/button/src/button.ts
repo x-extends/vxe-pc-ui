@@ -10,6 +10,7 @@ import VxeTooltipComponent from '../../tooltip'
 
 import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, VxeButtonDefines, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 
 const { warnLog } = createComponentLog('button')
 
@@ -129,6 +130,7 @@ const VxeButtonComponent = defineVxeComponent({
 
     const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
     const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
+    const $xeGrid = inject<(VxeGridConstructor & VxeGridPrivateMethods) | null>('$xeGrid', null)
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
     const $xeTree = inject<(VxeTreeConstructor & VxeTreePrivateMethods) | null>('$xeTree', null)
     const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
@@ -185,7 +187,7 @@ const VxeButtonComponent = defineVxeComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeTree || $xeModal || $xeDrawer || $xeForm) {
+        if ($xeGrid || $xeTable || $xeTree || $xeModal || $xeDrawer || $xeForm) {
           return true
         }
       }
@@ -587,13 +589,6 @@ const VxeButtonComponent = defineVxeComponent({
       }
     }
 
-    const handleGlobalMousewheelEvent = (evnt: Event) => {
-      const panelElem = refBtnPanel.value
-      if (reactData.visiblePanel && !getEventTargetNode(evnt, panelElem).flag) {
-        hidePanel()
-      }
-    }
-
     const handleGlobalMousedownEvent = (evnt: MouseEvent) => {
       const btnDisabled = computeBtnDisabled.value
       const { visiblePanel } = reactData
@@ -608,6 +603,13 @@ const VxeButtonComponent = defineVxeComponent({
     }
 
     const handleGlobalResizeEvent = () => {
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        updatePlacement()
+      }
+    }
+
+    const handleGlobalScrollEvent = () => {
       const { visiblePanel } = reactData
       if (visiblePanel) {
         updatePlacement()
@@ -823,15 +825,15 @@ const VxeButtonComponent = defineVxeComponent({
         warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
       }
 
-      globalEvents.on($xeButton, 'mousewheel', handleGlobalMousewheelEvent)
       globalEvents.on($xeButton, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeButton, 'resize', handleGlobalResizeEvent)
+      globalEvents.on($xeButton, 'scroll', handleGlobalScrollEvent)
     })
 
     onUnmounted(() => {
-      globalEvents.off($xeButton, 'mousewheel')
       globalEvents.off($xeButton, 'mousedown')
       globalEvents.off($xeButton, 'resize')
+      globalEvents.off($xeButton, 'scroll')
     })
 
     return $xeButton
