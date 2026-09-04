@@ -35,4 +35,13 @@
   &.is--vertical {
     flex-direction: column;
   }
+  &.is--fill {
+    & > .vxe-space--item {
+      flex-grow: 1;
+    }
+  }
+}
+
+.vxe-space--separator{
+  flex-shrink: 0;
 }

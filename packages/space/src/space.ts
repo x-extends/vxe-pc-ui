@@ -41,6 +41,26 @@ export default defineVxeComponent({
     align: {
       type: String as PropType<VxeSpacePropTypes.Align>,
       default: () => getConfig().space.align
+    },
+    fill: {
+      type: Boolean as PropType<VxeSpacePropTypes.Fill>,
+      default: () => getConfig().space.fill
+    },
+    itemWidth: {
+      type: [String, Number] as PropType<VxeSpacePropTypes.ItemWidth>,
+      default: () => getConfig().space.itemWidth
+    },
+    itemMinWidth: {
+      type: [String, Number] as PropType<VxeSpacePropTypes.ItemMinWidth>,
+      default: () => getConfig().space.itemMinWidth
+    },
+    itemMaxWidth: {
+      type: [String, Number] as PropType<VxeSpacePropTypes.ItemMaxWidth>,
+      default: () => getConfig().space.itemMaxWidth
+    },
+    separatorWidth: {
+      type: [String, Number] as PropType<VxeSpacePropTypes.SeparatorWidth>,
+      default: () => getConfig().space.separatorWidth
     }
   },
   emits: [] as VxeSpaceEmits,
@@ -117,23 +137,39 @@ export default defineVxeComponent({
     Object.assign($xeSpace, spaceMethods, spacePrivateMethods)
 
     const renderItems = () => {
-      const { separator, itemClassName } = props
+      const { separator, itemClassName, itemWidth, itemMinWidth, itemMaxWidth, separatorWidth } = props
       const itemVNs: VNode[] = []
       const defaultSlot = slots.default
       const separatorSlot = slots.separator
+      const srStys: VxeComponentStyleType = {}
+      if (separatorWidth) {
+        srStys.width = toCssUnit(itemWidth)
+      }
+      const itemStys: VxeComponentStyleType = {}
+      if (itemWidth) {
+        itemStys.width = toCssUnit(itemWidth)
+      }
+      if (itemMinWidth) {
+        itemStys.minWidth = toCssUnit(itemMinWidth)
+      }
+      if (itemMaxWidth) {
+        itemStys.maxWidth = toCssUnit(itemMaxWidth)
+      }
       if (defaultSlot) {
         XEUtils.each(defaultSlot({}), (itemVN, index, items) => {
           itemVNs.push(
             h('div', {
               key: 'i' + index,
-              class: ['vxe-space--item', getPropClass(itemClassName, { index })]
+              class: ['vxe-space--item', getPropClass(itemClassName, { index })],
+              style: itemStys
             }, [itemVN])
           )
           if ((separator || separatorSlot) && index < items.length - 1) {
             itemVNs.push(
               h('div', {
                 key: 's' + index,
-                class: 'vxe-space--separator'
+                class: 'vxe-space--separator',
+                style: srStys
               }, separatorSlot ? separatorSlot({}) : ('' + separator))
             )
           }
@@ -143,7 +179,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { vertical, wrap, className } = props
+      const { vertical, wrap, className, fill, itemWidth, itemMinWidth, itemMaxWidth } = props
       const wrapperStyle = computeWrapperStyle.value
       const vSize = computeSize.value
       return h('div', {
@@ -151,7 +187,9 @@ export default defineVxeComponent({
         class: ['vxe-space', getPropClass(className, {}), {
           [`size--${vSize}`]: vSize,
           'is--wrap': wrap,
-          'is--vertical': vertical
+          'is--vertical': vertical,
+          'is--fill': fill,
+          'is--width': itemWidth || itemMinWidth || itemMaxWidth
         }],
         style: wrapperStyle
       }, renderItems())

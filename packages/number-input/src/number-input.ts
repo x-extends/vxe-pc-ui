@@ -691,7 +691,7 @@ export default defineVxeComponent({
           const inputElem = refInputTarget.value
           const content = getText(contentMethod
             ? contentMethod({
-              $mumberInput: $xeNumberInput,
+              $numberInput: $xeNumberInput,
               type,
               inputValue: inputElem.value,
               value: inputValue || '',
