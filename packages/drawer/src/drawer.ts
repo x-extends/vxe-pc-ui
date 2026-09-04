@@ -3,15 +3,14 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { globalMixins, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getDomNode, getPopupAppendElement, toCssUnit } from '../../ui/src/dom'
+import { getPopupAppendElement, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
+import { allActiveDrawers } from './store'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
 
 import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, VxeDrawerMethods, ValueOf, VxeDrawerConstructor, VxeButtonConstructor, DrawerEventTypes, VxeModalConstructor, VxeModalMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
-
-export const allActiveDrawers: VxeDrawerConstructor[] = []
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDrawer',
@@ -99,8 +98,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().drawer.showTitleOverflow
     },
     preload: Boolean as PropType<VxeDrawerPropTypes.Preload>,
-    width: [Number, String] as PropType<VxeDrawerPropTypes.Width>,
-    height: [Number, String] as PropType<VxeDrawerPropTypes.Height>,
+    width: {
+      type: [Number, String] as PropType<VxeDrawerPropTypes.Width>,
+      default: () => getConfig().drawer.width
+    },
+    height: {
+      type: [Number, String] as PropType<VxeDrawerPropTypes.Height>,
+      default: () => getConfig().drawer.height
+    },
+    minWidth: {
+      type: [Number, String] as PropType<VxeDrawerPropTypes.MinWidth>,
+      default: () => getConfig().drawer.minWidth
+    },
+    minHeight: {
+      type: [Number, String] as PropType<VxeDrawerPropTypes.MinHeight>,
+      default: () => getConfig().drawer.minHeight
+    },
     resize: {
       type: Boolean as PropType<VxeDrawerPropTypes.Resize>,
       default: () => getConfig().drawer.resize
@@ -121,6 +134,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     appendTo: {
       type: [String, Function] as PropType<VxeDrawerPropTypes.AppendTo>,
       default: () => getConfig().drawer.appendTo
+    },
+    isWithinAppendTo: {
+      type: Boolean as PropType<VxeDrawerPropTypes.IsWithinAppendTo>,
+      default: () => getConfig().drawer.isWithinAppendTo
     },
     padding: {
       type: Boolean as PropType<VxeDrawerPropTypes.Padding>,
@@ -167,7 +184,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     return {
       xID: XEUtils.uniqueId(),
-      reactData
+      reactData,
+      reFlag: 0
     }
   },
   computed: {
@@ -266,11 +284,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDrawer = this
       const props = $xeDrawer
 
-      const { width, height } = props
+      const { position, width, height } = props
       const boxElem = $xeDrawer.getBox()
       if (boxElem) {
-        boxElem.style.width = toCssUnit(width)
-        boxElem.style.height = toCssUnit(height)
+        if (position === 'top' || position === 'bottom') {
+          boxElem.style.height = toCssUnit(height)
+        } else {
+          boxElem.style.width = toCssUnit(width)
+        }
       }
       return $xeDrawer.$nextTick()
     },
@@ -305,6 +326,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (visible) {
         Promise.resolve(beforeHideMethod ? beforeHideMethod(params) : null).then((rest) => {
           if (!XEUtils.isError(rest)) {
+            const el = $xeDrawer.$refs.refElem as HTMLDivElement
+            if (el) {
+              el.setAttribute('data-effect', 'y')
+            }
             reactData.contentVisible = false
             $xeDrawer.removeActiveQueue()
             $xeDrawer.dispatchEvent('before-hide', params, null)
@@ -313,6 +338,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
               $xeDrawer.emitModel(false)
               $xeDrawer.dispatchEvent('hide', params, null)
             }, 200)
+            setTimeout(() => {
+              const el = $xeDrawer.$refs.refElem as HTMLDivElement
+              if (el) {
+                el.removeAttribute('data-effect')
+              }
+            }, 350)
           }
         }).catch(e => e)
       }
@@ -367,6 +398,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.contentVisible = false
         $xeDrawer.updateZindex()
         allActiveDrawers.push($xeDrawer)
+        $xeDrawer.$nextTick(() => {
+          const el = $xeDrawer.$refs.refElem as HTMLDivElement
+          if (el) {
+            el.setAttribute('data-effect', 'y')
+          }
+        })
         setTimeout(() => {
           $xeDrawer.recalculate()
           reactData.contentVisible = true
@@ -385,6 +422,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeDrawer.dispatchEvent('show', params, null)
           })
         }, 10)
+        setTimeout(() => {
+          const el = $xeDrawer.$refs.refElem as HTMLDivElement
+          if (el) {
+            el.removeAttribute('data-effect')
+          }
+        }, 350)
       }
       return $xeDrawer.$nextTick()
     },
@@ -426,19 +469,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     dragEvent (evnt: MouseEvent) {
-      const $xeModal = this
-      const reactData = $xeModal.reactData
+      const $xeDrawer = this
+      const props = $xeDrawer
+      const reactData = $xeDrawer.reactData
 
       evnt.preventDefault()
-      const { visibleHeight, visibleWidth } = getDomNode()
+      const { isWithinAppendTo } = props
+      const el = $xeDrawer.$refs.refElem as HTMLDivElement
+      const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo ? el : document.body)
+      if (!parentWrapperEl) {
+        return
+      }
+      const visibleWidth = parentWrapperEl.clientWidth
+      const visibleHeight = parentWrapperEl.clientHeight
       const marginSize = 0
       const targetElem = evnt.target as HTMLSpanElement
       const type = targetElem.getAttribute('type')
-      const minWidth = 0
-      const minHeight = 0
+      const minWidth = XEUtils.toNumber(props.minWidth)
+      const minHeight = XEUtils.toNumber(props.minHeight)
       const maxWidth = visibleWidth
       const maxHeight = visibleHeight
-      const boxElem = $xeModal.getBox()
+      const boxElem = $xeDrawer.getBox()
       const clientWidth = boxElem.clientWidth
       const clientHeight = boxElem.clientHeight
       const disX = evnt.clientX
@@ -491,7 +542,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             break
         }
         boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
-        $xeModal.dispatchEvent('resize', params, evnt)
+        $xeDrawer.dispatchEvent('resize', params, evnt)
         reactData.resizeFlag++
       }
       document.onmouseup = () => {
@@ -676,14 +727,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeDrawer.$scopedSlots
       const reactData = $xeDrawer.reactData
 
-      const { border, showTitleBackground, slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, destroyOnClose } = props
+      const { border, showTitleBackground, slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, destroyOnClose, isWithinAppendTo } = props
       const { initialized, contentVisible, visible } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = $xeDrawer.computeSize
       const dragType = $xeDrawer.computeDragType
       return h('div', {
         ref: 'refElem',
-        class: ['vxe-drawer--wrapper', `pos--${position}`, className || '', {
+        class: ['vxe-drawer--wrapper', `pos--${position}`, isWithinAppendTo ? 'ctx--within' : 'ctx--free', className || '', {
           [`size--${vSize}`]: vSize,
           'is--padding': padding,
           'is--border': border,
@@ -748,9 +799,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
     width () {
       const $xeDrawer = this
 
-      $xeDrawer.recalculate()
+      $xeDrawer.reFlag++
     },
     height () {
+      const $xeDrawer = this
+
+      $xeDrawer.reFlag++
+    },
+    position () {
+      const $xeDrawer = this
+
+      $xeDrawer.reFlag++
+    },
+    reFlag () {
       const $xeDrawer = this
 
       $xeDrawer.recalculate()

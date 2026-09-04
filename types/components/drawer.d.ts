@@ -54,6 +54,8 @@ export namespace VxeDrawerPropTypes {
   export type Preload = boolean
   export type Width = number | string
   export type Height = number | string
+  export type MinWidth = number | string
+  export type MinHeight = number | string
   export type Resize = boolean
   export type ShowTitleBackground = boolean
   export type ZIndex = number
@@ -61,6 +63,7 @@ export namespace VxeDrawerPropTypes {
   export type ShowTitleOverflow = boolean
   export type Transfer = boolean
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
+  export type IsWithinAppendTo = boolean
   export type Padding = boolean
   export type BeforeHideMethod = (params: VxeDrawerDefines.DrawerVisibleParams) => Promise<any>
   export type Slots = VxeDrawerSlots
@@ -95,6 +98,8 @@ export interface VxeDrawerProps {
   preload?: VxeDrawerPropTypes.Preload
   width?: VxeDrawerPropTypes.Width
   height?: VxeDrawerPropTypes.Height
+  minWidth?: VxeDrawerPropTypes.MinWidth
+  minHeight?: VxeDrawerPropTypes.MinHeight
   resize?: VxeDrawerPropTypes.Resize
   zIndex?: VxeDrawerPropTypes.ZIndex
   destroyOnClose?: VxeDrawerPropTypes.DestroyOnClose
@@ -107,6 +112,10 @@ export interface VxeDrawerProps {
    * 挂载到指定元素下
    */
   appendTo?: VxeDrawerPropTypes.AppendTo
+  /**
+   * 是否在指定元素 append-to 的范围内显示
+   */
+  isWithinAppendTo?: VxeDrawerPropTypes.IsWithinAppendTo
   padding?: VxeDrawerPropTypes.Padding
   beforeHideMethod?: VxeDrawerPropTypes.BeforeHideMethod
   slots?: VxeDrawerPropTypes.Slots

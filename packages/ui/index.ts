@@ -146,6 +146,8 @@ setConfig({
   drawer: {
     // size: null,
     // useHtml: false,
+    minWidth: 40,
+    minHeight: 40,
     position: 'right',
     showHeader: true,
     // showTitleBackground: false,

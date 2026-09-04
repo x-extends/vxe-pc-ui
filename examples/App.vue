@@ -14,6 +14,9 @@
       <vxe-layout-container vertical>
         <vxe-layout-body padding>
           <RouterView />
+          <div style="height:100px"></div>
+
+          <div class="my-within-demo2-wrapper" style="height: 600px; position: relative; overflow: auto; background-color: rgb(232, 234, 236);"></div>
         </vxe-layout-body>
         <vxe-layout-footer fixed>11111</vxe-layout-footer>
       </vxe-layout-container>

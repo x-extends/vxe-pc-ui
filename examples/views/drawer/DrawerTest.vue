@@ -37,6 +37,17 @@
         </template>
       </vxe-drawer>
     </p>
+
+    <div>
+      <vxe-button content="内部打开" @click="demo1.value5 = true"></vxe-button>
+      <vxe-drawer v-model="demo1.value5" resize transfer is-within-append-to append-to=".my-within-demo2-wrapper">
+        <template #default>
+          <div>默认尺寸</div>
+          <div>xxxxxxxxx</div>
+          <div>xxxxxxxxxx</div>
+        </template>
+      </vxe-drawer>
+    </div>
   </div>
 </template>
 
@@ -50,7 +61,8 @@ export default Vue.extend({
         value1: false,
         value2: false,
         value3: false,
-        value4: false
+        value4: false,
+        value5: false
       }
     }
   }
