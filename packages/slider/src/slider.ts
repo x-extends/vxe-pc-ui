@@ -1,13 +1,16 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI, getConfig, createEvent, renderEmptyElement } from '../../ui'
+import { getText } from '../../ui/src/utils'
 
 import type { SliderReactData, SliderInternalData, VxeSliderEmits, ValueOf, VxeSliderPropTypes, VxeFormDefines, VxeComponentSizeType, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
 function createInternalData (): SliderInternalData {
   return {
     // _isUp: false,
+    isDragStatus: false,
+    isBtnActive: false,
     currValue: 0,
     startValue: 0,
     endValue: 0
@@ -61,7 +64,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     immediate: {
       type: Boolean as PropType<VxeSliderPropTypes.Immediate>,
       default: () => getConfig().slider.immediate
-    }
+    },
+    showTooltip: {
+      type: Boolean as PropType<VxeSliderPropTypes.ShowTooltip>,
+      default: () => getConfig().slider.showTooltip
+    },
+    tooltipConfig: Object as PropType<VxeSliderPropTypes.TooltipConfig>
   },
   inject: {
     $xeForm: {
@@ -135,6 +143,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { range, startValue, endValue } = props
       return range ? `${startValue || ''}${endValue || ''}` : ''
+    },
+    computeTooltipOpts () {
+      const $xeSlider = this
+      const props = $xeSlider
+
+      return Object.assign({}, getConfig().slider.tooltipConfig, props.tooltipConfig)
     }
   },
   methods: {
@@ -312,6 +326,47 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const raw = minNum + ratio * (maxNum - minNum)
       return Math.floor(raw)
     },
+    handleShowTip (btnElem: HTMLDivElement) {
+      const $xeSlider = this
+      const props = $xeSlider
+      const internalData = $xeSlider.internalData
+
+      const { showTooltip } = props
+      if (showTooltip) {
+        if (VxeUI.tooltip) {
+          const { currValue } = internalData
+          const tooltipOpts = $xeSlider.computeTooltipOpts
+          const { contentMethod } = tooltipOpts
+          const content = getText(contentMethod
+            ? contentMethod({
+              $slider: $xeSlider,
+              value: currValue
+            })
+            : '' + currValue)
+          if (content) {
+            VxeUI.tooltip.open(btnElem, Object.assign({}, {
+              ...tooltipOpts,
+              content
+            }, {
+              contentMethod: undefined
+            }))
+          } else {
+            VxeUI.tooltip.close()
+          }
+        }
+      }
+    },
+    handleHideTip () {
+      const $xeSlider = this
+      const props = $xeSlider
+
+      const { showTooltip } = props
+      if (showTooltip) {
+        if (VxeUI.tooltip) {
+          VxeUI.tooltip.close()
+        }
+      }
+    },
     handleBtnMousedownEvent (evnt: MouseEvent) {
       const $xeSlider = this
       const props = $xeSlider
@@ -352,10 +407,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeSlider.changeEvent(evnt)
           }
           $xeSlider.updateTrackStyle()
+          $xeSlider.handleShowTip(btnElem)
         }
         document.onmouseup = (evnt: MouseEvent) => {
           document.onmousemove = null
           document.onmouseup = null
+          internalData.isDragStatus = false
           $xeSlider.dispatchEvent('track-dragend', {
             currentValue: internalData.currValue,
             startValue: internalData.startValue,
@@ -363,12 +420,37 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }, evnt)
           $xeSlider.changeEvent(evnt)
           $xeSlider.updateTrackStyle()
+          if (!internalData.isBtnActive) {
+            $xeSlider.handleHideTip()
+          }
         }
         $xeSlider.dispatchEvent('track-dragstart', {
           currentValue: internalData.currValue,
           startValue: internalData.startValue,
           endValue: internalData.endValue
         }, evnt)
+        internalData.isDragStatus = false
+      }
+    },
+    handleBtnMouseenterEvent (evnt: MouseEvent) {
+      const $xeSlider = this
+      const internalData = $xeSlider.internalData
+
+      const { startValue, endValue } = internalData
+      const btnElem = evnt.currentTarget as HTMLDivElement
+      const btnType = btnElem.getAttribute('data-type')
+      internalData.currValue = btnType === '1' ? startValue : endValue
+      internalData.isBtnActive = true
+      $xeSlider.handleShowTip(btnElem)
+    },
+    handleBtnMouseleaveEvent () {
+      const $xeSlider = this
+      const internalData = $xeSlider.internalData
+
+      const { isDragStatus } = internalData
+      internalData.isBtnActive = false
+      if (!isDragStatus) {
+        $xeSlider.handleHideTip()
       }
     },
 
@@ -412,6 +494,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 'data-type': '1'
               },
               on: {
+                mouseenter: $xeSlider.handleBtnMouseenterEvent,
+                mouseleave: $xeSlider.handleBtnMouseleaveEvent,
                 mousedown: $xeSlider.handleBtnMousedownEvent
               }
             }),
@@ -424,6 +508,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 'data-type': '2'
               },
               on: {
+                mouseenter: $xeSlider.handleBtnMouseenterEvent,
+                mouseleave: $xeSlider.handleBtnMouseleaveEvent,
                 mousedown: $xeSlider.handleBtnMousedownEvent
               }
             })

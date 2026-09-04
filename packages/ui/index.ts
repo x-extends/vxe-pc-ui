@@ -390,7 +390,10 @@ setConfig({
   splitterPanel: {},
   slider: {
     max: 100,
-    min: 0
+    min: 0,
+    tooltipConfig: {
+      enterDelay: 0
+    }
   },
   space: {},
   steps: {},

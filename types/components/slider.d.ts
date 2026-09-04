@@ -1,4 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentStatusType, VxeComponentEventParams } from '@vxe-ui/core'
+import { VxeTooltipProps } from './tooltip'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -30,6 +31,13 @@ export namespace VxeSliderPropTypes {
   export type Readonly = boolean
   export type Disabled = boolean
   export type Immediate = boolean
+  export type ShowTooltip = boolean
+  export interface TooltipConfig extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
+    contentMethod?: (params: {
+      $slider: VxeSliderConstructor
+      value: number
+    }) => string | number | null | undefined
+  }
 }
 
 export interface VxeSliderProps {
@@ -46,6 +54,8 @@ export interface VxeSliderProps {
   readonly?: VxeSliderPropTypes.Readonly
   disabled?: VxeSliderPropTypes.Disabled
   immediate?: VxeSliderPropTypes.Immediate
+  showTooltip?: VxeSliderPropTypes.ShowTooltip
+  tooltipConfig?: VxeSliderPropTypes.TooltipConfig
 }
 
 export interface SliderPrivateComputed {
@@ -56,6 +66,8 @@ export interface SliderReactData {
 }
 export interface SliderInternalData {
   _isUp?: boolean
+  isDragStatus: boolean
+  isBtnActive: boolean
   currValue: number
   startValue: number
   endValue: number

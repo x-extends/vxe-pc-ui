@@ -24,6 +24,11 @@ export namespace VxeSpacePropTypes {
   export type ItemClassName = string
   export type Separator = string
   export type Align = 'stretch' | 'start' | 'end' | 'center' | 'baseline' | '' | null
+  export type Fill = boolean
+  export type ItemWidth = string | number
+  export type ItemMinWidth = string | number
+  export type ItemMaxWidth = string | number
+  export type SeparatorWidth = string | number
 }
 
 export interface VxeSpaceProps {
@@ -47,6 +52,11 @@ export interface VxeSpaceProps {
    */
   separator?: VxeSpacePropTypes.Separator
   align?: VxeSpacePropTypes.Align
+  fill?: VxeSpacePropTypes.Fill
+  itemWidth?: VxeSpacePropTypes.ItemWidth
+  itemMinWidth?: VxeSpacePropTypes.ItemMinWidth
+  itemMaxWidth?: VxeSpacePropTypes.ItemMaxWidth
+  separatorWidth?: VxeSpacePropTypes.SeparatorWidth
 }
 
 export interface SpacePrivateComputed {

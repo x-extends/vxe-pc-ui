@@ -94,7 +94,7 @@ export namespace VxeNumberInputPropTypes {
   export type ShowTooltip = boolean
   export interface TooltipConfig extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
     contentMethod?: (params: {
-      $mumberInput: VxeNumberInputConstructor
+      $numberInput: VxeNumberInputConstructor
       type: VxeNumberInputPropTypes.Type
       value: VxeNumberInputPropTypes.ModelValue
       label: string

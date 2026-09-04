@@ -810,7 +810,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const inputElem = $xeNumberInput.$refs.refInputTarget as HTMLInputElement
           const content = getText(contentMethod
             ? contentMethod({
-              $mumberInput: $xeNumberInput,
+              $numberInput: $xeNumberInput,
               type,
               inputValue: inputElem.value,
               value: inputValue || '',

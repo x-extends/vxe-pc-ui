@@ -223,7 +223,7 @@ export function updatePanelPlacement (targetElem: HTMLElement | null | undefined
       minWidth = targetElem.offsetWidth
 
       if (teleportTo) {
-        left = defaultLeft || (targetLeft)
+        left = defaultLeft || (targetLeft - (panelWidth - targetWidth) / 2)
         top = defaultTop || (targetTop + targetHeight)
         if (placement === 'top') {
           panelPlacement = 'top'
