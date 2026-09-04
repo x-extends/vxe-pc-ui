@@ -232,7 +232,8 @@ export interface ModalReactData {
 }
 
 export interface ModalInternalData {
-  msgTimeout: undefined | number
+  msgTimeout?: number
+  isMoveStatus: boolean
 }
 
 export interface ModalMethods {

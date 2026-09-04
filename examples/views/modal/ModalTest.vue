@@ -77,7 +77,7 @@
     <div>
       <vxe-button content="自定义模板-范围内" @click="demo1.value5 = true"></vxe-button>
       <div style="width: 1000px;height: 500px;position: relative;">
-        <vxe-modal v-model="demo1.value5" width="400" height="300" :lock-view="false" is-within-append-to show-zoom>
+        <vxe-modal v-model="demo1.value5" width="400" height="300" :lock-view="false" resize is-within-append-to show-zoom>
           <template #title>
             <span style="color:red">自定义标题</span>
           </template>

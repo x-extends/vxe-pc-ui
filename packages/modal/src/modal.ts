@@ -4,17 +4,40 @@ import XEUtils from 'xe-utils'
 import { getEventTargetNode, getPopupContainer, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
-import VxeButtonComponent from '../../button'
-import VxeLoadingComponent from '../../loading'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
+import { allActiveModals } from './store'
+import VxeButtonComponent from '../../button'
+import VxeLoadingComponent from '../../loading'
 
 import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods, ValueOf, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { warnLog, errLog } = createComponentLog('modal')
 
-export const allActiveModals: VxeModalConstructor[] = []
+function createInternalData (): ModalInternalData {
+  return {
+    // msgTimeout: undefined,
+    isMoveStatus: false
+  }
+}
+
+function createReactData (): ModalReactData {
+  return {
+    initialized: false,
+    visible: false,
+    contentVisible: false,
+    modalTop: 0,
+    modalZindex: 0,
+    prevZoomStatus: '',
+    zoomStatus: '',
+    revertLocat: null,
+    prevLocat: null,
+    firstOpen: true,
+    resizeFlag: 1
+  }
+}
+
 const msgQueue: VxeModalConstructor[] = []
 const notifyQueue: VxeModalConstructor[] = []
 
@@ -236,23 +259,8 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<ModalReactData>({
-      initialized: false,
-      visible: false,
-      contentVisible: false,
-      modalTop: 0,
-      modalZindex: 0,
-      prevZoomStatus: '',
-      zoomStatus: '',
-      revertLocat: null,
-      prevLocat: null,
-      firstOpen: true,
-      resizeFlag: 1
-    })
-
-    const internalData: ModalInternalData = {
-      msgTimeout: undefined
-    }
+    const reactData = reactive(createReactData())
+    const internalData = createInternalData()
 
     const refElem = ref<HTMLDivElement>()
     const refModalBox = ref() as Ref<HTMLDivElement>
@@ -425,6 +433,10 @@ export default defineVxeComponent({
       if (visible) {
         Promise.resolve(beforeHideFn ? beforeHideFn(params) : null).then((rest) => {
           if (!XEUtils.isError(rest)) {
+            const el = refElem.value
+            if (el) {
+              el.setAttribute('data-effect', 'y')
+            }
             if (isMsg) {
               removeMsgQueue()
             }
@@ -440,6 +452,12 @@ export default defineVxeComponent({
               dispatchEvent('hide', params, null)
             }, 200)
             removeBodyLockScroll()
+            setTimeout(() => {
+              const el = refElem.value
+              if (el) {
+                el.removeAttribute('data-effect')
+              }
+            }, 350)
           }
         }).catch(e => e)
       }
@@ -752,6 +770,7 @@ export default defineVxeComponent({
       }
       if (!visible) {
         addBodyLockScroll()
+        internalData.isMoveStatus = false
         reactData.visible = true
         reactData.contentVisible = false
         updateZindex()
@@ -782,6 +801,10 @@ export default defineVxeComponent({
         } else {
           nextTick(() => {
             const { firstOpen } = reactData
+            const el = refElem.value
+            if (el) {
+              el.setAttribute('data-effect', 'y')
+            }
             if (firstOpen) {
               reactData.firstOpen = false
               if (hasPosStorage()) {
@@ -805,6 +828,12 @@ export default defineVxeComponent({
               }
             }
           })
+          setTimeout(() => {
+            const el = refElem.value
+            if (el) {
+              el.removeAttribute('data-effect')
+            }
+          }, 350)
         }
       }
       return nextTick()
@@ -854,6 +883,12 @@ export default defineVxeComponent({
             }
           }, 10)
         }
+      }
+    }
+
+    const handleGlobalResizeEvent = () => {
+      if (!internalData.isMoveStatus) {
+        updatePosition()
       }
     }
 
@@ -968,7 +1003,7 @@ export default defineVxeComponent({
     }
 
     const mousedownEvent = (evnt: MouseEvent) => {
-      const { resize, storage, isWithinAppendTo } = props
+      const { storage, isWithinAppendTo } = props
       const { zoomStatus } = reactData
       const marginSize = XEUtils.toNumber(props.marginSize)
       const boxElem = getBox()
@@ -982,8 +1017,8 @@ export default defineVxeComponent({
         if (!parentWrapperEl) {
           return
         }
-        const visibleWidth = parentWrapperEl.clientWidth - (resize && isWithinAppendTo ? 8 : 0)
-        const visibleHeight = parentWrapperEl.clientHeight - (resize && isWithinAppendTo ? 8 : 0)
+        const visibleWidth = parentWrapperEl.clientWidth
+        const visibleHeight = parentWrapperEl.clientHeight
         const disX = evnt.clientX - boxElem.offsetLeft
         const disY = evnt.clientY - boxElem.offsetTop
         document.onmousemove = evnt => {
@@ -1012,6 +1047,7 @@ export default defineVxeComponent({
           boxElem.style.top = `${top}px`
           boxElem.className = boxElem.className.replace(/\s?is--drag/, '') + ' is--drag'
           dispatchEvent('move', { type: 'move' }, evnt)
+          internalData.isMoveStatus = true
           reactData.resizeFlag++
         }
         document.onmouseup = () => {
@@ -1032,14 +1068,14 @@ export default defineVxeComponent({
 
     const dragEvent = (evnt: MouseEvent) => {
       evnt.preventDefault()
-      const { resize, storage, isWithinAppendTo } = props
+      const { storage, isWithinAppendTo } = props
       const el = refElem.value
       const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo ? el : document.body)
       if (!parentWrapperEl) {
         return
       }
-      const visibleWidth = parentWrapperEl.clientWidth - (resize && isWithinAppendTo ? 8 : 0)
-      const visibleHeight = parentWrapperEl.clientHeight - (resize && isWithinAppendTo ? 8 : 0)
+      const visibleWidth = parentWrapperEl.clientWidth
+      const visibleHeight = parentWrapperEl.clientHeight
       const marginSize = XEUtils.toNumber(props.marginSize)
       const targetElem = evnt.target as HTMLSpanElement
       const type = targetElem.getAttribute('data-type')
@@ -1444,7 +1480,7 @@ export default defineVxeComponent({
       }, [
         h('div', {
           ref: refElem,
-          class: ['vxe-modal--wrapper', `type--${type}`, `zoom--${zoomStatus || 'revert'}`, className || '', position ? `pos--${position}` : '', isWithinAppendTo ? 'ctx--within' : 'ctx--free', {
+          class: ['vxe-modal--wrapper', `type--${type}`, `zoom--${zoomStatus || 'revert'}`, position ? `pos--${position}` : '', isWithinAppendTo ? 'ctx--within' : 'ctx--free', className || '', {
             [`size--${vSize}`]: vSize,
             [`status--${status}`]: status,
             'is--padding': padding,
@@ -1546,13 +1582,17 @@ export default defineVxeComponent({
       if (props.escClosable) {
         globalEvents.on($xeModal, 'keydown', handleGlobalKeydownEvent)
       }
+      globalEvents.on($xeModal, 'resize', handleGlobalResizeEvent)
     })
 
     onUnmounted(() => {
       globalEvents.off($xeModal, 'keydown')
+      globalEvents.off($xeModal, 'resize')
       removeMsgQueue()
       removeActiveQueue()
       removeBodyLockScroll()
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
     })
 
     provide('$xeModal', $xeModal)

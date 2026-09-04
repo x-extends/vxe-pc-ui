@@ -1,14 +1,32 @@
 @use '../helpers/baseMixin.scss';
 
+// 局部变量
+.vxe-drawer--wrapper {
+  --vxe-ui-drawer-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--xlarge {
+    --vxe-ui-drawer-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-drawer-current-font-size: var(--vxe-ui-font-size-large);
+  }
+  &.size--medium {
+    --vxe-ui-drawer-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-drawer-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-drawer-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 .vxe-drawer--wrapper {
   display: none;
-  position: fixed;
   top: 0;
   left: 0;
   line-height: 1.5;
-  width: calc(100% + 18px);
-  height: calc(100% + 18px);
   color: var(--vxe-ui-font-color);
+  font-size: var(--vxe-ui-drawer-current-font-size);
   font-family: var(--vxe-ui-font-family);
   outline: 0;
   &.is--active {
@@ -57,7 +75,6 @@
   &.is--mask {
     &:before {
       content: "";
-      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
@@ -123,10 +140,39 @@
     }
   }
 }
+.vxe-drawer--wrapper {
+  &.ctx--free {
+    position: fixed;
+    width: calc(100% + 18px);
+    height: calc(100% + 18px);
+    &.lock--view,
+    &.is--mask {
+      &:before {
+        position: fixed;
+      }
+    }
+    .vxe-drawer--box {
+      position: fixed;
+    }
+  }
+  &.ctx--within {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    &.lock--view,
+    &.is--mask {
+      &:before {
+        position: absolute;
+      }
+    }
+    .vxe-drawer--box {
+      position: absolute;
+    }
+  }
+}
 .vxe-drawer--box {
   display: flex;
   flex-direction: row;
-  position: fixed;
   background-color: var(--vxe-ui-layout-background-color);
   text-align: left;
   pointer-events: auto;
@@ -262,7 +308,7 @@
 
 .vxe-drawer--resize {
   $SpaceSize: 8px;
-  $SpaceWidth: 5px;
+  $SpaceWidth: 4px;
   .wl-resize,
   .wr-resize,
   .st-resize,
@@ -299,14 +345,7 @@
 }
 
 .vxe-drawer--wrapper {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
+  &[data-effect] {
+    overflow: hidden;
   }
 }

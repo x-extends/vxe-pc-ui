@@ -3,15 +3,14 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getDomNode, getPopupContainer, toCssUnit } from '../../ui/src/dom'
+import { getPopupContainer, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
+import { allActiveDrawers } from './store'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
 
 import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, DrawerPrivateRef, DrawerMethods, DrawerPrivateMethods, VxeDrawerPrivateComputed, VxeDrawerConstructor, VxeDrawerMethods, VxeButtonInstance, DrawerEventTypes, ValueOf, VxeModalConstructor, VxeModalMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
-
-export const allActiveDrawers: VxeDrawerConstructor[] = []
 
 export default defineVxeComponent({
   name: 'VxeDrawer',
@@ -95,8 +94,22 @@ export default defineVxeComponent({
       default: () => getConfig().drawer.showTitleOverflow
     },
     preload: Boolean as PropType<VxeDrawerPropTypes.Preload>,
-    width: [Number, String] as PropType<VxeDrawerPropTypes.Width>,
-    height: [Number, String] as PropType<VxeDrawerPropTypes.Height>,
+    width: {
+      type: [Number, String] as PropType<VxeDrawerPropTypes.Width>,
+      default: () => getConfig().drawer.width
+    },
+    height: {
+      type: [Number, String] as PropType<VxeDrawerPropTypes.Height>,
+      default: () => getConfig().drawer.height
+    },
+    minWidth: {
+      type: [Number, String] as PropType<VxeDrawerPropTypes.MinWidth>,
+      default: () => getConfig().drawer.minWidth
+    },
+    minHeight: {
+      type: [Number, String] as PropType<VxeDrawerPropTypes.MinHeight>,
+      default: () => getConfig().drawer.minHeight
+    },
     resize: {
       type: Boolean as PropType<VxeDrawerPropTypes.Resize>,
       default: () => getConfig().drawer.resize
@@ -117,6 +130,10 @@ export default defineVxeComponent({
     appendTo: {
       type: [String, Function] as PropType<VxeDrawerPropTypes.AppendTo>,
       default: () => getConfig().drawer.appendTo
+    },
+    isWithinAppendTo: {
+      type: Boolean as PropType<VxeDrawerPropTypes.IsWithinAppendTo>,
+      default: () => getConfig().drawer.isWithinAppendTo
     },
     padding: {
       type: Boolean as PropType<VxeDrawerPropTypes.Padding>,
@@ -216,11 +233,12 @@ export default defineVxeComponent({
     }
 
     const recalculate = () => {
-      const { width, height } = props
+      const { position, width, height } = props
       const boxElem = getBox()
       if (boxElem) {
-        boxElem.style.width = toCssUnit(width)
-        boxElem.style.height = toCssUnit(height)
+        const isTb = position === 'top' || position === 'bottom'
+        boxElem.style.height = isTb ? toCssUnit(height) : ''
+        boxElem.style.width = isTb ? '' : toCssUnit(width)
       }
       return nextTick()
     }
@@ -248,6 +266,10 @@ export default defineVxeComponent({
       if (visible) {
         Promise.resolve(beforeHideMethod ? beforeHideMethod(params) : null).then((rest) => {
           if (!XEUtils.isError(rest)) {
+            const el = refElem.value
+            if (el) {
+              el.setAttribute('data-effect', 'y')
+            }
             reactData.contentVisible = false
             removeActiveQueue()
             dispatchEvent('before-hide', params, null)
@@ -256,6 +278,12 @@ export default defineVxeComponent({
               emit('update:modelValue', false)
               dispatchEvent('hide', params, null)
             }, 200)
+            setTimeout(() => {
+              const el = refElem.value
+              if (el) {
+                el.removeAttribute('data-effect')
+              }
+            }, 350)
           }
         }).catch(e => e)
       }
@@ -297,6 +325,12 @@ export default defineVxeComponent({
         reactData.contentVisible = false
         updateZindex()
         allActiveDrawers.push($xeDrawer)
+        nextTick(() => {
+          const el = refElem.value
+          if (el) {
+            el.setAttribute('data-effect', 'y')
+          }
+        })
         setTimeout(() => {
           recalculate()
           reactData.contentVisible = true
@@ -315,6 +349,12 @@ export default defineVxeComponent({
             dispatchEvent('show', params, null)
           })
         }, 10)
+        setTimeout(() => {
+          const el = refElem.value
+          if (el) {
+            el.removeAttribute('data-effect')
+          }
+        }, 350)
       }
       return nextTick()
     }
@@ -366,12 +406,19 @@ export default defineVxeComponent({
 
     const dragEvent = (evnt: MouseEvent) => {
       evnt.preventDefault()
-      const { visibleHeight, visibleWidth } = getDomNode()
+      const { resize, isWithinAppendTo } = props
+      const el = refElem.value
+      const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo ? el : document.body)
+      if (!parentWrapperEl) {
+        return
+      }
+      const visibleWidth = parentWrapperEl.clientWidth - (resize && isWithinAppendTo ? 8 : 0)
+      const visibleHeight = parentWrapperEl.clientHeight - (resize && isWithinAppendTo ? 8 : 0)
       const marginSize = 0
       const targetElem = evnt.target as HTMLSpanElement
       const type = targetElem.getAttribute('type')
-      const minWidth = 0
-      const minHeight = 0
+      const minWidth = XEUtils.toNumber(props.minWidth)
+      const minHeight = XEUtils.toNumber(props.minHeight)
       const maxWidth = visibleWidth
       const maxHeight = visibleHeight
       const boxElem = getBox()
@@ -578,7 +625,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { border, showTitleBackground, slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, appendTo, destroyOnClose } = props
+      const { border, showTitleBackground, slots: propSlots = {}, className, position, loading, lockScroll, padding, lockView, mask, resize, appendTo, destroyOnClose, isWithinAppendTo } = props
       const { initialized, contentVisible, visible } = reactData
       const asideSlot = slots.aside || propSlots.aside
       const vSize = computeSize.value
@@ -590,7 +637,7 @@ export default defineVxeComponent({
       }, [
         h('div', {
           ref: refElem,
-          class: ['vxe-drawer--wrapper', `pos--${position}`, className || '', {
+          class: ['vxe-drawer--wrapper', `pos--${position}`, isWithinAppendTo ? 'ctx--within' : 'ctx--free', className || '', {
             [`size--${vSize}`]: vSize,
             'is--padding': padding,
             'is--border': border,
@@ -643,8 +690,17 @@ export default defineVxeComponent({
       ])
     }
 
-    watch(() => props.width, recalculate)
-    watch(() => props.height, recalculate)
+    const reFlag = ref(0)
+    watch(() => props.width, () => {
+      reFlag.value++
+    })
+    watch(() => props.height, () => {
+      reFlag.value++
+    })
+    watch(() => props.position, () => {
+      reFlag.value++
+    })
+    watch(reFlag, recalculate)
 
     watch(() => props.modelValue, (value) => {
       if (value) {

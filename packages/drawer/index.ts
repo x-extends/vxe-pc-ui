@@ -1,7 +1,8 @@
 import { App } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
-import VxeDrawerComponent, { allActiveDrawers } from './src/drawer'
+import VxeDrawerComponent from './src/drawer'
+import { allActiveDrawers } from './src/store'
 import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 
 import { VxeDrawerPropTypes, DrawerEventTypes, VxeDrawerDefines } from '../../types'
