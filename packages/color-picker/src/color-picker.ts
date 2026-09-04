@@ -752,23 +752,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalMousewheelEvent (evnt: MouseEvent) {
-      const $xeColorPicker = this
-      const reactData = $xeColorPicker.reactData
-
-      const { visiblePanel } = reactData
-      const isDisabled = $xeColorPicker.computeIsDisabled
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelElem = $xeColorPicker.$refs.refOptionPanel as HTMLDivElement
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            $xeColorPicker.updatePlacement()
-          } else {
-            $xeColorPicker.hideOptionPanel()
-          }
-        }
-      }
-    },
     handleGlobalMousedownEvent (evnt: MouseEvent) {
       const $xeColorPicker = this
       const reactData = $xeColorPicker.reactData
@@ -803,6 +786,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     handleGlobalResizeEvent () {
+      const $xeColorPicker = this
+      const reactData = $xeColorPicker.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeColorPicker.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
       const $xeColorPicker = this
       const reactData = $xeColorPicker.reactData
 
@@ -1290,10 +1282,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     reactData.selectColor = `${props.value || ''}`
     $xeColorPicker.updateType()
 
-    globalEvents.on($xeColorPicker, 'mousewheel', $xeColorPicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeColorPicker, 'mousedown', $xeColorPicker.handleGlobalMousedownEvent)
     globalEvents.on($xeColorPicker, 'blur', $xeColorPicker.handleGlobalBlurEvent)
     globalEvents.on($xeColorPicker, 'resize', $xeColorPicker.handleGlobalResizeEvent)
+    globalEvents.on($xeColorPicker, 'scroll', $xeColorPicker.handleGlobalScrollEvent)
   },
   beforeDestroy () {
     const $xeColorPicker = this
@@ -1302,10 +1294,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (panelElem && panelElem.parentNode) {
       panelElem.parentNode.removeChild(panelElem)
     }
-    globalEvents.off($xeColorPicker, 'mousewheel')
     globalEvents.off($xeColorPicker, 'mousedown')
     globalEvents.off($xeColorPicker, 'blur')
     globalEvents.off($xeColorPicker, 'resize')
+    globalEvents.off($xeColorPicker, 'scroll')
   },
   render (this: any, h) {
     return this.renderVN(h)

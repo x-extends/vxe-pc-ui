@@ -316,29 +316,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xePulldown.dispatchEvent('click', { $pulldown: $xePulldown }, evnt)
     },
-    handleGlobalMousewheelEvent (evnt: Event) {
-      const $xePulldown = this
-      const props = $xePulldown
-      const reactData = $xePulldown.reactData
-
-      const { trigger, disabled } = props
-      const { visiblePanel } = reactData
-      const popupOpts = $xePulldown.computePopupOpts
-      const currTrigger = trigger || popupOpts.trigger
-      const panelElem = $xePulldown.$refs.refPulldownPanel as HTMLElement
-      if (!disabled) {
-        if (visiblePanel) {
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            $xePulldown.updatePlacement()
-          } else {
-            if (currTrigger !== 'manual') {
-              $xePulldown.hideOptionPanel()
-              $xePulldown.dispatchEvent('hide-panel', {}, evnt)
-            }
-          }
-        }
-      }
-    },
     handleGlobalMousedownEvent  (evnt: Event) {
       const $xePulldown = this
       const props = $xePulldown
@@ -380,6 +357,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     handleGlobalResizeEvent () {
+      const $xePulldown = this
+      const reactData = $xePulldown.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xePulldown.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
       const $xePulldown = this
       const reactData = $xePulldown.reactData
 
@@ -510,10 +496,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (props.value) {
       $xePulldown.showPanel()
     }
-    globalEvents.on($xePulldown, 'mousewheel', $xePulldown.handleGlobalMousewheelEvent)
     globalEvents.on($xePulldown, 'mousedown', $xePulldown.handleGlobalMousedownEvent)
     globalEvents.on($xePulldown, 'blur', $xePulldown.handleGlobalBlurEvent)
     globalEvents.on($xePulldown, 'resize', $xePulldown.handleGlobalResizeEvent)
+    globalEvents.on($xePulldown, 'scroll', $xePulldown.handleGlobalScrollEvent)
   },
   beforeDestroy () {
     const $xePulldown = this
@@ -522,10 +508,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (panelElem && panelElem.parentNode) {
       panelElem.parentNode.removeChild(panelElem)
     }
-    globalEvents.off($xePulldown, 'mousewheel')
     globalEvents.off($xePulldown, 'mousedown')
     globalEvents.off($xePulldown, 'blur')
     globalEvents.off($xePulldown, 'resize')
+    globalEvents.off($xePulldown, 'scroll')
   },
   render (this: any, h) {
     return this.renderVN(h)

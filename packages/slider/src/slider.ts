@@ -61,6 +61,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeSliderPropTypes.Disabled>,
       default: null
     },
+    status: {
+      type: String as PropType<VxeSliderPropTypes.Status>,
+      default: () => getConfig().slider.status
+    },
     immediate: {
       type: Boolean as PropType<VxeSliderPropTypes.Immediate>,
       default: () => getConfig().slider.immediate
@@ -461,7 +465,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSlider = this
       const props = $xeSlider
 
-      const { vertical, range } = props
+      const { status, vertical, range } = props
       const vSize = $xeSlider.computeSize
       const formReadonly = $xeSlider.computeFormReadonly
       const isDisabled = $xeSlider.computeIsDisabled
@@ -469,6 +473,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ref: 'refElem',
         class: ['vxe-slider', {
           [`size--${vSize}`]: vSize,
+          [`theme--${status}`]: status,
           'is--vertical': vertical,
           'is--readonly': formReadonly,
           'is--disabled': isDisabled

@@ -64,12 +64,25 @@ $sliderThemeList: (
         }
       }
       .vxe-slider--bar-btn {
-        background-color: map.get($item, textColor);
+        border-color: map.get($item, textColor);
+      }
+      &.is--disabled {
+        .vxe-slider--bar-track {
+          background-color: map.get($item, disabledColor);
+        }
+        .vxe-slider--bar-btn {
+          border-color: map.get($item, disabledColor);
+          cursor: not-allowed;
+        }
       }
     }
   }
   &.is--disabled {
+    .vxe-slider--bar-track {
+      background-color: var(--vxe-ui-font-primary-disabled-color);
+    }
     .vxe-slider--bar-btn {
+      border-color: var(--vxe-ui-font-primary-disabled-color);
       cursor: not-allowed;
     }
   }

@@ -10,6 +10,7 @@ import VxeTooltipComponent from '../../tooltip'
 
 import type { VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, VxeButtonGroupConstructor, ButtonInternalData, VxeButtonDefines, VxeButtonGroupPrivateMethods, VxeFormConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 
 const { warnLog } = createComponentLog('button')
 
@@ -166,6 +167,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
       $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
+      $xeGrid(): (VxeGridConstructor & VxeGridPrivateMethods) | null
       $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
       $xeTree(): (VxeTreeConstructor & VxeTreePrivateMethods) | null
       $xeButtonGroup(): (VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods)| null
@@ -173,6 +175,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     computeBtnTransfer () {
       const $xeButton = this
       const props = $xeButton
+      const $xeGrid = $xeButton.$xeGrid
       const $xeTable = $xeButton.$xeTable
       const $xeTree = $xeButton.$xeTree
       const $xeModal = $xeButton.$xeModal
@@ -189,7 +192,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (XEUtils.isBoolean(globalTransfer)) {
           return globalTransfer
         }
-        if ($xeTable || $xeTree || $xeModal || $xeDrawer || $xeForm) {
+        if ($xeGrid || $xeTable || $xeTree || $xeModal || $xeDrawer || $xeForm) {
           return true
         }
       }
@@ -561,15 +564,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeButton.hidePanel()
     },
-    handleGlobalMousewheelEvent  (evnt: Event) {
-      const $xeButton = this
-      const reactData = $xeButton.reactData
-
-      const panelElem = $xeButton.$refs.refBtnPanel as HTMLElement | undefined
-      if (reactData.visiblePanel && !getEventTargetNode(evnt, panelElem).flag) {
-        $xeButton.hidePanel()
-      }
-    },
     handleGlobalMousedownEvent  (evnt: MouseEvent) {
       const $xeButton = this
       const reactData = $xeButton.reactData
@@ -586,6 +580,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     handleGlobalResizeEvent () {
+      const $xeButton = this
+      const reactData = $xeButton.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeButton.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
       const $xeButton = this
       const reactData = $xeButton.reactData
 
@@ -935,9 +938,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       warnLog('vxe.error.delProp', ['type=text', 'mode=text'])
     }
 
-    globalEvents.on($xeButton, 'mousewheel', $xeButton.handleGlobalMousewheelEvent)
     globalEvents.on($xeButton, 'mousedown', $xeButton.handleGlobalMousedownEvent)
     globalEvents.on($xeButton, 'resize', $xeButton.handleGlobalResizeEvent)
+    globalEvents.on($xeButton, 'scroll', $xeButton.handleGlobalScrollEvent)
   },
   beforeDestroy () {
     const $xeButton = this
@@ -953,6 +956,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeButton, 'mousewheel')
     globalEvents.off($xeButton, 'mousedown')
     globalEvents.off($xeButton, 'resize')
+    globalEvents.off($xeButton, 'scroll')
   },
   render (this: any, h) {
     return this.renderVN(h)

@@ -1297,23 +1297,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalMousewheelEvent (evnt: Event) {
-      const $xeDatePicker = this
-      const reactData = $xeDatePicker.reactData
-
-      const { visiblePanel } = reactData
-      const isDisabled = $xeDatePicker.computeIsDisabled
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelWrapperElem = $xeDatePicker.$refs.refPanelWrapper as HTMLDivElement
-          if (getEventTargetNode(evnt, panelWrapperElem).flag) {
-            $xeDatePicker.updatePlacement()
-          } else {
-            $xeDatePicker.hidePanel()
-          }
-        }
-      }
-    },
     handleGlobalBlurEvent () {
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
@@ -1335,6 +1318,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     handleGlobalResizeEvent () {
+      const $xeDatePicker = this
+      const reactData = $xeDatePicker.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeDatePicker.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
       const $xeDatePicker = this
       const reactData = $xeDatePicker.reactData
 
@@ -1918,11 +1910,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     }
     $xeDatePicker.updateModelValue()
-    globalEvents.on($xeDatePicker, 'mousewheel', $xeDatePicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeDatePicker, 'mousedown', $xeDatePicker.handleGlobalMousedownEvent)
     globalEvents.on($xeDatePicker, 'keydown', $xeDatePicker.handleGlobalKeydownEvent)
     globalEvents.on($xeDatePicker, 'blur', $xeDatePicker.handleGlobalBlurEvent)
     globalEvents.on($xeDatePicker, 'resize', $xeDatePicker.handleGlobalResizeEvent)
+    globalEvents.on($xeDatePicker, 'scroll', $xeDatePicker.handleGlobalScrollEvent)
   },
   beforeDestroy () {
     const $xeDatePicker = this
@@ -1933,11 +1925,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (panelElem && panelElem.parentNode) {
       panelElem.parentNode.removeChild(panelElem)
     }
-    globalEvents.off($xeDatePicker, 'mousewheel')
     globalEvents.off($xeDatePicker, 'mousedown')
     globalEvents.off($xeDatePicker, 'keydown')
     globalEvents.off($xeDatePicker, 'blur')
     globalEvents.off($xeDatePicker, 'resize')
+    globalEvents.off($xeDatePicker, 'scroll')
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },

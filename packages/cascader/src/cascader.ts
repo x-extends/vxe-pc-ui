@@ -1095,23 +1095,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { $event } = params
       $xeCascader.hideOptionPanel($event)
     },
-    handleGlobalMousewheelEvent (evnt: MouseEvent) {
-      const $xeCascader = this
-      const reactData = $xeCascader.reactData
-
-      const { visiblePanel } = reactData
-      const isDisabled = $xeCascader.computeIsDisabled
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelElem = $xeCascader.$refs.refOptionPanel as HTMLDivElement
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            $xeCascader.updatePlacement()
-          } else {
-            $xeCascader.hideOptionPanel(evnt)
-          }
-        }
-      }
-    },
     handleGlobalMousedownEvent (evnt: MouseEvent) {
       const $xeCascader = this
       const reactData = $xeCascader.reactData
@@ -1146,6 +1129,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     handleGlobalResizeEvent () {
+      const $xeCascader = this
+      const reactData = $xeCascader.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeCascader.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
       const $xeCascader = this
       const reactData = $xeCascader.reactData
 
@@ -2098,10 +2090,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   mounted () {
     const $xeCascader = this
 
-    globalEvents.on($xeCascader, 'mousewheel', $xeCascader.handleGlobalMousewheelEvent)
     globalEvents.on($xeCascader, 'mousedown', $xeCascader.handleGlobalMousedownEvent)
     globalEvents.on($xeCascader, 'blur', $xeCascader.handleGlobalBlurEvent)
     globalEvents.on($xeCascader, 'resize', $xeCascader.handleGlobalResizeEvent)
+    globalEvents.on($xeCascader, 'scroll', $xeCascader.handleGlobalScrollEvent)
   },
   beforeDestroy () {
     const $xeCascader = this
@@ -2112,10 +2104,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (panelElem && panelElem.parentNode) {
       panelElem.parentNode.removeChild(panelElem)
     }
-    globalEvents.off($xeCascader, 'mousewheel')
     globalEvents.off($xeCascader, 'mousedown')
     globalEvents.off($xeCascader, 'blur')
     globalEvents.off($xeCascader, 'resize')
+    globalEvents.off($xeCascader, 'scroll')
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },

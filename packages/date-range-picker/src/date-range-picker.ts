@@ -1092,24 +1092,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalMousewheelEvent (evnt: Event) {
-      const $xeDateRangePicker = this
-      const reactData = $xeDateRangePicker.reactData
-
-      const { visiblePanel } = reactData
-      const isDisabled = $xeDateRangePicker.computeIsDisabled
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelWrapperElem = $xeDateRangePicker.$refs.refPanelWrapper as HTMLDivElement
-          if (getEventTargetNode(evnt, panelWrapperElem).flag) {
-            $xeDateRangePicker.updatePlacement()
-          } else {
-            $xeDateRangePicker.checkValue()
-            $xeDateRangePicker.hidePanel()
-          }
-        }
-      }
-    },
     handleGlobalBlurEvent () {
       const $xeDateRangePicker = this
       const reactData = $xeDateRangePicker.reactData
@@ -1130,6 +1112,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     handleGlobalResizeEvent () {
+      const $xeDateRangePicker = this
+      const reactData = $xeDateRangePicker.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeDateRangePicker.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
       const $xeDateRangePicker = this
       const reactData = $xeDateRangePicker.reactData
 
@@ -1763,11 +1754,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     $xeDateRangePicker.updateModelValue(true)
 
-    globalEvents.on($xeDateRangePicker, 'mousewheel', $xeDateRangePicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeDateRangePicker, 'mousedown', $xeDateRangePicker.handleGlobalMousedownEvent)
     globalEvents.on($xeDateRangePicker, 'keydown', $xeDateRangePicker.handleGlobalKeydownEvent)
     globalEvents.on($xeDateRangePicker, 'blur', $xeDateRangePicker.handleGlobalBlurEvent)
     globalEvents.on($xeDateRangePicker, 'resize', $xeDateRangePicker.handleGlobalResizeEvent)
+    globalEvents.on($xeDateRangePicker, 'scroll', $xeDateRangePicker.handleGlobalScrollEvent)
   },
   deactivated () {
     const $xeDateRangePicker = this
@@ -1784,10 +1775,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       panelElem.parentNode.removeChild(panelElem)
     }
     $xeDateRangePicker.checkValue()
-    globalEvents.off($xeDateRangePicker, 'mousewheel')
     globalEvents.off($xeDateRangePicker, 'mousedown')
+    globalEvents.off($xeDateRangePicker, 'keydown')
     globalEvents.off($xeDateRangePicker, 'blur')
     globalEvents.off($xeDateRangePicker, 'resize')
+    globalEvents.off($xeDateRangePicker, 'scroll')
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },

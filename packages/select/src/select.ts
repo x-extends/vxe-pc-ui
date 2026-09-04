@@ -1051,23 +1051,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       reactData.reactFlag++
     },
-    handleGlobalMousewheelEvent (evnt: MouseEvent) {
-      const $xeSelect = this
-      const reactData = $xeSelect.reactData
-
-      const { visiblePanel } = reactData
-      const isDisabled = $xeSelect.computeIsDisabled
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelElem = $xeSelect.$refs.refOptionPanel
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            $xeSelect.updatePlacement()
-          } else {
-            $xeSelect.hideOptionPanel(evnt)
-          }
-        }
-      }
-    },
     handleGlobalMousedownEvent  (evnt: MouseEvent) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
@@ -1237,6 +1220,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     handleGlobalResizeEvent () {
+      const $xeSelect = this
+      const reactData = $xeSelect.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeSelect.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -2157,11 +2149,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSelect.loadData(options)
       }
     })
-    globalEvents.on($xeSelect, 'mousewheel', $xeSelect.handleGlobalMousewheelEvent)
     globalEvents.on($xeSelect, 'mousedown', $xeSelect.handleGlobalMousedownEvent)
     globalEvents.on($xeSelect, 'keydown', $xeSelect.handleGlobalKeydownEvent)
     globalEvents.on($xeSelect, 'blur', $xeSelect.handleGlobalBlurEvent)
     globalEvents.on($xeSelect, 'resize', $xeSelect.handleGlobalResizeEvent)
+    globalEvents.on($xeSelect, 'scroll', $xeSelect.handleGlobalScrollEvent)
   },
   beforeDestroy () {
     const $xeSelect = this
@@ -2170,11 +2162,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (panelElem && panelElem.parentNode) {
       panelElem.parentNode.removeChild(panelElem)
     }
-    globalEvents.off($xeSelect, 'mousewheel')
     globalEvents.off($xeSelect, 'mousedown')
     globalEvents.off($xeSelect, 'keydown')
     globalEvents.off($xeSelect, 'blur')
     globalEvents.off($xeSelect, 'resize')
+    globalEvents.off($xeSelect, 'scroll')
   },
   destroyed () {
     const $xeSelect = this

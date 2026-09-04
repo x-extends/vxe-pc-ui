@@ -569,23 +569,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTableSelect.clearValueEvent(evnt, null)
       $xeTableSelect.hideOptionPanel()
     },
-    handleGlobalMousewheelEvent (evnt: MouseEvent) {
-      const $xeTableSelect = this
-      const reactData = $xeTableSelect.reactData
-
-      const { visiblePanel } = reactData
-      const isDisabled = $xeTableSelect.computeIsDisabled
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelElem = $xeTableSelect.$refs.refOptionPanel as HTMLDivElement
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            $xeTableSelect.updatePlacement()
-          } else {
-            $xeTableSelect.hideOptionPanel()
-          }
-        }
-      }
-    },
     handleGlobalMousedownEvent (evnt: MouseEvent) {
       const $xeTableSelect = this
       const reactData = $xeTableSelect.reactData
@@ -620,6 +603,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     handleGlobalResizeEvent () {
+      const $xeTableSelect = this
+      const reactData = $xeTableSelect.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeTableSelect.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
       const $xeTableSelect = this
       const reactData = $xeTableSelect.reactData
 
@@ -898,10 +890,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.initialized = true
       }
     }
-    globalEvents.on($xeTableSelect, 'mousewheel', $xeTableSelect.handleGlobalMousewheelEvent)
     globalEvents.on($xeTableSelect, 'mousedown', $xeTableSelect.handleGlobalMousedownEvent)
     globalEvents.on($xeTableSelect, 'blur', $xeTableSelect.handleGlobalBlurEvent)
     globalEvents.on($xeTableSelect, 'resize', $xeTableSelect.handleGlobalResizeEvent)
+    globalEvents.on($xeTableSelect, 'scroll', $xeTableSelect.handleGlobalScrollEvent)
   },
   beforeDestroy () {
     const $xeTableSelect = this
@@ -912,10 +904,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (panelElem && panelElem.parentNode) {
       panelElem.parentNode.removeChild(panelElem)
     }
-    globalEvents.off($xeTableSelect, 'mousewheel')
     globalEvents.off($xeTableSelect, 'mousedown')
     globalEvents.off($xeTableSelect, 'blur')
     globalEvents.off($xeTableSelect, 'resize')
+    globalEvents.off($xeTableSelect, 'scroll')
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },

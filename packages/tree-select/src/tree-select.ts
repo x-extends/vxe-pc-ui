@@ -729,23 +729,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $tree.clearAllExpandNode()
       }
     },
-    handleGlobalMousewheelEvent (evnt: MouseEvent) {
-      const $xeTreeSelect = this
-      const reactData = $xeTreeSelect.reactData
-
-      const { visiblePanel } = reactData
-      const isDisabled = $xeTreeSelect.computeIsDisabled
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelElem = $xeTreeSelect.$refs.refOptionPanel as HTMLElement
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            $xeTreeSelect.updatePlacement()
-          } else {
-            $xeTreeSelect.hideOptionPanel(evnt)
-          }
-        }
-      }
-    },
     handleGlobalMousedownEvent  (evnt: MouseEvent) {
       const $xeTreeSelect = this
       const reactData = $xeTreeSelect.reactData
@@ -780,6 +763,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     handleGlobalResizeEvent () {
+      const $xeTreeSelect = this
+      const reactData = $xeTreeSelect.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeTreeSelect.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
       const $xeTreeSelect = this
       const reactData = $xeTreeSelect.reactData
 
@@ -1233,10 +1225,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (XEUtils.isBoolean(props.autoClose)) {
       warnLog('vxe.error.delProp', ['auto-close', 'checked-closable | clear-closable'])
     }
-    globalEvents.on($xeTreeSelect, 'mousewheel', $xeTreeSelect.handleGlobalMousewheelEvent)
     globalEvents.on($xeTreeSelect, 'mousedown', $xeTreeSelect.handleGlobalMousedownEvent)
     globalEvents.on($xeTreeSelect, 'blur', $xeTreeSelect.handleGlobalBlurEvent)
     globalEvents.on($xeTreeSelect, 'resize', $xeTreeSelect.handleGlobalResizeEvent)
+    globalEvents.on($xeTreeSelect, 'scroll', $xeTreeSelect.handleGlobalScrollEvent)
   },
   beforeDestroy () {
     const $xeTreeSelect = this
@@ -1247,10 +1239,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (panelElem && panelElem.parentNode) {
       panelElem.parentNode.removeChild(panelElem)
     }
-    globalEvents.off($xeTreeSelect, 'mousewheel')
     globalEvents.off($xeTreeSelect, 'mousedown')
     globalEvents.off($xeTreeSelect, 'blur')
     globalEvents.off($xeTreeSelect, 'resize')
+    globalEvents.off($xeTreeSelect, 'scroll')
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },

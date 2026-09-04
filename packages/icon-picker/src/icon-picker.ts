@@ -517,23 +517,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeIconPicker.togglePanelEvent(evnt)
       $xeIconPicker.dispatchEvent('click', {}, evnt)
     },
-    handleGlobalMousewheelEvent  (evnt: MouseEvent) {
-      const $xeIconPicker = this
-      const reactData = $xeIconPicker.reactData
-
-      const { visiblePanel } = reactData
-      const isDisabled = $xeIconPicker.computeIsDisabled
-      if (!isDisabled) {
-        if (visiblePanel) {
-          const panelElem = $xeIconPicker.$refs.refOptionPanel as HTMLElement
-          if (getEventTargetNode(evnt, panelElem).flag) {
-            $xeIconPicker.updatePlacement()
-          } else {
-            $xeIconPicker.hideOptionPanel()
-          }
-        }
-      }
-    },
     handleGlobalMousedownEvent (evnt: MouseEvent) {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
@@ -613,6 +596,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if ($input) {
           $input.blur()
         }
+      }
+    },
+    handleGlobalResizeEvent () {
+      const $xeIconPicker = this
+      const reactData = $xeIconPicker.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeIconPicker.updatePlacement()
+      }
+    },
+    handleGlobalScrollEvent () {
+      const $xeIconPicker = this
+      const reactData = $xeIconPicker.reactData
+
+      const { visiblePanel } = reactData
+      if (visiblePanel) {
+        $xeIconPicker.updatePlacement()
       }
     },
     handleClickIconEvent  (evnt: MouseEvent, item: VxeIconPickerDefines.IconItemObj) {
@@ -881,10 +882,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     reactData.selectIcon = `${props.value || ''}`
     $xeIconPicker.handleData()
 
-    globalEvents.on($xeIconPicker, 'mousewheel', $xeIconPicker.handleGlobalMousewheelEvent)
     globalEvents.on($xeIconPicker, 'mousedown', $xeIconPicker.handleGlobalMousedownEvent)
     globalEvents.on($xeIconPicker, 'keydown', $xeIconPicker.handleGlobalKeydownEvent)
     globalEvents.on($xeIconPicker, 'blur', $xeIconPicker.handleGlobalBlurEvent)
+    globalEvents.on($xeIconPicker, 'resize', $xeIconPicker.handleGlobalResizeEvent)
+    globalEvents.on($xeIconPicker, 'scroll', $xeIconPicker.handleGlobalScrollEvent)
   },
   beforeDestroy () {
     const $xeIconPicker = this
@@ -895,10 +897,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (panelElem && panelElem.parentNode) {
       panelElem.parentNode.removeChild(panelElem)
     }
-    globalEvents.off($xeIconPicker, 'mousewheel')
     globalEvents.off($xeIconPicker, 'mousedown')
     globalEvents.off($xeIconPicker, 'keydown')
     globalEvents.off($xeIconPicker, 'blur')
+    globalEvents.off($xeIconPicker, 'resize')
+    globalEvents.off($xeIconPicker, 'scroll')
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
