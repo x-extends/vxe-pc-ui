@@ -30,6 +30,7 @@ import VxeCountdown from './countdown'
 import VxeDatePanel from './date-panel'
 import VxeDatePicker from './date-picker'
 import VxeDateRangePicker from './date-range-picker'
+import VxeDivider from './divider'
 import VxeDrawer, { DrawerController } from './drawer'
 import VxeEmpty from './empty'
 import VxeForm from './form'
@@ -131,6 +132,7 @@ const components = [
   VxeDatePanel,
   VxeDatePicker,
   VxeDateRangePicker,
+  VxeDivider,
   VxeDrawer,
   VxeEmpty,
   VxeForm,
@@ -276,6 +278,7 @@ export * from './countdown'
 export * from './date-panel'
 export * from './date-picker'
 export * from './date-range-picker'
+export * from './divider'
 export * from './drawer'
 export * from './empty'
 export * from './form'

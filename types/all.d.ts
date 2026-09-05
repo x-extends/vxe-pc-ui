@@ -28,6 +28,7 @@ import VxeCountdown from './components/countdown'
 import VxeDatePanel from './components/date-panel'
 import VxeDatePicker from './components/date-picker'
 import VxeDateRangePicker from './components/date-range-picker'
+import VxeDivider from './components/divider'
 import VxeDrawer from './components/drawer'
 import VxeEmpty from './components/empty'
 import VxeForm from './components/form'
@@ -230,6 +231,10 @@ interface UIComponents {
    * DateRangePicker 日期范围选择
    */
   VxeDateRangePicker: typeof VxeDateRangePicker
+  /**
+   * Divider 分割线
+   */
+  VxeDivider: typeof VxeDivider
   /**
    * Drawer 抽屉
    */
@@ -476,6 +481,7 @@ export * from './components/countdown'
 export * from './components/date-panel'
 export * from './components/date-picker'
 export * from './components/date-range-picker'
+export * from './components/divider'
 export * from './components/drawer'
 export * from './components/empty'
 export * from './components/form'

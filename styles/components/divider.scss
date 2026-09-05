@@ -1,0 +1,92 @@
+// 局部变量
+.vxe-divider {
+  --vxe-ui-divider-current-font-size: inherit;
+  --vxe-ui-divider-padding: var(--vxe-ui-layout-padding-default);
+  --vxe-ui-divider-current-horizontal-margin: var(--vxe-ui-divider-horizontal-margin-default);
+  --vxe-ui-divider-current-vertical-margin: var(--vxe-ui-divider-vertical-margin-default);
+  &.size--xlarge {
+    --vxe-ui-divider-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-divider-padding: var(--vxe-ui-layout-padding-xlarge);
+    --vxe-ui-divider-current-horizontal-margin: var(--vxe-ui-divider-horizontal-margin-xlarge);
+    --vxe-ui-divider-current-vertical-margin: var(--vxe-ui-divider-vertical-margin-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-divider-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-divider-padding: var(--vxe-ui-layout-padding-large);
+    --vxe-ui-divider-current-horizontal-margin: var(--vxe-ui-divider-horizontal-margin-large);
+    --vxe-ui-divider-current-vertical-margin: var(--vxe-ui-divider-vertical-margin-large);
+  }
+  &.size--medium {
+    --vxe-ui-divider-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-divider-padding: var(--vxe-ui-layout-padding-medium);
+    --vxe-ui-divider-current-horizontal-margin: var(--vxe-ui-divider-horizontal-margin-medium);
+    --vxe-ui-divider-current-vertical-margin: var(--vxe-ui-divider-vertical-margin-medium);
+  }
+  &.size--small {
+    --vxe-ui-divider-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-divider-padding: var(--vxe-ui-layout-padding-small);
+    --vxe-ui-divider-current-horizontal-margin: var(--vxe-ui-divider-horizontal-margin-small);
+    --vxe-ui-divider-current-vertical-margin: var(--vxe-ui-divider-vertical-margin-small);
+  }
+  &.size--mini {
+    --vxe-ui-divider-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-divider-padding: var(--vxe-ui-layout-padding-mini);
+    --vxe-ui-divider-current-horizontal-margin: var(--vxe-ui-divider-horizontal-margin-mini);
+    --vxe-ui-divider-current-vertical-margin: var(--vxe-ui-divider-vertical-margin-mini);
+  }
+}
+
+.vxe-divider {
+  color: var(--vxe-ui-font-color);
+  font-size: var(--vxe-ui-divider-current-font-size);
+  white-space: nowrap;
+  &.is--horizontal{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: var(--vxe-ui-divider-current-horizontal-margin) 0;
+    &::after,
+    &::before {
+      content: "";
+      display: block;
+      height: 1px;
+      border-top: var(--vxe-ui-divider-border-width) solid var(--vxe-ui-input-border-color);
+    }
+    &.t--align-left {
+      &::after {
+        flex-grow: 1;
+      }
+      &::before {
+        width: 1.2em;
+        flex-shrink: 0;
+      }
+    }
+    &.t--align-center {
+      &::after,
+      &::before {
+        flex-grow: 1;
+      }
+    }
+    &.t--align-right {
+      &::after {
+        width: 1.2em;
+        flex-shrink: 0;
+      }
+      &::before {
+        flex-grow: 1;
+      }
+    }
+    .vxe-divider--content {
+      padding: 0 var(--vxe-ui-divider-padding);
+    }
+  }
+  &.is--vertical {
+    display: inline-block;
+    width: 1px;
+    height: 1em;
+    vertical-align: middle;
+    margin: 0 var(--vxe-ui-divider-current-vertical-margin);
+    border-left: var(--vxe-ui-divider-border-width) solid var(--vxe-ui-input-border-color);
+  }
+}

@@ -1,7 +1,7 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getI18n, getIcon, createEvent } from '../../ui'
+import { getConfig, getI18n, getIcon, createEvent } from '../../ui'
 
 import type { EmptyReactData, VxeEmptyEmits, ValueOf, VxeEmptyPropTypes } from '../../../types'
 
@@ -11,7 +11,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     imageUrl: String as PropType<VxeEmptyPropTypes.ImageUrl>,
     imageStyle: Object as PropType<VxeEmptyPropTypes.ImageStyle>,
     icon: String as PropType<VxeEmptyPropTypes.Icon>,
-    status: String as PropType<VxeEmptyPropTypes.Status>,
+    status: {
+      type: String as PropType<VxeEmptyPropTypes.Status>,
+      default: () => getConfig().empty.status
+    },
     content: [String, Number] as PropType<VxeEmptyPropTypes.Content>
   },
   data () {

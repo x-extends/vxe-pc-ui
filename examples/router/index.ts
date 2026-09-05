@@ -346,6 +346,11 @@ const routes: Array<RouteConfig> = [
     path: '/component/space',
     name: 'SpaceTest',
     component: () => import('../views/space/SpaceTest.vue')
+  },
+  {
+    path: '/component/divider',
+    name: 'DividerTest',
+    component: () => import('../views/divider/SpaceTest.vue')
   }
 ]
 

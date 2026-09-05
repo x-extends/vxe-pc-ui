@@ -162,7 +162,8 @@ export default Vue.extend({
         { name: 'TableTransferTest', routerLink: { name: 'TableTransferTest' } },
         { name: 'TableTest', routerLink: { name: 'TableTest' } },
         { name: 'GanttTest', routerLink: { name: 'GanttTest' } },
-        { name: 'SpaceTest', routerLink: { name: 'SpaceTest' } }
+        { name: 'SpaceTest', routerLink: { name: 'SpaceTest' } },
+        { name: 'DividerTest', routerLink: { name: 'DividerTest' } }
       ]
     }
   },

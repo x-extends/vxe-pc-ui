@@ -1,16 +1,16 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
-import VxeemptyComponent from './src/empty'
+import VxeEmptyComponent from './src/empty'
 import { dynamicApp } from '../dynamics'
 
-export const Vxeempty = Object.assign({}, VxeemptyComponent, {
+export const VxeEmpty = Object.assign({}, VxeEmptyComponent, {
   install (app: VueConstructor) {
-    app.component(VxeemptyComponent.name as string, VxeemptyComponent)
+    app.component(VxeEmptyComponent.name as string, VxeEmptyComponent)
   }
 })
 
-dynamicApp.use(Vxeempty)
-VxeUI.component(VxeemptyComponent)
+dynamicApp.use(VxeEmpty)
+VxeUI.component(VxeEmptyComponent)
 
-export const empty = Vxeempty
-export default Vxeempty
+export const Empty = VxeEmpty
+export default VxeEmpty

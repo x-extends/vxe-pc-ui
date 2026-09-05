@@ -26,6 +26,7 @@ import { VxeCountdownProps } from '../components/countdown'
 import { VxeDatePanelProps } from '../components/date-panel'
 import { VxeDatePickerProps } from '../components/date-picker'
 import { VxeDateRangePickerProps } from '../components/date-range-picker'
+import { VxeDividerProps } from '../components/divider'
 import { VxeDrawerProps } from '../components/drawer'
 import { VxeEmptyProps } from '../components/empty'
 import { VxeFormProps } from '../components/form'
@@ -140,6 +141,7 @@ declare module '@vxe-ui/core' {
     datePanel?: VxeDatePanelProps
     datePicker?: VxeDatePickerProps
     dateRangePicker?: VxeDateRangePickerProps
+    divider?: VxeDividerProps
     drawer?: VxeDrawerProps
     empty?: VxeEmptyProps
     form?: VxeFormProps

@@ -291,16 +291,31 @@
   --vxe-ui-icon-picker-panel-icon-font-size: 1.4em;
 
   /*space*/
-  --vxe-ui-space-row-gap-xlarge: 16px;
-  --vxe-ui-space-row-gap-large: 14px;
-  --vxe-ui-space-row-gap-default: 12px;
-  --vxe-ui-space-row-gap-medium: 10px;
-  --vxe-ui-space-row-gap-small: 8px;
-  --vxe-ui-space-row-gap-mini: 6px;
-  --vxe-ui-space-column-gap-xlarge: var(--vxe-ui-space-row-gap-xlarge);
-  --vxe-ui-space-column-gap-large: var(--vxe-ui-space-row-gap-large);
-  --vxe-ui-space-column-gap-default: var(--vxe-ui-space-row-gap-default);
-  --vxe-ui-space-column-gap-medium: var(--vxe-ui-space-row-gap-medium);
-  --vxe-ui-space-column-gap-small: var(--vxe-ui-space-row-gap-small);
-  --vxe-ui-space-column-gap-mini: var(--vxe-ui-space-row-gap-mini);
+  --vxe-ui-space-column-gap-xlarge: 16px;
+  --vxe-ui-space-column-gap-large: 14px;
+  --vxe-ui-space-column-gap-default: 12px;
+  --vxe-ui-space-column-gap-medium: 10px;
+  --vxe-ui-space-column-gap-small: 8px;
+  --vxe-ui-space-column-gap-mini: 6px;
+  --vxe-ui-space-row-gap-xlarge: var(--vxe-ui-space-column-gap-xlarge);
+  --vxe-ui-space-row-gap-large: var(--vxe-ui-space-column-gap-large);
+  --vxe-ui-space-row-gap-default: var(--vxe-ui-space-column-gap-default);
+  --vxe-ui-space-row-gap-medium: var(--vxe-ui-space-column-gap-medium);
+  --vxe-ui-space-row-gap-small: var(--vxe-ui-space-column-gap-small);
+  --vxe-ui-space-row-gap-mini: var(--vxe-ui-space-column-gap-mini);
+
+  /*divider*/
+  --vxe-ui-divider-horizontal-margin-xlarge: 26px;
+  --vxe-ui-divider-horizontal-margin-large: 22px;
+  --vxe-ui-divider-horizontal-margin-default: 18px;
+  --vxe-ui-divider-horizontal-margin-medium: 14px;
+  --vxe-ui-divider-horizontal-margin-small: 10px;
+  --vxe-ui-divider-horizontal-margin-mini: 6px;
+  --vxe-ui-divider-vertical-margin-xlarge: 16px;
+  --vxe-ui-divider-vertical-margin-large: 14px;
+  --vxe-ui-divider-vertical-margin-default: 12px;
+  --vxe-ui-divider-vertical-margin-medium: 10px;
+  --vxe-ui-divider-vertical-margin-small: 8px;
+  --vxe-ui-divider-vertical-margin-mini: 6px;
+  --vxe-ui-divider-border-width: 1px;
 }

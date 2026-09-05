@@ -143,6 +143,7 @@ setConfig({
     showClearButton: true,
     showConfirmButton: null
   },
+  divider: {},
   drawer: {
     // size: null,
     // useHtml: false,
