@@ -60,6 +60,7 @@ const componentList = [
   'date-panel',
   'date-picker',
   'date-range-picker',
+  'divider',
   'drawer',
   'empty',
   'form',
