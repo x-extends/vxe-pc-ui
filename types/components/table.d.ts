@@ -379,7 +379,7 @@ export namespace VxeTablePropTypes {
     /**
      * 当鼠标点击的行存在合并时，是否合并高亮显示
      */
-    // isMergeCurrent?: boolean
+    isMergeCurrent?: boolean
     /**
      * 已废弃，请使用 current-row-config.beforeSelectMethod
      * @deprecated
@@ -394,7 +394,7 @@ export namespace VxeTablePropTypes {
     /**
      * 当鼠标移到行存在合并时，是否合并高亮显示
      */
-    // isMergeHover?: boolean
+    isMergeHover?: boolean
     /**
      * 每一行开启调整行高度
      */
@@ -4067,8 +4067,6 @@ export interface TableReactData<D = any> {
   isAllSelected: boolean
   // 复选框属性，有选中且非全选状态
   isIndeterminate: boolean
-  // 单选框属性，选中列
-  currentColumn: any
   // 单选框属性，选中行
   selectRadioRow: D | null
   // 表尾合计数据
@@ -4249,6 +4247,8 @@ export interface TableReactData<D = any> {
   isDragResize: boolean
   isRowLoading: boolean
   isColLoading: boolean
+
+  currColFlag: number
 }
 
 export interface TableInternalData<D = any> {
@@ -4286,8 +4286,14 @@ export interface TableInternalData<D = any> {
   customHeight: number
   customMinHeight: number
   customMaxHeight: number
+
   // 当前 hover 行
-  hoverRow: any
+  hoverRow: D | null
+  hoverCol: VxeTableDefines.ColumnInfo<D>[] | null,
+  // 当前行
+  currentRow: D | null
+  currentCol: VxeTableDefines.ColumnInfo<D> | null
+
   // 最后滚动位置
   lastScrollLeft: number
   lastScrollTop: number
@@ -4342,9 +4348,6 @@ export interface TableInternalData<D = any> {
     value: any
     result: Record<string, any>
   }>>
-
-  // 当前行
-  currentRow: D | null
 
   // 合并表头单元格的数据
   mergeHeaderList: VxeTableDefines.MergeItem<D>[]
