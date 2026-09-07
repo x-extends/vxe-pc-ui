@@ -4,8 +4,9 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
+import { toCssUnit } from '../../ui/src/dom'
 
-import type { VxePasswordInputConstructor, VxePasswordInputEmits, PasswordInputReactData, PasswordInputMethods, VxePasswordInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
+import type { VxePasswordInputConstructor, VxePasswordInputEmits, PasswordInputReactData, PasswordInputMethods, VxePasswordInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeComponentStyleType } from '../../../types'
 
 export default defineVxeComponent({
   name: 'VxePasswordInput',
@@ -41,6 +42,7 @@ export default defineVxeComponent({
       type: String as PropType<VxePasswordInputPropTypes.InputClassName>,
       default: () => getConfig().passwordInput.inputClassName
     },
+    width: [String, Number] as PropType<VxePasswordInputPropTypes.Width>,
     size: {
       type: String as PropType<VxePasswordInputPropTypes.Size>,
       default: () => getConfig().passwordInput.size || getConfig().size
@@ -169,6 +171,15 @@ export default defineVxeComponent({
     const computeDomValue = computed(() => {
       const { inputValue } = reactData
       return inputValue
+    })
+
+    const computeCurrStyle = computed(() => {
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     })
 
     const dispatchEvent = (type: ValueOf<VxePasswordInputEmits>, params: Record<string, any>, evnt: Event | null) => {
@@ -386,6 +397,7 @@ export default defineVxeComponent({
           class: ['vxe-password-input--readonly', className]
         }, getText(inputValue))
       }
+      const currStyle = computeCurrStyle.value
       const vSize = computeSize.value
       const inputType = computeInputType.value
       const inpPlaceholder = computeInpPlaceholder.value
@@ -405,6 +417,7 @@ export default defineVxeComponent({
           'is--active': isActivated,
           'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }],
+        style: currStyle,
         spellcheck: false
       }, [
         prefix || renderEmptyElement($xePasswordInput),

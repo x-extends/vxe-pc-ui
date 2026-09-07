@@ -51,6 +51,7 @@ export namespace VxeSelectPropTypes {
   export type ShowCheckedButton = boolean
   export type ShowClearButton = boolean
   export type ClassName = string | ((params: { $select: VxeSelectConstructor }) => string)
+  export type Width = string | number
   /**
    * 已废弃，请使用 PopupConfig.className
    * @deprecated
@@ -223,6 +224,10 @@ export interface VxeSelectProps {
   showCheckedButton?: VxeSelectPropTypes.ShowCheckedButton
   showClearButton?: VxeSelectPropTypes.ShowClearButton
   className?: VxeSelectPropTypes.ClassName
+  /**
+   * 宽度
+   */
+  width?: VxeSelectPropTypes.Width
   /**
    * 已废弃，请使用 popup-config.className
    * @deprecated

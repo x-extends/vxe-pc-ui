@@ -4,11 +4,11 @@ import XEUtils, { CommafyOptions } from 'xe-utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, eqEmptyValue, isEnableConf, getText } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
-import { hasClass, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
+import { hasClass, getEventTargetNode, hasControlKey, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
 
-import type { VxeNumberInputConstructor, NumberInputInternalData, VxeNumberInputEmits, VxeNumberInputPrivateComputed, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
+import type { VxeNumberInputConstructor, NumberInputInternalData, VxeNumberInputEmits, VxeNumberInputPrivateComputed, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeComponentStyleType } from '../../../types'
 
 const { errLog } = createComponentLog('number-input')
 
@@ -61,6 +61,7 @@ export default defineVxeComponent({
       type: String as PropType<VxeNumberInputPropTypes.InputClassName>,
       default: () => getConfig().numberInput.inputClassName
     },
+    width: [String, Number] as PropType<VxeNumberInputPropTypes.Width>,
     size: {
       type: String as PropType<VxeNumberInputPropTypes.Size>,
       default: () => getConfig().numberInput.size || getConfig().size
@@ -351,6 +352,15 @@ export default defineVxeComponent({
     const computeInpClassNamevalue = computed(() => {
       const { inputClassName } = props
       return 'vxe-number-input--input' + (inputClassName ? (' ' + inputClassName) : '')
+    })
+
+    const computeCurrStyle = computed(() => {
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     })
 
     const refMaps: InputPrivateRef = {
@@ -1135,6 +1145,7 @@ export default defineVxeComponent({
           class: ['vxe-number-input--readonly', `type--${type}`, className]
         }, numLabel)
       }
+      const currStyle = computeCurrStyle.value
       const inputReadonly = computeInputReadonly.value
       const isClearable = computeIsClearable.value
       const isControls = isEnableConf(controlOpts) && (controls === false ? controls : showButton)
@@ -1150,6 +1161,7 @@ export default defineVxeComponent({
           'is--active': isActivated,
           'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }],
+        style: currStyle,
         spellcheck: false,
         onMouseenter: mouseenterEvent,
         onMouseleave: mouseleaveEvent

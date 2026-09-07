@@ -25,6 +25,7 @@ export interface VxeSpacePrivateRef extends SpacePrivateRef { }
 export namespace VxeSpacePropTypes {
   export type Size = VxeComponentSizeType
   export type Wrap = boolean
+  export type Width = string | number
   export type Gap = number | string | number[] | VxeSpaceDefines.GapObj
   export type Vertical = boolean
   export type ClassName = string
@@ -44,6 +45,10 @@ export interface VxeSpaceProps {
    * 是否自动换行
    */
   wrap?: VxeSpacePropTypes.Wrap
+  /**
+   * 宽度
+   */
+  width?: VxeSpacePropTypes.Width
   /**
    * 自定义间距
    */

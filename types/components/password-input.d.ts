@@ -28,6 +28,7 @@ export namespace VxePasswordInputPropTypes {
   export type Immediate = boolean
   export type ClassName = string
   export type InputClassName = string
+  export type Width = string | number
   export type Name = string
   export type Clearable = boolean
   export type Readonly = boolean
@@ -54,6 +55,10 @@ export interface VxePasswordInputProps {
   immediate?: VxePasswordInputPropTypes.Immediate
   className?: VxePasswordInputPropTypes.ClassName
   inputClassName?: VxePasswordInputPropTypes.InputClassName
+  /**
+   * 宽度
+   */
+  width?: VxePasswordInputPropTypes.Width
   name?: VxePasswordInputPropTypes.Name
   clearable?: VxePasswordInputPropTypes.Clearable
   readonly?: VxePasswordInputPropTypes.Readonly

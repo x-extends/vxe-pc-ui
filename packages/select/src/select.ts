@@ -118,6 +118,7 @@ export default defineVxeComponent({
      * @deprecated
      */
     popupClassName: [String, Function] as PropType<VxeSelectPropTypes.PopupClassName>,
+    width: [String, Number] as PropType<VxeSelectPropTypes.Width>,
     max: {
       type: [String, Number] as PropType<VxeSelectPropTypes.Max>,
       default: null
@@ -370,6 +371,15 @@ export default defineVxeComponent({
 
     const computeMultiMaxCharNum = computed(() => {
       return XEUtils.toNumber(props.multiCharOverflow)
+    })
+
+    const computeCurrStyle = computed(() => {
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     })
 
     const computePopupWrapperStyle = computed(() => {
@@ -1617,14 +1627,7 @@ export default defineVxeComponent({
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
       const inpPlaceholder = computeInpPlaceholder.value
-      const popupWrapperStyle = computePopupWrapperStyle.value
-      const popupOpts = computePopupOpts.value
-      const { appendTo } = popupOpts
       const defaultSlot = slots.default
-      const headerSlot = slots.header
-      const footerSlot = slots.footer
-      const prefixSlot = slots.prefix
-      const ppClassName = popupOpts.className || props.popupClassName
       if (formReadonly) {
         return h('div', {
           ref: refElem,
@@ -1640,7 +1643,15 @@ export default defineVxeComponent({
           }, selectLabel)
         ])
       }
+      const currStyle = computeCurrStyle.value
       const selectVals = computeSelectVals.value
+      const popupWrapperStyle = computePopupWrapperStyle.value
+      const popupOpts = computePopupOpts.value
+      const headerSlot = slots.header
+      const footerSlot = slots.footer
+      const prefixSlot = slots.prefix
+      const { appendTo } = popupOpts
+      const ppClassName = popupOpts.className || props.popupClassName
       return h('div', {
         ref: refElem,
         class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '', {
@@ -1650,7 +1661,8 @@ export default defineVxeComponent({
           'is--filter': filterable,
           'is--loading': loading,
           'is--active': isActivated
-        }]
+        }],
+        style: currStyle
       }, [
         h('div', {
           class: 'vxe-select-slots',

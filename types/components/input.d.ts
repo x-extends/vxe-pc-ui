@@ -28,6 +28,7 @@ export namespace VxeInputPropTypes {
   export type ModelValue = string | number | Date | undefined | null
   export type ClassName = string
   export type InputClassName = string
+  export type Width = string | number
   export type Immediate = boolean
   export type Name = string
   export type Title = string
@@ -99,6 +100,10 @@ export interface VxeInputProps {
   modelValue?: VxeInputPropTypes.ModelValue
   className?: VxeInputPropTypes.ClassName
   inputClassName?: VxeInputPropTypes.InputClassName
+  /**
+   * 宽度
+   */
+  width?: VxeInputPropTypes.Width
   immediate?: VxeInputPropTypes.Immediate
   name?: VxeInputPropTypes.Name
   title?: VxeInputPropTypes.Title

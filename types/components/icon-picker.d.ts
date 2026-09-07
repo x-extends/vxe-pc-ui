@@ -27,6 +27,7 @@ export namespace VxeIconPickerPropTypes {
   export type ModelValue = string | null
   export type Placeholder = string
   export type Size = VxeComponentSizeType
+  export type Width = string | number
   export type ClassName = string | ((params: { $iconPicker: VxeIconPickerConstructor }) => string)
   /**
    * 已废弃，请使用 PopupConfig.className
@@ -107,6 +108,7 @@ export type VxeIconPickerProps = {
    * @deprecated
    */
   popupClassName?: VxeIconPickerPropTypes.PopupClassName
+  width?: VxeIconPickerPropTypes.Width
   readonly?: VxeIconPickerPropTypes.Readonly
   disabled?: VxeIconPickerPropTypes.Disabled
   icons?: VxeIconPickerPropTypes.Icons

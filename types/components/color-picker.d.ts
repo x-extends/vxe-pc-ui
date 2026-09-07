@@ -28,6 +28,7 @@ export namespace VxeColorPickerPropTypes {
   export type Type = 'rgb' | 'hex'
   export type ClassName = string | ((params: { $colorPicker: VxeColorPickerConstructor }) => string)
   export type PopupClassName = string | ((params: {$colorPicker: VxeColorPickerConstructor }) => string)
+  export type Width = string | number
   export type Colors = string[] | {
     label?: string
     value: string
@@ -90,6 +91,7 @@ export interface VxeColorPickerProps {
   type?: VxeColorPickerPropTypes.Type
   className?: VxeColorPickerPropTypes.ClassName
   popupClassName?: VxeColorPickerPropTypes.PopupClassName
+  width?: VxeColorPickerPropTypes.Width
   colors?: VxeColorPickerPropTypes.Colors
   showAlpha?: VxeColorPickerPropTypes.ShowAlpha
   showEyeDropper?: VxeColorPickerPropTypes.ShowEyeDropper

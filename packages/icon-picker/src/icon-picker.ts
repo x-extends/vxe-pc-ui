@@ -48,6 +48,7 @@ export default defineVxeComponent({
      * @deprecated
      */
     popupClassName: [String, Function] as PropType<VxeIconPickerPropTypes.PopupClassName>,
+    width: [Number, String] as PropType<VxeIconPickerPropTypes.Width>,
     showIconTitle: {
       type: Boolean as PropType<VxeIconPickerPropTypes.ShowIconTitle>,
       default: () => getConfig().iconPicker.showIconTitle
@@ -166,6 +167,15 @@ export default defineVxeComponent({
         return getFuncText(globalPlaceholder)
       }
       return getI18n('vxe.base.pleaseSelect')
+    })
+
+    const computeCurrStyle = computed(() => {
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     })
 
     const computeWrapperStyle = computed(() => {
@@ -602,11 +612,6 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
-      const inpPlaceholder = computeInpPlaceholder.value
-      const wrapperStyle = computeWrapperStyle.value
-      const popupOpts = computePopupOpts.value
-      const { appendTo } = popupOpts
-      const ppClassName = popupOpts.className || props.popupClassName
 
       if (formReadonly) {
         return h('div', {
@@ -618,6 +623,12 @@ export default defineVxeComponent({
           })
         ])
       }
+      const currStyle = computeCurrStyle.value
+      const inpPlaceholder = computeInpPlaceholder.value
+      const wrapperStyle = computeWrapperStyle.value
+      const popupOpts = computePopupOpts.value
+      const { appendTo } = popupOpts
+      const ppClassName = popupOpts.className || props.popupClassName
       return h('div', {
         ref: refElem,
         class: ['vxe-ico-picker', className ? (XEUtils.isFunction(className) ? className({ $iconPicker: $xeIconPicker }) : className) : '', {
@@ -626,7 +637,8 @@ export default defineVxeComponent({
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--active': isActivated
-        }]
+        }],
+        style: currStyle
       }, [
         h('div', {
           class: 'vxe-ico-picker--inner',

@@ -9,7 +9,7 @@ import VxeButtonComponent from '../../button'
 import VxeInputComponent from '../../input'
 import VxeNumberInputComponent from '../../number-input'
 
-import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, ColorPickerInternalData, ColorPickerMethods, ColorPickerPrivateMethods, ValueOf, ColorPickerPrivateRef, VxeColorPickerPrivateComputed, VxeColorPickerConstructor, VxeColorPickerPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
+import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, ColorPickerInternalData, ColorPickerMethods, ColorPickerPrivateMethods, ValueOf, ColorPickerPrivateRef, VxeColorPickerPrivateComputed, VxeColorPickerConstructor, VxeColorPickerPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeCardConstructor, VxeCardPrivateMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 export default defineVxeComponent({
@@ -25,6 +25,7 @@ export default defineVxeComponent({
       type: String as PropType<VxeColorPickerPropTypes.Type>,
       default: () => getConfig().colorPicker.type
     },
+    width: [Number, String] as PropType<VxeColorPickerPropTypes.Width>,
     size: {
       type: String as PropType<VxeColorPickerPropTypes.Size>,
       default: () => getConfig().colorPicker.size || getConfig().size
@@ -187,6 +188,15 @@ export default defineVxeComponent({
         })
       }
       return []
+    })
+
+    const computeCurrStyle = computed(() => {
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     })
 
     const computePopupOpts = computed(() => {
@@ -994,8 +1004,6 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
-      const popupOpts = computePopupOpts.value
-      const { appendTo } = popupOpts
 
       if (formReadonly) {
         return h('div', {
@@ -1016,6 +1024,9 @@ export default defineVxeComponent({
           })
         ])
       }
+      const currStyle = computeCurrStyle.value
+      const popupOpts = computePopupOpts.value
+      const { appendTo } = popupOpts
       return h('div', {
         ref: refElem,
         class: ['vxe-color-picker', className ? (XEUtils.isFunction(className) ? className({ $colorPicker: $xeColorPicker }) : className) : '', {
@@ -1024,7 +1035,8 @@ export default defineVxeComponent({
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--active': isActivated
-        }]
+        }],
+        style: currStyle
       }, [
         h('input', {
           ref: refInputTarget,

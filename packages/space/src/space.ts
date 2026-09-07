@@ -18,6 +18,7 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeSpacePropTypes.Wrap>,
       default: () => getConfig().space.wrap
     },
+    width: [Number, String] as PropType<VxeSpacePropTypes.Width>,
     gap: {
       type: [Number, String, Array, Object] as PropType<VxeSpacePropTypes.Gap>,
       default: () => getConfig().space.gap
@@ -81,8 +82,8 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeWrapperStyle = computed(() => {
-      const { align, gap } = props
+    const computeCurrStyle = computed(() => {
+      const { align, gap, width } = props
       const stys: VxeComponentStyleType = {}
       let rowGap: string | number = ''
       let columGap: string | number = ''
@@ -97,6 +98,9 @@ export default defineVxeComponent({
           rowGap = gap.rowGap || ''
           columGap = gap.columGap || ''
         }
+      }
+      if (width) {
+        stys.width = toCssUnit(width)
       }
       if (align) {
         stys['align-items'] = align
@@ -180,7 +184,7 @@ export default defineVxeComponent({
 
     const renderVN = () => {
       const { vertical, wrap, className, fill, itemWidth, itemMinWidth, itemMaxWidth } = props
-      const wrapperStyle = computeWrapperStyle.value
+      const currStyle = computeCurrStyle.value
       const vSize = computeSize.value
       return h('div', {
         ref: refElem,
@@ -191,7 +195,7 @@ export default defineVxeComponent({
           'is--fill': fill,
           'is--width': itemWidth || itemMinWidth || itemMaxWidth
         }],
-        style: wrapperStyle
+        style: currStyle
       }, renderItems())
     }
 

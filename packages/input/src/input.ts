@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue, getText } from '../../ui/src/utils'
-import { hasClass, getAbsolutePos, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
+import { hasClass, getAbsolutePos, getEventTargetNode, hasControlKey, toCssUnit } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from '../../date-panel/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -74,6 +74,7 @@ export default defineVxeComponent({
     align: String as PropType<VxeInputPropTypes.Align>,
     form: String as PropType<VxeInputPropTypes.Form>,
     className: String as PropType<VxeInputPropTypes.ClassName>,
+    width: [String, Number] as PropType<VxeInputPropTypes.Width>,
     inputClassName: {
       type: String as PropType<VxeInputPropTypes.InputClassName>,
       default: () => getConfig().input.inputClassName
@@ -325,6 +326,15 @@ export default defineVxeComponent({
         }
       }
       return maxLen as number
+    })
+
+    const computeCurrStyle = computed(() => {
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     })
 
     const computeIsDateTimeType = computed(() => {
@@ -2694,6 +2704,7 @@ export default defineVxeComponent({
           class: ['vxe-input--readonly', `type--${type}`, className]
         }, inputValue)
       }
+      const currStyle = computeCurrStyle.value
       const isCountError = computeIsCountError.value
       const inputCount = computeInputCount.value
       const inputReadonly = computeInputReadonly.value
@@ -2720,6 +2731,7 @@ export default defineVxeComponent({
           'is--active': isActivated,
           'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }],
+        style: currStyle,
         spellcheck: false
       }, [
         prefix || createCommentVNode(),
