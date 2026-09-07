@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
-import { updatePanelPlacement, getEventTargetNode, getPopupAppendElement } from '../../ui/src/dom'
+import { updatePanelPlacement, getEventTargetNode, getPopupAppendElement, toCssUnit } from '../../ui/src/dom'
 import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue, getNextMonth, getPrevMonth, getNextYear, getPrevYear } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -11,7 +11,7 @@ import VxeDatePanelComponent from '../../date-panel/src/date-panel'
 import VxeButtonComponent from '../../button/src/button'
 import VxeButtonGroupComponent from '../../button/src/button-group'
 
-import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerReactData, DateRangePickerInternalData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDateRangePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeDatePanelConstructor, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
+import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerReactData, DateRangePickerInternalData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDateRangePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeDatePanelConstructor, VxeCardConstructor, VxeCardPrivateMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { errLog } = createComponentLog('date-range-picker')
@@ -56,6 +56,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeDateRangePickerPropTypes.Immediate>,
       default: true
     },
+    width: [Number, String] as PropType<VxeDateRangePickerPropTypes.Width>,
     name: String as PropType<VxeDateRangePickerPropTypes.Name>,
     type: {
       type: String as PropType<VxeDateRangePickerPropTypes.Type>,
@@ -291,6 +292,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return [defaultTime, defaultTime]
       }
       return []
+    },
+    computeCurrStyle () {
+      const $xeDateRangePicker = this
+      const props = $xeDateRangePicker
+
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     },
     computeMVal () {
       const $xeDateRangePicker = this
@@ -1682,6 +1694,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           class: ['vxe-date-range-picker--readonly', `type--${type}`, className]
         }, inputLabel)
       }
+      const currStyle = $xeDateRangePicker.computeCurrStyle
       const inpPlaceholder = $xeDateRangePicker.computeInpPlaceholder
       const isClearable = $xeDateRangePicker.computeIsClearable
       const prefix = $xeDateRangePicker.renderPrefixIcon(h)
@@ -1697,6 +1710,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--active': isActivated,
           'show--clear': isClearable && !isDisabled && (selectStValue || selectEdValue)
         }],
+        style: currStyle,
         attrs: {
           spellcheck: false
         }

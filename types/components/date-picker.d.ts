@@ -23,6 +23,7 @@ export namespace VxeDatePickerPropTypes {
   export type ModelValue = string | number | Date | null
   export type ClassName = string
   export type InputClassName = string
+  export type Width = string | number
   export type Immediate = boolean
   export type Name = string
   export type Type = VxeDatePanelPropTypes.Type
@@ -142,6 +143,7 @@ export interface VxeDatePickerProps {
   value?: VxeDatePickerPropTypes.ModelValue
   className?: VxeDatePickerPropTypes.ClassName
   inputClassName?: VxeDatePickerPropTypes.InputClassName
+  width?: VxeDatePickerPropTypes.Width
   immediate?: VxeDatePickerPropTypes.Immediate
   name?: VxeDatePickerPropTypes.Name
   type?: VxeDatePickerPropTypes.Type

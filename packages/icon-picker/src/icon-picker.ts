@@ -55,6 +55,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
      * @deprecated
      */
     popupClassName: [String, Function] as PropType<VxeIconPickerPropTypes.PopupClassName>,
+    width: [Number, String] as PropType<VxeIconPickerPropTypes.Width>,
     showIconTitle: {
       type: Boolean as PropType<VxeIconPickerPropTypes.ShowIconTitle>,
       default: () => getConfig().iconPicker.showIconTitle
@@ -188,6 +189,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return getFuncText(globalPlaceholder)
       }
       return getI18n('vxe.base.pleaseSelect')
+    },
+    computeCurrStyle () {
+      const $xeIconPicker = this
+      const props = $xeIconPicker
+
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     },
     computeWrapperStyle () {
       const $xeIconPicker = this
@@ -743,10 +755,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isDisabled = $xeIconPicker.computeIsDisabled
       const btnTransfer = $xeIconPicker.computeBtnTransfer
       const formReadonly = $xeIconPicker.computeFormReadonly
-      const inpPlaceholder = $xeIconPicker.computeInpPlaceholder
-      const wrapperStyle = $xeIconPicker.computeWrapperStyle
-      const popupOpts = $xeIconPicker.computePopupOpts
-      const ppClassName = popupOpts.className || props.popupClassName
 
       if (formReadonly) {
         return h('div', {
@@ -758,6 +766,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
           })
         ])
       }
+      const currStyle = $xeIconPicker.computeCurrStyle
+      const inpPlaceholder = $xeIconPicker.computeInpPlaceholder
+      const wrapperStyle = $xeIconPicker.computeWrapperStyle
+      const popupOpts = $xeIconPicker.computePopupOpts
+      const ppClassName = popupOpts.className || props.popupClassName
       return h('div', {
         ref: 'refElem',
         class: ['vxe-ico-picker', className ? (XEUtils.isFunction(className) ? className({ $iconPicker: $xeIconPicker }) : className) : '', {
@@ -766,7 +779,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--active': isActivated
-        }]
+        }],
+        style: currStyle
       }, [
         h('div', {
           class: 'vxe-ico-picker--inner',

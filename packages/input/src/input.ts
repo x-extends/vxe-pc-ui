@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue, getText } from '../../ui/src/utils'
-import { hasClass, getAbsolutePos, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
+import { hasClass, getAbsolutePos, getEventTargetNode, hasControlKey, toCssUnit } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from '../../date-panel/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -85,6 +85,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeInputPropTypes.InputClassName>,
       default: () => getConfig().input.inputClassName
     },
+    width: [String, Number] as PropType<VxeInputPropTypes.Width>,
     size: {
       type: String as PropType<VxeInputPropTypes.Size>,
       default: () => getConfig().input.size || getConfig().size
@@ -327,6 +328,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
       return maxLen as number
+    },
+    computeCurrStyle () {
+      const $xeInput = this
+      const props = $xeInput
+
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     },
     computeIsDateTimeType () {
       const $xeInput = this
@@ -3055,6 +3067,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           class: ['vxe-input--readonly', `type--${type}`, className]
         }, inputValue)
       }
+      const currStyle = $xeInput.computeCurrStyle
       const isCountError = $xeInput.computeIsCountError
       const inputCount = $xeInput.computeInputCount
       const inputReadonly = $xeInput.computeInputReadonly
@@ -3081,6 +3094,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--active': isActivated,
           'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }],
+        style: currStyle,
         attrs: {
           spellcheck: false
         }

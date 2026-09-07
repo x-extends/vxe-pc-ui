@@ -9,7 +9,7 @@ import VxeButtonComponent from '../../button'
 import VxeInputComponent from '../../input'
 import VxeNumberInputComponent from '../../number-input'
 
-import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, VxeComponentSizeType, ColorPickerInternalData, ValueOf, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
+import type { ColorPickerReactData, VxeColorPickerPropTypes, VxeColorPickerEmits, VxeComponentSizeType, ColorPickerInternalData, ValueOf, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeCardConstructor, VxeCardPrivateMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const WinEyeDropper = typeof window !== 'undefined' ? (window as any).EyeDropper : null
@@ -39,6 +39,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeColorPickerPropTypes.Type>,
       default: () => getConfig().colorPicker.type
     },
+    width: [Number, String] as PropType<VxeColorPickerPropTypes.Width>,
     size: {
       type: String as PropType<VxeColorPickerPropTypes.Size>,
       default: () => getConfig().colorPicker.size || getConfig().size
@@ -220,6 +221,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
       return []
+    },
+    computeCurrStyle () {
+      const $xeColorPicker = this
+      const props = $xeColorPicker
+
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     },
     computePopupOpts () {
       const $xeColorPicker = this
@@ -1177,6 +1189,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           })
         ])
       }
+      const currStyle = $xeColorPicker.computeCurrStyle
       return h('div', {
         ref: 'refElem',
         class: ['vxe-color-picker', className ? (XEUtils.isFunction(className) ? className({ $colorPicker: $xeColorPicker }) : className) : '', {
@@ -1185,7 +1198,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--active': isActivated
-        }]
+        }],
+        style: currStyle
       }, [
         h('input', {
           ref: 'refInputTarget',

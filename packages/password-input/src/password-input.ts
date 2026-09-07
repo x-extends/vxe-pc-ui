@@ -4,8 +4,9 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
+import { toCssUnit } from '../../ui/src/dom'
 
-import type { VxePasswordInputEmits, VxeComponentSizeType, PasswordInputReactData, ValueOf, VxePasswordInputPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { VxePasswordInputEmits, VxeComponentSizeType, PasswordInputReactData, ValueOf, VxePasswordInputPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeComponentStyleType } from '../../../types'
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePasswordInput',
@@ -48,6 +49,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxePasswordInputPropTypes.InputClassName>,
       default: () => getConfig().passwordInput.inputClassName
     },
+    width: [String, Number] as PropType<VxePasswordInputPropTypes.Width>,
     size: {
       type: String as PropType<VxePasswordInputPropTypes.Size>,
       default: () => getConfig().passwordInput.size || getConfig().size
@@ -171,6 +173,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { editable } = props
       const formReadonly = $xePasswordInput.computeFormReadonly
       return formReadonly || !editable
+    },
+    computeCurrStyle () {
+      const $xePasswordInput = this
+      const props = $xePasswordInput
+
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     }
   },
   methods: {
@@ -451,6 +464,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           class: ['vxe-password-input--readonly', className]
         }, getText(inputValue))
       }
+      const currStyle = $xePasswordInput.computeCurrStyle
       const vSize = $xePasswordInput.computeSize
       const inputType = $xePasswordInput.computeInputType
       const inpPlaceholder = $xePasswordInput.computeInpPlaceholder
@@ -470,6 +484,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--active': isActivated,
           'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }],
+        style: currStyle,
         attrs: {
           spellcheck: false
         }

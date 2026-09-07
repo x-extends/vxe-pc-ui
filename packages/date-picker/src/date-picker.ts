@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
-import { updatePanelPlacement, getEventTargetNode, hasControlKey, getPopupAppendElement } from '../../ui/src/dom'
+import { updatePanelPlacement, getEventTargetNode, hasControlKey, getPopupAppendElement, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateInputFormat } from '../../date-panel/src/util'
 import { createComponentLog } from '../../ui/src/log'
@@ -11,7 +11,7 @@ import VxeDatePanelComponent from '../../date-panel'
 import VxeButtonComponent from '../../button'
 import VxeButtonGroupComponent from '../../button-group'
 
-import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDatePanelDefines, VxeDatePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeDatePanelConstructor, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
+import type { VxeDatePickerConstructor, VxeDatePickerEmits, DatePickerInternalData, DatePickerReactData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDatePanelDefines, VxeDatePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDatePickerDefines, VxeDatePanelConstructor, VxeCardConstructor, VxeCardPrivateMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { warnLog, errLog } = createComponentLog('date-picker')
@@ -67,6 +67,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeDatePickerPropTypes.Type>,
       default: 'date' as VxeDatePickerPropTypes.Type
     },
+    width: [Number, String] as PropType<VxeDatePickerPropTypes.Width>,
     clearable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Clearable>,
       default: () => getConfig().datePicker.clearable
@@ -321,6 +322,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
       return []
+    },
+    computeCurrStyle () {
+      const $xeDatePicker = this
+      const props = $xeDatePicker
+
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     },
     computeDateStartDate  () {
       const $xeDatePicker = this
@@ -1827,6 +1839,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           class: ['vxe-date-picker--readonly', `type--${type}`, className]
         }, panelLabel)
       }
+      const currStyle = $xeDatePicker.computeCurrStyle
       const inputReadonly = $xeDatePicker.computeInputReadonly
       const inpPlaceholder = $xeDatePicker.computeInpPlaceholder
       const isClearable = $xeDatePicker.computeIsClearable
@@ -1843,6 +1856,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--active': isActivated,
           'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
         }],
+        style: currStyle,
         attrs: {
           spellcheck: false
         }

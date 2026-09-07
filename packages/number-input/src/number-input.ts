@@ -4,11 +4,11 @@ import XEUtils, { CommafyOptions } from 'xe-utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, eqEmptyValue, isEnableConf, getText } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
-import { hasClass, getEventTargetNode, hasControlKey } from '../../ui/src/dom'
+import { hasClass, getEventTargetNode, hasControlKey, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
 
-import type { NumberInputInternalData, VxeNumberInputEmits, NumberInputReactData, VxeNumberInputPropTypes, VxeComponentSizeType, VxeFormConstructor, ValueOf, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type { NumberInputInternalData, VxeNumberInputEmits, NumberInputReactData, VxeNumberInputPropTypes, VxeComponentSizeType, VxeFormConstructor, ValueOf, VxeFormPrivateMethods, VxeFormDefines, VxeComponentStyleType } from '../../../types'
 
 const { errLog } = createComponentLog('number-input')
 
@@ -75,6 +75,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeNumberInputPropTypes.InputClassName>,
       default: () => getConfig().numberInput.inputClassName
     },
+    width: [String, Number] as PropType<VxeNumberInputPropTypes.Width>,
     size: {
       type: String as PropType<VxeNumberInputPropTypes.Size>,
       default: () => getConfig().numberInput.size || getConfig().size
@@ -396,6 +397,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { inputClassName } = props
       return 'vxe-number-input--input' + (inputClassName ? (' ' + inputClassName) : '')
+    },
+    computeCurrStyle () {
+      const $xeNumberInput = this
+      const props = $xeNumberInput
+
+      const { width } = props
+      const stys: VxeComponentStyleType = {}
+      if (width) {
+        stys.width = toCssUnit(width)
+      }
+      return stys
     }
   },
   methods: {
