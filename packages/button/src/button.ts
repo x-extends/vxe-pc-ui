@@ -102,8 +102,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
     suffixTooltip: Object as PropType<VxeButtonPropTypes.SuffixTooltip>,
     options: Array as PropType<VxeButtonPropTypes.Options>,
     showDropdownIcon: {
-      type: Boolean,
+      type: Boolean as PropType<VxeButtonPropTypes.ShowDropdownIcon>,
       default: () => getConfig().button.showDropdownIcon
+    },
+    dropdownCloseIcon: {
+      type: String as PropType<VxeButtonPropTypes.DropdownCloseIcon>,
+      default: () => getConfig().button.dropdownCloseIcon
+    },
+    dropdownOpenIcon: {
+      type: String as PropType<VxeButtonPropTypes.DropdownOpenIcon>,
+      default: () => getConfig().button.dropdownOpenIcon
     },
     /**
      * 在下拉面板关闭时销毁内容
@@ -717,7 +725,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeButton.$scopedSlots
       const reactData = $xeButton.reactData
 
-      const { className, trigger, title, routerLink, type, destroyOnClose, name, loading, shadow, showDropdownIcon } = props
+      const { className, trigger, title, routerLink, type, destroyOnClose, name, loading, shadow, dropdownOpenIcon, dropdownCloseIcon, showDropdownIcon } = props
       const { initialized, isAniVisible, visiblePanel } = reactData
       const isFormBtn = $xeButton.computeIsFormBtn
       const btnMode = $xeButton.computeBtnMode
@@ -785,7 +793,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             $xeButton.renderContent(h).concat(showDropdownIcon
               ? [
                   h('i', {
-                    class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
+                    class: `vxe-button--dropdown-icon ${visiblePanel ? (dropdownOpenIcon || getIcon().BUTTON_DROPDOWN_OPEN) : (dropdownCloseIcon || getIcon().BUTTON_DROPDOWN_CLOSE)}`
                   })
                 ]
               : [])
@@ -814,7 +822,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }, $xeButton.renderContent(h).concat(showDropdownIcon
               ? [
                   h('i', {
-                    class: `vxe-button--dropdown-arrow ${getIcon().BUTTON_DROPDOWN}`
+                    class: `vxe-button--dropdown-icon ${visiblePanel ? (dropdownOpenIcon || getIcon().BUTTON_DROPDOWN_OPEN) : (dropdownCloseIcon || getIcon().BUTTON_DROPDOWN_CLOSE)}`
                   })
                 ]
               : [])),

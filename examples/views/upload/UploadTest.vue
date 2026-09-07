@@ -60,16 +60,11 @@ export default Vue.extend({
     }
   },
   methods: {
-    uploadMethod  ({ file, updateProgress }: any) {
+    uploadMethod  ({ file }: any) {
       const formData = new FormData()
       formData.append('file', file)
-      return window.axios.post('/api/pub/upload/single', formData, {
-        onUploadProgress (progressEvent: any) {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-          updateProgress(percentCompleted)
-        }
-      }).then((res: any) => {
-        return res.data
+      return Promise.resolve({
+        url: 'xx'
       })
     }
   }

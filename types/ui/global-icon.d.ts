@@ -68,7 +68,8 @@ declare module '@vxe-ui/core' {
     LOADING?: string
 
     // button
-    BUTTON_DROPDOWN?: string
+    BUTTON_DROPDOWN_OPEN?: string
+    BUTTON_DROPDOWN_CLOSE?: string
     BUTTON_LOADING?: string
     BUTTON_TOOLTIP_ICON?: string
 
