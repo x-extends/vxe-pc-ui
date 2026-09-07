@@ -872,7 +872,7 @@ export default defineVxeComponent({
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
       const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
       if (isEsc) {
-        const lastModal = XEUtils.max(allActiveModals, (item) => item.reactData.modalZindex)
+        const lastModal = XEUtils.max(allActiveModals.filter(item => item.reactData.zoomStatus !== 'minimize'), (item) => item.reactData.modalZindex)
         // 多个时，只关掉最上层的窗口
         if (lastModal) {
           setTimeout(() => {

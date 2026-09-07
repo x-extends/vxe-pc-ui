@@ -529,7 +529,8 @@ setIcon({
   LOADING: iconPrefix + 'spinner roll vxe-loading--default-icon',
 
   // button
-  BUTTON_DROPDOWN: iconPrefix + 'arrow-down',
+  BUTTON_DROPDOWN_OPEN: iconPrefix + 'arrow-down rotate180',
+  BUTTON_DROPDOWN_CLOSE: iconPrefix + 'arrow-down',
   BUTTON_LOADING: iconPrefix + 'spinner roll',
   BUTTON_TOOLTIP_ICON: iconPrefix + 'question-circle-fill',
 

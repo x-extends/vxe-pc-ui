@@ -58,16 +58,11 @@ const imgList = ref([
   { name: 'fj187.jpg', url: 'https://vxeui.com/resource/img/fj187.jpg' }
 ])
 
-const uploadMethod: VxeUploadPropTypes.UploadMethod = ({ file, updateProgress }) => {
+const uploadMethod: VxeUploadPropTypes.UploadMethod = ({ file }) => {
   const formData = new FormData()
   formData.append('file', file)
-  return window.axios.post('/api/pub/upload/single', formData, {
-    onUploadProgress (progressEvent: any) {
-      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-      updateProgress(percentCompleted)
-    }
-  }).then((res: any) => {
-    return res.data
+  return Promise.resolve({
+    url: 'xx'
   })
 }
 </script>
