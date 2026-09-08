@@ -173,7 +173,10 @@ export default defineVxeComponent({
       type: [Number, String] as PropType<VxeModalPropTypes.MarginSize>,
       default: () => getConfig().modal.marginSize
     },
-    fullscreen: Boolean as PropType<VxeModalPropTypes.Fullscreen>,
+    fullscreen: {
+      type: Boolean as PropType<VxeModalPropTypes.Fullscreen>,
+      default: () => getConfig().modal.fullscreen
+    },
     draggable: {
       type: Boolean as PropType<VxeModalPropTypes.Draggable>,
       default: () => getConfig().modal.draggable
