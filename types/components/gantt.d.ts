@@ -3,7 +3,7 @@ import { NormalizedScopedSlot } from 'vue/types/vnode'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSlotType, VxeComponentAlignType, VxeComponentStatusType } from '@vxe-ui/core'
 import { GridPrivateRef, VxeGridProps, VxeGridPropTypes, GridPrivateComputed, GridReactData, GridInternalData, GridMethods, GridPrivateMethods, VxeGridEmits, VxeGridSlots, VxeGridListeners, VxeGridEventProps, VxeGridMethods } from './grid'
 import { VxeTablePropTypes } from './table'
-import { VxeTooltipPropTypes } from './tooltip'
+import { VxeTooltipPropTypes, VxeTooltipProps } from './tooltip'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
@@ -496,6 +496,10 @@ export namespace VxeGanttPropTypes {
      */
     allowEnd?: boolean
     /**
+     * 显示 Tooltip 提示
+     */
+    showTooltip?: boolean
+    /**
      * 拖拽开始时是否允许行拖拽调整任务日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
     resizeStartMethod?(params: {
@@ -538,6 +542,23 @@ export namespace VxeGanttPropTypes {
     }): void
   }
 
+  export interface TaskBarResizeTooltipConfig<D = any> extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
+    /**
+     * 自定义内容
+     */
+    contentMethod?: (params: {
+      $gantt: VxeGanttConstructor<D>
+      resizeType: 'start' | 'end'
+      row: D
+      startDate: Date
+      endDate: Date
+      targetStartDate: Date
+      targetEndDate: Date
+      offsetSize: number
+      linkInfo: VxeGanttDefines.LinkInfoObj<D>
+    }) => string | number | null | undefined
+  }
+
   export interface TaskBarMoveConfig<D = any> {
     /**
      * 拖拽模式
@@ -547,6 +568,10 @@ export namespace VxeGanttPropTypes {
      * 拖拽移动任务后自动更新依赖线关联任务的日期
      */
     isSyncLinkTask?: boolean
+    /**
+     * 显示 Tooltip 提示
+     */
+    showTooltip?: boolean
     /**
      * 拖拽开始时是否允许行拖拽移动任务日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
@@ -586,6 +611,22 @@ export namespace VxeGanttPropTypes {
       linkInfo: VxeGanttDefines.LinkInfoObj<D>
     }): void
   }
+
+  export interface TaskBarMoveTooltipConfig<D = any> extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
+    /**
+     * 自定义内容
+     */
+    contentMethod?: (params: {
+      $gantt: VxeGanttConstructor<D>
+      row: D
+      startDate: Date
+      endDate: Date
+      targetStartDate: Date
+      targetEndDate: Date
+      offsetSize: number
+      linkInfo: VxeGanttDefines.LinkInfoObj<D>
+    }) => string | number | null | undefined
+  }
 }
 
 export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'> {
@@ -605,7 +646,9 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   taskBarSubviewConfig?: VxeGanttPropTypes.TaskBarSubviewConfig<D>
   taskBarTooltipConfig?: VxeGanttPropTypes.TaskBarTooltipConfig<D>
   taskBarResizeConfig?: VxeGanttPropTypes.TaskBarResizeConfig<D>
+  taskBarResizeTooltipConfig?: VxeGanttPropTypes.TaskBarResizeTooltipConfig<D>
   taskBarMoveConfig?: VxeGanttPropTypes.TaskBarMoveConfig<D>
+  taskBarMoveTooltipConfig?: VxeGanttPropTypes.TaskBarMoveTooltipConfig<D>
 }
 
 export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
@@ -615,7 +658,9 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskViewScaleOpts: VxeGanttPropTypes.TaskViewScaleConfig
   computeTaskBarOpts: VxeGanttPropTypes.TaskBarConfig<D>
   computeTaskBarMoveOpts: VxeGanttPropTypes.TaskBarMoveConfig<D>
+  computeTaskBarMoveTooltipOpts: VxeGanttPropTypes.TaskBarMoveTooltipConfig<D>
   computeTaskBarResizeOpts: VxeGanttPropTypes.TaskBarResizeConfig<D>
+  computeTaskBarResizeTooltipOpts: VxeGanttPropTypes.TaskBarResizeTooltipConfig<D>
   computeTaskSplitOpts: VxeGanttPropTypes.TaskSplitConfig
   computeTaskBarMilestoneOpts: VxeGanttPropTypes.TaskBarMilestoneConfig<D>
   computeTaskBarSubviewOpts: VxeGanttPropTypes.TaskBarSubviewConfig<D>
@@ -1127,10 +1172,17 @@ export namespace VxeGanttDefines {
     startDate: Date
     endDate: Date
   }
-  export interface TaskMoveDragEventParams<D = any> extends TaskMoveStartEventParams<D> {}
+  export interface TaskMoveDragEventParams<D = any> extends TaskMoveStartEventParams<D> {
+    targetStartDate: Date
+    targetEndDate: Date
+    offsetSize: number
+    linkInfo: VxeGanttDefines.LinkInfoObj<D>
+  }
   export interface TaskMoveEndEventParams<D = any> extends TaskMoveStartEventParams<D> {
     targetStartDate: Date
     targetEndDate: Date
+    offsetSize: number
+    linkInfo: VxeGanttDefines.LinkInfoObj<D>
   }
   export interface TaskResizeStartEventParams<D = any> extends GanttEventParams<D> {
     $gantt: VxeGanttConstructor<D>
@@ -1139,10 +1191,17 @@ export namespace VxeGanttDefines {
     startDate: Date
     endDate: Date
   }
-  export interface TaskResizeDragEventParams<D = any> extends TaskResizeStartEventParams<D> {}
+  export interface TaskResizeDragEventParams<D = any> extends TaskResizeStartEventParams<D> {
+    targetStartDate: Date
+    targetEndDate: Date
+    offsetSize: number
+    linkInfo: VxeGanttDefines.LinkInfoObj<D>
+  }
   export interface TaskResizeEndEventParams<D = any> extends TaskResizeStartEventParams<D> {
     targetStartDate: Date
     targetEndDate: Date
+    offsetSize: number
+    linkInfo: VxeGanttDefines.LinkInfoObj<D>
   }
 
   export interface TaskLinkClickEventParams<D = any> extends GanttEventParams<D> {
