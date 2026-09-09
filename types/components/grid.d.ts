@@ -64,7 +64,7 @@ export namespace VxeGridPropTypes {
   }
 
   interface ProxyAjaxQuerySortCheckedParams<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     order: string
     sortBy: string
     field: string
@@ -351,7 +351,7 @@ export namespace VxeGridPropTypes {
       $table: VxeTableConstructor<D>
       $grid: VxeGridConstructor<D> | null | undefined
       $gantt: VxeGanttConstructor<D> | null | undefined
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): void
     [key: string]: any
 
@@ -1109,7 +1109,7 @@ export namespace VxeGridSlotTypes {
     /**
      * 当前列对象
      */
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     /**
      * 相对于 columns 中的索引，等同于 getTColumnIndex(column)
      */

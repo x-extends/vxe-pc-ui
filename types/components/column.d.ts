@@ -56,7 +56,7 @@ export namespace VxeColumnPropTypes {
   export type FooterFormatter<D = any> = ((params: {
     cellValue: any
     itemValue: any
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     row: any
     items: any[]
     _columnIndex: number
@@ -65,7 +65,7 @@ export namespace VxeColumnPropTypes {
   export type Sortable = boolean
   export type SortBy<D = any> = string | ((params: {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }) => string | number)
   export type SortType = 'auto' | 'string' | 'number' | null
 
@@ -91,21 +91,21 @@ export namespace VxeColumnPropTypes {
     option: VxeTableDefines.FilterOption
     cellValue: any
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
   export type FilterMethod<D = any> = (params: FilterMethodParams<D>) => boolean
 
   interface FilterResetMethodParams<D = any> {
     $table: VxeTableConstructor<D>
     options: VxeTableDefines.FilterOption[]
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
   export type FilterResetMethod<D = any> = (params: FilterResetMethodParams<D>) => void
 
   interface FilterRecoverMethodParams<D = any> {
     $table: VxeTableConstructor<D>
     option: VxeTableDefines.FilterOption
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
   export type FilterRecoverMethod<D = any> = (params: FilterRecoverMethodParams<D>) => void
 
@@ -174,14 +174,14 @@ export namespace VxeColumnPropTypes {
   interface ExportMethodParams<D = any> {
     $table: VxeTableConstructor<D>
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     options: VxeTablePropTypes.ExportHandleOptions
   }
   export type ExportMethod<D = any> = (params: ExportMethodParams<D>) => string | number
 
   interface HeaderExportParams<D = any> {
     $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     options: VxeTablePropTypes.ExportHandleOptions
   }
   export type HeaderExportMethod<D = any> = (params: HeaderExportParams<D>) => string | number
@@ -197,7 +197,7 @@ export namespace VxeColumnPropTypes {
      */
     itemIndex: number
     row: any
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     _columnIndex: number
     options: VxeTablePropTypes.ExportHandleOptions
   }
@@ -281,7 +281,7 @@ export namespace VxeColumnPropTypes {
     optionGroupProps?: VxeGlobalRendererHandles.RenderOptionGroupProps
     autoFocus?: boolean | string
     autoSelect?: boolean
-    defaultValue?: ((params: { column: VxeTableDefines.ColumnInfo<D> }) => any) | null | undefined | string | number | RegExp | object | any[] | Date
+    defaultValue?: ((params: { column: VxeTableDefines.ColumnInfo }) => any) | null | undefined | string | number | RegExp | object | any[] | Date
     immediate?: boolean
     content?: string
     placeholder?: string
@@ -668,7 +668,7 @@ export namespace VxeColumnDefines {
   export interface CellFormatterParams<D = any> {
     $table: VxeTableConstructor
     cellValue: any
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     row: D
   }
 
@@ -677,7 +677,7 @@ export namespace VxeColumnDefines {
     $grid: VxeGridConstructor<D> | null | undefined
     isCut: boolean
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     cellValue: any
   }
 
@@ -685,7 +685,7 @@ export namespace VxeColumnDefines {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $grid: VxeGridConstructor<D> | null | undefined
     row: D,
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     cellValue: any
     clipData: {
       text?: string
@@ -698,7 +698,7 @@ export namespace VxeColumnDefines {
     $grid: VxeGridConstructor<D> | null | undefined
     isCut: boolean
     row: D,
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     cellValue: any
     clipData: {
       text?: string
@@ -718,7 +718,7 @@ export namespace VxeColumnSlotTypes {
     $panel: any
     column: {
       filters: VxeTableDefines.FilterOption[]
-    } & VxeTableDefines.ColumnInfo<D>
+    } & VxeTableDefines.ColumnInfo
     columnIndex: number
     $columnIndex: number
     $rowIndex: number
@@ -731,7 +731,7 @@ export namespace VxeColumnSlotTypes {
   export interface FooterSlotParams<D = any> {
     row: D
     rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     _columnIndex: number
     $columnIndex: number
@@ -764,18 +764,18 @@ export namespace VxeColumnSlotTypes {
 
   export interface HeaderTooltipSlotParams<D = any> {
     $rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     tooltipContent: string
   }
   export interface TooltipSlotParams<D = any> {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     tooltipContent: string
   }
   export interface FooterTooltipSlotParams<D = any> {
     row: any
     $rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     tooltipContent: string
   }
 }

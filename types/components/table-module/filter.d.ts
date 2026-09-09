@@ -32,15 +32,15 @@ export interface TableFilterMethods<D = any> {
    * 手动弹出筛选
    * @param fieldOrColumn
    */
-  openFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>):Promise<void>
+  openFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo):Promise<void>
   /**
    * 用于 filters，修改筛选列表，update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据；如果需要同时触发对应的事件，请使用 setFilterByEvent
    */
-  setFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.Filters, update?: boolean): Promise<void>
+  setFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo, options: VxeColumnPropTypes.Filters, update?: boolean): Promise<void>
   /**
    * 手动清空筛选条件；如果需要同时触发对应的事件，请使用 clearFilterByEvent
    */
-  clearFilter(column?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): Promise<void>
+  clearFilter(column?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): Promise<void>
   /**
    * 用于在自定义面板中使用，手动确认筛选
    */

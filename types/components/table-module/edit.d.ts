@@ -79,7 +79,7 @@ export interface TableEditMethods<D = any> {
    */
   getActiveRecord(): {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     /**
      * 请使用 getRowIndex(row)
      * @deprecated
@@ -112,7 +112,7 @@ export interface TableEditMethods<D = any> {
    */
   getEditRecord(): {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     /**
      * 请使用 getRowIndex(row)
      * @deprecated
@@ -144,14 +144,14 @@ export interface TableEditMethods<D = any> {
    */
   getEditCell(): {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   } | null
   /**
    * 用于 mouse-config.selected，获取选中的单元格信息
    */
   getSelectedCell(): {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
   /**
    * 请使用 clearEdit()
@@ -184,24 +184,24 @@ export interface TableEditMethods<D = any> {
   /**
    * 用于 edit-config，激活行编辑并默认激活第一个列，也可以指定列；如果第二个参数为 true，则默认自动激活第一个可编辑列；也可以传指定列
    */
-  setEditRow(row: any, fieldOrColumn?: boolean | string | VxeTableDefines.ColumnInfo<any> | null, options?: {
+  setEditRow(row: any, fieldOrColumn?: boolean | string | VxeTableDefines.ColumnInfo | null, options?: {
     isClear?: boolean
   }): Promise<void>
   /**
    * 请使用 setEditCell
    * @deprecated
    */
-  setActiveCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo<any>): Promise<void>
+  setActiveCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo): Promise<void>
   /**
    * 用于 edit-config，激活单元格编辑
    */
-  setEditCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo<any> | null, options?: {
+  setEditCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo | null, options?: {
     isClear?: boolean
   }): Promise<void>
   /**
    * 用于 mouse-config.mouse-config，选中某个单元格
    */
-  setSelectCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo<any>): Promise<void>
+  setSelectCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo): Promise<void>
 }
 
 export interface TableEditPrivateMethods<D = any> {
@@ -210,7 +210,7 @@ export interface TableEditPrivateMethods<D = any> {
    */
   handleEdit(params: {
     $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     _columnIndex: number
     $columnIndex: number
@@ -230,7 +230,7 @@ export interface TableEditPrivateMethods<D = any> {
    */
   handleCellFocus(cell: HTMLElement, params: {
     $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     row: D
   }): HTMLInputElement | null
   /**
@@ -238,7 +238,7 @@ export interface TableEditPrivateMethods<D = any> {
    */
   handleFocus(params: {
     $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     row: D
     cell: HTMLElement
   }, evnt?: Event | null): void
@@ -247,7 +247,7 @@ export interface TableEditPrivateMethods<D = any> {
    */
   handleSelected(params: {
     $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     _columnIndex: number
     $columnIndex: number

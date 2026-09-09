@@ -93,7 +93,7 @@ export namespace VxeTablePropTypes {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
     $gantt: VxeGanttConstructor<D> | null | undefined
-    columns: VxeTableDefines.ColumnInfo<D>[]
+    columns: VxeTableDefines.ColumnInfo[]
     data: D[]
   }) => Array<string | number | null>[] | any[]
 
@@ -111,7 +111,7 @@ export namespace VxeTablePropTypes {
     rowIndex: number
     $rowIndex: number
     _rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -127,7 +127,7 @@ export namespace VxeTablePropTypes {
   export type HeaderCellClassName<D = VxeTablePropTypes.Row> = string | ((params: {
     $table: VxeTableConstructor<D>
     $rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -149,7 +149,7 @@ export namespace VxeTablePropTypes {
     row: D
     $rowIndex: number
     _rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -160,7 +160,7 @@ export namespace VxeTablePropTypes {
     rowIndex: number
     $rowIndex: number
     _rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -169,7 +169,7 @@ export namespace VxeTablePropTypes {
   export type HeaderCellStyle<D = VxeTablePropTypes.Row> = Partial<CSSStyleDeclaration> | ((params: {
     $table: VxeTableConstructor<D>
     $rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     _columnIndex: number
   }) => void | null | Partial<CSSStyleDeclaration> |VxeComponentStyleType)
@@ -178,7 +178,7 @@ export namespace VxeTablePropTypes {
     $table: VxeTableConstructor<D>
     row: D
     $rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -230,7 +230,7 @@ export namespace VxeTablePropTypes {
 
   export type SpanMethod<D = VxeTablePropTypes.Row> = (params: {
     $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     $columnIndex: number
     row: D
@@ -245,7 +245,7 @@ export namespace VxeTablePropTypes {
 
   export type FooterSpanMethod<D = any> = (params: {
     $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     _columnIndex: number
     $columnIndex: number
@@ -295,7 +295,7 @@ export namespace VxeTablePropTypes {
      * @deprecated
      */
     currentMethod?(params: {
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 每一列是否启用列宽调整
@@ -496,7 +496,7 @@ export namespace VxeTablePropTypes {
      */
     initialAggFuncMethod?:(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }) => VxeTableDefines.AggFuncType
     /**
      * 数据分组允许设置的最大数量
@@ -524,8 +524,8 @@ export namespace VxeTablePropTypes {
     calcValuesMethod?:(params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      groupColumn: VxeTableDefines.ColumnInfo
+      column: VxeTableDefines.ColumnInfo
       groupValue: any
       childCount: number
       children: D[]
@@ -537,8 +537,8 @@ export namespace VxeTablePropTypes {
     formatValuesMethod?:(params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      groupColumn: VxeTableDefines.ColumnInfo
+      column: VxeTableDefines.ColumnInfo
       groupValue: any
       childCount: number
       children: D[]
@@ -550,8 +550,8 @@ export namespace VxeTablePropTypes {
     totalMethod?:(params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      groupColumn: VxeTableDefines.ColumnInfo
+      column: VxeTableDefines.ColumnInfo
       groupValue: any
       childCount: number
       children: D[]
@@ -562,8 +562,8 @@ export namespace VxeTablePropTypes {
     contentMethod?:(params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      groupColumn: VxeTableDefines.ColumnInfo
+      column: VxeTableDefines.ColumnInfo
       groupValue: any
     }) => number | string
 
@@ -579,8 +579,8 @@ export namespace VxeTablePropTypes {
     aggregateMethod?:(params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      groupColumn: VxeTableDefines.ColumnInfo
+      column: VxeTableDefines.ColumnInfo
       groupValue: any
       childCount: number
       aggValue: any
@@ -593,8 +593,8 @@ export namespace VxeTablePropTypes {
     countMethod?:(params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      groupColumn: VxeTableDefines.ColumnInfo
+      column: VxeTableDefines.ColumnInfo
       groupValue: any
       childCount: number
       children: D[]
@@ -661,7 +661,7 @@ export namespace VxeTablePropTypes {
      */
     beforeSelectMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       selected: boolean
     }): boolean
   }
@@ -745,7 +745,7 @@ export namespace VxeTablePropTypes {
      */
     rowDisabledMethod?(params: {
       row: D
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 是否显示拖拽按钮
@@ -753,7 +753,7 @@ export namespace VxeTablePropTypes {
      */
     rowVisibleMethod?(params: {
       row: D
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 自定义提示内容
@@ -835,7 +835,7 @@ export namespace VxeTablePropTypes {
     disabledMethod?(params: {
       $table: VxeTableConstructor<D>
       row: D
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 是否显示拖拽按钮
@@ -843,7 +843,7 @@ export namespace VxeTablePropTypes {
     visibleMethod?(params: {
       $table: VxeTableConstructor<D>
       row: D
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 自定义提示内容
@@ -921,21 +921,21 @@ export namespace VxeTablePropTypes {
      */
     disabledMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 是否显示拖拽按钮
      */
     visibleMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 自定义提示内容
      */
     tooltipMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): string | number | null
     /**
      * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
@@ -1049,14 +1049,14 @@ export namespace VxeTablePropTypes {
      */
     checkMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 个性化设置是否的方法，该方法的返回值用来决定这一列是否显示
      */
     visibleMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 是否允许设置分页设置
@@ -1183,7 +1183,7 @@ export namespace VxeTablePropTypes {
      */
     minHeight?: number | string | ((params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       _columnIndex: number
       $columnIndex: number
@@ -1197,7 +1197,7 @@ export namespace VxeTablePropTypes {
      */
     maxHeight?: number | string | ((params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       _columnIndex: number
       $columnIndex: number
@@ -1211,7 +1211,7 @@ export namespace VxeTablePropTypes {
      */
     minWidth?: number | string | ((params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       _columnIndex: number
       $columnIndex: number
@@ -1225,7 +1225,7 @@ export namespace VxeTablePropTypes {
      */
     maxWidth?: number | string | ((params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       _columnIndex: number
       $columnIndex: number
@@ -1244,7 +1244,7 @@ export namespace VxeTablePropTypes {
     startIndex?: number
     seqMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       _columnIndex: number
       $columnIndex: number
@@ -1307,7 +1307,7 @@ export namespace VxeTablePropTypes {
      */
     iconVisibleMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 自定义列头升序按钮的 title 提示语
@@ -1336,7 +1336,7 @@ export namespace VxeTablePropTypes {
       values: any[]
       cellValue: any
       row: D
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }) => any
     /**
      * 是否精确筛选到每一行，默认情况下是父级被匹配到则所有子级也被匹配；如果传 true 则会对每一行进行筛选
@@ -1364,7 +1364,7 @@ export namespace VxeTablePropTypes {
      */
     iconVisibleMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     className?: string
     zIndex?: number
@@ -1573,7 +1573,7 @@ export namespace VxeTablePropTypes {
       rowIndex: number
       $rowIndex: number
       _rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
@@ -1594,7 +1594,7 @@ export namespace VxeTablePropTypes {
     contentMethod?(params: {
       $table: VxeTableConstructor<D>
       $rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
@@ -1613,7 +1613,7 @@ export namespace VxeTablePropTypes {
       row: D
       rowIndex: number
       $rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
@@ -1662,7 +1662,7 @@ export namespace VxeTablePropTypes {
       row: D
       rowIndex: number
       $rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
     }): boolean
@@ -1762,7 +1762,7 @@ export namespace VxeTablePropTypes {
       rowIndex: number
       $rowIndex: number
       _rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
@@ -1774,7 +1774,7 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       expanded: boolean
       row: D
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
@@ -1857,10 +1857,10 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       type: string
       options: VxeTableDefines.MenuFirstOption[][]
-      columns: VxeTableDefines.ColumnInfo<D>[]
+      columns: VxeTableDefines.ColumnInfo[]
       row?: D
       rowIndex?: number
-      column?: VxeTableDefines.ColumnInfo<D>
+      column?: VxeTableDefines.ColumnInfo
       columnIndex?: number
     }): boolean
   }
@@ -1920,7 +1920,7 @@ export namespace VxeTablePropTypes {
     selectedMethod?(params: {
       $table: VxeTableConstructor<D>
       row: D
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       $grid: VxeGridConstructor<D> | null | undefined
     }): boolean
     /**
@@ -2003,7 +2003,7 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       cellValue: any
       row: D
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     } & VxeTableExtendCellAreaDefines.ExtendCellAreaCalcBaseParams<D>): void
     /**
      * 只对 extendByCopy | extendByCalc 启用后有效，自定义单元格扩展区域赋值之前的方法，可以通过返回 false 阻止扩展赋值行为
@@ -2123,7 +2123,7 @@ export namespace VxeTablePropTypes {
       rowIndex: number
       $rowIndex: number
       _rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
@@ -2137,7 +2137,7 @@ export namespace VxeTablePropTypes {
       rowIndex: number
       $rowIndex: number
       _rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
@@ -2151,7 +2151,7 @@ export namespace VxeTablePropTypes {
       rowIndex: number
       $rowIndex: number
       _rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
@@ -2165,7 +2165,7 @@ export namespace VxeTablePropTypes {
       rowIndex: number
       $rowIndex: number
       _rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       _columnIndex: number
@@ -2177,7 +2177,7 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       row: D
       rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
     }): void
     /**
@@ -2187,7 +2187,7 @@ export namespace VxeTablePropTypes {
       $table: VxeTableConstructor<D>
       row: D
       rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
     }): void
     /**
@@ -2198,7 +2198,7 @@ export namespace VxeTablePropTypes {
       $grid: VxeGridConstructor<D> | null | undefined
       row: D
       rowIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
     }): void
   }
@@ -2272,10 +2272,10 @@ export namespace VxeTablePropTypes {
      * 重写表头单元格复制取值的方法，将表头单元格复制到剪贴板
      */
     copyHeaderMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       isCut: boolean
-      column: VxeTableDefines.ColumnInfo<DT>
+      column: VxeTableDefines.ColumnInfo
       cellTitle: string
     }): string
     /**
@@ -2286,7 +2286,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格复制取值之前的方法，可以通过返回 false 阻止复制行为
      */
     beforeCopyMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       isCut: boolean
       activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea
@@ -2296,7 +2296,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格复制到剪贴板之后的方法
      */
     afterCopyMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       isCut: boolean
       targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
@@ -2309,7 +2309,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格剪贴值清除之前的方法，可以通过返回 false 阻止清除行为
      */
     beforeCutMethod?:(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea
       cutAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
@@ -2323,7 +2323,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格剪贴值清除之后的方法
      */
     afterCutMethod?:(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       cutAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
@@ -2336,7 +2336,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格粘贴赋值之前的方法，可以通过返回 false 阻止复制行为
      */
     beforePasteMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       isCut: boolean
       activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea
@@ -2354,7 +2354,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格粘贴赋值之后的方法
      */
     afterPasteMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       isCut: boolean
       currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
@@ -2363,13 +2363,13 @@ export namespace VxeTablePropTypes {
       cellValues: any[][]
       pasteCells: string[][]
       insertRows: DT[]
-      insertColumns: VxeTableDefines.ColumnInfo<DT>[]
+      insertColumns: VxeTableDefines.ColumnInfo[]
     }): void
     /**
      * 只对 isRowIncrement 有效，自定义创建自增行数据的方法
      */
     createRowsMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
@@ -2381,7 +2381,7 @@ export namespace VxeTablePropTypes {
      * 只对 isColumnIncrement 有效，自定义创建自增列配置的方法
      */
     createColumnsMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       currentAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
       targetAreas: VxeTableExtendCellAreaDefines.CellAreaParams<DT>[]
@@ -2410,11 +2410,11 @@ export namespace VxeTablePropTypes {
      * 自定义单元格查找方法
      */
     findMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       cellValue: any
       row: DT
-      column: VxeTableDefines.ColumnInfo<DT>
+      column: VxeTableDefines.ColumnInfo
       isWhole: boolean
       isRE: boolean
       isSensitive: boolean
@@ -2425,7 +2425,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格查找之前的方法，可以通过返回 false 阻止查找行为
      */
     beforeFindMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       isAll: boolean
       findValue: string | null
@@ -2434,7 +2434,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格查找之后的方法
      */
     afterFindMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       isAll: boolean
       findValue: string | null
@@ -2448,10 +2448,10 @@ export namespace VxeTablePropTypes {
      * 自定义单元格替换方法
      */
     replaceMethod?:(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       row: DT
-      column: VxeTableDefines.ColumnInfo<DT>
+      column: VxeTableDefines.ColumnInfo
       cellValue: any
       findValue: string
       replaceValue: string
@@ -2460,7 +2460,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格替换之前的方法，可以通过返回 false 阻止替换行为
      */
     beforeReplaceMethod?:(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       isAll: boolean
       findValue: string
@@ -2470,7 +2470,7 @@ export namespace VxeTablePropTypes {
      * 自定义单元格替换之后的方法
      */
     afterReplaceMethod?:(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
       isAll: boolean
       findValue: string
@@ -2603,24 +2603,24 @@ export namespace VxeTablePropTypes {
      * 自定义编辑之前逻辑，该方法的返回值用来决定该单元格是否允许编辑
      */
     beforeEditMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
-      $gantt: VxeGanttConstructor | null | undefined
+      $gantt: VxeGanttConstructor<DT> | null | undefined
       row: DT
       rowIndex: number
-      column: VxeTableDefines.ColumnInfo<DT>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
     }): boolean
     /**
      * 自定义编辑之后逻辑
      */
     afterEditMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
-      $gantt: VxeGanttConstructor | null | undefined
+      $gantt: VxeGanttConstructor<DT> | null | undefined
       row: DT
       rowIndex: number
-      column: VxeTableDefines.ColumnInfo<DT>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
     }): void
 
@@ -2629,12 +2629,12 @@ export namespace VxeTablePropTypes {
      * @deprecated
      */
     activeMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods<DT>
+      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
       $grid: VxeGridConstructor<DT> | null | undefined
-      $gantt: VxeGanttConstructor | null | undefined
+      $gantt: VxeGanttConstructor<DT> | null | undefined
       row: DT
       rowIndex: number
-      column: VxeTableDefines.ColumnInfo<DT>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
     }): boolean
   }
@@ -3181,7 +3181,7 @@ export namespace VxeTablePropTypes {
      */
     checkMethod?(params: {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }): boolean
     /**
      * 列过滤方法
@@ -3949,7 +3949,7 @@ export interface TablePrivateComputed<D = any> {
   computeCellOffsetWidth: number
   computeCustomOpts: VxeTablePropTypes.CustomOpts<D>
   computeCustomSimpleMode: 'inside' | 'outside' | 'auto' | '' | null
-  computeAutoWidthColumnList: VxeTableDefines.ColumnInfo<D>[]
+  computeAutoWidthColumnList: VxeTableDefines.ColumnInfo[]
   computeLeftFixedWidth: number
   computeRightFixedWidth: number
   computeBodyMergeCoverFixed: boolean
@@ -4002,8 +4002,8 @@ export interface TablePrivateComputed<D = any> {
     y: boolean
   }
   computeRowGroupFields: string[] | null | undefined
-  computeRowGroupColumns: VxeTableDefines.ColumnInfo<D>[]
-  computeAggFuncColumns: VxeTableDefines.ColumnInfo<D>[]
+  computeRowGroupColumns: VxeTableDefines.ColumnInfo[]
+  computeAggFuncColumns: VxeTableDefines.ColumnInfo[]
   computeUndoRedoHistoryOpts: VxeTablePropTypes.UndoRedoHistoryConfig
 
   computeTableBorder: 'default' | 'full' | 'outer' | 'inner' | 'none'
@@ -4072,11 +4072,11 @@ export interface TableReactData<D = any> {
   // 表尾合计数据
   footerTableData: any[][]
   // 行分组列信息
-  rowGroupColumn: VxeTableDefines.ColumnInfo<D> | null | undefined
+  rowGroupColumn: VxeTableDefines.ColumnInfo | null | undefined
   // 展开列信息
-  expandColumn: VxeTableDefines.ColumnInfo<D> | null | undefined
-  checkboxColumn: VxeTableDefines.ColumnInfo<D> | null | undefined
-  radioColumn: VxeTableDefines.ColumnInfo<D> | null | undefined
+  expandColumn: VxeTableDefines.ColumnInfo | null | undefined
+  checkboxColumn: VxeTableDefines.ColumnInfo | null | undefined
+  radioColumn: VxeTableDefines.ColumnInfo | null | undefined
   hasFixedColumn: boolean
   // 树节点列信息
   treeNodeColumn: any
@@ -4093,22 +4093,22 @@ export interface TableReactData<D = any> {
   }
   // 个性化设置相关的信息
   customStore: VxeTableDefines.VxeTableCustomStoreObj
-  customColumnList: VxeTableDefines.ColumnInfo<D>[]
+  customColumnList: VxeTableDefines.ColumnInfo[]
   // 当前选中的筛选列
   filterStore: VxeTableDefines.FilterStoreObj
   // 存放列相关的信息
   columnStore: {
-    leftList: VxeTableDefines.ColumnInfo<D>[]
-    centerList: VxeTableDefines.ColumnInfo<D>[]
-    rightList: VxeTableDefines.ColumnInfo<D>[]
-    resizeList: VxeTableDefines.ColumnInfo<D>[]
-    pxList: VxeTableDefines.ColumnInfo<D>[]
-    pxMinList: VxeTableDefines.ColumnInfo<D>[]
-    autoMinList: VxeTableDefines.ColumnInfo<D>[]
-    scaleList: VxeTableDefines.ColumnInfo<D>[]
-    scaleMinList: VxeTableDefines.ColumnInfo<D>[]
-    autoList: VxeTableDefines.ColumnInfo<D>[]
-    remainList: VxeTableDefines.ColumnInfo<D>[]
+    leftList: VxeTableDefines.ColumnInfo[]
+    centerList: VxeTableDefines.ColumnInfo[]
+    rightList: VxeTableDefines.ColumnInfo[]
+    resizeList: VxeTableDefines.ColumnInfo[]
+    pxList: VxeTableDefines.ColumnInfo[]
+    pxMinList: VxeTableDefines.ColumnInfo[]
+    autoMinList: VxeTableDefines.ColumnInfo[]
+    scaleList: VxeTableDefines.ColumnInfo[]
+    scaleMinList: VxeTableDefines.ColumnInfo[]
+    autoList: VxeTableDefines.ColumnInfo[]
+    remainList: VxeTableDefines.ColumnInfo[]
   }
   // 存放快捷菜单的信息
   ctxMenuStore: {
@@ -4289,10 +4289,10 @@ export interface TableInternalData<D = any> {
 
   // 当前 hover 行
   hoverRow: D | null
-  hoverCol: VxeTableDefines.ColumnInfo<D>[] | null,
+  hoverCol: VxeTableDefines.ColumnInfo[] | null,
   // 当前行
   currentRow: D | null
-  currentCol: VxeTableDefines.ColumnInfo<D> | null
+  currentCol: VxeTableDefines.ColumnInfo | null
 
   // 最后滚动位置
   lastScrollLeft: number
@@ -4321,11 +4321,11 @@ export interface TableInternalData<D = any> {
   // 行分组全量数据、条件处理后
   tableFullGroupData: D[]
   // 收集的列配置（带分组）
-  collectColumn: VxeTableDefines.ColumnInfo<D>[],
+  collectColumn: VxeTableDefines.ColumnInfo[],
   // 完整所有列（不带分组）
-  tableFullColumn: VxeTableDefines.ColumnInfo<D>[]
+  tableFullColumn: VxeTableDefines.ColumnInfo[]
   // 渲染所有列
-  visibleColumn: VxeTableDefines.ColumnInfo<D>[]
+  visibleColumn: VxeTableDefines.ColumnInfo[]
 
   // 全量数据集（包括当前和已删除）
   fullAllDataRowIdData: Record<string, VxeTableDefines.RowCacheItem<D>>
@@ -4540,12 +4540,12 @@ export interface TableMethods<DT = any> {
    * 加载列配置
    * @param columns 列对象
    */
-  loadColumn(columns: (VxeTableDefines.ColumnOptions<any> | VxeTableDefines.ColumnInfo<any>)[]): Promise<any>
+  loadColumn(columns: (VxeTableDefines.ColumnOptions | VxeTableDefines.ColumnInfo)[]): Promise<any>
   /**
    * 加载列配置并恢复到初始状态
    * @param columns 列对象
    */
-  reloadColumn(columns: (VxeTableDefines.ColumnOptions<any> | VxeTableDefines.ColumnInfo<any>)[]): Promise<any>
+  reloadColumn(columns: (VxeTableDefines.ColumnOptions | VxeTableDefines.ColumnInfo)[]): Promise<any>
   /**
    * 根据 tr 元素获取对应的 row 信息
    * @param tr 行节点元素
@@ -4563,10 +4563,10 @@ export interface TableMethods<DT = any> {
    */
   getColumnNode(cellElem: HTMLElement): {
     colid: string
-    item: VxeTableDefines.ColumnInfo<DT>
-    items: VxeTableDefines.ColumnInfo<DT>[]
+    item: VxeTableDefines.ColumnInfo
+    items: VxeTableDefines.ColumnInfo[]
     index: number
-    parent?: VxeTableDefines.ColumnInfo<DT> | null
+    parent?: VxeTableDefines.ColumnInfo | null
   } | null
   /**
    * 根据 row 获取表格内置的序号
@@ -4592,17 +4592,17 @@ export interface TableMethods<DT = any> {
    * 根据 column 获取相对于 columns 中的索引
    * @param column 列对象
    */
-  getColumnIndex(column: VxeTableDefines.ColumnInfo<any> | null): number
+  getColumnIndex(column: VxeTableDefines.ColumnInfo | null): number
   /**
    * 根据 column 获取相对于当前表格列中的索引
    * @param column 列对象
    */
-  getVTColumnIndex(column: VxeTableDefines.ColumnInfo<any> | null): number
+  getVTColumnIndex(column: VxeTableDefines.ColumnInfo | null): number
   /**
    * 根据 column 获取渲染中的虚拟索引
    * @param column 列对象
    */
-  getVMColumnIndex(column: VxeTableDefines.ColumnInfo<any> | null): number
+  getVMColumnIndex(column: VxeTableDefines.ColumnInfo | null): number
   /**
    * 创建 data 对象
    * 对于某些特殊场景可能会用到，会自动对数据的字段名进行检测，如果不存在就自动定义
@@ -4640,15 +4640,15 @@ export interface TableMethods<DT = any> {
   /**
    * 获取单元格 td 元素
    */
-  getCellElement(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): HTMLElement | null
+  getCellElement(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): HTMLElement | null
   /**
    * 获取单元格显示值
    */
-  getCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
+  getCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): string | number | null
   /**
    * 更新单元格显示值
    */
-  updateCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
+  updateCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): string | number | null
   /**
    * 清除单元格格式化缓存
    */
@@ -4656,11 +4656,11 @@ export interface TableMethods<DT = any> {
   /**
    * 获取表头单元格显示值
    */
-  getHeaderCellLabel(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string
+  getHeaderCellLabel(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): string
   /**
    * 更新表头单元格显示值
    */
-  updateHeaderCellLabel(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string
+  updateHeaderCellLabel(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): string
   /**
    * 清除表头单元格格式化缓存
    */
@@ -4668,11 +4668,11 @@ export interface TableMethods<DT = any> {
   /**
    * 获取表尾单元格显示值
    */
-  getFooterCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
+  getFooterCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): string | number | null
   /**
    * 更新表尾单元格显示值
    */
-  updateFooterCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | number | null
+  updateFooterCellLabel(row: any, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): string | number | null
   /**
    * 清除表尾单元格格式化缓存
    */
@@ -4705,37 +4705,37 @@ export interface TableMethods<DT = any> {
    * 获取表格的可视列，也可以指定索引获取列
    * @param columnIndex 列索引
    */
-  getColumns(): VxeTableDefines.ColumnInfo<DT>[]
-  getColumns(columnIndex?: number): VxeTableDefines.ColumnInfo<DT>
+  getColumns(): VxeTableDefines.ColumnInfo[]
+  getColumns(columnIndex?: number): VxeTableDefines.ColumnInfo
   /**
    * 根据列获取列的唯一主键
    * @param fieldOrColumn
    */
-  getColid(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): string | null
+  getColid(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): string | null
   /**
    * 根据列的唯一主键获取列
    * @param colid 列主键
    */
-  getColumnById(colid: string | null): VxeTableDefines.ColumnInfo<DT> | null
+  getColumnById(colid: string | null): VxeTableDefines.ColumnInfo | null
   /**
    * 根据列的字段名获取列
    * @param field 字段名
    */
-  getColumnByField(field: VxeColumnPropTypes.Field | null): VxeTableDefines.ColumnInfo<DT> | null
+  getColumnByField(field: VxeColumnPropTypes.Field | null): VxeTableDefines.ColumnInfo | null
   /**
    * 根据列获取列的唯一主键
    * @param fieldOrColumn
    */
-  getParentColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): VxeTableDefines.ColumnInfo<DT> | null
+  getParentColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): VxeTableDefines.ColumnInfo | null
   /**
    * 获取当前表格的列
    * 收集到的全量列、全量表头列、处理条件之后的全量表头列、当前渲染中的表头列
    */
   getTableColumn(): {
-    collectColumn: VxeTableDefines.ColumnInfo<DT>[]
-    fullColumn: VxeTableDefines.ColumnInfo<DT>[]
-    visibleColumn: VxeTableDefines.ColumnInfo<DT>[]
-    tableColumn: VxeTableDefines.ColumnInfo<DT>[]
+    collectColumn: VxeTableDefines.ColumnInfo[]
+    fullColumn: VxeTableDefines.ColumnInfo[]
+    visibleColumn: VxeTableDefines.ColumnInfo[]
+    tableColumn: VxeTableDefines.ColumnInfo[]
   }
   /**
    * 移动列到指定列的位置
@@ -4839,33 +4839,33 @@ export interface TableMethods<DT = any> {
    * 设置指定列为固定列
    * @param fieldOrColumns 列对象或字段名,支持传多个
    */
-  setColumnFixed(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[], fixed: VxeColumnPropTypes.Fixed): Promise<void>
+  setColumnFixed(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo[], fixed: VxeColumnPropTypes.Fixed): Promise<void>
   /**
    * 取消指定的固定列
    * @param fieldOrColumns 列对象或字段名,支持传多个
    */
-  clearColumnFixed(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[]): Promise<void>
+  clearColumnFixed(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo[]): Promise<void>
   /**
    * 隐藏指定列
    * @param fieldOrColumns 列对象或字段名,支持传多个
    */
-  hideColumn(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[]): Promise<void>
+  hideColumn(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo[]): Promise<void>
   /**
    * 显示指定列
    * @param fieldOrColumns 列对象或字段名,支持传多个
    */
-  showColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[]): Promise<void>
+  showColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo[]): Promise<void>
   /**
    * 设置列宽
    * @param fieldOrColumns 列对象或字段名,支持传多个
    * @param width 宽度 %，px
    */
-  setColumnWidth(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo<any>[], width: number | string): Promise<{ status: boolean }>
+  setColumnWidth(fieldOrColumns: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | VxeColumnPropTypes.Field[] | VxeTableDefines.ColumnInfo[], width: number | string): Promise<{ status: boolean }>
   /**
    * 获取列宽
    * @param fieldOrColumn 列对象或字段名
    */
-  getColumnWidth(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>): number;
+  getColumnWidth(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): number;
   /**
    * 已废弃，被 resetCustom 替换
    * @deprecated
@@ -5096,7 +5096,7 @@ export interface TableMethods<DT = any> {
   /**
    * 用于 column-config.isCurrent，获取当前列
    */
-  getCurrentColumn(): VxeTableDefines.ColumnInfo<DT> | null
+  getCurrentColumn(): VxeTableDefines.ColumnInfo | null
   /**
    * 用于 row-config.isCurrent，获取当前行的行数据
    */
@@ -5109,7 +5109,7 @@ export interface TableMethods<DT = any> {
    * 用于 column-config.isCurrent，设置某列行为高亮状态
    * @param columnOrField 列对象或字段名
    */
-  setCurrentColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>): Promise<void>
+  setCurrentColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<void>
   /**
    * 用于 column-config.isCurrent，手动清空当前高亮的状态
    */
@@ -5134,15 +5134,15 @@ export interface TableMethods<DT = any> {
    * 手动清空排序条件，数据会恢复成未排序的状态
    * @param columnOrField 列对象或字段名
    */
-  clearSort(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): Promise<void>
+  clearSort(fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): Promise<void>
   /**
    * 区别就是会触发对应的事件
    */
-  clearSortByEvent(event: Event, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): Promise<void>
+  clearSortByEvent(event: Event, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): Promise<void>
   /**
    * 手动清空排序条件，数据会恢复成未排序的状态；如果需要同时触发对应的事件，请使用 clearSortByEvent
    */
-  isSort(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>): boolean
+  isSort(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): boolean
   /**
    * 获取当前排序的列信息
    */
@@ -5155,20 +5155,20 @@ export interface TableMethods<DT = any> {
    * 已废弃，请使用 isActiveFilterByColumn
    * @deprecated
    */
-  isFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): boolean
+  isFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): boolean
   /**
    * 区别就是会触发对应的事件
    */
-  setFilterByEvent(event: Event, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any>, options: VxeColumnPropTypes.Filters): Promise<void>
+  setFilterByEvent(event: Event, fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo, options: VxeColumnPropTypes.Filters): Promise<void>
   /**
    * 区别就是会触发对应的事件
    */
-  clearFilterByEvent(event: Event, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): Promise<void>
+  clearFilterByEvent(event: Event, fieldOrColumn?: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): Promise<void>
   /**
    * 判断指定列是否为筛选状态，如果为空则判断所有列
    * @param columnOrField 列对象或字段名
    */
-  isActiveFilterByColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo<any> | null): boolean
+  isActiveFilterByColumn(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo | null): boolean
   /**
    * 用于 expand-config.lazy，用于懒加载展开行，判断展开行是否懒加载完成
    * @param row 指定行
@@ -5421,7 +5421,7 @@ export interface TableMethods<DT = any> {
   updateStatus(
     params: {
       row: DT
-      column: VxeTableDefines.ColumnInfo<DT>
+      column: VxeTableDefines.ColumnInfo
     },
     cellValue?: any
   ): Promise<any>
@@ -5729,7 +5729,7 @@ export interface TablePrivateMethods<D = any> {
    * @private
    */
   triggerCurrentColumnEvent(evnt: Event, params: {
-    column: VxeTableDefines.ColumnInfo<any>
+    column: VxeTableDefines.ColumnInfo
   }): void
   /**
    * 内部方法
@@ -5765,7 +5765,7 @@ export interface TablePrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo<any>, order: VxeTablePropTypes.SortOrder): void
+  triggerSortEvent(evnt: Event, column: VxeTableDefines.ColumnInfo, order: VxeTablePropTypes.SortOrder): void
   /**
    * 内部方法
    * @private
@@ -5895,7 +5895,7 @@ export interface TablePrivateMethods<D = any> {
    */
   handleCellRuleUpdateStatus(type: 'change' | 'blur', cellParams: {
     row: any
-    column: VxeTableDefines.ColumnInfo<any>
+    column: VxeTableDefines.ColumnInfo
   }, cellValue?: any): Promise<any>
   /**
    * 内部方法
@@ -6026,7 +6026,7 @@ export interface TablePrivateMethods<D = any> {
    * 已废弃，被 getCellElement 替换
    * @deprecated
    */
-  getCell(row: any, column: VxeTableDefines.ColumnInfo<any>): HTMLTableCellElement | HTMLElement | null
+  getCell(row: any, column: VxeTableDefines.ColumnInfo): HTMLTableCellElement | HTMLElement | null
   /**
    * 内部方法
    * @private
@@ -6227,7 +6227,7 @@ export namespace VxeTableDefines {
   export interface UpdateCellObj<D = any> {
     row: D
     rowid: string
-    column: VxeTableDefines.ColumnInfo<D> | null
+    column: VxeTableDefines.ColumnInfo | null
     field: string
     newValue: any
     oldValue: any
@@ -6270,12 +6270,12 @@ export namespace VxeTableDefines {
     removeData: D[]
     visibleData: D[]
     visibleTreeData: D[]
-    visibleColumn: VxeTableDefines.ColumnInfo<D>[]
+    visibleColumn: VxeTableDefines.ColumnInfo[]
   }
 
   export type AggFuncType = 'sum' | 'count' | 'avg' | 'min' | 'max' | 'first' | 'last'
 
-  export type InjectGanttType<D = any> = (VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>)
+  export type InjectGanttType<D = any> = (VxeGanttConstructor & VxeGanttPrivateMethods)
 
   export interface SortConfs {
     field: string
@@ -6284,7 +6284,7 @@ export namespace VxeTableDefines {
 
   export interface MergeOptions<D = any> {
     row: any | number
-    col: VxeTableDefines.ColumnInfo<D> | number
+    col: VxeTableDefines.ColumnInfo | number
     rowspan: number
     colspan: number
   }
@@ -6298,7 +6298,7 @@ export namespace VxeTableDefines {
 
   export interface MergeItem<D = any> extends MergeInfo {
     _row: any
-    _col: VxeTableDefines.ColumnInfo<D>
+    _col: VxeTableDefines.ColumnInfo
     _rowspan: number
     _colspan: number
   }
@@ -6352,13 +6352,13 @@ export namespace VxeTableDefines {
   }
 
   export interface ColumnCacheItem<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     colid: string
     index: number
     $index: number
     _index: number
-    items: VxeTableDefines.ColumnInfo<D>[]
-    parent: VxeTableDefines.ColumnInfo<D> | null
+    items: VxeTableDefines.ColumnInfo[]
+    parent: VxeTableDefines.ColumnInfo | null
     width: number
     oLeft: number
   }
@@ -6408,8 +6408,8 @@ export namespace VxeTableDefines {
     format?: 'round' | 'ceil' | 'floor' | '' | null | ((params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      groupColumn: VxeTableDefines.ColumnInfo
+      column: VxeTableDefines.ColumnInfo
       groupValue: any
       childCount: number
       children: D[]
@@ -6658,8 +6658,8 @@ export namespace VxeTableDefines {
     renderAggFormat: 'round' | 'ceil' | 'floor' | '' | null | ((params: {
       $table: VxeTableConstructor<D>
       groupField: VxeColumnPropTypes.Field
-      groupColumn: VxeTableDefines.ColumnInfo<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      groupColumn: VxeTableDefines.ColumnInfo
+      column: VxeTableDefines.ColumnInfo
       groupValue: any
       childCount: number
       children: D[]
@@ -6674,7 +6674,7 @@ export namespace VxeTableDefines {
       value: any
     }
 
-    children: ColumnInfo<D>[]
+    children: ColumnInfo[]
 
     /**
      * @private
@@ -6707,7 +6707,7 @@ export namespace VxeTableDefines {
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor | null | undefined
     $gantt: VxeGanttConstructor | null | undefined
-    column: ColumnInfo<D>
+    column: ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -6726,7 +6726,7 @@ export namespace VxeTableDefines {
     rowIndex: number
     _rowIndex: number
     $rowIndex: number
-    column: ColumnInfo<D>
+    column: ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -6751,7 +6751,7 @@ export namespace VxeTableDefines {
     rowIndex: number
     $rowIndex: number
     _rowIndex: number
-    column: ColumnInfo<D>
+    column: ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -6789,7 +6789,7 @@ export namespace VxeTableDefines {
     rowIndex: number
     _rowIndex: number
     $rowIndex: number
-    column: ColumnInfo<D>
+    column: ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -6816,7 +6816,7 @@ export namespace VxeTableDefines {
     source: string
     type: string
     $rowIndex: number
-    column: ColumnInfo<D>
+    column: ColumnInfo
     columnIndex: number
     $columnIndex: number
   }
@@ -6828,7 +6828,7 @@ export namespace VxeTableDefines {
     row: D
     rowIndex: number
     $rowIndex: number
-    column: ColumnInfo<D>
+    column: ColumnInfo
     columnIndex: number
     $columnIndex: number
   }
@@ -6837,7 +6837,7 @@ export namespace VxeTableDefines {
     source: string
     type: string
     $rowIndex: number
-    column: ColumnInfo<D>
+    column: ColumnInfo
     columnIndex: number
     $columnIndex: number
   }
@@ -6845,12 +6845,12 @@ export namespace VxeTableDefines {
   export interface ReadyEventParams<D = any> extends TableEventParams<D> {
   }
   export interface InitRenderedEventParams<D = any> extends TableEventParams<D> {
-    visibleColumn: ColumnInfo<D>[]
+    visibleColumn: ColumnInfo[]
     visibleData: D
   }
   export interface DataRenderedEventParams<D = any> extends TableEventParams<D> {
     isReload: boolean
-    visibleColumn: ColumnInfo<D>[]
+    visibleColumn: ColumnInfo[]
     visibleData: D
   }
 
@@ -6878,17 +6878,17 @@ export namespace VxeTableDefines {
   export interface ContextMenuEventParams<D = any> extends TableEventParams<D> {}
 
   export interface ColumnsChangeEventParams<D = any> extends TableEventParams<D> {
-    visibleColgroups: ColumnInfo<D>[][]
-    visibleColumn: ColumnInfo<D>[]
+    visibleColgroups: ColumnInfo[][]
+    visibleColumn: ColumnInfo[]
   }
 
   export interface DataChangeEventParams<D = any> extends TableEventParams<D> {
-    visibleColumn: ColumnInfo<D>[]
+    visibleColumn: ColumnInfo[]
     visibleData: D[]
   }
 
   export interface FooterDataChangeEventParams<D = any> extends TableEventParams<D> {
-    visibleColumn: ColumnInfo<D>[]
+    visibleColumn: ColumnInfo[]
     footerData: D[]
   }
 
@@ -6904,14 +6904,14 @@ export namespace VxeTableDefines {
   }
 
   export interface CurrentColumnChangeParams<D = any> extends TableBaseCellParams<D> {
-    newValue: ColumnInfo<D> | null
-    oldValue: ColumnInfo<D> | null
+    newValue: ColumnInfo | null
+    oldValue: ColumnInfo | null
     selected: boolean
   }
   export interface CurrentColumnChangeEventParams<D = any> extends TableEventParams<D>, CurrentColumnChangeParams<D> { }
 
   export interface CurrentColumnDisabledEventParams<D = any> extends TableEventParams<D> {
-    column: ColumnInfo<D>
+    column: ColumnInfo
   }
 
   export interface RadioChangeParams<D = any> extends TableBaseCellParams<D> {
@@ -6989,7 +6989,7 @@ export namespace VxeTableDefines {
   export interface CellDeleteValueParams<D = any> {
     row: D
     rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea<D>
     cellAreas: VxeTableExtendCellAreaDefines.MouseCellArea<D>[]
@@ -7019,7 +7019,7 @@ export namespace VxeTableDefines {
   export interface FooterCellMenuEventParams<D = any> extends TableEventParams<D>, FooterCellMenuParams<D> { }
 
   export interface SortCheckedParams<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     field: VxeColumnPropTypes.Field
     order: VxeTablePropTypes.SortOrder
     sortTime: number
@@ -7037,7 +7037,7 @@ export namespace VxeTableDefines {
   export interface ClearAllSortEventParams<D = any> extends TableEventParams<D>, SortChangeParams<D> { }
 
   export interface FilterCheckedParams<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     field: VxeColumnPropTypes.Field
     values: any[]
     datas: any[]
@@ -7055,7 +7055,7 @@ export namespace VxeTableDefines {
   export interface ClearAllFilterEventParams<D = any> extends TableEventParams<D>, FilterChangeParams<D> { }
 
   export interface FilterVisibleParams<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     field: VxeColumnPropTypes.Field
     filterList: FilterCheckedParams<D>[]
     visible: boolean
@@ -7142,7 +7142,7 @@ export namespace VxeTableDefines {
 
   export interface RowDragstartEventParams<D = any> {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
 
   export interface RowDragoverEventParams<D = any> {
@@ -7182,21 +7182,21 @@ export namespace VxeTableDefines {
   export interface RowDragToChildMethod<D = any> extends RowDragendEventParams<D> {}
 
   export interface ColumnDragstartEventParams<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
 
   export interface ColumnDragoverEventParams<D = any> {
-    oldColumn: VxeTableDefines.ColumnInfo<D>
-    targetColumn: VxeTableDefines.ColumnInfo<D>
-    dragColumn: VxeTableDefines.ColumnInfo<D>
+    oldColumn: VxeTableDefines.ColumnInfo
+    targetColumn: VxeTableDefines.ColumnInfo
+    dragColumn: VxeTableDefines.ColumnInfo
     dragPos: 'left' | 'right'
     offsetIndex: 0 | 1
   }
 
   export interface ColumnDragendEventParams<D = any> {
-    newColumn: VxeTableDefines.ColumnInfo<D>
-    oldColumn: VxeTableDefines.ColumnInfo<D>
-    dragColumn: VxeTableDefines.ColumnInfo<D>
+    newColumn: VxeTableDefines.ColumnInfo
+    oldColumn: VxeTableDefines.ColumnInfo
+    dragColumn: VxeTableDefines.ColumnInfo
     dragPos: 'left' | 'right'
     offsetIndex: 0 | 1
     dragToChild: boolean
@@ -7213,7 +7213,7 @@ export namespace VxeTableDefines {
     rowIndex: number
     $rowIndex: number
     _rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -7224,7 +7224,7 @@ export namespace VxeTableDefines {
     rowIndex: number
     $rowIndex: number
     _rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     $columnIndex: number
     _columnIndex: number
@@ -7357,7 +7357,7 @@ export namespace VxeTableDefines {
   }
 
   export interface ColumnDragSlotParams<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
 
   export interface MenuSlotParams {
@@ -7411,7 +7411,7 @@ export namespace VxeTableDefines {
     cellValue: any
     rule: ValidatorRule<D>
     rules: ValidatorRule<D>[]
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     row: D
     rowIndex: number
@@ -7422,7 +7422,7 @@ export namespace VxeTableDefines {
     cellValue: any
     rule: ValidatorRule<D>
     rules: ValidatorRule<D>[]
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     columnIndex: number
     row: D
     rowIndex: number
@@ -7771,21 +7771,21 @@ export namespace VxeTableSlotTypes {
 
   export interface RowDragIconSlotParams<D = any> extends BaseSlotParams<D> {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
   export interface ColumnDragIconSlotParams<D = any> extends BaseSlotParams<D> {
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
   export interface ColumnGroupContentSlotParams<D = any> extends BaseSlotParams<D> {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     groupContent: string
     groupField: string
     childCount: number
   }
   export interface ColumnGroupValuesSlotParams<D = any> extends BaseSlotParams<D> {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     groupContent: string
     groupField: string
     childCount: number
@@ -7793,17 +7793,17 @@ export namespace VxeTableSlotTypes {
   }
 
   export interface HeaderTooltipSlotParams<D = any> {
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     tooltipContent: string
   }
   export interface TooltipSlotParams<D = any> {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     tooltipContent: string
   }
   export interface FooterTooltipSlotParams<D = any> {
     row: any
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     tooltipContent: string
   }
 }
@@ -7819,7 +7819,7 @@ export interface VxeTableSlots<D = any> {
   //   rowIndex: number
   //   $rowIndex: number
   //   _rowIndex: number
-  //   column: VxeTableDefines.ColumnInfo<D>
+  //   column: VxeTableDefines.ColumnInfo
   //   columnIndex: number
   //   $columnIndex: number
   //   _columnIndex: number

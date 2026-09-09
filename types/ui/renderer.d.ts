@@ -284,7 +284,7 @@ declare module '@vxe-ui/core' {
 
     export interface CreateTableFilterOptionsParams<D = any> {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }
 
     export interface RenderParams {}
@@ -298,7 +298,7 @@ declare module '@vxe-ui/core' {
       $panel: any
       column: {
         filters: VxeTableDefines.FilterOption[]
-      } & VxeTableDefines.ColumnInfo<D>
+      } & VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       $rowIndex: number
@@ -309,7 +309,7 @@ declare module '@vxe-ui/core' {
       option: VxeTableDefines.FilterOption
       column: {
         filters: VxeTableDefines.FilterOption[]
-      } & VxeTableDefines.ColumnInfo<D>
+      } & VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
     }
@@ -324,7 +324,7 @@ declare module '@vxe-ui/core' {
       option: VxeTableDefines.FilterOption
       cellValue: any
       row: any
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }
 
     /**
@@ -342,7 +342,7 @@ declare module '@vxe-ui/core' {
     export interface TableFilterResetMethodParams<D = any> {
       $table: VxeTableConstructor<D>
       options: VxeTableDefines.FilterOption[]
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }
 
     /**
@@ -352,7 +352,7 @@ declare module '@vxe-ui/core' {
     export interface TableFilterRecoverMethodParams<D = any> {
       $table: VxeTableConstructor<D>
       option: VxeTableDefines.FilterOption
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
     }
 
     /**
@@ -367,7 +367,7 @@ declare module '@vxe-ui/core' {
     export interface RenderHeaderParams<D = any> extends RenderTableHeaderParams<D> {}
     export interface RenderTableHeaderParams<D = any> {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       $rowIndex: number
@@ -394,7 +394,7 @@ declare module '@vxe-ui/core' {
     export interface RenderFooterParams<D = any> extends RenderTableFooterParams<D>{}
     export interface RenderTableFooterParams<D = any> {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       _columnIndex: number
       $columnIndex: number
@@ -408,7 +408,7 @@ declare module '@vxe-ui/core' {
     export interface TableExportMethodParams<D = any> {
       $table: VxeTableConstructor<D>
       row: D
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       options: VxeTablePropTypes.ExportHandleOptions
     }
 
@@ -417,7 +417,7 @@ declare module '@vxe-ui/core' {
       $table: VxeTableConstructor<D>
       items: any[]
       _columnIndex: number
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       options: VxeTablePropTypes.ExportHandleOptions
     }
 
@@ -429,7 +429,7 @@ declare module '@vxe-ui/core' {
 
     export interface TableAutoFocusParams<D = any> {
       $table: VxeTableConstructor<D>
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       row: D
     }
 
@@ -458,7 +458,7 @@ declare module '@vxe-ui/core' {
     export interface RenderTableCellParams<D = any> {
       $table: VxeTableConstructor<D>
       $grid: VxeGridConstructor<D> | null | undefined
-      column: VxeTableDefines.ColumnInfo<D>
+      column: VxeTableDefines.ColumnInfo
       columnIndex: number
       $columnIndex: number
       rowid: string
