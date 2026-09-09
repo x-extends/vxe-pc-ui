@@ -225,6 +225,11 @@ declare module '@vxe-ui/core' {
     gantt?: VxeGanttProps
 
     /**
+     * 用于兼容低版本，将 header 插槽转为 title 插槽
+     * @deprecated
+     */
+    tableHeadeSlotToTitleSlot?: 'obsolete'
+    /**
      * 无效，已废弃
      * @deprecated
      */
@@ -234,22 +239,22 @@ declare module '@vxe-ui/core' {
      */
     emptyCell?: string
     /**
-     * 表格-还原成老的校验样式
+     * 用于兼容低版本，表格-还原成老的校验样式
      * @deprecated
      */
     cellVaildMode?: 'obsolete'
     /**
-     * 表格-返回老的校验结果
+     * 用于兼容低版本，表格-返回老的校验结果
      * @deprecated
      */
     validToReject?: 'obsolete'
     /**
-     * 表格-还原虚拟滚动老的定位方式
+     * 用于兼容低版本，表格-还原虚拟滚动老的定位方式
      * @deprecated
      */
     scrollMarginStyle?: 'obsolete'
     /**
-     *输入框-还原 readonly 为不可编辑模式，被 editable 替换
+     * 用于兼容低版本，输入框-还原 readonly 为不可编辑模式，被 editable 替换
      * @deprecated
      */
     inputReadonly?: 'obsolete'
