@@ -307,7 +307,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeModal = this
       const props = $xeModal
 
-      return props.type === 'message' || props.type === 'notification'
+      const { type } = props
+      return type === 'message' || type === 'notification'
+    },
+    computeIsModal () {
+      const $xeModal = this
+      const props = $xeModal
+
+      return props.type === 'modal'
     },
     computeIsMinimizeStatus  () {
       const $xeModal = this
@@ -451,7 +458,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeModal = this
       const reactData = $xeModal.reactData
 
-      if (!reactData.visible) {
+      const { visible } = reactData
+      const isModal = $xeModal.computeIsModal
+      if (!isModal || !visible) {
         return Promise.resolve({
           status: false
         })
@@ -462,7 +471,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeModal = this
       const reactData = $xeModal.reactData
 
-      if (!reactData.visible) {
+      const { visible } = reactData
+      const isModal = $xeModal.computeIsModal
+      if (!isModal || !visible) {
         return Promise.resolve({
           status: false
         })
@@ -473,7 +484,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeModal = this
       const reactData = $xeModal.reactData
 
-      if (!reactData.visible) {
+      const { visible } = reactData
+      const isModal = $xeModal.computeIsModal
+      if (!isModal || !visible) {
         return Promise.resolve({
           status: false
         })
@@ -963,9 +976,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeModal.reactData
       const internalData = $xeModal.internalData
 
-      const { remember, showFooter, appendTo } = props
+      const { remember, showFooter, fullscreen, appendTo } = props
       const { initialized, visible } = reactData
       const isMsg = $xeModal.computeIsMsg
+      const isModal = $xeModal.computeIsModal
       const btnTransfer = $xeModal.computeBtnTransfer
       if (!initialized) {
         reactData.initialized = true
@@ -984,7 +998,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         setTimeout(() => {
           reactData.contentVisible = true
           $xeModal.$nextTick(() => {
-            if (!props.fullscreen) {
+            if (!(isModal && fullscreen)) {
               $xeModal.recalculate()
             }
             if (showFooter) {
@@ -1016,7 +1030,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               if ($xeModal.hasPosStorage()) {
                 $xeModal.restorePosStorage()
               } else {
-                if (props.fullscreen) {
+                if (isModal && fullscreen) {
                   $xeModal.$nextTick(() => $xeModal.handleMaximize())
                 } else {
                   $xeModal.recalculate()
