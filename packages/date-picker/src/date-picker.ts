@@ -1698,10 +1698,10 @@ export default defineVxeComponent({
       const { type, multiple, maskedConfig } = props
       if (isEnableConf(maskedConfig)) {
         if (multiple) {
-          errLog('vxe.error.notSupportProp', ['multiple', 'control-config.enabled=true', 'control-config.enabled=false'])
+          errLog('vxe.error.notSupportProp', ['multiple', 'masked-config.enabled=true', 'masked-config.enabled=false'])
         }
         if (!maskedTypes.includes(type)) {
-          warnLog('vxe.error.notSupportProp', ['control-config.enabled=true', `type=${type}`, `type=${maskedTypes.join('|')}`])
+          warnLog('vxe.error.notSupportProp', ['masked-config.enabled=true', `type=${type}`, `type=${maskedTypes.join('|')}`])
         }
       }
     })

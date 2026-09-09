@@ -27,25 +27,25 @@ declare module '@vxe-ui/core' {
 
     export interface InterceptorExportParams extends InterceptorParams {
       options: VxeTablePropTypes.ExportHandleOptions
-      columns: VxeTableDefines.ColumnInfo<any>[]
-      colgroups: VxeTableDefines.ColumnInfo<any>[][]
+      columns: VxeTableDefines.ColumnInfo[]
+      colgroups: VxeTableDefines.ColumnInfo[][]
       datas: any[]
     }
 
     export interface InterceptorImportParams extends InterceptorParams {
       file: File
       options: VxeTablePropTypes.ExportHandleOptions
-      columns: VxeTableDefines.ColumnInfo<any>[]
+      columns: VxeTableDefines.ColumnInfo[]
       datas: any[]
     }
 
     export interface InterceptorShowMenuParams extends InterceptorParams {
       type: 'header' | 'body' | 'footer'
       options: VxeTableDefines.MenuFirstOption[][]
-      columns: VxeTableDefines.ColumnInfo<any>[]
+      columns: VxeTableDefines.ColumnInfo[]
       row?: any
       rowIndex?: number
-      column?: VxeTableDefines.ColumnInfo<any>
+      column?: VxeTableDefines.ColumnInfo
       columnIndex?: number
     }
   }

@@ -50,7 +50,7 @@ export interface VxeTableExtendCellAreaMethods<D = any> {
    */
   setCellAreas(areaConfigs: VxeTableExtendCellAreaDefines.CellAreaConfig[], activeArea?: {
     area?: number | VxeTableExtendCellAreaDefines.CellAreaConfig<D>
-    column?: number | VxeTableDefines.ColumnInfo<D>
+    column?: number | VxeTableDefines.ColumnInfo
     row?: D | number
   }): Promise<any>
   /**
@@ -233,7 +233,7 @@ export namespace VxeTableExtendCellAreaDefines {
     /**
      * 对应的列数组
      */
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
     /**
      * 对应的行数组
      */
@@ -258,7 +258,7 @@ export namespace VxeTableExtendCellAreaDefines {
     type: CELL_AREA_TYPE
     area: MouseCellArea<D>
     row: any
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     top: number
     left: number
     width: number
@@ -271,7 +271,7 @@ export namespace VxeTableExtendCellAreaDefines {
     rightEl?: HTMLElement | null
     type: CELL_AREA_TYPE
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
     top: number
     left: number
     width: number
@@ -282,15 +282,15 @@ export namespace VxeTableExtendCellAreaDefines {
 
   export interface CellAreaConfig<D = any> {
     type?: CELL_AREA_TYPE
-    startColumn: VxeTableDefines.ColumnInfo<D> | VxeColumnPropTypes.Field | number
-    endColumn: VxeTableDefines.ColumnInfo<D> | VxeColumnPropTypes.Field | number
+    startColumn: VxeTableDefines.ColumnInfo | VxeColumnPropTypes.Field | number
+    endColumn: VxeTableDefines.ColumnInfo | VxeColumnPropTypes.Field | number
     startRow: D | number
     endRow: D | number
   }
 
   export interface ActiveCellAreaConfig<D = any> {
     area: VxeTableExtendCellAreaDefines.MouseCellArea<D> | number
-    column: VxeTableDefines.ColumnInfo<D> | VxeColumnPropTypes.Field | number
+    column: VxeTableDefines.ColumnInfo | VxeColumnPropTypes.Field | number
     row: D | number
   }
 
@@ -298,12 +298,12 @@ export namespace VxeTableExtendCellAreaDefines {
 
   export interface ExtendCellAreaCalcBaseParams<D = any> {
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
     targetValues: any[][]
     targetRows: any[]
-    targetCols: VxeTableDefines.ColumnInfo<D>[]
+    targetCols: VxeTableDefines.ColumnInfo[]
     extendRows: any[]
-    extendCols: VxeTableDefines.ColumnInfo<D>[]
+    extendCols: VxeTableDefines.ColumnInfo[]
     direction: ExtendCellAreaDirection
     $table: VxeTableConstructor<D>
     $grid: VxeGridConstructor<D> | null | undefined
@@ -327,14 +327,14 @@ export namespace VxeTableExtendCellAreaDefines {
   export interface FnrFindParams<D = any> {
     findValue: string
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
   export type FnrFindEventParams<D = any> = FnrFindParams<D>
 
   export interface FindAndReplaceResult<D = any> {
     row: D
     _rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     _columnIndex: number
   }
 
@@ -348,7 +348,7 @@ export namespace VxeTableExtendCellAreaDefines {
     findValue: string
     replaceValue: string
     row: any
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
   export type FnrReplaceEventParams<D = any> = FnrReplaceParams<D>
 
@@ -400,15 +400,15 @@ export namespace VxeTableExtendCellAreaDefines {
 
   export interface HeaderCellAreaSelectionParams<D = any> {
     targetRows: D[]
-    targetCols: VxeTableDefines.ColumnInfo<D>[]
-    column: VxeTableDefines.ColumnInfo<D>
+    targetCols: VxeTableDefines.ColumnInfo[]
+    column: VxeTableDefines.ColumnInfo
     _columnIndex: number
   }
   export interface HeaderCellAreaSelectionEventParams<D = any> extends EventParams<D>, HeaderCellAreaSelectionParams<D> { }
 
   export interface CellAreaSelectionInvalidParams<D = any> {
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
   }
   export interface CellAreaSelectionInvalidEventParams<D = any> extends EventParams<D>, CellAreaSelectionInvalidParams<D> { }
 
@@ -416,7 +416,7 @@ export namespace VxeTableExtendCellAreaDefines {
     row: D
     _rowIndex: number
     $rowIndex: number
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     _columnIndex: number
     $columnIndex: number
     cell: HTMLElement
@@ -425,52 +425,52 @@ export namespace VxeTableExtendCellAreaDefines {
 
   export interface CellAreaSelectionDragParams<D = any> {
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
   }
   export interface CellAreaSelectionDragEventParams<D = any> extends EventParams<D>, CellAreaSelectionDragParams<D> { }
 
   export interface CellAreaSelectionEndParams<D = any> {
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
   }
   export interface CellAreaSelectionEndEventParams<D = any> extends EventParams<D>, CellAreaSelectionEndParams<D> { }
 
   export interface CellAreaExtensionStartParams<D = any> {
     fixed: VxeColumnPropTypes.Fixed
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
   }
   export interface CellAreaExtensionStartEventParams<D = any> extends EventParams<D>, CellAreaExtensionStartParams<D> {
     targetRows: D[]
-    targetCols: VxeTableDefines.ColumnInfo<D>[]
+    targetCols: VxeTableDefines.ColumnInfo[]
   }
 
   export interface CellAreaExtensionDragParams<D = any> {
     fixed: VxeColumnPropTypes.Fixed
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
     targetRows: D[]
-    targetCols: VxeTableDefines.ColumnInfo<D>[]
+    targetCols: VxeTableDefines.ColumnInfo[]
   }
   export interface CellAreaExtensionDragEventParams<D = any> extends EventParams<D>, CellAreaExtensionDragParams<D> { }
 
   export interface CellAreaExtensionEndParams<D = any> {
     fixed: VxeColumnPropTypes.Fixed
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
     targetRows: D[]
-    targetCols: VxeTableDefines.ColumnInfo<D>[]
+    targetCols: VxeTableDefines.ColumnInfo[]
   }
   export interface CellAreaExtensionEndEventParams<D = any> extends EventParams<D>, CellAreaExtensionEndParams<D> { }
 
   export interface CellAreaExtensionFillEventParams<D = any> extends EventParams<D> {
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
     targetValues: any[][]
     targetRows: D[]
-    targetCols: VxeTableDefines.ColumnInfo<D>[]
+    targetCols: VxeTableDefines.ColumnInfo[]
     extendRows: D[]
-    extendCols: VxeTableDefines.ColumnInfo<D>[]
+    extendCols: VxeTableDefines.ColumnInfo[]
     direction: 'up' | 'down' | 'left' | 'right'
   }
 
@@ -480,13 +480,13 @@ export namespace VxeTableExtendCellAreaDefines {
 
   export interface CellAreaSelectionAllEndParams<D = any> {
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
   }
   export interface CellAreaSelectionAllEndEventParams<D = any> extends EventParams<D>, CellAreaSelectionAllEndParams<D> { }
 
   export interface CellAreaArrowsStartParams<D = any> {
     rows: D[]
-    cols: VxeTableDefines.ColumnInfo<D>[]
+    cols: VxeTableDefines.ColumnInfo[]
     isLeft: boolean
     isUp: boolean
     isRight: boolean
@@ -496,7 +496,7 @@ export namespace VxeTableExtendCellAreaDefines {
 
   export interface CellAreaArrowsEndParams<D = any> extends CellAreaArrowsStartParams<D> {
     targetRows: D[]
-    targetCols: VxeTableDefines.ColumnInfo<D>[]
+    targetCols: VxeTableDefines.ColumnInfo[]
   }
   export interface CellAreaArrowsEndEventParams<D = any> extends EventParams<D>, CellAreaArrowsEndParams<D> { }
 
@@ -507,7 +507,7 @@ export namespace VxeTableExtendCellAreaDefines {
   export interface ActiveCellChangeStartParams<D = any> {
     activeArea: VxeTableExtendCellAreaDefines.MouseActiveCellArea
     row: D
-    column: VxeTableDefines.ColumnInfo<D>
+    column: VxeTableDefines.ColumnInfo
     isTab: boolean
     isEnter: boolean
     isLeft: boolean

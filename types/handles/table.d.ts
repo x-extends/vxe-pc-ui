@@ -7,7 +7,7 @@ export interface TableHandleExport {
     renderOpts: VxeGlobalRendererHandles.RenderTableCellOptions | VxeGlobalRendererHandles.RenderTableEditOptions
     renderParams: VxeGlobalRendererHandles.RenderTableCellParams | VxeGlobalRendererHandles.RenderTableEditParams
   }): {
-    currColumn: ComputedRef<VxeTableDefines.ColumnInfo<D>>
+    currColumn: ComputedRef<VxeTableDefines.ColumnInfo>
     currRow: ComputedRef<D>
     cellModel: WritableComputedRef<any>
     cellOptions: ComputedRef<P>

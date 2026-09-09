@@ -254,7 +254,7 @@ export interface ToolbarInternalData {
 export interface ToolbarMethods {
   dispatchEvent(type: ValueOf<VxeToolbarEmits>, params: Record<string, any>, evnt: Event | null): void
   syncUpdate(params: {
-    collectColumn: VxeTableDefines.ColumnInfo<any>[]
+    collectColumn: VxeTableDefines.ColumnInfo[]
     $table: VxeTableConstructor
   }): void
 }

@@ -28,7 +28,7 @@ export interface FormDesignHandleExport {
     renderOpts: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableEditViewOptions
     renderParams: VxeGlobalRendererHandles.RenderFormDesignWidgetSubtableEditViewParams
   }): {
-    currColumn: ComputedRef<VxeTableDefines.ColumnInfo<D>>
+    currColumn: ComputedRef<VxeTableDefines.ColumnInfo>
     currRow: ComputedRef<D>
     currWidget: ComputedRef<VxeFormDesignDefines.WidgetObjItem<P>>
     widgetOptions: ComputedRef<P>
