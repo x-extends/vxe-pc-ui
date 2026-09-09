@@ -74,7 +74,8 @@ function openAlert (content: VxeModalPropTypes.Content | VxeModalDefines.ModalOp
     type: 'alert',
     lockScroll: true,
     showHeader: true,
-    showFooter: true
+    showFooter: true,
+    fullscreen: false
   }, content, title, options)
 }
 
@@ -84,7 +85,8 @@ function openConfirm (content: VxeModalPropTypes.Content | VxeModalDefines.Modal
     status: 'question',
     lockScroll: true,
     showHeader: true,
-    showFooter: true
+    showFooter: true,
+    fullscreen: false
   }, content, title, options)
 }
 
@@ -94,7 +96,8 @@ function openMessage (content: VxeModalPropTypes.Content | VxeModalDefines.Modal
     mask: false,
     lockView: false,
     lockScroll: false,
-    showHeader: false
+    showHeader: false,
+    fullscreen: false
   }, content, '', options)
 }
 
@@ -107,7 +110,8 @@ function openNotification (content: VxeModalPropTypes.Content | VxeModalDefines.
     showHeader: true,
     draggable: false,
     position: 'top-right',
-    width: 320
+    width: 320,
+    fullscreen: false
   }, content, title, options)
 }
 
