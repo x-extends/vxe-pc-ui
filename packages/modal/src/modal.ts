@@ -290,7 +290,12 @@ export default defineVxeComponent({
     })
 
     const computeIsMsg = computed(() => {
-      return props.type === 'message' || props.type === 'notification'
+      const { type } = props
+      return type === 'message' || type === 'notification'
+    })
+
+    const computeIsModal = computed(() => {
+      return props.type === 'modal'
     })
 
     const computeIsMinimizeStatus = computed(() => {
@@ -765,9 +770,10 @@ export default defineVxeComponent({
     }
 
     const openModal = () => {
-      const { remember, showFooter } = props
+      const { remember, showFooter, fullscreen } = props
       const { initialized, visible } = reactData
       const isMsg = computeIsMsg.value
+      const isModal = computeIsModal.value
       if (!initialized) {
         reactData.initialized = true
       }
@@ -781,7 +787,7 @@ export default defineVxeComponent({
         setTimeout(() => {
           reactData.contentVisible = true
           nextTick(() => {
-            if (!props.fullscreen) {
+            if (!(isModal && fullscreen)) {
               recalculate()
             }
             if (showFooter) {
@@ -813,7 +819,7 @@ export default defineVxeComponent({
               if (hasPosStorage()) {
                 restorePosStorage()
               } else {
-                if (props.fullscreen) {
+                if (isModal && fullscreen) {
                   nextTick(() => handleMaximize())
                 } else {
                   recalculate()
@@ -1247,7 +1253,9 @@ export default defineVxeComponent({
         return handleZoom()
       },
       minimize () {
-        if (!reactData.visible) {
+        const { visible } = reactData
+        const isModal = computeIsModal.value
+        if (!isModal || !visible) {
           return Promise.resolve({
             status: false
           })
@@ -1255,7 +1263,9 @@ export default defineVxeComponent({
         return handleMinimize()
       },
       maximize () {
-        if (!reactData.visible) {
+        const { visible } = reactData
+        const isModal = computeIsModal.value
+        if (!isModal || !visible) {
           return Promise.resolve({
             status: false
           })
@@ -1263,7 +1273,9 @@ export default defineVxeComponent({
         return handleMaximize()
       },
       revert () {
-        if (!reactData.visible) {
+        const { visible } = reactData
+        const isModal = computeIsModal.value
+        if (!isModal || !visible) {
           return Promise.resolve({
             status: false
           })
