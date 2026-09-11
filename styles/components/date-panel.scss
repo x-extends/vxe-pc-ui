@@ -82,9 +82,6 @@
     border-radius: var(--vxe-ui-base-border-radius);
     border: 1px solid var(--vxe-ui-input-border-color);
     margin-left: 0.5em;
-    i {
-      font-size: 1.2em;
-    }
   }
   .vxe-date-panel--picker-btn {
     &:not(.is--disabled) {
