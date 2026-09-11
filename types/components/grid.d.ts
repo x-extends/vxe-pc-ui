@@ -501,10 +501,27 @@ export interface GridMethods<D = any> {
    */
   getFormData(): any
   /**
-   * 获取表单项列表
+   * 已废弃，被 getFormFlatItems 替换
+   * @deprecated
    */
   getFormItems(): VxeFormItemProps[]
+  /**
+   * 已废弃，被 getFormFlatItems 替换
+   * @deprecated
+   */
   getFormItems(itemIndex?: number): VxeFormItemProps
+  /**
+   * 获取表单扁平化的项列表
+   */
+  getFormFlatItems(): VxeFormItemProps[]
+  /**
+   * 获取表单项列表，与 form-config.items 一致
+   */
+  getFormNestedItems(): VxeFormItemProps[]
+  /**
+   * 根据项的字段名获取表单项
+   */
+  getFormItemByField(field: VxeFormItemPropTypes.Field): VxeFormDefines.ItemInfo | null
   /**
    * 重置表单
    */

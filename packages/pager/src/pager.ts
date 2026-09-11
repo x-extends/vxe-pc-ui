@@ -504,6 +504,7 @@ export default defineVxeComponent({
         placement: pageSizePlacement,
         transfer: transfer,
         options: sizeList,
+        clearable: false,
         onChange: pageSizeEvent
       })
     }
@@ -536,6 +537,7 @@ export default defineVxeComponent({
           max: pageCount,
           min: 1,
           controls: false,
+          clearable: false,
           onKeydown: jumpKeydownEvent,
           onBlur: triggerJumpEvent,
           'onUpdate:modelValue' (val) {

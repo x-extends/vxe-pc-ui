@@ -13,7 +13,7 @@ import { createComponentLog } from '../../ui/src/log'
 
 import '../render'
 
-import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed } from '../../../types'
+import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed, ValueOf } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
 
 const { warnLog, errLog } = createComponentLog('form')
@@ -163,6 +163,7 @@ function createInternalData (): FormInternalData {
       visible: false
     },
     itemFormatCache: {},
+    fullItemList: [],
     fullItemIdData: {},
     fullItemFieldData: {}
   }
@@ -275,8 +276,6 @@ export default defineVxeComponent({
     const refElem = ref<HTMLFormElement>()
     const refTooltip = ref() as Ref<VxeTooltipInstance>
 
-    let formMethods = {} as FormMethods
-
     const computeValidOpts = computed(() => {
       return Object.assign({}, getConfig().form.validConfig, props.validConfig)
     })
@@ -332,6 +331,10 @@ export default defineVxeComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeFormConstructor & VxeFormPrivateMethods
 
+    const dispatchEvent = (type: ValueOf<VxeFormEmits>, params: Record<string, any>, evnt: Event | null) => {
+      emit(type, createEvent(evnt, { $form: $xeForm, $grid: $xeGrid }, params))
+    }
+
     const callSlot = (slotFunc: ((params: any) => any) | string | null, params: any) => {
       if (slotFunc) {
         if (XEUtils.isString(slotFunc)) {
@@ -365,12 +368,21 @@ export default defineVxeComponent({
       })
     }
 
+    /**
+     * 已废弃，被 getFormFlatItems 替换
+     * @deprecated
+     */
     const getItems = () => {
-      const itemList: VxeFormDefines.ItemInfo[] = []
-      XEUtils.eachTree(reactData.formItems, item => {
-        itemList.push(item)
-      }, { children: 'children' })
-      return itemList
+      // errLog('vxe.error.delFunc', ['getItems', 'getFlatItems'])
+      return getFlatItems()
+    }
+
+    const getFlatItems = () => {
+      return internalData.fullItemList
+    }
+
+    const getNestedItems = () => {
+      return reactData.formItems
     }
 
     const getItemByField = (field: string) => {
@@ -393,8 +405,8 @@ export default defineVxeComponent({
     const toggleCollapseEvent = (evnt: Event) => {
       const actionRest = toggleCollapse()
       const status = getCollapseStatus()
-      formMethods.dispatchEvent('toggle-collapse', { status, collapse: status, data: props.data }, evnt)
-      formMethods.dispatchEvent('collapse', { status, collapse: status, data: props.data }, evnt)
+      dispatchEvent('toggle-collapse', { status, collapse: status, data: props.data }, evnt)
+      dispatchEvent('collapse', { status, collapse: status, data: props.data }, evnt)
       actionRest.then(() => {
         recalculate().then(() => {
           if ($xeGrid) {
@@ -408,6 +420,7 @@ export default defineVxeComponent({
     }
 
     const clearValidate = (fieldOrItem?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[]) => {
+      const { fullItemList } = internalData
       if (fieldOrItem) {
         let fields: any = fieldOrItem
         if (!XEUtils.isArray(fieldOrItem)) {
@@ -423,7 +436,7 @@ export default defineVxeComponent({
           }
         })
       } else {
-        getItems().forEach((item) => {
+        fullItemList.forEach((item) => {
           item.showError = false
           item.showIconMsg = false
         })
@@ -456,6 +469,7 @@ export default defineVxeComponent({
       const { formItems } = reactData
       const itemIdData: Record<string, VxeFormDefines.ItemCacheItem> = {}
       const itemFieldData: Record<string, VxeFormDefines.ItemCacheItem> = {}
+      const itemList: VxeFormDefines.ItemInfo[] = []
       XEUtils.eachTree(formItems, (item, index, items) => {
         const { id, field } = item
         const itemRest = { item, items, index }
@@ -465,16 +479,18 @@ export default defineVxeComponent({
         if (field) {
           itemFieldData[field] = itemRest
         }
+        itemList.push(item)
       }, { children: 'children' })
+      internalData.fullItemList = itemList
       internalData.fullItemFieldData = itemFieldData
       internalData.fullItemIdData = itemIdData
     }
 
     const reset = () => {
       const { data } = props
-      const itemList = getItems()
+      const { fullItemList } = internalData
       if (data) {
-        itemList.forEach((item) => {
+        fullItemList.forEach((item) => {
           const { field, itemRender } = item
           if (isEnableConf(itemRender)) {
             const { name, startField, endField } = itemRender
@@ -508,7 +524,7 @@ export default defineVxeComponent({
     const resetEvent = (evnt: Event) => {
       evnt.preventDefault()
       reset()
-      formMethods.dispatchEvent('reset', { data: props.data }, evnt)
+      dispatchEvent('reset', { data: props.data }, evnt)
     }
 
     const handleFocus = (fields: string[]) => {
@@ -708,11 +724,12 @@ export default defineVxeComponent({
 
     const validate = (callback: any): Promise<any> => {
       const { readonly } = props
+      const { fullItemList } = internalData
       clearValidate()
       if (readonly) {
         return nextTick()
       }
-      return beginValidate(getItems(), '', callback).then((params) => {
+      return beginValidate(fullItemList, '', callback).then((params) => {
         recalculate()
         return params
       })
@@ -740,17 +757,18 @@ export default defineVxeComponent({
 
     const handleSubmitEvent = (evnt: Event) => {
       const { readonly } = props
+      const { fullItemList } = internalData
       clearValidate()
       if (readonly) {
-        $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
+        dispatchEvent('submit', { data: props.data }, evnt)
         recalculate()
         return
       }
-      beginValidate(getItems()).then((errMap) => {
+      beginValidate(fullItemList).then((errMap) => {
         if (errMap) {
-          $xeForm.dispatchEvent('submit-invalid', { data: props.data, errMap }, evnt)
+          dispatchEvent('submit-invalid', { data: props.data, errMap }, evnt)
         } else {
-          $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
+          dispatchEvent('submit', { data: props.data }, evnt)
         }
         recalculate()
       })
@@ -882,10 +900,8 @@ export default defineVxeComponent({
       }
     }
 
-    formMethods = {
-      dispatchEvent (type, params, evnt) {
-        emit(type, createEvent(evnt, { $form: $xeForm, $grid: $xeGrid }, params))
-      },
+    const formMethods: FormMethods = {
+      dispatchEvent,
       loadItems,
       showItem: handleItemVisible(true),
       hideItem: handleItemVisible(false),
@@ -896,6 +912,8 @@ export default defineVxeComponent({
       updateStatus,
       toggleCollapse,
       getItems,
+      getFlatItems,
+      getNestedItems,
       getItemByField,
       closeTooltip,
       recalculate
