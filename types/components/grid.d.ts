@@ -486,23 +486,40 @@ export interface GridInternalData {
 export interface GridMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeGridEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
-   * 获取根元素
-   */
-  getEl(): HTMLDivElement
-  /**
    * 给数据代理提交指令
    * @param code 指令编码
    */
   commitProxy(code: string | VxeToolbarPropTypes.ButtonConfig, ...args: any[]): Promise<any>
   /**
+   * 获取根元素
+   */
+  getEl(): HTMLDivElement
+  /**
    * 获取表单数据
    */
   getFormData(): any
   /**
-   * 获取表单项列表
+   * 已废弃，被 getFormFlatItems 替换
+   * @deprecated
    */
   getFormItems(): VxeFormItemProps[]
+  /**
+   * 已废弃，被 getFormFlatItems 替换
+   * @deprecated
+   */
   getFormItems(itemIndex?: number): VxeFormItemProps
+  /**
+   * 获取扁平化的项列表
+   */
+  getFormFlatItems(): VxeFormItemProps[]
+  /**
+   * 获取配置项，与 form-config.items 一致
+   */
+  getFormNestedItems(): VxeFormItemProps[]
+  /**
+   * 根据项的字段名获取表单项
+   */
+  getFormItemByField(field: VxeFormItemPropTypes.Field): VxeFormDefines.ItemInfo | null
   /**
    * 只对 form-config 有效，重置表单
    */

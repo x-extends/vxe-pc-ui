@@ -699,7 +699,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           value: pageSize,
           placement: pageSizePlacement,
           transfer: transfer,
-          options: sizeList
+          options: sizeList,
+          clearable: false
         },
         on: {
           change: $xePager.pageSizeEvent
@@ -739,7 +740,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
             type: 'integer',
             max: pageCount,
             min: 1,
-            controls: false
+            controls: false,
+            clearable: false
           },
           on: {
             keydown: $xePager.jumpKeydownEvent,

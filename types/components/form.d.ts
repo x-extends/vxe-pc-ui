@@ -182,6 +182,7 @@ export interface FormInternalData {
       label?: any
     }
   }>
+  fullItemList: VxeFormDefines.ItemInfo[]
   fullItemIdData: Record<string, VxeFormDefines.ItemCacheItem>
   fullItemFieldData: Record<string, VxeFormDefines.ItemCacheItem>
 }
@@ -220,9 +221,18 @@ export interface FormMethods<D = any> {
     itemValue?: any
   ): void
   /**
-   * 获取表单项列表
+   * 已废弃，被 getFlatItems 替换
+   * @deprecated
    */
   getItems(): VxeFormDefines.ItemInfo[]
+  /**
+   * 获取扁平化的项列表
+   */
+  getFlatItems(): VxeFormDefines.ItemInfo[]
+  /**
+   * 获取配置项，与 items 一致
+   */
+  getNestedItems(): VxeFormDefines.ItemInfo[]
   /**
    * 加载表单项
    */
@@ -236,9 +246,7 @@ export interface FormMethods<D = any> {
    */
   showItem(fieldOrItems?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null): Promise<void>
   /**
-   * 根据列的字段名获取表单项
-   * @param field 字段名
-   *
+   * 根据项的字段名获取表单项
    */
   getItemByField(field: VxeFormItemPropTypes.Field): VxeFormDefines.ItemInfo | null
   /**

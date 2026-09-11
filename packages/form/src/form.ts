@@ -178,6 +178,7 @@ function createInternalData (): FormInternalData {
       visible: false
     },
     itemFormatCache: {},
+    fullItemList: [],
     fullItemIdData: {},
     fullItemFieldData: {}
   }
@@ -391,15 +392,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     showItem: handleItemVisible(true),
     hideItem: handleItemVisible(false),
+    /**
+     * 已废弃，被 getFormFlatItems 替换
+     * @deprecated
+     */
     getItems () {
+      const $xeForm = this
+
+      // errLog('vxe.error.delFunc', ['getItems', 'getFlatItems'])
+      return $xeForm.getFlatItems()
+    },
+    getFlatItems () {
+      const $xeForm = this
+      const internalData = $xeForm.internalData
+
+      return internalData.fullItemList
+    },
+    getNestedItems () {
       const $xeForm = this
       const reactData = $xeForm.reactData
 
-      const itemList: VxeFormDefines.ItemInfo[] = []
-      XEUtils.eachTree(reactData.formItems, item => {
-        itemList.push(item)
-      }, { children: 'children' })
-      return itemList
+      return reactData.formItems
     },
     getItemByField  (field: string) {
       const $xeForm = this
@@ -446,7 +459,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     clearValidate  (fieldOrItem?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[]) {
       const $xeForm = this
+      const internalData = $xeForm.internalData
 
+      const { fullItemList } = internalData
       if (fieldOrItem) {
         let fields: any = fieldOrItem
         if (!XEUtils.isArray(fieldOrItem)) {
@@ -462,7 +477,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         })
       } else {
-        $xeForm.getItems().forEach((item) => {
+        fullItemList.forEach((item) => {
           item.showError = false
           item.showIconMsg = false
         })
@@ -500,6 +515,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { formItems } = reactData
       const itemIdData: Record<string, VxeFormDefines.ItemCacheItem> = {}
       const itemFieldData: Record<string, VxeFormDefines.ItemCacheItem> = {}
+      const itemList: VxeFormDefines.ItemInfo[] = []
       XEUtils.eachTree(formItems, (item, index, items) => {
         const { id, field } = item
         const itemRest = { item, items, index }
@@ -509,7 +525,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (field) {
           itemFieldData[field] = itemRest
         }
+        itemList.push(item)
       }, { children: 'children' })
+      internalData.fullItemList = itemList
       internalData.fullItemFieldData = itemFieldData
       internalData.fullItemIdData = itemIdData
     },
@@ -520,9 +538,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeForm.internalData
 
       const { data } = props
-      const itemList = $xeForm.getItems()
+      const { fullItemList } = internalData
       if (data) {
-        itemList.forEach((item) => {
+        fullItemList.forEach((item) => {
           const { field, itemRender } = item
           if (isEnableConf(itemRender)) {
             const { name, startField, endField } = itemRender
@@ -759,13 +777,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
     validate  (callback: any) {
       const $xeForm = this
       const props = $xeForm
+      const internalData = $xeForm.internalData
 
       const { readonly } = props
+      const { fullItemList } = internalData
       $xeForm.clearValidate()
       if (readonly) {
         return $xeForm.$nextTick()
       }
-      return $xeForm.beginValidate($xeForm.getItems(), '', callback).then((params) => {
+      return $xeForm.beginValidate(fullItemList, '', callback).then((params) => {
         $xeForm.recalculate()
         return params
       })
@@ -795,15 +815,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     handleSubmitEvent (evnt: Event) {
       const $xeForm = this
       const props = $xeForm
+      const internalData = $xeForm.internalData
 
       const { readonly } = props
+      const { fullItemList } = internalData
       $xeForm.clearValidate()
       if (readonly) {
         $xeForm.dispatchEvent('submit', { data: props.data }, evnt)
         $xeForm.recalculate()
         return
       }
-      $xeForm.beginValidate($xeForm.getItems()).then((errMap) => {
+      $xeForm.beginValidate(fullItemList).then((errMap) => {
         if (errMap) {
           $xeForm.dispatchEvent('submit-invalid', { data: props.data, errMap }, evnt)
         } else {
