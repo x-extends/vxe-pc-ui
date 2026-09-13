@@ -91,15 +91,15 @@ export interface TableFilterPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleClearFilter(column: any): void
+  handleClearFilter(column: VxeTableDefines.ColumnInfo): void
   /**
    * @private
    */
-  triggerFilterEvent(evnt: any, column: any, params: any): void
+  triggerFilterEvent(evnt: Event, column: VxeTableDefines.ColumnInfo, params: any): void
   /**
    * @private
    */
-  handleOpenFilterColumn(evnt: any, btnEl: HTMLElement | null, cellEl: HTMLElement, column: any, params: any): void
+  handleOpenFilterColumn(evnt: Event, btnEl: HTMLElement | null, cellEl: HTMLElement, column: VxeTableDefines.ColumnInfo, params: any): void
   /**
    * @private
    */

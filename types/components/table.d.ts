@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, VNode } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeComponentAlignType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeComponentAlignType, VxeGlobalRendererOptions } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
@@ -3008,13 +3008,21 @@ export namespace VxeTablePropTypes {
     y?: ScrollbarYConfig
   }
 
+  /**
+   * 渲染器配置项
+   */
+  export type RendererConfig = Record<string, VxeGlobalRendererOptions>
+
   export type Params = any
 
   /**
      * 导入参数
      */
   export interface ImportConfig<D = any> {
-    // 内置属性
+    /**
+     * 内置属性
+     * @private
+     */
     _typeMaps?: Record<string, number>
 
     /**
@@ -3836,6 +3844,10 @@ export interface VxeTableProps<D = any> {
    */
   scrollbarConfig?: VxeTablePropTypes.ScrollbarConfig
   /**
+   * 渲染器配置项
+   */
+  rendererConfig?: VxeTablePropTypes.RendererConfig
+  /**
    * 自定义参数（可以用来存放一些自定义的数据）
    */
   params?: VxeTablePropTypes.Params
@@ -3988,6 +4000,7 @@ export interface TablePrivateComputed<D = any> {
   computeRowGroupColumns: ComputedRef<VxeTableDefines.ColumnInfo[]>
   computeAggFuncColumns: ComputedRef<VxeTableDefines.ColumnInfo[]>
   computeUndoRedoHistoryOpts: ComputedRef<VxeTablePropTypes.UndoRedoHistoryConfig>
+  computeRendererOpts: ComputedRef<VxeTablePropTypes.RendererConfig>
 
   /**
    * @deprecated
