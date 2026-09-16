@@ -51,6 +51,12 @@ export namespace VxeDatePickerPropTypes {
   export type LabelFormat = string
   export type ValueFormat = string
   export type TimeFormat = string
+  export type ParseMethod = (params: {
+    $datePicker: VxeDatePickerConstructor
+    inputValue: string
+    type: VxeDatePanelPropTypes.Type
+    valueFormat: string
+  }) => Date | null | undefined | void
   export type Editable = boolean
   export type FestivalMethod = VxeDatePanelPropTypes.FestivalMethod
   export type DisabledMethod = VxeDatePanelPropTypes.DisabledMethod
@@ -171,6 +177,10 @@ export interface VxeDatePickerProps {
   labelFormat?: VxeDatePickerPropTypes.LabelFormat
   valueFormat?: VxeDatePickerPropTypes.ValueFormat
   timeFormat?: VxeDatePickerPropTypes.TimeFormat
+  /**
+   * 自定义解析方法
+   */
+  parseMethod?: VxeDatePickerPropTypes.ParseMethod
   editable?: VxeDatePickerPropTypes.Editable
   festivalMethod?: VxeDatePickerPropTypes.FestivalMethod
   disabledMethod?: VxeDatePickerPropTypes.DisabledMethod

@@ -82,7 +82,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeColorPickerPropTypes.DefaultColor>,
       default: () => getConfig().colorPicker.defaultColor
     },
+    /**
+     * 已废弃，请使用 popupConfig.placement
+     * @deprecated
+     */
     placement: String as PropType<VxeColorPickerPropTypes.Placement>,
+    /**
+     * 已废弃，请使用 popupConfig.transfer
+     * @deprecated
+     */
     transfer: {
       type: Boolean as PropType<VxeColorPickerPropTypes.Transfer>,
       default: null

@@ -122,6 +122,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePickerPropTypes.TimeFormat>,
+    parseMethod: {
+      type: Function as PropType<VxeDatePickerPropTypes.ParseMethod>,
+      default: () => getConfig().datePicker.parseMethod
+    },
     editable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Editable>,
       default: true
@@ -156,7 +160,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     prefixIcon: String as PropType<VxeDatePickerPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeDatePickerPropTypes.SuffixIcon>,
+    /**
+     * @deprecated
+     */
     placement: String as PropType<VxeDatePickerPropTypes.Placement>,
+    /**
+     * 已废弃，请使用 popupConfig.placement
+     * 已废弃，请使用 popupConfig.transfer
+     * @deprecated
+     */
     transfer: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Transfer>,
       default: null
@@ -166,7 +178,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     popupConfig: Object as PropType<VxeDatePickerPropTypes.PopupConfig>,
     shortcutConfig: Object as PropType<VxeDatePickerPropTypes.ShortcutConfig>,
 
-    // 已废弃 startWeek，被 startDay 替换
+    /**
+     * 已废弃 startWeek，被 startDay 替换
+     * @deprecated
+     */
     startWeek: Number as PropType<VxeDatePickerPropTypes.StartDay>
   },
   inject: {
@@ -693,7 +708,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeDatePicker.reactData
       const internalData = $xeDatePicker.internalData
 
-      const { type, editable, multiple, maskedConfig } = props
+      const { type, editable, multiple, maskedConfig, parseMethod } = props
       const { inputLabel } = internalData
       const dateLabelFormat = $xeDatePicker.computeDateLabelFormat
       const maskedOpts = $xeDatePicker.computeMaskedOpts
@@ -726,14 +741,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
 
-      const $datePanel = $xeDatePicker.$refs.refDatePanel as VxeDatePanelConstructor
-      if ($datePanel) {
-        return $datePanel.checkValue(inpVal)
+      let inpDateVal: VxeDatePickerPropTypes.ModelValue
+      if (parseMethod) {
+        inpDateVal = parseMethod({
+          $datePicker: $xeDatePicker,
+          type,
+          inputValue: inpVal,
+          valueFormat: dateLabelFormat
+        }) || null
+      } else {
+        const $datePanel = $xeDatePicker.$refs.refDatePanel as VxeDatePanelConstructor
+        if ($datePanel) {
+          return $datePanel.checkValue(inpVal)
+        }
+
+        inpDateVal = parseDateValue(inpVal, type, {
+          valueFormat: dateLabelFormat
+        })
       }
 
-      let inpDateVal: VxeDatePickerPropTypes.ModelValue = parseDateValue(inpVal, type, {
-        valueFormat: dateLabelFormat
-      })
       if (!XEUtils.isValidDate(inpDateVal)) {
         $xeDatePicker.dateRevert()
         return

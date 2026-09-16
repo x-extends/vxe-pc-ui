@@ -152,7 +152,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     prefixIcon: String as PropType<VxeDateRangePickerPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeDateRangePickerPropTypes.SuffixIcon>,
+    /**
+     * 已废弃，请使用 popupConfig.placement
+     * @deprecated
+     */
     placement: String as PropType<VxeDateRangePickerPropTypes.Placement>,
+    /**
+     * 已废弃，请使用 popupConfig.transfer
+     * @deprecated
+     */
     transfer: {
       type: Boolean as PropType<VxeDateRangePickerPropTypes.Transfer>,
       default: null
