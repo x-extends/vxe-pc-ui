@@ -59,7 +59,7 @@ export namespace VxeDatePickerPropTypes {
   export type LabelFormat = string
   export type ValueFormat = string
   export type TimeFormat = string
-  export type ParseMethod = (params: {
+  export type ParseInputMethod = (params: {
     $datePicker: VxeDatePickerConstructor
     inputValue: string
     type: VxeDatePanelPropTypes.Type
@@ -186,9 +186,9 @@ export interface VxeDatePickerProps {
   valueFormat?: VxeDatePickerPropTypes.ValueFormat
   timeFormat?: VxeDatePickerPropTypes.TimeFormat
   /**
-   * 自定义解析方法
+   * 自定义解析方法，用于手动输入日期
    */
-  parseMethod?: VxeDatePickerPropTypes.ParseMethod
+  parseInputMethod?: VxeDatePickerPropTypes.ParseInputMethod
   editable?: VxeDatePickerPropTypes.Editable
   festivalMethod?: VxeDatePickerPropTypes.FestivalMethod
   disabledMethod?: VxeDatePickerPropTypes.DisabledMethod

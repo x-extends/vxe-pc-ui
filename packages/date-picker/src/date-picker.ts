@@ -115,9 +115,9 @@ export default defineVxeComponent({
     labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePickerPropTypes.TimeFormat>,
-    parseMethod: {
-      type: Function as PropType<VxeDatePickerPropTypes.ParseMethod>,
-      default: () => getConfig().datePicker.parseMethod
+    parseInputMethod: {
+      type: Function as PropType<VxeDatePickerPropTypes.ParseInputMethod>,
+      default: () => getConfig().datePicker.parseInputMethod
     },
     editable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Editable>,
@@ -602,7 +602,7 @@ export default defineVxeComponent({
     }
 
     const afterCheckValue = (inpVal: string) => {
-      const { type, editable, multiple, maskedConfig, parseMethod } = props
+      const { type, editable, multiple, maskedConfig, parseInputMethod } = props
       const { inputLabel } = internalData
       const dateLabelFormat = computeDateLabelFormat.value
       const maskedOpts = computeMaskedOpts.value
@@ -635,8 +635,8 @@ export default defineVxeComponent({
       }
 
       let inpDateVal: VxeDatePickerPropTypes.ModelValue
-      if (parseMethod) {
-        inpDateVal = parseMethod({
+      if (parseInputMethod) {
+        inpDateVal = parseInputMethod({
           $datePicker: $xeDatePicker,
           type,
           inputValue: inpVal,
