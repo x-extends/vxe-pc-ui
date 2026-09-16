@@ -115,6 +115,10 @@ export default defineVxeComponent({
     labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePickerPropTypes.TimeFormat>,
+    parseMethod: {
+      type: Function as PropType<VxeDatePickerPropTypes.ParseMethod>,
+      default: () => getConfig().datePicker.parseMethod
+    },
     editable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Editable>,
       default: true
@@ -149,7 +153,15 @@ export default defineVxeComponent({
 
     prefixIcon: String as PropType<VxeDatePickerPropTypes.PrefixIcon>,
     suffixIcon: String as PropType<VxeDatePickerPropTypes.SuffixIcon>,
+    /**
+     * 已废弃，请使用 popupConfig.placement
+     * @deprecated
+     */
     placement: String as PropType<VxeDatePickerPropTypes.Placement>,
+    /**
+     * 已废弃，请使用 popupConfig.transfer
+     * @deprecated
+     */
     transfer: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Transfer>,
       default: null
@@ -159,7 +171,10 @@ export default defineVxeComponent({
     popupConfig: Object as PropType<VxeDatePickerPropTypes.PopupConfig>,
     shortcutConfig: Object as PropType<VxeDatePickerPropTypes.ShortcutConfig>,
 
-    // 已废弃 startWeek，被 startDay 替换
+    /**
+     * 已废弃 startWeek，被 startDay 替换
+     * @deprecated
+     */
     startWeek: Number as PropType<VxeDatePickerPropTypes.StartDay>
   },
   emits: [
@@ -587,7 +602,7 @@ export default defineVxeComponent({
     }
 
     const afterCheckValue = (inpVal: string) => {
-      const { type, editable, multiple, maskedConfig } = props
+      const { type, editable, multiple, maskedConfig, parseMethod } = props
       const { inputLabel } = internalData
       const dateLabelFormat = computeDateLabelFormat.value
       const maskedOpts = computeMaskedOpts.value
@@ -619,24 +634,34 @@ export default defineVxeComponent({
         }
       }
 
-      const $datePanel = refDatePanel.value
-      if ($datePanel) {
-        return $datePanel.checkValue(inpVal)
+      let inpDateVal: VxeDatePickerPropTypes.ModelValue
+      if (parseMethod) {
+        inpDateVal = parseMethod({
+          $datePicker: $xeDatePicker,
+          type,
+          inputValue: inpVal,
+          valueFormat: dateLabelFormat
+        }) || null
+      } else {
+        const $datePanel = refDatePanel.value
+        if ($datePanel) {
+          return $datePanel.checkValue(inpVal)
+        }
+        inpDateVal = parseDateValue(inpVal, type, {
+          valueFormat: dateLabelFormat
+        })
       }
 
-      let inpDateVal: VxeDatePickerPropTypes.ModelValue = parseDateValue(inpVal, type, {
-        valueFormat: dateLabelFormat
-      })
       if (!XEUtils.isValidDate(inpDateVal)) {
         dateRevert()
         return
       }
       if (type === 'time') {
-        inpDateVal = XEUtils.toDateString(inpDateVal, dateLabelFormat)
-        if (inputLabel !== inpDateVal) {
+        const timeVal = XEUtils.toDateString(inpDateVal, dateLabelFormat)
+        if (inputLabel !== timeVal) {
           handleChange(inpDateVal, { type: 'check' })
         }
-        handleInputLabel(inpDateVal, true)
+        handleInputLabel(timeVal, true)
         return
       }
       if (dateEndDate && inpDateVal > dateEndDate) {
