@@ -398,15 +398,27 @@ export namespace VxeGanttPropTypes {
     linkCreatable?: boolean
   }
 
-  export interface TaskCriticalPathConfig extends VxeGanttDefines.LinkStyleConfig {
+  export interface TaskCriticalPathConfig {
+    /**
+     * 线颜色
+     */
+    lineColor?: string
+    /**
+     * 线宽度
+     */
+    lineWidth?: number | string
+    /**
+     * 线类型
+     */
+    lineType?: VxeGanttDefines.LineType
     /**
      * 是否高亮关键任务条
      */
-    highlightTasks?: boolean
+    // highlightTasks?: boolean
     /**
      * 是否高亮关键依赖线
      */
-    highlightLinks?: boolean
+    // highlightLinks?: boolean
   }
 
   /**
@@ -682,6 +694,7 @@ export interface VxeGanttProps<D = any> extends Omit<VxeGridProps<D>, 'layouts'>
   taskLinkConfig?: VxeGanttPropTypes.TaskLinkConfig
   taskBarConfig?: VxeGanttPropTypes.TaskBarConfig<D>
   taskBarMilestoneConfig?: VxeGanttPropTypes.TaskBarMilestoneConfig<D>
+  taskCriticalPathConfig?: VxeGanttPropTypes.TaskCriticalPathConfig
   taskBarSubviewConfig?: VxeGanttPropTypes.TaskBarSubviewConfig<D>
   taskBarTooltipConfig?: VxeGanttPropTypes.TaskBarTooltipConfig<D>
   taskBarResizeConfig?: VxeGanttPropTypes.TaskBarResizeConfig<D>
@@ -702,6 +715,7 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTaskBarResizeTooltipOpts: ComputedRef<VxeGanttPropTypes.TaskBarResizeTooltipConfig<D>>
   computeTaskSplitOpts: ComputedRef<VxeGanttPropTypes.TaskSplitConfig>
   computeTaskBarMilestoneOpts: ComputedRef<VxeGanttPropTypes.TaskBarMilestoneConfig<D>>
+  computeTaskCriticalPathOpts: ComputedRef<VxeGanttPropTypes.TaskCriticalPathConfig>
   computeTaskBarSubviewOpts: ComputedRef<VxeGanttPropTypes.TaskBarSubviewConfig<D>>
   computeTaskBarTooltipOpts: ComputedRef<VxeGanttPropTypes.TaskBarTooltipConfig>
   computeTaskLinkOpts: ComputedRef<VxeGanttPropTypes.TaskLinkConfig>
