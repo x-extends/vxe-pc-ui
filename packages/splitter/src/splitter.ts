@@ -239,7 +239,7 @@ export default defineVxeComponent({
         }
         if (item.slots) {
           XEUtils.each(item.slots, (func) => {
-            if (!XEUtils.isFunction(func)) {
+            if (func && !XEUtils.isFunction(func)) {
               if (!slots[func]) {
                 errLog('vxe.error.notSlot', [func])
               }
