@@ -347,6 +347,10 @@ export namespace VxeGanttPropTypes {
      */
     showContent?: boolean
     /**
+     * 是否显示关键路径
+     */
+    showCriticalPath?: boolean
+    /**
      * 是否在任务条显示提示信息
      */
     showTooltip?: boolean
@@ -384,6 +388,17 @@ export namespace VxeGanttPropTypes {
      * 是否允许自定义创建依赖线
      */
     linkCreatable?: boolean
+  }
+
+  export interface TaskCriticalPathConfig extends VxeGanttDefines.LinkStyleConfig {
+    /**
+     * 是否高亮关键任务条
+     */
+    highlightTasks?: boolean
+    /**
+     * 是否高亮关键依赖线
+     */
+    highlightLinks?: boolean
   }
 
   /**
@@ -500,6 +515,18 @@ export namespace VxeGanttPropTypes {
      */
     showTooltip?: boolean
     /**
+     * 拖拽调整任务后自动更新依赖线关联任务的日期
+     */
+    isSyncLinkTask?: boolean
+    /**
+     * 拖拽调整任务自动根据依赖线的紧前紧后关系来限制可拖拽日期范围
+     */
+    isLimitByLink?: boolean
+    /**
+     * 可拖拽的最小宽度大小
+     */
+    minWidthSize?: number
+    /**
      * 拖拽开始时是否允许行拖拽调整任务日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
     resizeStartMethod?(params: {
@@ -568,6 +595,10 @@ export namespace VxeGanttPropTypes {
      * 拖拽移动任务后自动更新依赖线关联任务的日期
      */
     isSyncLinkTask?: boolean
+    /**
+     * 拖拽移动任务自动根据依赖线的紧前紧后关系来限制可拖拽日期范围
+     */
+    isLimitByLink?: boolean
     /**
      * 显示 Tooltip 提示
      */
@@ -725,6 +756,11 @@ export interface GanttReactData<D = any> extends GridReactData<D> {
   nowTime: number
   currLeftSpacing: number
   currRightSpacing: number
+
+  // 关键路径
+  criticalLinks: VxeGanttPropTypes.Link[]
+  criticalRowIds: string[]
+  criticalPathFlag: number
 }
 
 export interface GanttInternalData extends GridInternalData {
@@ -740,6 +776,11 @@ export interface GanttInternalData extends GridInternalData {
     rowid: string | null
     type: 0 | 1
   }
+
+  // 关键路径
+  criticalRowList: any[]
+  criticalRowMaps: Map<string, any>
+  criticalLinkKeyMaps: Map<string, VxeGanttPropTypes.Link>
 
   _taTime?: any
   _msTout?: any
@@ -788,6 +829,14 @@ export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEve
    * 如果任务视图有横向滚动条，则滚动到任务视图对应的日期
    */
   scrollToDateView(colDate: string | Date | number): Promise<any>
+  /**
+   * 获取关键路径
+   */
+  getCriticalPath(): {
+    rowIds: string[]
+    rows: D[]
+    links: VxeGanttPropTypes.Links
+  }
 }
 export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridMethods<D>, 'dispatchEvent'> { }
 

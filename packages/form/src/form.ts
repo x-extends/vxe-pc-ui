@@ -375,7 +375,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         list.forEach((item) => {
           if (item.slots) {
             XEUtils.each(item.slots, (func) => {
-              if (!XEUtils.isFunction(func)) {
+              if (func && !XEUtils.isFunction(func)) {
                 if (!slots[func]) {
                   errLog('vxe.error.notSlot', [func])
                 }

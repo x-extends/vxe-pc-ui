@@ -244,7 +244,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.itemList = list.map(item => {
         if (item.slots) {
           XEUtils.each(item.slots, (func) => {
-            if (!XEUtils.isFunction(func)) {
+            if (func && !XEUtils.isFunction(func)) {
               if (!slots[func]) {
                 errLog('vxe.error.notSlot', [func])
               }
