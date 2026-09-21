@@ -112,14 +112,8 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeDateRangePickerPropTypes.Editable>,
       default: true
     },
-    festivalMethod: {
-      type: Function as PropType<VxeDateRangePickerPropTypes.FestivalMethod>,
-      default: () => getConfig().dateRangePicker.festivalMethod
-    },
-    disabledMethod: {
-      type: Function as PropType<VxeDateRangePickerPropTypes.DisabledMethod>,
-      default: () => getConfig().dateRangePicker.disabledMethod
-    },
+    festivalMethod: Function as PropType<VxeDateRangePickerPropTypes.FestivalMethod>,
+    disabledMethod: Function as PropType<VxeDateRangePickerPropTypes.DisabledMethod>,
     separator: {
       type: [String, Number] as PropType<VxeDateRangePickerPropTypes.Separator>,
       default: () => getConfig().dateRangePicker.separator
@@ -198,8 +192,12 @@ export default defineVxeComponent({
     const { computeSize } = useSize(props)
 
     const reactData = reactive(createReactData())
-
     const internalData = createInternalData()
+
+    const defaultFuncProps = {
+      festivalMethod: getConfig().dateRangePicker.festivalMethod,
+      disabledMethod: getConfig().dateRangePicker.disabledMethod
+    }
 
     const refElem = ref() as Ref<HTMLDivElement>
     const refInputTarget = ref() as Ref<HTMLInputElement>
@@ -1337,8 +1335,8 @@ export default defineVxeComponent({
                         defaultDate: sdDate,
                         defaultTime: sdTime,
                         timeConfig: timeOpts,
-                        festivalMethod: props.festivalMethod,
-                        disabledMethod: props.disabledMethod,
+                        festivalMethod: props.festivalMethod || defaultFuncProps.festivalMethod,
+                        disabledMethod: props.disabledMethod || defaultFuncProps.disabledMethod,
                         selectDay: props.selectDay,
                         cellClassName: panelCellClassName,
                         onChange: startPanelChangeEvent,
@@ -1364,8 +1362,8 @@ export default defineVxeComponent({
                         defaultDate: edDate,
                         defaultTime: edTime,
                         timeConfig: timeOpts,
-                        festivalMethod: props.festivalMethod,
-                        disabledMethod: props.disabledMethod,
+                        festivalMethod: props.festivalMethod || defaultFuncProps.festivalMethod,
+                        disabledMethod: props.disabledMethod || defaultFuncProps.disabledMethod,
                         selectDay: props.selectDay,
                         cellClassName: panelCellClassName,
                         onChange: endPanelChangeEvent,

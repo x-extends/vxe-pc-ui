@@ -115,22 +115,13 @@ export default defineVxeComponent({
     labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePickerPropTypes.TimeFormat>,
-    parseInputMethod: {
-      type: Function as PropType<VxeDatePickerPropTypes.ParseInputMethod>,
-      default: () => getConfig().datePicker.parseInputMethod
-    },
+    parseInputMethod: Function as PropType<VxeDatePickerPropTypes.ParseInputMethod>,
     editable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Editable>,
       default: true
     },
-    festivalMethod: {
-      type: Function as PropType<VxeDatePickerPropTypes.FestivalMethod>,
-      default: () => getConfig().datePicker.festivalMethod
-    },
-    disabledMethod: {
-      type: Function as PropType<VxeDatePickerPropTypes.DisabledMethod>,
-      default: () => getConfig().datePicker.disabledMethod
-    },
+    festivalMethod: Function as PropType<VxeDatePickerPropTypes.FestivalMethod>,
+    disabledMethod: Function as PropType<VxeDatePickerPropTypes.DisabledMethod>,
 
     // week
     selectDay: {
@@ -211,6 +202,12 @@ export default defineVxeComponent({
 
     const reactData = reactive(createReactData())
     const internalData = createInternalData()
+
+    const defaultFuncProps = {
+      parseInputMethod: getConfig().datePicker.parseInputMethod,
+      festivalMethod: getConfig().datePicker.festivalMethod,
+      disabledMethod: getConfig().datePicker.disabledMethod
+    }
 
     const refElem = ref() as Ref<HTMLDivElement>
     const refInputTarget = ref() as Ref<HTMLInputElement>
@@ -602,12 +599,13 @@ export default defineVxeComponent({
     }
 
     const afterCheckValue = (inpVal: string) => {
-      const { type, editable, multiple, maskedConfig, parseInputMethod } = props
+      const { type, editable, multiple, maskedConfig } = props
       const { inputLabel } = internalData
       const dateLabelFormat = computeDateLabelFormat.value
       const maskedOpts = computeMaskedOpts.value
       const dateStartDate = computeDateStartDate.value
       const dateEndDate = computeDateEndDate.value
+      const parseInpMethod = props.parseInputMethod || defaultFuncProps.parseInputMethod
       if (!inpVal) {
         handleChange('', { type: 'check' })
         return
@@ -635,8 +633,8 @@ export default defineVxeComponent({
       }
 
       let inpDateVal: VxeDatePickerPropTypes.ModelValue
-      if (parseInputMethod) {
-        inpDateVal = parseInputMethod({
+      if (parseInpMethod) {
+        inpDateVal = parseInpMethod({
           $datePicker: $xeDatePicker,
           type,
           inputValue: inpVal,
@@ -1514,8 +1512,8 @@ export default defineVxeComponent({
                         valueFormat: props.valueFormat,
                         timeFormat: props.timeFormat,
                         timeConfig: timeOpts,
-                        festivalMethod: props.festivalMethod,
-                        disabledMethod: props.disabledMethod,
+                        festivalMethod: props.festivalMethod || defaultFuncProps.festivalMethod,
+                        disabledMethod: props.disabledMethod || defaultFuncProps.disabledMethod,
                         selectDay: props.selectDay,
                         onChange: panelChangeEvent,
                         onConfirm: panelConfirmEvent,

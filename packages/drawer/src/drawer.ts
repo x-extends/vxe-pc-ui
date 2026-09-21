@@ -143,10 +143,7 @@ export default defineVxeComponent({
       type: String as PropType<VxeDrawerPropTypes.Size>,
       default: () => getConfig().drawer.size || getConfig().size
     },
-    beforeHideMethod: {
-      type: Function as PropType<VxeDrawerPropTypes.BeforeHideMethod>,
-      default: () => getConfig().drawer.beforeHideMethod
-    },
+    beforeHideMethod: Function as PropType<VxeDrawerPropTypes.BeforeHideMethod>,
     slots: Object as PropType<VxeDrawerPropTypes.Slots>
   },
   emits: [
@@ -183,6 +180,10 @@ export default defineVxeComponent({
       drawerZIndex: 0,
       resizeFlag: 1
     })
+
+    const defaultFuncProps = {
+      beforeHideMethod: getConfig().drawer.beforeHideMethod
+    }
 
     const refMaps: DrawerPrivateRef = {
       refElem
@@ -260,11 +261,11 @@ export default defineVxeComponent({
     }
 
     const closeDrawer = (type: DrawerEventTypes) => {
-      const { beforeHideMethod } = props
       const { visible } = reactData
+      const beHideMethod = props.beforeHideMethod || defaultFuncProps.beforeHideMethod
       const params = { type }
       if (visible) {
-        Promise.resolve(beforeHideMethod ? beforeHideMethod(params) : null).then((rest) => {
+        Promise.resolve(beHideMethod ? beHideMethod(params) : null).then((rest) => {
           if (!XEUtils.isError(rest)) {
             const el = refElem.value
             if (el) {

@@ -51,14 +51,8 @@ export default defineVxeComponent({
     valueFormat: String as PropType<VxeDatePanelPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePanelPropTypes.TimeFormat>,
     valueSort: Boolean as PropType<VxeDatePanelPropTypes.ValueSort>,
-    festivalMethod: {
-      type: Function as PropType<VxeDatePanelPropTypes.FestivalMethod>,
-      default: () => getConfig().datePanel.festivalMethod
-    },
-    disabledMethod: {
-      type: Function as PropType<VxeDatePanelPropTypes.DisabledMethod>,
-      default: () => getConfig().datePanel.disabledMethod
-    },
+    festivalMethod: Function as PropType<VxeDatePanelPropTypes.FestivalMethod>,
+    disabledMethod: Function as PropType<VxeDatePanelPropTypes.DisabledMethod>,
 
     timeConfig: Object as PropType<VxeDatePanelPropTypes.TimeConfig>,
 
@@ -105,6 +99,11 @@ export default defineVxeComponent({
       monthSize: 12,
       quarterSize: 4,
       hpTimeout: undefined as any
+    }
+
+    const defaultFuncProps = {
+      festivalMethod: getConfig().datePanel.festivalMethod,
+      disabledMethod: getConfig().datePanel.disabledMethod
     }
 
     const refElem = ref() as Ref<HTMLDivElement>
@@ -991,11 +990,11 @@ export default defineVxeComponent({
     }
 
     const isDateDisabled = (item: { date: Date }) => {
-      const { disabledMethod } = props
+      const disbMethod = props.disabledMethod || defaultFuncProps.disabledMethod
       const { datePanelType } = reactData
       const { date } = item
-      if (disabledMethod) {
-        return disabledMethod({ type: datePanelType, viewType: datePanelType, date, $datePanel: $xeDatePanel })
+      if (disbMethod) {
+        return disbMethod({ type: datePanelType, viewType: datePanelType, date, $datePanel: $xeDatePanel })
       }
       return false
     }
@@ -1283,11 +1282,11 @@ export default defineVxeComponent({
     Object.assign($xeDatePanel, datePanelMethods)
 
     const renderDateLabel = (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem, label: string | number) => {
-      const { festivalMethod } = props
+      const flMethod = props.festivalMethod || defaultFuncProps.festivalMethod
       const labelVNs: VNode[] = []
-      if (festivalMethod) {
+      if (flMethod) {
         const { datePanelType } = reactData
-        const festivalRest = festivalMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $datePanel: $xeDatePanel })
+        const festivalRest = flMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $datePanel: $xeDatePanel })
         const festivalItem = festivalRest ? (XEUtils.isString(festivalRest) ? { label: festivalRest } : festivalRest) : {}
         const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
         labelVNs.push(
