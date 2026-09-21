@@ -150,14 +150,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeInputPropTypes.Editable>,
       default: true
     },
-    festivalMethod: {
-      type: Function as PropType<VxeInputPropTypes.FestivalMethod>,
-      default: () => getConfig().input.festivalMethod
-    },
-    disabledMethod: {
-      type: Function as PropType<VxeInputPropTypes.DisabledMethod>,
-      default: () => getConfig().input.disabledMethod
-    },
+    festivalMethod: Function as PropType<VxeInputPropTypes.FestivalMethod>,
+    disabledMethod: Function as PropType<VxeInputPropTypes.DisabledMethod>,
 
     // week
     selectDay: {
@@ -231,10 +225,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       hpTimeout: undefined,
       dnTimeout: undefined
     }
+    const defaultFuncProps = {
+      festivalMethod: getConfig().input.festivalMethod,
+      disabledMethod: getConfig().input.disabledMethod
+    }
     return {
       xID,
       reactData,
-      internalData
+      internalData,
+      defaultFuncProps
     }
   },
   computed: {
@@ -1719,8 +1718,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeInput = this
       const props = $xeInput
       const reactData = $xeInput.reactData
+      const defaultFuncProps = $xeInput.defaultFuncProps
 
-      const { disabledMethod } = props
+      const disbMethod = props.disabledMethod || defaultFuncProps.disabledMethod
       const { datePanelType } = reactData
       const dateStartTime = $xeInput.computeDateStartTime
       const dateEndTime = $xeInput.computeDateEndTime
@@ -1731,8 +1731,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (dateEndTime && dateEndTime.getTime() < date.getTime()) {
         return true
       }
-      if (disabledMethod) {
-        return disabledMethod({ type: datePanelType, viewType: datePanelType, date, $input: $xeInput as VxeInputConstructor })
+      if (disbMethod) {
+        return disbMethod({ type: datePanelType, viewType: datePanelType, date, $input: $xeInput as VxeInputConstructor })
       }
       return false
     },
@@ -2311,11 +2311,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeInput = this
       const props = $xeInput
       const reactData = $xeInput.reactData
+      const defaultFuncProps = $xeInput.defaultFuncProps
 
-      const { festivalMethod } = props
-      if (festivalMethod) {
+      const flMethod = props.festivalMethod || defaultFuncProps.festivalMethod
+      if (flMethod) {
         const { datePanelType } = reactData
-        const festivalRest = festivalMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $input: $xeInput as VxeInputConstructor })
+        const festivalRest = flMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $input: $xeInput as VxeInputConstructor })
         const festivalItem = festivalRest ? (XEUtils.isString(festivalRest) ? { label: festivalRest } : festivalRest) : {}
         const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
         const labels = [

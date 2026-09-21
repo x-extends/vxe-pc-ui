@@ -50,14 +50,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     labelFormat: String as PropType<VxeCalendarPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeCalendarPropTypes.ValueFormat>,
-    festivalMethod: {
-      type: Function as PropType<VxeCalendarPropTypes.FestivalMethod>,
-      default: () => getConfig().calendar.festivalMethod
-    },
-    disabledMethod: {
-      type: Function as PropType<VxeCalendarPropTypes.DisabledMethod>,
-      default: () => getConfig().calendar.disabledMethod
-    },
+    festivalMethod: Function as PropType<VxeCalendarPropTypes.FestivalMethod>,
+    disabledMethod: Function as PropType<VxeCalendarPropTypes.DisabledMethod>,
     cellStyle: [Object, Function] as PropType<VxeCalendarPropTypes.CellStyle>,
     menuConfig: Object as PropType<VxeCalendarPropTypes.MenuConfig>,
 
@@ -82,11 +76,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       monthSize: 20,
       quarterSize: 8
     }
+    const defaultFuncProps = {
+      festivalMethod: getConfig().calendar.festivalMethod,
+      disabledMethod: getConfig().calendar.disabledMethod
+    }
 
     return {
       xID: XEUtils.uniqueId(),
       reactData,
-      internalData
+      internalData,
+      defaultFuncProps
     }
   },
   computed: {
@@ -736,10 +735,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeCalendar = this
       const props = $xeCalendar
       const reactData = $xeCalendar.reactData
+      const defaultFuncProps = $xeCalendar.defaultFuncProps
 
-      const { disabledMethod } = props
+      const disbMethod = props.disabledMethod || defaultFuncProps.disabledMethod
       const { datePanelType } = reactData
-      return disabledMethod && disabledMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor })
+      return disbMethod && disbMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor })
     },
     changeViewEvent (evnt: Event | null) {
       const $xeCalendar = this
@@ -960,11 +960,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeCalendar = this
       const props = $xeCalendar
       const reactData = $xeCalendar.reactData
+      const defaultFuncProps = $xeCalendar.defaultFuncProps
 
-      const { festivalMethod } = props
-      if (festivalMethod) {
+      const flMethod = props.festivalMethod || defaultFuncProps.festivalMethod
+      if (flMethod) {
         const { datePanelType } = reactData
-        const festivalRest = festivalMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor })
+        const festivalRest = flMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $calendar: $xeCalendar as VxeCalendarConstructor })
         const festivalItem = festivalRest ? (XEUtils.isString(festivalRest) ? { label: festivalRest } : festivalRest) : {}
         const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
         const labels = [

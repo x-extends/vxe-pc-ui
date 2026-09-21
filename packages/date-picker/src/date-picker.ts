@@ -122,22 +122,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     labelFormat: String as PropType<VxeDatePickerPropTypes.LabelFormat>,
     valueFormat: String as PropType<VxeDatePickerPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePickerPropTypes.TimeFormat>,
-    parseInputMethod: {
-      type: Function as PropType<VxeDatePickerPropTypes.ParseInputMethod>,
-      default: () => getConfig().datePicker.parseInputMethod
-    },
+    parseInputMethod: Function as PropType<VxeDatePickerPropTypes.ParseInputMethod>,
     editable: {
       type: Boolean as PropType<VxeDatePickerPropTypes.Editable>,
       default: true
     },
-    festivalMethod: {
-      type: Function as PropType<VxeDatePickerPropTypes.FestivalMethod>,
-      default: () => getConfig().datePicker.festivalMethod
-    },
-    disabledMethod: {
-      type: Function as PropType<VxeDatePickerPropTypes.DisabledMethod>,
-      default: () => getConfig().datePicker.disabledMethod
-    },
+    festivalMethod: Function as PropType<VxeDatePickerPropTypes.FestivalMethod>,
+    disabledMethod: Function as PropType<VxeDatePickerPropTypes.DisabledMethod>,
 
     // week
     selectDay: {
@@ -212,12 +203,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
   data () {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
+    const defaultFuncProps = {
+      parseInputMethod: getConfig().datePicker.parseInputMethod,
+      festivalMethod: getConfig().datePicker.festivalMethod,
+      disabledMethod: getConfig().datePicker.disabledMethod
+    }
     return {
       ...({} as {
         internalData: DatePickerInternalData
       }),
       xID,
-      reactData
+      reactData,
+      defaultFuncProps
     }
   },
   computed: {
@@ -707,13 +704,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePicker
       const reactData = $xeDatePicker.reactData
       const internalData = $xeDatePicker.internalData
+      const defaultFuncProps = $xeDatePicker.defaultFuncProps
 
-      const { type, editable, multiple, maskedConfig, parseInputMethod } = props
+      const { type, editable, multiple, maskedConfig } = props
       const { inputLabel } = internalData
       const dateLabelFormat = $xeDatePicker.computeDateLabelFormat
       const maskedOpts = $xeDatePicker.computeMaskedOpts
       const dateStartDate = $xeDatePicker.computeDateStartDate
       const dateEndDate = $xeDatePicker.computeDateEndDate
+      const parseInpMethod = props.parseInputMethod || defaultFuncProps.parseInputMethod
       if (!inpVal) {
         $xeDatePicker.handleChange('', { type: 'check' })
         return
@@ -742,8 +741,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
 
       let inpDateVal: VxeDatePickerPropTypes.ModelValue
-      if (parseInputMethod) {
-        inpDateVal = parseInputMethod({
+      if (parseInpMethod) {
+        inpDateVal = parseInpMethod({
           $datePicker: $xeDatePicker,
           type,
           inputValue: inpVal,
@@ -1603,6 +1602,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeDatePicker
       const slots = $xeDatePicker.$scopedSlots
       const reactData = $xeDatePicker.reactData
+      const defaultFuncProps = $xeDatePicker.defaultFuncProps
 
       const popupOpts = $xeDatePicker.computePopupOpts
       if (popupOpts.enabled === false) {
@@ -1697,8 +1697,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         valueFormat: props.valueFormat,
                         timeFormat: props.timeFormat,
                         timeConfig: timeOpts,
-                        festivalMethod: props.festivalMethod,
-                        disabledMethod: props.disabledMethod,
+                        festivalMethod: props.festivalMethod || defaultFuncProps.festivalMethod,
+                        disabledMethod: props.disabledMethod || defaultFuncProps.disabledMethod,
                         selectDay: props.selectDay
                       },
                       on: {

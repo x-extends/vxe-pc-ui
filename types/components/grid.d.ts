@@ -181,6 +181,15 @@ export namespace VxeGridPropTypes {
      */
     form?: boolean
     /**
+     * 代理表单参数
+     */
+    formOptions?: {
+      /**
+       * 代理表单提交模式
+       */
+      submitMode?: 'reload' | 'query' | '' | null
+    }
+    /**
      * 是否代理表尾
      */
     footer?: boolean

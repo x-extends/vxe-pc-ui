@@ -147,10 +147,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeDrawerPropTypes.Size>,
       default: () => getConfig().drawer.size || getConfig().size
     },
-    beforeHideMethod: {
-      type: Function as PropType<VxeDrawerPropTypes.BeforeHideMethod>,
-      default: () => getConfig().drawer.beforeHideMethod
-    },
+    beforeHideMethod: Function as PropType<VxeDrawerPropTypes.BeforeHideMethod>,
     slots: Object as PropType<VxeDrawerPropTypes.Slots>
   },
   inject: {
@@ -182,9 +179,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       drawerZIndex: 0,
       resizeFlag: 1
     }
+    const defaultFuncProps = {
+      beforeHideMethod: getConfig().drawer.beforeHideMethod
+    }
     return {
       xID: XEUtils.uniqueId(),
       reactData,
+      defaultFuncProps,
       reFlag: 0
     }
   },
@@ -319,12 +320,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDrawer = this
       const props = $xeDrawer
       const reactData = $xeDrawer.reactData
+      const defaultFuncProps = $xeDrawer.defaultFuncProps
 
-      const { beforeHideMethod } = props
       const { visible } = reactData
+      const beHideMethod = props.beforeHideMethod || defaultFuncProps.beforeHideMethod
       const params = { type }
       if (visible) {
-        Promise.resolve(beforeHideMethod ? beforeHideMethod(params) : null).then((rest) => {
+        Promise.resolve(beHideMethod ? beHideMethod(params) : null).then((rest) => {
           if (!XEUtils.isError(rest)) {
             const el = $xeDrawer.$refs.refElem as HTMLDivElement
             if (el) {

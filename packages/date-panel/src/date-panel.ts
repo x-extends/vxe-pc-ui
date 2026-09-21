@@ -58,14 +58,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     valueFormat: String as PropType<VxeDatePanelPropTypes.ValueFormat>,
     timeFormat: String as PropType<VxeDatePanelPropTypes.TimeFormat>,
     valueSort: Boolean as PropType<VxeDatePanelPropTypes.ValueSort>,
-    festivalMethod: {
-      type: Function as PropType<VxeDatePanelPropTypes.FestivalMethod>,
-      default: () => getConfig().datePanel.festivalMethod
-    },
-    disabledMethod: {
-      type: Function as PropType<VxeDatePanelPropTypes.DisabledMethod>,
-      default: () => getConfig().datePanel.disabledMethod
-    },
+    festivalMethod: Function as PropType<VxeDatePanelPropTypes.FestivalMethod>,
+    disabledMethod: Function as PropType<VxeDatePanelPropTypes.DisabledMethod>,
 
     timeConfig: Object as PropType<VxeDatePanelPropTypes.TimeConfig>,
 
@@ -99,10 +93,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       hpTimeout: undefined as any
     }
 
+    const defaultFuncProps = {
+      festivalMethod: getConfig().datePanel.festivalMethod,
+      disabledMethod: getConfig().datePanel.disabledMethod
+    }
+
     return {
       xID,
       reactData,
-      internalData
+      internalData,
+      defaultFuncProps
     }
   },
   computed: {
@@ -1107,12 +1107,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
+      const defaultFuncProps = $xeDatePanel.defaultFuncProps
 
-      const { disabledMethod } = props
+      const disbMethod = props.disabledMethod || defaultFuncProps.disabledMethod
       const { datePanelType } = reactData
       const { date } = item
-      if (disabledMethod) {
-        return disabledMethod({ type: datePanelType, viewType: datePanelType, date, $datePanel: $xeDatePanel })
+      if (disbMethod) {
+        return disbMethod({ type: datePanelType, viewType: datePanelType, date, $datePanel: $xeDatePanel })
       }
       return false
     },
@@ -1436,12 +1437,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
+      const defaultFuncProps = $xeDatePanel.defaultFuncProps
 
-      const { festivalMethod } = props
+      const flMethod = props.festivalMethod || defaultFuncProps.festivalMethod
       const labelVNs: VNode[] = []
-      if (festivalMethod) {
+      if (flMethod) {
         const { datePanelType } = reactData
-        const festivalRest = festivalMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $datePanel: $xeDatePanel })
+        const festivalRest = flMethod({ type: datePanelType, viewType: datePanelType, date: item.date, $datePanel: $xeDatePanel })
         const festivalItem = festivalRest ? (XEUtils.isString(festivalRest) ? { label: festivalRest } : festivalRest) : {}
         const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
         labelVNs.push(
