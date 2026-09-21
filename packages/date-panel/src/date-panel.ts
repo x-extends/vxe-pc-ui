@@ -1482,6 +1482,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             ])
           )
         }
+      } else {
+        labelVNs.push(
+          h('div', {
+            class: 'vxe-date-panel--label'
+          }, `${label}`)
+        )
       }
       return labelVNs
     },
