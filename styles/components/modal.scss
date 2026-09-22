@@ -370,10 +370,16 @@ html[data-vxe-lock-scroll] {
     }
   }
   &.is--animat {
+    pointer-events: none;
     &.is--mask {
       &:before {
         @include baseMixin.createAnimationTransition(background-color, .2s);
       }
+    }
+  }
+  &.zoom--minimize {
+    &::before {
+      display: none;
     }
   }
   &.type--message,
