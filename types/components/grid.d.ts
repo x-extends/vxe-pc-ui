@@ -199,7 +199,7 @@ export namespace VxeGridPropTypes {
       /**
        * 代理表单的重置方式
        */
-      resetMode?: 'reset_form' | 'reset_table' | 'reset' | '' | null
+      resetMode?: 'reset_form' | 'reset' | '' | null
     }
     /**
      * 是否代理表尾
