@@ -193,9 +193,13 @@ export namespace VxeGridPropTypes {
      */
     formOptions?: {
       /**
-       * 代理表单提交模式
+       * 代理表单的提交方式
        */
       submitMode?: 'reload' | 'query' | '' | null
+      /**
+       * 代理表单的重置方式
+       */
+      resetMode?: 'reset_form' | 'reset_table' | 'reset' | '' | null
     }
     /**
      * 是否代理表尾

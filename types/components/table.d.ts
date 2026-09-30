@@ -2262,9 +2262,14 @@ export namespace VxeTablePropTypes {
      */
     isCopyToContent?: boolean
     /**
-     * 用于 isCopy，对复制到剪贴板的文本进行修剪，去掉首尾换行符
+     * 已废弃，请使用 clip-config.trailingNewline
+     * @deprecated
      */
     isTrimCopyContent?: boolean
+    /**
+     * 用于 isCopy，是否给复制到剪贴板文本的末尾带一个换行符
+     */
+    trailingNewline?: boolean
     /**
      * 只对 area-config.multiple 有效，对相同列数的跨行选取多区域进行复制粘贴
      */
