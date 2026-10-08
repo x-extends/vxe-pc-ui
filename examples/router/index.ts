@@ -350,7 +350,12 @@ const routes: Array<RouteConfig> = [
   {
     path: '/component/divider',
     name: 'DividerTest',
-    component: () => import('../views/divider/SpaceTest.vue')
+    component: () => import('../views/divider/DividerTest.vue')
+  },
+  {
+    path: '/component/scrollbar',
+    name: 'ScrollbarTest',
+    component: () => import('../views/scrollbar/ScrollbarTest.vue')
   }
 ]
 

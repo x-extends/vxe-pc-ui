@@ -68,6 +68,7 @@ import VxeRadioGroup from './radio-group'
 import VxeRate from './rate'
 import VxeResult from './result'
 import VxeRow from './row'
+import VxeScrollbar from './scrollbar'
 import VxeSegmented from './segmented'
 import VxeSelect from './select'
 import VxeSplitter from './splitter'
@@ -170,6 +171,7 @@ const components = [
   VxeRate,
   VxeResult,
   VxeRow,
+  VxeScrollbar,
   VxeSegmented,
   VxeSelect,
   VxeSplitter,
@@ -316,6 +318,7 @@ export * from './radio-group'
 export * from './rate'
 export * from './result'
 export * from './row'
+export * from './scrollbar'
 export * from './segmented'
 export * from './select'
 export * from './splitter'

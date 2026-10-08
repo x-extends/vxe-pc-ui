@@ -146,4 +146,9 @@
   /*image-preview*/
   --vxe-ui-vxe-image-preview-operation-color: #{light_variable.$vxe-ui-vxe-image-preview-operation-color};
   --vxe-ui-vxe-image-preview-operation-background-color: #{light_variable.$vxe-ui-vxe-image-preview-operation-background-color};
+
+  /*scrollbar*/
+  --vxe-ui-scrollbar-thumb-background-color: #{light_variable.$vxe-ui-scrollbar-thumb-background-color};
+  --vxe-ui-scrollbar-thumb-hover-background-color: #{light_variable.$vxe-ui-scrollbar-thumb-hover-background-color};
+  --vxe-ui-scrollbar-thumb-active-background-color: #{light_variable.$vxe-ui-scrollbar-thumb-active-background-color};
 }

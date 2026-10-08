@@ -318,4 +318,9 @@
   --vxe-ui-divider-vertical-margin-small: 8px;
   --vxe-ui-divider-vertical-margin-mini: 6px;
   --vxe-ui-divider-border-width: 1px;
+
+  /*scrollbar*/
+  --vxe-ui-scrollbar-y-width: 10px;
+  --vxe-ui-scrollbar-x-height: var(--vxe-ui-scrollbar-y-width);
+  --vxe-ui-scrollbar-track-background-color: transparent;
 }

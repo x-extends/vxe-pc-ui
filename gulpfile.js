@@ -96,6 +96,7 @@ const componentList = [
   'rate',
   'result',
   'row',
+  'scrollbar',
   'segmented',
   'select',
   'splitter',
