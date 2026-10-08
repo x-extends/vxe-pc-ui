@@ -63,7 +63,7 @@ export default defineVxeComponent({
       const status = props.status || type
       const slotExtra = slots.extra
       return h('div', {
-        ref: 'refElem',
+        ref: refElem,
         class: ['vxe-result', {
           [`theme--${status}`]: status
         }]

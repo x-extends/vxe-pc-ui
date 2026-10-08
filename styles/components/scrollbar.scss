@@ -1,0 +1,114 @@
+@use '../helpers/baseMixin.scss';
+
+.vxe-scrollbar {
+  width: 100%;
+  position: relative;
+  &.is--virtual {
+    & > .vxe-scrollbar--view {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+    & > .vxe-scrollbar--view::-webkit-scrollbar {
+      display: none;
+    }
+    &.ov-x--auto-hide {
+      &:hover {
+        & > .vxe-scrollbar--track-x {
+          opacity: 1;
+        }
+      }
+      & > .vxe-scrollbar--track-x {
+        opacity: 0;
+        @include baseMixin.createAnimationTransition(opacity, 0.3s);
+      }
+    }
+    &.ov-y--auto-hide {
+      &:hover {
+        & > .vxe-scrollbar--track-y {
+          opacity: 1;
+        }
+      }
+      & > .vxe-scrollbar--track-y {
+        opacity: 0;
+        @include baseMixin.createAnimationTransition(opacity, 0.3s);
+      }
+    }
+  }
+  &.is--native {
+    & > .vxe-scrollbar--view {
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+    &.ov-x--hidden {
+      & > .vxe-scrollbar--view {
+        overflow-x: hidden;
+      }
+    }
+    &.ov-y--hidden {
+      & > .vxe-scrollbar--view {
+        overflow-y: hidden;
+      }
+    }
+    & > .vxe-scrollbar--view::-webkit-scrollbar {
+      width: var(--vxe-ui-scrollbar-y-width);
+      height: var(--vxe-ui-scrollbar-x-height);
+    }
+    & > .vxe-scrollbar--view::-webkit-scrollbar-thumb {
+      border-radius: var(--vxe-ui-base-border-radius);
+      background-color: var(--vxe-ui-scrollbar-thumb-background-color);
+    }
+    & > .vxe-scrollbar--view::-webkit-scrollbar-thumb:hover {
+      background-color: var(--vxe-ui-scrollbar-thumb-hover-background-color);
+    }
+    & > .vxe-scrollbar--view::-webkit-scrollbar-thumb:active {
+      background-color: var(--vxe-ui-scrollbar-thumb-active-background-color);
+    }
+  }
+}
+
+.vxe-scrollbar--view {
+  height: 100%;
+  width: 100%;
+}
+
+.vxe-scrollbar--track-x,
+.vxe-scrollbar--track-y {
+  position: absolute;
+  background-color: var(--vxe-ui-scrollbar-track-background-color);
+  user-select: none;
+}
+
+.vxe-scrollbar--track-x {
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  height: var(--vxe-ui-scrollbar-x-height);
+}
+
+.vxe-scrollbar--track-y {
+  height: 100%;
+  right: 0;
+  top: 0;
+  width: var(--vxe-ui-scrollbar-y-width);
+}
+
+.vxe-scrollbar--thumb-y {
+  width: 100%;
+}
+.vxe-scrollbar--thumb-x {
+  height: 100%;
+}
+
+.vxe-scrollbar--thumb-x,
+.vxe-scrollbar--thumb-y {
+  border-radius: var(--vxe-ui-base-border-radius);
+  background-color: var(--vxe-ui-scrollbar-thumb-background-color);
+  &:hover {
+    background-color: var(--vxe-ui-scrollbar-thumb-hover-background-color);
+  }
+  &:active {
+    background-color: var(--vxe-ui-scrollbar-thumb-active-background-color);
+  }
+}

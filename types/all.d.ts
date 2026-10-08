@@ -66,6 +66,7 @@ import VxeRadioButton from './components/radio-button'
 import VxeRadioGroup from './components/radio-group'
 import VxeResult from './components/result'
 import VxeRow from './components/row'
+import VxeScrollbar from './components/scrollbar'
 import VxeSegmented from './components/segmented'
 import VxeSelect from './components/select'
 import VxeSplitter from './components/splitter'
@@ -343,6 +344,7 @@ interface UIComponents {
   VxeRate: typeof VxeRate
   VxeResult: typeof VxeResult
   VxeRow: typeof VxeRow
+  VxeScrollbar: typeof VxeScrollbar
   VxeSegmented: typeof VxeSegmented
   VxeSelect: typeof VxeSelect
   VxeSplitter: typeof VxeSplitter
@@ -519,6 +521,7 @@ export * from './components/radio-group'
 export * from './components/rate'
 export * from './components/result'
 export * from './components/row'
+export * from './components/scrollbar'
 export * from './components/segmented'
 export * from './components/select'
 export * from './components/splitter'

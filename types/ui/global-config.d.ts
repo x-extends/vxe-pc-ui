@@ -65,6 +65,7 @@ import { VxeRadioGroupProps } from '../components/radio-group'
 import { VxeRateProps } from '../components/rate'
 import { VxeResultProps } from '../components/result'
 import { VxeRowProps } from '../components/row'
+import { VxeScrollbarProps } from '../components/scrollbar'
 import { VxeSegmentedProps } from '../components/segmented'
 import { VxeSelectProps } from '../components/select'
 import { VxeSplitterProps } from '../components/splitter'
@@ -180,6 +181,7 @@ declare module '@vxe-ui/core' {
     rate?: VxeRateProps
     result?: VxeResultProps
     row?: VxeRowProps
+    scrollbar?: VxeScrollbarProps
     segmented?: VxeSegmentedProps
     select?: VxeSelectProps
     splitter?: VxeSplitterProps

@@ -344,6 +344,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/component/divider',
     name: 'DividerTest',
     component: () => import('../views/divider/DividerTest.vue')
+  },
+  {
+    path: '/component/scrollbar',
+    name: 'ScrollbarTest',
+    component: () => import('../views/scrollbar/ScrollbarTest.vue')
   }
 ]
 

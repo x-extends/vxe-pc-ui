@@ -36,15 +36,15 @@ export namespace VxeGanttPropTypes {
   export type Columns<D = any> = Column<D>[]
   export interface Link<D = any> extends VxeGanttDefines.LinkStyleConfig {
     /**
-     * 线类型
+     * 线类型 (0 = FinishToStart), (1 = StartToFinish), (2 = StartToStart), (3 = FinishToFinish)
      */
     type: VxeGanttDependencyType
     /**
-     * 从指定行
+     * 从指定行开始线连接
      */
     from: D | string | number
     /**
-     * 到目标行
+     * 到目标行结束线连接
      */
     to: D | string | number
   }
