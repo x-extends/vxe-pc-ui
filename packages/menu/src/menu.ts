@@ -9,7 +9,7 @@ import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type { VxeMenuDefines, VxeMenuPropTypes, MenuInternalData, MenuReactData, VxeMenuEmits, MenuMethods, VxeComponentSlotType, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods } from '../../../types'
+import type { VxeMenuDefines, VxeMenuPropTypes, MenuInternalData, MenuReactData, VxeMenuEmits, MenuMethods, VxeComponentSlotType, MenuPrivateMethods, MenuPrivateRef, VxeMenuPrivateComputed, VxeMenuConstructor, VxeMenuPrivateMethods, ValueOf, VxeLayoutAsideConstructor, VxeLayoutAsidePrivateMethods, VxeScrollbarInstance } from '../../../types'
 
 const { errLog } = createComponentLog('menu')
 
@@ -97,6 +97,8 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
     const refCollapseElem = ref<HTMLDivElement>()
+    const refCollapseBodyElem = ref<HTMLDivElement>()
+    const refCollapseBodyScrollbar = ref<VxeScrollbarInstance>()
 
     const { computeSize } = useSize(props)
 
@@ -282,16 +284,21 @@ export default defineVxeComponent({
           const isCollapsed = computeIsCollapsed.value
           const el = refElem.value
           if (el) {
-            const clientRect = el.getBoundingClientRect()
-            const parentNode = el.parentNode as HTMLElement
-            reactData.collapseStyle = isCollapsed
-              ? {
-                  top: toCssUnit(clientRect.top),
-                  left: toCssUnit(clientRect.left),
-                  height: toCssUnit(parentNode.clientHeight),
-                  zIndex: reactData.collapseZindex
-                }
-              : {}
+            let clientRect = el.getBoundingClientRect()
+            const parentElement = el.parentElement
+            if (parentElement) {
+              if (clientRect.top < 0) {
+                clientRect = parentElement.getBoundingClientRect()
+              }
+              reactData.collapseStyle = isCollapsed
+                ? {
+                    top: toCssUnit(clientRect.top),
+                    left: toCssUnit(clientRect.left),
+                    height: toCssUnit(parentElement.clientHeight),
+                    zIndex: reactData.collapseZindex
+                  }
+                : {}
+            }
           }
         })
       }
@@ -433,6 +440,14 @@ export default defineVxeComponent({
     }
 
     const handleMenuMouseleave = () => {
+      const $collapseBodyScrollbar = refCollapseBodyScrollbar.value
+      const collapseBodyEl = refCollapseBodyElem.value
+      if (collapseBodyEl) {
+        collapseBodyEl.scrollTop = 0
+      }
+      if ($collapseBodyScrollbar) {
+        $collapseBodyScrollbar.clearScroll()
+      }
       reactData.isEnterCollapse = false
     }
 
@@ -747,16 +762,18 @@ export default defineVxeComponent({
                     class: 'vxe-menu--header'
                   }, headerSlot(stParams))
                   : renderEmptyElement($xeMenu),
-                useScrollbar
+                useScrollbar && isEnterCollapse
                   ? h(VxeScrollbarComponent, {
+                    ref: refCollapseBodyScrollbar,
                     class: 'vxe-menu--scrollbar-body',
                     ...scrollbarOpts,
-                    viewClassName: 'vxe-menu--body-view' + (viewClassName ? (' ' + viewClassName) : ''),
-                    viewInnerClassName: 'vxe-menu--body-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+                    viewClassName: 'vxe-menu--scrollbar-body-view' + (viewClassName ? (' ' + viewClassName) : ''),
+                    viewInnerClassName: 'vxe-menu--scrollbar-body-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
                   }, {
                     default: () => menuList.map(child => renderDefaultChildren(child, menuList))
                   })
                   : h('div', {
+                    ref: refCollapseBodyElem,
                     class: 'vxe-menu--body'
                   }, menuList.map(child => renderDefaultChildren(child, menuList))),
                 footerSlot

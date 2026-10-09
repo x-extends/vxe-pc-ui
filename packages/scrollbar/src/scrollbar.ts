@@ -204,6 +204,39 @@ export default defineVxeComponent({
           viewEl.scrollIntoView()
         }
       },
+      setScrollTop (top) {
+        const viewEl = refViewElem.value
+        if (viewEl) {
+          viewEl.scrollTop = top
+        }
+      },
+      setScrollLeft (left) {
+        const viewEl = refViewElem.value
+        if (viewEl) {
+          viewEl.scrollLeft = left
+        }
+      },
+      getScrollTop () {
+        const viewEl = refViewElem.value
+        if (viewEl) {
+          return viewEl.scrollTop
+        }
+        return 0
+      },
+      getScrollLeft () {
+        const viewEl = refViewElem.value
+        if (viewEl) {
+          return viewEl.scrollLeft
+        }
+        return 0
+      },
+      clearScroll () {
+        const viewEl = refViewElem.value
+        if (viewEl) {
+          viewEl.scrollTop = 0
+          viewEl.scrollLeft = 0
+        }
+      },
       recalculate () {
         updateThumbSize()
         updateThumbOffset()
