@@ -200,6 +200,49 @@ export default /* define-vxe-component start */ defineVxeComponent({
         viewEl.scrollIntoView()
       }
     },
+    setScrollTop (top: number) {
+      const $xeScrollbar = this
+
+      const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
+      if (viewEl) {
+        viewEl.scrollTop = top
+      }
+    },
+    setScrollLeft (left: number) {
+      const $xeScrollbar = this
+
+      const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
+      if (viewEl) {
+        viewEl.scrollLeft = left
+      }
+    },
+    getScrollTop () {
+      const $xeScrollbar = this
+
+      const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
+      if (viewEl) {
+        return viewEl.scrollTop
+      }
+      return 0
+    },
+    getScrollLeft () {
+      const $xeScrollbar = this
+
+      const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
+      if (viewEl) {
+        return viewEl.scrollLeft
+      }
+      return 0
+    },
+    clearScroll () {
+      const $xeScrollbar = this
+
+      const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
+      if (viewEl) {
+        viewEl.scrollTop = 0
+        viewEl.scrollLeft = 0
+      }
+    },
     recalculate () {
       const $xeScrollbar = this
 

@@ -113,22 +113,33 @@
     .vxe-menu--item-link-collapse {
       display: none;
     }
+    .vxe-menu--scrollbar-body {
+      .vxe-scrollbar--track-x,
+      .vxe-scrollbar--track-y {
+        display: none;
+      }
+    }
+    & > .vxe-menu--body {
+      overflow: hidden;
+    }
   }
   &.is--enter {
     width: var(--vxe-ui-layout-aside-default-width);
     box-shadow: var(--vxe-ui-menu-collapse-wrapper-box-shadow);
+    & > .vxe-menu--body {
+      overflow: auto;
+    }
   }
   & > .vxe-menu--header,
   & > .vxe-menu--footer {
     flex-shrink: 0;
   }
   & > .vxe-menu--scrollbar-body {
-    flex-grow: 1;
     overflow: hidden;
   }
-  & > .vxe-menu--body {
+  & > .vxe-menu--body,
+  & > .vxe-menu--scrollbar-body {
     flex-grow: 1;
-    overflow: auto;
   }
 }
 

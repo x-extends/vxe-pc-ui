@@ -147,7 +147,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
          * 加载中
          */
         h(VxeLoadingComponent, {
-          class: 'vxe-list-view--loading',
+          class: 'vxe-layout-body-view--loading',
           props: {
             value: loading
           }

@@ -158,6 +158,26 @@ export interface ScrollbarMethods {
   scrollTo(options: ScrollToOptions): void
   scrollTo(left: number, top: number): void
   /**
+   * 设置顶部滚动距离
+   */
+  setScrollTop(top: number): void
+  /**
+   * 设置左侧滚动距离
+   */
+  setScrollLeft(left: number): void
+  /**
+   * 获取顶部滚动距离
+   */
+  getScrollTop(top: number): number
+  /**
+   * 获取左侧滚动距离
+   */
+  getScrollLeft(left: number): number
+  /**
+   * 清除滚动条距离
+   */
+  clearScroll(): void
+  /**
    * 滚动元素到可见位置
    */
   scrollIntoView(): void
