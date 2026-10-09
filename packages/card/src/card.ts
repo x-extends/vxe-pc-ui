@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import { getSlotVNs } from '../../ui/src/vn'
 import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
-import VxeLoadingComponent from '../../loading/src/loading'
+import VxeLoadingComponent from '../../loading'
 import XEUtils from 'xe-utils'
 
 import type { CardReactData, VxeCardEmits, VxeCardPropTypes, CardPrivateRef, ValueOf, CardMethods, CardPrivateMethods, VxeCardPrivateComputed, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'

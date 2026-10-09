@@ -323,4 +323,6 @@
   --vxe-ui-scrollbar-y-width: 10px;
   --vxe-ui-scrollbar-x-height: var(--vxe-ui-scrollbar-y-width);
   --vxe-ui-scrollbar-track-background-color: transparent;
+  --vxe-ui-scrollbar-track-padding: 0;
+  --vxe-ui-scrollbar-thumb-border-radius: var(--vxe-ui-base-border-radius);
 }

@@ -2,7 +2,7 @@ import { ref, h, reactive, watch, computed, PropType, onUnmounted, onMounted } f
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeTextComponent from '../../text/src/text'
+import VxeTextComponent from '../../text'
 import XEUtils from 'xe-utils'
 
 import type { VxeCountdownPropTypes, CountdownReactData, CountdownInternalData, CountdownPrivateRef, VxeCountdownEmits, VxeCountdownPrivateComputed, VxeCountdownConstructor, VxeCountdownPrivateMethods, ValueOf, CountdownMethods, CountdownPrivateMethods } from '../../../types'

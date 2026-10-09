@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getIcon, createEvent, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
-import VxeLoadingComponent from '../../loading/src/loading'
+import VxeLoadingComponent from '../../loading'
 import XEUtils from 'xe-utils'
 
 import type { CarouselReactData, CarouselPrivateRef, VxeCarouselPropTypes, CarouselInternalData, CarouselMethods, CarouselPrivateMethods, VxeCarouselEmits, VxeCarouselDefines, VxeCarouselPrivateComputed, VxeCarouselConstructor, ValueOf, VxeCarouselPrivateMethods } from '../../../types'

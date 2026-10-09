@@ -1,9 +1,9 @@
 import { ref, h, reactive, PropType, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, useSize, createEvent, renderEmptyElement } from '../../ui'
-import VxeLoadingComponent from '../../loading'
-import VxeUIBacktopComponent from '../../backtop'
 import XEUtils from 'xe-utils'
+import VxeScrollbarComponent from '../../scrollbar'
+import VxeUIBacktopComponent from '../../backtop'
 
 import type { LayoutBodyInternalData, VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef, VxeLayoutBodyEmits, LayoutBodyMethods, LayoutBodyPrivateMethods, VxeLayoutBodyPrivateComputed, VxeLayoutBodyConstructor, VxeLayoutBodyPrivateMethods, ValueOf } from '../../../types'
 
@@ -25,6 +25,7 @@ export default defineVxeComponent({
       default: () => getConfig().layoutBody.showBacktop
     },
     backtopConfig: Object as PropType<VxeLayoutBodyPropTypes.BacktopConfig>,
+    scrollbarConfig: Object as PropType<VxeLayoutBodyPropTypes.ScrollbarConfig>,
     size: {
       type: String as PropType<VxeLayoutBodyPropTypes.Size>,
       default: () => getConfig().layoutBody.size || getConfig().size
@@ -52,6 +53,10 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().layoutBody.backtopConfig, props.backtopConfig, {
         target: '#' + backtopId
       })
+    })
+
+    const computeScrollbarOpts = computed(() => {
+      return Object.assign({}, getConfig().layoutBody.scrollbarConfig, props.scrollbarConfig)
     })
 
     const computeMaps: VxeLayoutBodyPrivateComputed = {
@@ -85,6 +90,8 @@ export default defineVxeComponent({
     const renderVN = () => {
       const { loading, padding, showBacktop } = props
       const backtopOpts = computeBacktopOpts.value
+      const scrollbarOpts = computeScrollbarOpts.value
+      const { native, xConfig, yConfig, className, viewAttrs, viewClassName, viewInnerClassName } = scrollbarOpts
       const vSize = computeSize.value
       const defaultSlot = slots.default
       const backtopSlot = slots.backtop
@@ -112,16 +119,20 @@ export default defineVxeComponent({
           'is--padding': padding
         }]
       }, [
-        h('div', {
-          id: showBacktop ? backtopId : '',
-          class: 'vxe-layout-body--inner'
-        }, defaultSlot ? defaultSlot({}) : []),
-        /**
-         * 加载中
-         */
-        h(VxeLoadingComponent, {
-          class: 'vxe-list-view--loading',
-          modelValue: loading
+        h(VxeScrollbarComponent, {
+          loading,
+          native,
+          xConfig,
+          yConfig,
+          className: 'vxe-layout-body--scrollbar' + (className ? (' ' + className) : ''),
+          viewAttrs: {
+            ...viewAttrs,
+            id: showBacktop ? (backtopId || null) : null
+          },
+          viewClassName: 'vxe-layout-body--view' + (viewClassName ? (' ' + viewClassName) : ''),
+          viewInnerClassName: 'vxe-layout-body--inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
+        }, {
+          default: () => defaultSlot ? defaultSlot({}) : []
         }),
         /**
          * 回到顶部

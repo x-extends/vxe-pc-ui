@@ -8,7 +8,7 @@ import { isEnableConf, getText, enModelValue, deModelValue } from '../../ui/src/
 import { createComponentLog } from '../../ui/src/log'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import { getItemCacheObj } from './util'
-import VxeLoadingComponent from '../../loading/src/loading'
+import VxeLoadingComponent from '../../loading'
 
 import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, VxeListPrivateMethods, ListInternalData, VxeListDefines, ValueOf, ListMethods, ListPrivateMethods, ListPrivateRef, VxeComponentStyleType } from '../../../types'
 

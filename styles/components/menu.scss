@@ -98,11 +98,12 @@
 
 .vxe-menu--collapse-wrapper {
   display: none;
+  flex-direction: column;
   position: absolute;
-  overflow: auto;
+  overflow: hidden;
   background-color: var(--vxe-ui-layout-background-color);
   &.is--collapsed {
-    display: block;
+    display: flex;
     @include baseMixin.createAnimationTransition(all, 0.25s);
   }
   &:not(.is--enter) {
@@ -116,6 +117,14 @@
   &.is--enter {
     width: var(--vxe-ui-layout-aside-default-width);
     box-shadow: var(--vxe-ui-menu-collapse-wrapper-box-shadow);
+  }
+  & > .vxe-menu--header,
+  & > .vxe-menu--footer {
+    flex-shrink: 0;
+  }
+  & > .vxe-menu--body {
+    flex-grow: 1;
+    overflow: hidden;
   }
 }
 

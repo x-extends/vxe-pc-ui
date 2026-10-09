@@ -5,7 +5,7 @@ import { getDateQuarter } from '../../date-panel/src/util'
 import { toCssUnit } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
-import VxeButtonComponent from '../../button/src/button'
+import VxeButtonComponent from '../../button'
 import XEUtils from 'xe-utils'
 
 import type { VxeCalendarConstructor, VxeCalendarEmits, CalendarInternalData, CalendarReactData, CalendarMethods, VxeCalendarPropTypes, CalendarPrivateRef, VxeDatePanelDefines, ValueOf } from '../../../types'

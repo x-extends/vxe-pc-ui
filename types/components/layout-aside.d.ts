@@ -1,5 +1,6 @@
 import { RenderFunction, ComputedRef, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType } from '@vxe-ui/core'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -35,6 +36,7 @@ export namespace VxeLayoutAsidePropTypes {
      */
     animation?: boolean
   }
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'yConfig' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
 }
 
 export interface VxeLayoutAsideProps {
@@ -45,6 +47,7 @@ export interface VxeLayoutAsideProps {
   padding?: VxeLayoutAsidePropTypes.Padding
   size?: VxeLayoutAsidePropTypes.Size
   collapseConfig?: VxeLayoutAsidePropTypes.CollapseConfig
+  scrollbarConfig?: VxeLayoutAsidePropTypes.ScrollbarConfig
 }
 export interface LayoutAsidePrivateComputed {
   computeSize: ComputedRef<VxeLayoutAsidePropTypes.Size>

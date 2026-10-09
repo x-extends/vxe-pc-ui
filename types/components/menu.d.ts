@@ -2,6 +2,7 @@ import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSlotType, VxeComponentStyleType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentPermissionCodeType } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
 import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -85,6 +86,7 @@ export namespace VxeMenuPropTypes {
     }): boolean
   }
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
+  export interface ScrollbarConfig extends VxeScrollbarProps {}
 }
 
 export interface VxeMenuProps {
@@ -106,6 +108,7 @@ export interface VxeMenuProps {
   expandKeys?: VxeMenuPropTypes.ExpandKeys
   options?: VxeMenuPropTypes.Options
   menuConfig?: VxeMenuPropTypes.MenuConfig
+  scrollbarConfig?: VxeMenuPropTypes.ScrollbarConfig
   /**
    * 挂载到指定元素下
    */
