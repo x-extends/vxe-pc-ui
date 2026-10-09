@@ -122,9 +122,13 @@
   & > .vxe-menu--footer {
     flex-shrink: 0;
   }
-  & > .vxe-menu--body {
+  & > .vxe-menu--scrollbar-body {
     flex-grow: 1;
     overflow: hidden;
+  }
+  & > .vxe-menu--body {
+    flex-grow: 1;
+    overflow: auto;
   }
 }
 

@@ -36,6 +36,7 @@ export namespace VxeLayoutAsidePropTypes {
      */
     animation?: boolean
   }
+  export type UseScrollbar = boolean
   export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'yConfig' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
 }
 
@@ -47,6 +48,7 @@ export interface VxeLayoutAsideProps {
   padding?: VxeLayoutAsidePropTypes.Padding
   size?: VxeLayoutAsidePropTypes.Size
   collapseConfig?: VxeLayoutAsidePropTypes.CollapseConfig
+  useScrollbar?: VxeLayoutAsidePropTypes.UseScrollbar
   scrollbarConfig?: VxeLayoutAsidePropTypes.ScrollbarConfig
 }
 export interface LayoutAsidePrivateComputed {

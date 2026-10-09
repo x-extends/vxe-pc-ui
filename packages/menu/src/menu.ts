@@ -72,6 +72,10 @@ export default defineVxeComponent({
       default: () => getConfig().menu.size || getConfig().size
     },
     menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeMenuPropTypes.UseScrollbar>,
+      default: () => getConfig().menu.useScrollbar
+    },
     scrollbarConfig: Object as PropType<VxeMenuPropTypes.ScrollbarConfig>,
     appendTo: {
       type: [String, Function] as PropType<VxeMenuPropTypes.AppendTo>,
@@ -682,13 +686,14 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { loading, collapseFixed, appendTo } = props
+      const { loading, collapseFixed, appendTo, useScrollbar } = props
       const { initialized, menuList, collapseStyle, isEnterCollapse } = reactData
       const vSize = computeSize.value
       const isCollapsed = computeIsCollapsed.value
       const currBorder = computeCurrBorder.value
       const varStyle = computeVarStyle.value
       const scrollbarOpts = computeScrollbarOpts.value
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
       let ons: Record<string, any> = {}
@@ -742,12 +747,18 @@ export default defineVxeComponent({
                     class: 'vxe-menu--header'
                   }, headerSlot(stParams))
                   : renderEmptyElement($xeMenu),
-                h(VxeScrollbarComponent, {
-                  class: 'vxe-menu--body',
-                  ...scrollbarOpts
-                }, {
-                  default: () => menuList.map(child => renderDefaultChildren(child, menuList))
-                }),
+                useScrollbar
+                  ? h(VxeScrollbarComponent, {
+                    class: 'vxe-menu--scrollbar-body',
+                    ...scrollbarOpts,
+                    viewClassName: 'vxe-menu--body-view' + (viewClassName ? (' ' + viewClassName) : ''),
+                    viewInnerClassName: 'vxe-menu--body-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+                  }, {
+                    default: () => menuList.map(child => renderDefaultChildren(child, menuList))
+                  })
+                  : h('div', {
+                    class: 'vxe-menu--body'
+                  }, menuList.map(child => renderDefaultChildren(child, menuList))),
                 footerSlot
                   ? h('div', {
                     class: 'vxe-menu--footer'

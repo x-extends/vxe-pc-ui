@@ -31,6 +31,7 @@ export namespace VxeLayoutBodyPropTypes {
   export type Padding = boolean
   export type ShowBacktop = boolean
   export interface BacktopConfig extends Omit<VxeBacktopProps, 'target'> {}
+  export type UseScrollbar = boolean
   export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'xConfig' | 'yConfig' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
 }
 export interface VxeLayoutBodyProps {
@@ -39,6 +40,7 @@ export interface VxeLayoutBodyProps {
   padding?: VxeLayoutBodyPropTypes.Padding
   showBacktop?: VxeLayoutBodyPropTypes.ShowBacktop
   backtopConfig?: VxeLayoutBodyPropTypes.BacktopConfig
+  useScrollbar?: VxeLayoutBodyPropTypes.UseScrollbar
   scrollbarConfig?: VxeLayoutBodyPropTypes.ScrollbarConfig
 }
 

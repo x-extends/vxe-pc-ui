@@ -2,6 +2,7 @@ import { ref, h, reactive, PropType, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, useSize, createEvent, renderEmptyElement } from '../../ui'
 import XEUtils from 'xe-utils'
+import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 import VxeUIBacktopComponent from '../../backtop'
 
@@ -25,6 +26,10 @@ export default defineVxeComponent({
       default: () => getConfig().layoutBody.showBacktop
     },
     backtopConfig: Object as PropType<VxeLayoutBodyPropTypes.BacktopConfig>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeLayoutBodyPropTypes.UseScrollbar>,
+      default: () => getConfig().layoutBody.useScrollbar
+    },
     scrollbarConfig: Object as PropType<VxeLayoutBodyPropTypes.ScrollbarConfig>,
     size: {
       type: String as PropType<VxeLayoutBodyPropTypes.Size>,
@@ -88,7 +93,7 @@ export default defineVxeComponent({
     Object.assign($xeLayoutBody, layoutBodyMethods, layoutBodyPrivateMethods)
 
     const renderVN = () => {
-      const { loading, padding, showBacktop } = props
+      const { loading, padding, showBacktop, useScrollbar } = props
       const backtopOpts = computeBacktopOpts.value
       const scrollbarOpts = computeScrollbarOpts.value
       const { native, xConfig, yConfig, className, viewAttrs, viewClassName, viewInnerClassName } = scrollbarOpts
@@ -119,20 +124,31 @@ export default defineVxeComponent({
           'is--padding': padding
         }]
       }, [
-        h(VxeScrollbarComponent, {
-          loading,
-          native,
-          xConfig,
-          yConfig,
-          className: 'vxe-layout-body--scrollbar' + (className ? (' ' + className) : ''),
-          viewAttrs: {
-            ...viewAttrs,
-            id: showBacktop ? (backtopId || null) : null
-          },
-          viewClassName: 'vxe-layout-body--view' + (viewClassName ? (' ' + viewClassName) : ''),
-          viewInnerClassName: 'vxe-layout-body--inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
-        }, {
-          default: () => defaultSlot ? defaultSlot({}) : []
+        useScrollbar
+          ? h(VxeScrollbarComponent, {
+            native,
+            xConfig,
+            yConfig,
+            className: 'vxe-layout-body--scrollbar' + (className ? (' ' + className) : ''),
+            viewAttrs: {
+              ...viewAttrs,
+              id: showBacktop ? (backtopId || null) : null
+            },
+            viewClassName: 'vxe-layout-body--scrollbar-view' + (viewClassName ? (' ' + viewClassName) : ''),
+            viewInnerClassName: 'vxe-layout-body--scrollbar-inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
+          }, {
+            default: () => defaultSlot ? defaultSlot({}) : []
+          })
+          : h('div', {
+            id: showBacktop ? backtopId : '',
+            class: 'vxe-layout-body--inner'
+          }, defaultSlot ? defaultSlot({}) : []),
+        /**
+         * 加载中
+         */
+        h(VxeLoadingComponent, {
+          class: 'vxe-list-view--loading',
+          modelValue: loading
         }),
         /**
          * 回到顶部

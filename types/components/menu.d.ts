@@ -86,6 +86,7 @@ export namespace VxeMenuPropTypes {
     }): boolean
   }
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
+  export type UseScrollbar = boolean
   export interface ScrollbarConfig extends VxeScrollbarProps {}
 }
 
@@ -108,6 +109,7 @@ export interface VxeMenuProps {
   expandKeys?: VxeMenuPropTypes.ExpandKeys
   options?: VxeMenuPropTypes.Options
   menuConfig?: VxeMenuPropTypes.MenuConfig
+  useScrollbar?: VxeMenuPropTypes.UseScrollbar
   scrollbarConfig?: VxeMenuPropTypes.ScrollbarConfig
   /**
    * 挂载到指定元素下
