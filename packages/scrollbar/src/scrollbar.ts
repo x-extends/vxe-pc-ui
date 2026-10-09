@@ -441,7 +441,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeScrollbar
       const slots = $xeScrollbar.$scopedSlots
 
-      const { native, loading } = props
+      const { native, loading, autoResize } = props
       const wrapperStyle = $xeScrollbar.computeWrapperStyle
       const wrapperClss = $xeScrollbar.computeWrapperClss
       const viewClss = $xeScrollbar.computeViewClss
@@ -463,7 +463,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
           h('div', {
             ref: 'refViewInnerElem',
             class: 'vxe-scrollbar--view-inner'
-          }, defaultSlot ? defaultSlot({}) : [])
+          }, autoResize
+            ? [
+                h('div', {
+                  key: 'vi',
+                  ref: 'refViewInnerElem',
+                  class: 'vxe-scrollbar--view-inner'
+                }, defaultSlot ? defaultSlot({}) : [])
+              ]
+            : defaultSlot ? defaultSlot({}) : [])
         ]),
         native || xOpts.visible === 'hidden'
           ? renderEmptyElement($xeScrollbar)
@@ -517,6 +525,36 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   watch: {
+    height () {
+      const $xeScrollbar = this
+
+      $xeScrollbar.reFlag++
+    },
+    width () {
+      const $xeScrollbar = this
+
+      $xeScrollbar.reFlag++
+    },
+    minHeight () {
+      const $xeScrollbar = this
+
+      $xeScrollbar.reFlag++
+    },
+    minWidth () {
+      const $xeScrollbar = this
+
+      $xeScrollbar.reFlag++
+    },
+    maxHeight () {
+      const $xeScrollbar = this
+
+      $xeScrollbar.reFlag++
+    },
+    maxWidth () {
+      const $xeScrollbar = this
+
+      $xeScrollbar.reFlag++
+    },
     native () {
       const $xeScrollbar = this
 
@@ -546,19 +584,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const internalData = $xeScrollbar.internalData
 
     const { autoResize } = props
+    const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
     const viewInnerEl = $xeScrollbar.$refs.refViewInnerElem as HTMLDivElement
-    if (autoResize && viewInnerEl) {
+    if (autoResize) {
       const resizeObserver = globalResize.create(() => {
         if (props.autoResize) {
           $xeScrollbar.reFlag++
         }
       })
-      resizeObserver.observe(viewInnerEl)
+      if (viewEl) {
+        resizeObserver.observe(viewEl)
+      }
+      if (viewInnerEl) {
+        resizeObserver.observe(viewInnerEl)
+      }
       internalData.resizeObserver = resizeObserver
     }
-    $xeScrollbar.$nextTick(() => {
-      $xeScrollbar.recalculate()
-    })
+
+    $xeScrollbar.reFlag++
   },
   beforeDestroy () {
     const $xeScrollbar = this

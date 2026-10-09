@@ -412,9 +412,8 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 1.8em;
-  height: 1.8em;
-  font-size: 0.8em;
+  width: 1.2em;
+  height: 1.2em;
   border-radius: 50%;
   color: #fff;
   background-color: var(--vxe-ui-status-error-color);
@@ -422,6 +421,9 @@
   cursor: pointer;
   &:hover {
     background-color: var(--vxe-ui-status-error-lighten-color);
+  }
+  i {
+    font-size: 0.6em;
   }
 }
 

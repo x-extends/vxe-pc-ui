@@ -21,7 +21,7 @@
       }
       & > .vxe-scrollbar--track-x {
         opacity: 0;
-        @include baseMixin.createAnimationTransition(opacity, 0.3s);
+        @include baseMixin.createAnimationTransition(opacity, 0.8s);
       }
     }
     &.ov-y--auto-hide {
@@ -32,7 +32,7 @@
       }
       & > .vxe-scrollbar--track-y {
         opacity: 0;
-        @include baseMixin.createAnimationTransition(opacity, 0.3s);
+        @include baseMixin.createAnimationTransition(opacity, 0.8s);
       }
     }
   }
