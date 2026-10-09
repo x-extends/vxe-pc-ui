@@ -427,7 +427,7 @@ export default defineVxeComponent({
     Object.assign($xeScrollbar, scrollbarMethods, scrollbarPrivateMethods)
 
     const renderVN = () => {
-      const { native, loading } = props
+      const { native, loading, autoResize } = props
       const wrapperStyle = computeWrapperStyle.value
       const wrapperClss = computeWrapperClss.value
       const viewClss = computeViewClss.value
@@ -443,12 +443,15 @@ export default defineVxeComponent({
           ref: refViewElem,
           class: viewClss,
           onScroll: scrollEvent
-        }, [
-          h('div', {
-            ref: refViewInnerElem,
-            class: 'vxe-scrollbar--view-inner'
-          }, defaultSlot ? defaultSlot({}) : [])
-        ]),
+        }, autoResize
+          ? [
+              h('div', {
+                key: 'vi',
+                ref: refViewInnerElem,
+                class: 'vxe-scrollbar--view-inner'
+              }, defaultSlot ? defaultSlot({}) : [])
+            ]
+          : defaultSlot ? defaultSlot({}) : []),
         native || xOpts.visible === 'hidden'
           ? renderEmptyElement($xeScrollbar)
           : h('div', {
@@ -492,6 +495,24 @@ export default defineVxeComponent({
 
     const reFlag = ref(0)
 
+    watch(() => props.height, () => {
+      reFlag.value++
+    })
+    watch(() => props.width, () => {
+      reFlag.value++
+    })
+    watch(() => props.minHeight, () => {
+      reFlag.value++
+    })
+    watch(() => props.minWidth, () => {
+      reFlag.value++
+    })
+    watch(() => props.maxHeight, () => {
+      reFlag.value++
+    })
+    watch(() => props.maxWidth, () => {
+      reFlag.value++
+    })
     watch(() => props.native, () => {
       reFlag.value++
     })
@@ -506,20 +527,24 @@ export default defineVxeComponent({
 
     onMounted(() => {
       const { autoResize } = props
+      const viewEl = refViewElem.value
       const viewInnerEl = refViewInnerElem.value
-      if (autoResize && viewInnerEl) {
+      if (autoResize) {
         const resizeObserver = globalResize.create(() => {
           if (props.autoResize) {
             reFlag.value++
           }
         })
-        resizeObserver.observe(viewInnerEl)
+        if (viewEl) {
+          resizeObserver.observe(viewEl)
+        }
+        if (viewInnerEl) {
+          resizeObserver.observe(viewInnerEl)
+        }
         internalData.resizeObserver = resizeObserver
       }
 
-      nextTick(() => {
-        $xeScrollbar.recalculate()
-      })
+      reFlag.value++
     })
 
     onBeforeUnmount(() => {
