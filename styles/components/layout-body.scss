@@ -8,6 +8,10 @@
     padding: var(--vxe-ui-layout-padding-double);
   }
 }
+.vxe-layout-body--inner {
+  flex-grow: 1;
+  overflow: auto;
+}
 .vxe-layout-body--scrollbar {
   flex-grow: 1;
   overflow: hidden;

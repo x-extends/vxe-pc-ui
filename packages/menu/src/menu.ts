@@ -76,6 +76,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().menu.size || getConfig().size
     },
     menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeMenuPropTypes.UseScrollbar>,
+      default: () => getConfig().menu.useScrollbar
+    },
     scrollbarConfig: Object as PropType<VxeMenuPropTypes.ScrollbarConfig>,
     appendTo: {
       type: [String, Function] as PropType<VxeMenuPropTypes.AppendTo>,
@@ -775,13 +779,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeMenu.$scopedSlots
       const reactData = $xeMenu.reactData
 
-      const { loading, collapseFixed } = props
+      const { loading, collapseFixed, useScrollbar } = props
       const { initialized, menuList, collapseStyle, isEnterCollapse } = reactData
       const vSize = $xeMenu.computeSize
       const isCollapsed = $xeMenu.computeIsCollapsed
       const currBorder = $xeMenu.computeCurrBorder
       const varStyle = $xeMenu.computeVarStyle
       const scrollbarOpts = $xeMenu.computeScrollbarOpts
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
       let ons: Record<string, any> = {}
@@ -832,13 +837,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     class: 'vxe-menu--header'
                   }, headerSlot(stParams))
                   : renderEmptyElement($xeMenu),
-                h(VxeScrollbarComponent, {
-                  class: 'vxe-menu--body',
-                  props: scrollbarOpts,
-                  scopedSlots: {
-                    default: () => menuList.map(child => $xeMenu.renderDefaultChildren(h, child, menuList))
-                  }
-                }),
+                useScrollbar
+                  ? h(VxeScrollbarComponent, {
+                    class: 'vxe-menu--scrollbar-body',
+                    props: {
+                      ...scrollbarOpts,
+                      viewClassName: 'vxe-menu--body-view' + (viewClassName ? (' ' + viewClassName) : ''),
+                      viewInnerClassName: 'vxe-menu--body-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+                    },
+                    scopedSlots: {
+                      default: () => menuList.map(child => $xeMenu.renderDefaultChildren(h, child, menuList))
+                    }
+                  })
+                  : h('div', {
+                    class: 'vxe-menu--body'
+                  }, menuList.map(child => $xeMenu.renderDefaultChildren(h, child, menuList))),
                 footerSlot
                   ? h('div', {
                     class: 'vxe-menu--footer'

@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import { toCssUnit } from '../../ui/src/dom'
 import { getConfig, createEvent, globalMixins } from '../../ui'
 import XEUtils from 'xe-utils'
+import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeComponentSizeType, VxeLayoutAsideEmits, ValueOf, VxeComponentStyleType } from '../../../types'
@@ -19,6 +20,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     loading: Boolean as PropType<VxeLayoutAsidePropTypes.Loading>,
     padding: Boolean as PropType<VxeLayoutAsidePropTypes.Padding>,
     collapseConfig: Object as PropType<VxeLayoutAsidePropTypes.CollapseConfig>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeLayoutAsidePropTypes.UseScrollbar>,
+      default: () => getConfig().layoutAside.useScrollbar
+    },
     scrollbarConfig: Object as PropType<VxeLayoutAsidePropTypes.ScrollbarConfig>,
     size: {
       type: String as PropType<VxeLayoutAsidePropTypes.Size>,
@@ -87,7 +92,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeLayoutAside
       const slots = $xeLayoutAside.$scopedSlots
 
-      const { collapsed, loading, padding } = props
+      const { collapsed, loading, padding, useScrollbar } = props
       const varStyle = $xeLayoutAside.computeVarStyle
       const vSize = $xeLayoutAside.computeSize
       const collapseOpts = $xeLayoutAside.computeCollapseOpts
@@ -105,23 +110,33 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }],
         style: varStyle
       }, [
-        h(VxeScrollbarComponent, {
-          props: {
-            loading,
-            native,
-            xConfig: {
-              visible: 'hidden'
+        useScrollbar
+          ? h(VxeScrollbarComponent, {
+            props: {
+              native,
+              xConfig: {
+                visible: 'hidden'
+              },
+              yConfig,
+              className: 'vxe-layout-aside--scrollbar' + (className ? (' ' + className) : ''),
+              viewAttrs,
+              viewClassName: 'vxe-layout-aside--scrollbar-view' + (viewClassName ? (' ' + viewClassName) : ''),
+              viewInnerClassName: 'vxe-layout-aside--scrollbar-inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
             },
-            yConfig,
-            className: 'vxe-layout-aside--scrollbar' + (className ? (' ' + className) : ''),
-            viewAttrs,
-            viewClassName: 'vxe-layout-aside--view' + (viewClassName ? (' ' + viewClassName) : ''),
-            viewInnerClassName: 'vxe-layout-aside--inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
-          },
-          scopedSlots: {
-            default: () => {
-              return defaultSlot ? defaultSlot({}) : []
+            scopedSlots: {
+              default: () => defaultSlot ? defaultSlot({}) : []
             }
+          })
+          : h('div', {
+            class: 'vxe-layout-aside--inner'
+          }, defaultSlot ? defaultSlot({}) : []),
+        /**
+         * 加载中
+         */
+        h(VxeLoadingComponent, {
+          class: 'vxe-layout-aside--loading',
+          props: {
+            value: loading
           }
         })
       ])
