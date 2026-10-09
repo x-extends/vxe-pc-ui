@@ -1,5 +1,6 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeBacktopProps, VxeBacktopSlotTypes } from './backtop'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -23,6 +24,7 @@ export namespace VxeLayoutBodyPropTypes {
   export type Padding = boolean
   export type ShowBacktop = boolean
   export interface BacktopConfig extends Omit<VxeBacktopProps, 'target'> {}
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'xConfig' | 'yConfig' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
 }
 
 export interface VxeLayoutBodyProps {
@@ -31,6 +33,7 @@ export interface VxeLayoutBodyProps {
   padding?: VxeLayoutBodyPropTypes.Padding
   showBacktop?: VxeLayoutBodyPropTypes.ShowBacktop
   backtopConfig?: VxeLayoutBodyPropTypes.BacktopConfig
+  scrollbarConfig?: VxeLayoutBodyPropTypes.ScrollbarConfig
 }
 
 export interface LayoutBodyPrivateComputed {

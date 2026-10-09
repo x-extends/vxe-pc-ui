@@ -6,7 +6,7 @@ import { getEventTargetNode, updatePanelPlacement, toCssUnit, getPopupAppendElem
 import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
-import VxeInputComponent from '../../input/src/input'
+import VxeInputComponent from '../../input'
 
 import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeInputConstructor, VxeFormDefines, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods, VxeTablePropTypes } from '../../../types/components/table'

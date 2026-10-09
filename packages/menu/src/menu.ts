@@ -7,6 +7,7 @@ import { getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
+import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeMenuDefines, MenuInternalData, MenuReactData, VxeMenuPropTypes, VxeLayoutAsideConstructor, VxeMenuEmits, VxeLayoutAsidePropTypes, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
@@ -75,6 +76,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().menu.size || getConfig().size
     },
     menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>,
+    scrollbarConfig: Object as PropType<VxeMenuPropTypes.ScrollbarConfig>,
     appendTo: {
       type: [String, Function] as PropType<VxeMenuPropTypes.AppendTo>,
       default: () => getConfig().menu.appendTo
@@ -136,6 +138,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const propsOpts = $xeMenu.computePropsOpts as VxeMenuPropTypes.OptionProps
       return propsOpts.routerLink || 'routerLink'
+    },
+    computeScrollbarOpts () {
+      const $xeMenu = this
+      const props = $xeMenu
+
+      return Object.assign({}, getConfig().menu.scrollbarConfig, props.scrollbarConfig)
     },
     computeCurrBorder () {
       const $xeMenu = this
@@ -773,6 +781,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isCollapsed = $xeMenu.computeIsCollapsed
       const currBorder = $xeMenu.computeCurrBorder
       const varStyle = $xeMenu.computeVarStyle
+      const scrollbarOpts = $xeMenu.computeScrollbarOpts
       const headerSlot = slots.header
       const footerSlot = slots.footer
       let ons: Record<string, any> = {}
@@ -823,9 +832,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     class: 'vxe-menu--header'
                   }, headerSlot(stParams))
                   : renderEmptyElement($xeMenu),
-                h('div', {
-                  class: 'vxe-menu--body'
-                }, menuList.map(child => $xeMenu.renderDefaultChildren(h, child, menuList))),
+                h(VxeScrollbarComponent, {
+                  class: 'vxe-menu--body',
+                  props: scrollbarOpts,
+                  scopedSlots: {
+                    default: () => menuList.map(child => $xeMenu.renderDefaultChildren(h, child, menuList))
+                  }
+                }),
                 footerSlot
                   ? h('div', {
                     class: 'vxe-menu--footer'
@@ -838,7 +851,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
          * 加载中
          */
         h(VxeLoadingComponent, {
-          class: 'vxe-list-view--loading',
+          class: 'vxe-menu-view--loading',
           props: {
             value: loading
           }

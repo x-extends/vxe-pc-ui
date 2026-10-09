@@ -6,7 +6,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { initTpImg, getTpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
-import VxeButtonComponent from '../../button/src/button'
+import VxeButtonComponent from '../../button'
 
 import type { VxeUploadDefines, VxeUploadConstructor, VxeUploadPropTypes, UploadReactData, UploadInternalData, VxeUploadEmits, VxeComponentSizeType, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf, VxeComponentEventParams } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'

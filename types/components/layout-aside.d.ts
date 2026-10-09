@@ -1,4 +1,5 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType } from '@vxe-ui/core'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -28,6 +29,7 @@ export namespace VxeLayoutAsidePropTypes {
      */
     animation?: boolean
   }
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'yConfig' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
 }
 
 export interface VxeLayoutAsideProps {
@@ -38,6 +40,7 @@ export interface VxeLayoutAsideProps {
   padding?: VxeLayoutAsidePropTypes.Padding
   size?: VxeLayoutAsidePropTypes.Size
   collapseConfig?: VxeLayoutAsidePropTypes.CollapseConfig
+  scrollbarConfig?: VxeLayoutAsidePropTypes.ScrollbarConfig
 }
 
 export interface LayoutAsidePrivateComputed {

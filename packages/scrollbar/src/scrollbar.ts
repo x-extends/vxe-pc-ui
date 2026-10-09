@@ -32,6 +32,7 @@ function createInternalData (): ScrollbarInternalData {
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeScrollbar',
   props: {
+    id: [String, Number] as PropType<VxeScrollbarPropTypes.Id>,
     width: [String, Number] as PropType<VxeScrollbarPropTypes.Width>,
     height: [String, Number] as PropType<VxeScrollbarPropTypes.Height>,
     minWidth: [String, Number] as PropType<VxeScrollbarPropTypes.MinWidth>,
@@ -45,8 +46,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     xConfig: Object as PropType<VxeScrollbarPropTypes.XConfig>,
     yConfig: Object as PropType<VxeScrollbarPropTypes.YConfig>,
-    className: String as PropType<VxeScrollbarPropTypes.ClassName>,
-    viewClassName: String as PropType<VxeScrollbarPropTypes.ViewClassName>,
+    className: {
+      type: String as PropType<VxeScrollbarPropTypes.ClassName>,
+      default: () => getConfig().scrollbar.className
+    },
+    viewAttrs: {
+      type: Object as PropType<VxeScrollbarPropTypes.ViewAttrs>,
+      default: () => getConfig().scrollbar.viewAttrs
+    },
+    viewClassName: {
+      type: String as PropType<VxeScrollbarPropTypes.ViewClassName>,
+      default: () => getConfig().scrollbar.viewClassName
+    },
+    viewInnerClassName: {
+      type: String as PropType<VxeScrollbarPropTypes.ViewInnerClassName>,
+      default: () => getConfig().scrollbar.viewInnerClassName
+    },
     autoResize: {
       type: Boolean as PropType<VxeScrollbarPropTypes.AutoResize>,
       default: () => getConfig().scrollbar.autoResize
@@ -105,8 +120,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     computeWrapperClss () {
       const $xeScrollbar = this
       const props = $xeScrollbar
+      const reactData = $xeScrollbar.reactData
 
       const { native, className } = props
+      const { yThumbHeight, xThumbWidth } = reactData
       const xOpts = ($xeScrollbar as any).computeXOpts as VxeScrollbarPropTypes.XConfig
       const yOpts = ($xeScrollbar as any).computeYOpts as VxeScrollbarPropTypes.YConfig
       return domUtils.buildClass([
@@ -117,7 +134,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         className
       ], {
         'ov-x--auto-hide': xOpts.autoHide,
-        'ov-y--auto-hide': yOpts.autoHide
+        'ov-y--auto-hide': yOpts.autoHide,
+        'overflow-y': yThumbHeight,
+        'overflow-x': xThumbWidth
       })
     },
     computeViewClss () {
@@ -128,6 +147,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return domUtils.buildClass([
         'vxe-scrollbar--view',
         viewClassName
+      ])
+    },
+    computeViewInnerClss () {
+      const $xeScrollbar = this
+      const props = $xeScrollbar
+
+      const { viewInnerClassName } = props
+      return domUtils.buildClass([
+        'vxe-scrollbar--view-inner',
+        viewInnerClassName
       ])
     },
     computeXOpts () {
@@ -441,37 +470,35 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeScrollbar
       const slots = $xeScrollbar.$scopedSlots
 
-      const { native, loading, autoResize } = props
+      const { id, native, loading, viewAttrs } = props
       const wrapperStyle = $xeScrollbar.computeWrapperStyle
       const wrapperClss = $xeScrollbar.computeWrapperClss
       const viewClss = $xeScrollbar.computeViewClss
+      const viewInnerClss = $xeScrollbar.computeViewInnerClss
       const xOpts = $xeScrollbar.computeXOpts
       const yOpts = $xeScrollbar.computeYOpts
       const defaultSlot = slots.default
       return h('div', {
         ref: 'refElem',
+        attrs: {
+          id: id || null
+        },
         class: wrapperClss,
         style: wrapperStyle
       }, [
         h('div', {
           ref: 'refViewElem',
           class: viewClss,
+          attrs: viewAttrs,
           on: {
             scroll: $xeScrollbar.scrollEvent
           }
         }, [
           h('div', {
+            key: 'vi',
             ref: 'refViewInnerElem',
-            class: 'vxe-scrollbar--view-inner'
-          }, autoResize
-            ? [
-                h('div', {
-                  key: 'vi',
-                  ref: 'refViewInnerElem',
-                  class: 'vxe-scrollbar--view-inner'
-                }, defaultSlot ? defaultSlot({}) : [])
-              ]
-            : defaultSlot ? defaultSlot({}) : [])
+            class: viewInnerClss
+          }, defaultSlot ? defaultSlot({}) : [])
         ]),
         native || xOpts.visible === 'hidden'
           ? renderEmptyElement($xeScrollbar)

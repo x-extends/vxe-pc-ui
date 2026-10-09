@@ -1,9 +1,9 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import VxeLoadingComponent from '../../loading'
-import VxeUIBacktopComponent from '../../backtop'
 import XEUtils from 'xe-utils'
+import VxeScrollbarComponent from '../../scrollbar'
+import VxeUIBacktopComponent from '../../backtop'
 
 import type { LayoutBodyInternalData, VxeLayoutBodyPropTypes, LayoutBodyReactData, VxeLayoutBodyEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
@@ -28,6 +28,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().layoutBody.showBacktop
     },
     backtopConfig: Object as PropType<VxeLayoutBodyPropTypes.BacktopConfig>,
+    scrollbarConfig: Object as PropType<VxeLayoutBodyPropTypes.ScrollbarConfig>,
     size: {
       type: String as PropType<VxeLayoutBodyPropTypes.Size>,
       default: () => getConfig().layoutBody.size || getConfig().size
@@ -58,6 +59,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return Object.assign({}, getConfig().layoutBody.backtopConfig, props.backtopConfig, {
         target: '#' + backtopId
       })
+    },
+    computeScrollbarOpts () {
+      const $xeLayoutBody = this
+      const props = $xeLayoutBody
+
+      return Object.assign({}, getConfig().layoutBody.scrollbarConfig, props.scrollbarConfig)
     }
   },
   methods: {
@@ -79,6 +86,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { loading, padding, showBacktop } = props
       const backtopOpts = $xeLayoutBody.computeBacktopOpts
+      const scrollbarOpts = $xeLayoutBody.computeScrollbarOpts
+      const { native, xConfig, yConfig, className, viewAttrs, viewClassName, viewInnerClassName } = scrollbarOpts
       const vSize = $xeLayoutBody.computeSize
       const defaultSlot = slots.default
       const backtopSlot = slots.backtop
@@ -105,19 +114,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--padding': padding
         }]
       }, [
-        h('div', {
-          attrs: {
-            id: showBacktop ? backtopId : ''
-          },
-          class: 'vxe-layout-body--inner'
-        }, defaultSlot ? defaultSlot({}) : []),
-        /**
-         * 加载中
-         */
-        h(VxeLoadingComponent, {
-          class: 'vxe-list-view--loading',
+        h(VxeScrollbarComponent, {
           props: {
-            value: loading
+            loading,
+            native,
+            xConfig,
+            yConfig,
+            className: 'vxe-layout-body--scrollbar' + (className ? (' ' + className) : ''),
+            viewAttrs: {
+              ...viewAttrs,
+              id: showBacktop ? (backtopId || null) : null
+            },
+            viewClassName: 'vxe-layout-body--view' + (viewClassName ? (' ' + viewClassName) : ''),
+            viewInnerClassName: 'vxe-layout-body--inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
+          },
+          scopedSlots: {
+            default: () => defaultSlot ? defaultSlot({}) : []
           }
         }),
         /**

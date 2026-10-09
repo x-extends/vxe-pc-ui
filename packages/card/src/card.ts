@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeLoadingComponent from '../../loading/src/loading'
+import VxeLoadingComponent from '../../loading'
 
 import type { CardReactData, VxeCardEmits, VxeCardPropTypes, ValueOf, VxeComponentSizeType } from '../../../types'
 

@@ -9,7 +9,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import { getItemCacheObj } from './util'
-import VxeLoadingComponent from '../../loading/src/loading'
+import VxeLoadingComponent from '../../loading'
 
 import type { VxeListPropTypes, VxeListEmits, VxeComponentSizeType, ListReactData, VxeListDefines, ValueOf, ListInternalData, VxeListConstructor, VxeListPrivateMethods, VxeComponentStyleType } from '../../../types'
 

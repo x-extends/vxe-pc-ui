@@ -17,6 +17,8 @@ export interface ScrollbarPrivateRef {
 export interface VxeScrollbarPrivateRef extends ScrollbarPrivateRef { }
 
 export namespace VxeScrollbarPropTypes {
+  export type Id = number | string
+  export type ViewId = number | string
   export type Width = number | string
   export type Height = number | string
   export type MinWidth = number | string
@@ -52,12 +54,18 @@ export namespace VxeScrollbarPropTypes {
     threshold?: string | number
   }
   export type ClassName = string
+  export type ViewAttrs = Record<string, any>
   export type ViewClassName = string
+  export type ViewInnerClassName = string
   export type AutoResize = boolean
   export type SyncResize = boolean
 }
 
 export interface VxeScrollbarProps {
+  /**
+   * ID
+   */
+  id?: VxeScrollbarPropTypes.Id
   /**
    * 容器宽度
    */
@@ -103,9 +111,17 @@ export interface VxeScrollbarProps {
    */
   className?: VxeScrollbarPropTypes.ClassName
   /**
+   * 给视图元素附加属性
+   */
+  viewAttrs?: VxeScrollbarPropTypes.ViewAttrs
+  /**
    * 给视图元素附加 class
    */
   viewClassName?: VxeScrollbarPropTypes.ViewClassName
+  /**
+   * 给视图内元素附加 class
+   */
+  viewInnerClassName?: VxeScrollbarPropTypes.ViewInnerClassName
   /**
    * 自动监听元素的变化去重新计算样式
    */

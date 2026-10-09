@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
-import VxeLoadingComponent from '../../loading/src/loading'
+import VxeLoadingComponent from '../../loading'
 
 import type { CarouselReactData, VxeComponentSizeType, VxeCarouselPropTypes, CarouselInternalData, VxeCarouselEmits, VxeCarouselDefines, ValueOf } from '../../../types'
 

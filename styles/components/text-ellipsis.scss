@@ -1,63 +1,34 @@
 @use "sass:map";
 @use "sass:list";
+@use '../helpers/themeStatus.scss';
 
-$btnThemeList: (
-  (
-    name: "primary",
-    textColor: var(--vxe-ui-font-primary-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-font-primary-lighten-color),
-    btnDarkenColor: var(--vxe-ui-font-primary-darken-color),
-    btnDisabledColor: var(--vxe-ui-font-primary-disabled-color)
-  ),
-  (
-    name: "success",
-    textColor: var(--vxe-ui-status-success-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-success-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-success-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-success-disabled-color)
-  ),
-  (
-    name: "info",
-    textColor: var(--vxe-ui-status-info-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-info-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-info-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-info-disabled-color)
-  ),
-  (
-    name: "warning",
-    textColor: var(--vxe-ui-status-warning-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-warning-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-warning-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-warning-disabled-color)
-  ),
-  (
-    name: "danger",
-    textColor: var(--vxe-ui-status-danger-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-danger-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-danger-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-danger-disabled-color)
-  ),
-  (
-    name: "error",
-    textColor: var(--vxe-ui-status-error-color),
-    btnColor: #fff,
-    btnLightenColor: var(--vxe-ui-status-error-lighten-color),
-    btnDarkenColor: var(--vxe-ui-status-error-darken-color),
-    btnDisabledColor: var(--vxe-ui-status-error-disabled-color)
-  )
-);
+// 局部变量
+.vxe-text-ellipsis {
+  --vxe-ui-text-ellipsis-current-font-size: inherit;
+  &.size--xlarge {
+    --vxe-ui-text-ellipsis-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-text-ellipsis-current-font-size: var(--vxe-ui-font-size-large);
+  }
+  &.size--medium {
+    --vxe-ui-text-ellipsis-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-text-ellipsis-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-text-ellipsis-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
 
 .vxe-text-ellipsis {
   display: block;
   overflow: hidden;
   white-space: normal;
-  @for $index from 0 to list.length($btnThemeList) {
-    $item: list.nth($btnThemeList, $index + 1);
+  font-size: var(--vxe-ui-text-ellipsis-current-font-size);
+  @for $index from 0 to list.length(themeStatus.$btnThemeList) {
+    $item: list.nth(themeStatus.$btnThemeList, $index + 1);
     &.theme--#{map.get($item, name)} {
       color: map.get($item, textColor);
       & > .vxe-text-ellipsis--link {
@@ -116,16 +87,4 @@ $btnThemeList: (
 .vxe-text-ellipsis--link {
   text-decoration: none;
   color: inherit;
-}
-
-.vxe-text-ellipsis {
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
 }

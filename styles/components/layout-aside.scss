@@ -15,9 +15,7 @@
     padding: var(--vxe-ui-layout-padding-default);
   }
 }
-.vxe-layout-aside--inner {
+.vxe-layout-aside--scrollbar {
   flex-grow: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  outline: 0;
+  overflow: hidden;
 }

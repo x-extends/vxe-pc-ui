@@ -7,9 +7,9 @@ import { updatePanelPlacement, getEventTargetNode, getPopupAppendElement, toCssU
 import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue, getNextMonth, getPrevMonth, getNextYear, getPrevYear } from '../../date-panel/src/util'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
-import VxeDatePanelComponent from '../../date-panel/src/date-panel'
-import VxeButtonComponent from '../../button/src/button'
-import VxeButtonGroupComponent from '../../button/src/button-group'
+import VxeDatePanelComponent from '../../date-panel'
+import VxeButtonComponent from '../../button'
+import VxeButtonGroupComponent from '../../button-group'
 
 import type { VxeDateRangePickerConstructor, VxeDateRangePickerEmits, DateRangePickerReactData, DateRangePickerInternalData, VxeButtonGroupDefines, VxeComponentSizeType, VxeDateRangePickerPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeModalConstructor, VxeDrawerConstructor, VxeModalMethods, VxeDrawerMethods, VxeDateRangePickerDefines, VxeDatePanelConstructor, VxeCardConstructor, VxeCardPrivateMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'

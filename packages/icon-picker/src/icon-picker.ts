@@ -5,7 +5,7 @@ import { getConfig, getIcon, getI18n, globalEvents, renderer, createEvent, globa
 import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeInputComponent from '../../input/src/input'
+import VxeInputComponent from '../../input'
 
 import type { VxeIconPickerPropTypes, IconPickerInternalData, ValueOf, IconPickerReactData, VxeInputConstructor, VxeComponentSizeType, VxeIconPickerEmits, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'

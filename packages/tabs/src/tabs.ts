@@ -6,7 +6,7 @@ import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
-import VxeLoadingComponent from '../../loading/src/loading'
+import VxeLoadingComponent from '../../loading'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, VxeComponentSizeType, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, VxeComponentStyleType } from '../../../types'
 

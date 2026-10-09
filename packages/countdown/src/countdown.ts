@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
-import VxeTextComponent from '../../text/src/text'
+import VxeTextComponent from '../../text'
 
 import type { VxeCountdownPropTypes, CountdownReactData, CountdownInternalData, VxeCountdownEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
