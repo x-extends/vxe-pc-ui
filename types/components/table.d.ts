@@ -711,7 +711,7 @@ export namespace VxeTablePropTypes {
     /**
      * 是否显示间距
      */
-    padding?: VxeColumnPropTypes.Padding | VxeTableDefines.PaddingConfig
+    padding?: VxeColumnPropTypes.Padding
     /**
      * 垂直对齐方式
      */
@@ -729,7 +729,7 @@ export namespace VxeTablePropTypes {
     /**
      * 是否显示间距
      */
-    padding?: boolean | VxeTableDefines.PaddingConfig
+    padding?: VxeColumnPropTypes.Padding
   }
 
   /**
@@ -743,7 +743,7 @@ export namespace VxeTablePropTypes {
     /**
      * 是否显示间距
      */
-    padding?: boolean | VxeTableDefines.PaddingConfig
+    padding?: VxeColumnPropTypes.Padding
   }
 
   /**
