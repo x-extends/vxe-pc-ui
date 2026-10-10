@@ -39,7 +39,7 @@ export namespace VxeColumnPropTypes {
   export type ClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderTableCellParams<D>) => string | any[] | { [key: string]: boolean })
   export type HeaderClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderTableHeaderParams<D>) => string | any[] | { [key: string]: boolean })
   export type FooterClassName<D = any> = string | ((params: VxeGlobalRendererHandles.RenderTableFooterParams<D>) => string | any[] | { [key: string]: boolean })
-  export type Padding = boolean
+  export type Padding = boolean | VxeTableDefines.PaddingConfig
   export type VerticalAlign = '' | 'top' | 'center' | null
 
   export type Rules<D = any> = VxeTableDefines.ValidatorRule<D>[]
