@@ -727,7 +727,7 @@ export default defineVxeComponent({
       const { fullItemList } = internalData
       clearValidate()
       if (readonly) {
-        return nextTick()
+        return Promise.resolve()
       }
       return beginValidate(fullItemList, '', callback).then((params) => {
         recalculate()
@@ -738,7 +738,7 @@ export default defineVxeComponent({
     const validateField = (fieldOrItem: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[], callback: any) => {
       const { readonly } = props
       if (readonly) {
-        return nextTick()
+        return Promise.resolve()
       }
       let fields: any[] = []
       if (fieldOrItem) {

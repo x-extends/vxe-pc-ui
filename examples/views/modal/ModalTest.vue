@@ -196,7 +196,7 @@
             :sync-resize="demo1.value11"
             :pager-config="demo1.tablePage"
             :columns="demo1.tableColumn"
-            :toolbar="demo1.tableToolbar"
+            :toolbar-config="demo1.tableToolbar"
             :data="demo1.tableData">
           </vxe-grid>
         </template>
