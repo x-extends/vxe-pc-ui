@@ -783,7 +783,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { fullItemList } = internalData
       $xeForm.clearValidate()
       if (readonly) {
-        return $xeForm.$nextTick()
+        return Promise.resolve()
       }
       return $xeForm.beginValidate(fullItemList, '', callback).then((params) => {
         $xeForm.recalculate()
@@ -796,7 +796,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { readonly } = props
       if (readonly) {
-        return $xeForm.$nextTick()
+        return Promise.resolve()
       }
       let fields: any[] = []
       if (fieldOrItem) {

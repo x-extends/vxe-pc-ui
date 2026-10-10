@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, createEvent, globalEvents, globalMixins, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
-import { getEventTargetNode, getPopupAppendElement, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
+import { getEventTargetNode, getPopupAppendElement, getPopupWrapperElement, isScale, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
@@ -504,8 +504,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (boxElem) {
         boxElem.style.width = width ? toCssUnit(width) : ''
         boxElem.style.height = height ? toCssUnit(height) : ''
-        boxElem.style.minWidth = !isMsg && !isMinimizeStatus && minWidth ? toCssUnit(minWidth) : ''
-        boxElem.style.minHeight = !isMsg && !isMinimizeStatus && minHeight ? toCssUnit(minHeight) : ''
+        boxElem.style.minWidth = !isMsg && !isMinimizeStatus && minWidth ? (isScale(minWidth) ? (minWidth as string) : toCssUnit(minWidth)) : ''
+        boxElem.style.minHeight = !isMsg && !isMinimizeStatus && minHeight ? (isScale(minHeight) ? (minHeight as string) : toCssUnit(minHeight)) : ''
       }
       return $xeModal.$nextTick()
     },
@@ -1275,7 +1275,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeModal.reactData
 
       evnt.preventDefault()
-      const { storage, isWithinAppendTo } = props
+      const { minWidth, minHeight, storage, isWithinAppendTo } = props
       const el = $xeModal.$refs.refElem as HTMLDivElement
       const parentWrapperEl = getPopupWrapperElement(isWithinAppendTo ? el : document.body)
       if (!parentWrapperEl) {
@@ -1286,8 +1286,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const marginSize = XEUtils.toNumber(props.marginSize)
       const targetElem = evnt.target as HTMLSpanElement
       const type = targetElem.getAttribute('data-type')
-      const minWidth = XEUtils.toNumber(props.minWidth)
-      const minHeight = XEUtils.toNumber(props.minHeight)
+      const dragMinWidth = isScale(minWidth) ? (XEUtils.toNumber(minWidth) * visibleWidth / 100) : XEUtils.toNumber(minWidth)
+      const dragMinHeight = isScale(minHeight) ? (XEUtils.toNumber(minHeight) * visibleHeight / 100) : XEUtils.toNumber(minHeight)
       const maxWidth = visibleWidth
       const maxHeight = visibleHeight
       const boxElem = $xeModal.getBox()
@@ -1309,7 +1309,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             dragLeft = disX - evnt.clientX
             width = dragLeft + clientWidth
             if (offsetLeft - dragLeft > marginSize) {
-              if (width > minWidth) {
+              if (width > dragMinWidth) {
                 boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
                 boxElem.style.left = `${offsetLeft - dragLeft}px`
               }
@@ -1321,13 +1321,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
             width = dragLeft + clientWidth
             height = dragTop + clientHeight
             if (offsetLeft - dragLeft > marginSize) {
-              if (width > minWidth) {
+              if (width > dragMinWidth) {
                 boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
                 boxElem.style.left = `${offsetLeft - dragLeft}px`
               }
             }
             if (offsetTop - dragTop > marginSize) {
-              if (height > minHeight) {
+              if (height > dragMinHeight) {
                 boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
                 boxElem.style.top = `${offsetTop - dragTop}px`
               }
@@ -1339,13 +1339,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
             width = dragLeft + clientWidth
             height = dragTop + clientHeight
             if (offsetLeft - dragLeft > marginSize) {
-              if (width > minWidth) {
+              if (width > dragMinWidth) {
                 boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
                 boxElem.style.left = `${offsetLeft - dragLeft}px`
               }
             }
             if (offsetTop + height + marginSize < visibleHeight) {
-              if (height > minHeight) {
+              if (height > dragMinHeight) {
                 boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
               }
             }
@@ -1354,7 +1354,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             dragTop = disY - evnt.clientY
             height = clientHeight + dragTop
             if (offsetTop - dragTop > marginSize) {
-              if (height > minHeight) {
+              if (height > dragMinHeight) {
                 boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
                 boxElem.style.top = `${offsetTop - dragTop}px`
               }
@@ -1364,7 +1364,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             dragLeft = evnt.clientX - disX
             width = dragLeft + clientWidth
             if (offsetLeft + width + marginSize < visibleWidth) {
-              if (width > minWidth) {
+              if (width > dragMinWidth) {
                 boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
               }
             }
@@ -1375,12 +1375,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             width = dragLeft + clientWidth
             height = dragTop + clientHeight
             if (offsetLeft + width + marginSize < visibleWidth) {
-              if (width > minWidth) {
+              if (width > dragMinWidth) {
                 boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
               }
             }
             if (offsetTop - dragTop > marginSize) {
-              if (height > minHeight) {
+              if (height > dragMinHeight) {
                 boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
                 boxElem.style.top = `${offsetTop - dragTop}px`
               }
@@ -1392,12 +1392,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             width = dragLeft + clientWidth
             height = dragTop + clientHeight
             if (offsetLeft + width + marginSize < visibleWidth) {
-              if (width > minWidth) {
+              if (width > dragMinWidth) {
                 boxElem.style.width = `${width < maxWidth ? width : maxWidth}px`
               }
             }
             if (offsetTop + height + marginSize < visibleHeight) {
-              if (height > minHeight) {
+              if (height > dragMinHeight) {
                 boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
               }
             }
@@ -1406,7 +1406,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             dragTop = evnt.clientY - disY
             height = dragTop + clientHeight
             if (offsetTop + height + marginSize < visibleHeight) {
-              if (height > minHeight) {
+              if (height > dragMinHeight) {
                 boxElem.style.height = `${height < maxHeight ? height : maxHeight}px`
               }
             }
