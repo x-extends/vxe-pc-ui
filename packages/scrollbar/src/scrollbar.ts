@@ -44,6 +44,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeScrollbarPropTypes.Native>,
       default: () => getConfig().scrollbar.native
     },
+    padding: {
+      type: Boolean as PropType<VxeScrollbarPropTypes.Padding>,
+      default: () => getConfig().scrollbar.padding
+    },
     xConfig: Object as PropType<VxeScrollbarPropTypes.XConfig>,
     yConfig: Object as PropType<VxeScrollbarPropTypes.YConfig>,
     className: {
@@ -122,17 +126,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeScrollbar
       const reactData = $xeScrollbar.reactData
 
-      const { native, className } = props
+      const { native, className, padding } = props
       const { yThumbHeight, xThumbWidth } = reactData
       const xOpts = ($xeScrollbar as any).computeXOpts as VxeScrollbarPropTypes.XConfig
       const yOpts = ($xeScrollbar as any).computeYOpts as VxeScrollbarPropTypes.YConfig
+      const xToTop = ($xeScrollbar as any).computeXToTop as boolean
+      const yToLeft = ($xeScrollbar as any).computeYToLeft as boolean
       return domUtils.buildClass([
         'vxe-scrollbar',
         `ov-x--${xOpts.visible || 'visible'}`,
         `ov-y--${yOpts.visible || 'visible'}`,
+        `sx-pos--${xToTop ? 'top' : 'bottom'}`,
+        `sy-pos--${yToLeft ? 'left' : 'right'}`,
         native ? 'is--native' : 'is--virtual',
         className
       ], {
+        'is--padding': padding,
         'ov-x--auto-hide': xOpts.autoHide,
         'ov-y--auto-hide': yOpts.autoHide,
         'overflow-y': yThumbHeight,
@@ -170,6 +179,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeScrollbar
 
       return Object.assign({}, getConfig().scrollbar.yConfig, props.yConfig)
+    },
+    computeXToTop () {
+      const $xeScrollbar = this
+
+      const xOpts = $xeScrollbar.computeXOpts as VxeScrollbarPropTypes.XConfig
+      return xOpts.position === 'top'
+    },
+    computeYToLeft () {
+      const $xeScrollbar = this
+
+      const yOpts = $xeScrollbar.computeYOpts as VxeScrollbarPropTypes.YConfig
+      return yOpts.position === 'left'
     }
   },
   methods: {
