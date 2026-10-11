@@ -44,6 +44,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeScrollbarPropTypes.Native>,
       default: () => getConfig().scrollbar.native
     },
+    padding: {
+      type: Boolean as PropType<VxeScrollbarPropTypes.Padding>,
+      default: () => getConfig().scrollbar.padding
+    },
     xConfig: Object as PropType<VxeScrollbarPropTypes.XConfig>,
     yConfig: Object as PropType<VxeScrollbarPropTypes.YConfig>,
     className: {
@@ -122,17 +126,22 @@ export default defineVxeComponent({
     })
 
     const computeWrapperClss = computed(() => {
-      const { native, className } = props
+      const { native, className, padding } = props
       const { yThumbHeight, xThumbWidth } = reactData
       const xOpts = computeXOpts.value
       const yOpts = computeYOpts.value
+      const xToTop = computeXToTop.value
+      const yToLeft = computeYToLeft.value
       return domUtils.buildClass([
         'vxe-scrollbar',
         `ov-x--${xOpts.visible || 'visible'}`,
         `ov-y--${yOpts.visible || 'visible'}`,
+        `sx-pos--${xToTop ? 'top' : 'bottom'}`,
+        `sy-pos--${yToLeft ? 'left' : 'right'}`,
         native ? 'is--native' : 'is--virtual',
         className
       ], {
+        'is--padding': padding,
         'ov-x--auto-hide': xOpts.autoHide,
         'ov-y--auto-hide': yOpts.autoHide,
         'overflow-y': yThumbHeight,
@@ -162,6 +171,16 @@ export default defineVxeComponent({
 
     const computeYOpts = computed(() => {
       return Object.assign({}, getConfig().scrollbar.yConfig, props.yConfig)
+    })
+
+    const computeXToTop = computed(() => {
+      const xOpts = computeXOpts.value
+      return xOpts.position === 'top'
+    })
+
+    const computeYToLeft = computed(() => {
+      const yOpts = computeYOpts.value
+      return yOpts.position === 'left'
     })
 
     const refMaps: ScrollbarPrivateRef = {

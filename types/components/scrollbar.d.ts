@@ -33,6 +33,7 @@ export namespace VxeScrollbarPropTypes {
   export type MaxHeight = number | string
   export type Loading = boolean
   export type Native = boolean
+  export type Padding = boolean
   export interface XConfig {
     height?: number | string
     // showArrows?: boolean
@@ -40,6 +41,10 @@ export namespace VxeScrollbarPropTypes {
      * 是否自动隐藏滚动条
      */
     autoHide?: boolean
+    /**
+     * 滚动条显示位置
+     */
+    position?: 'top' | 'bottom' | ''
     visible?: 'auto' | 'hidden' | 'visible' | ''
     /**
      * 滚动到边界触发的阈值会触发 scroll-boundary 事件
@@ -53,6 +58,10 @@ export namespace VxeScrollbarPropTypes {
      * 是否自动隐藏滚动条
      */
     autoHide?: boolean
+    /**
+     * 滚动条显示位置
+     */
+    position?: 'left' | 'right' | ''
     visible?: 'auto' | 'hidden' | 'visible' | ''
     /**
      * 滚动到边界触发的阈值会触发 scroll-boundary 事件
@@ -104,6 +113,10 @@ export interface VxeScrollbarProps {
    * 是否使用原生滚动条
    */
   native?: VxeScrollbarPropTypes.Native
+  /**
+   * 滚动条是否需要边距
+   */
+  padding?: VxeScrollbarPropTypes.Padding
   /**
    * 纵向滚动条宽度
    */
