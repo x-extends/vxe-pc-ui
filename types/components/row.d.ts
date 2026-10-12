@@ -23,6 +23,7 @@ export interface RowPrivateRef {
 export interface VxeRowPrivateRef extends RowPrivateRef { }
 
 export namespace VxeRowPropTypes {
+  export type GridLayout = boolean
   export type Gutter = string | number | (string | number)[]
   export type Wrap = boolean
   export type Vertical = boolean
@@ -30,6 +31,7 @@ export namespace VxeRowPropTypes {
 }
 
 export type VxeRowProps = {
+  gridLayout?: VxeRowPropTypes.GridLayout
   gutter?: VxeRowPropTypes.Gutter
   wrap?: VxeRowPropTypes.Wrap
   vertical?: VxeRowPropTypes.Vertical

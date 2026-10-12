@@ -1,14 +1,21 @@
-import { ref, h, reactive, provide, PropType, computed } from 'vue'
+import { ref, h, reactive, provide, PropType, computed, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeRowPropTypes, RowReactData, RowPrivateRef, VxeRowEmits, RowMethods, RowPrivateMethods, VxeRowPrivateComputed, VxeRowConstructor, VxeRowPrivateMethods, ValueOf } from '../../../types'
+
+const { warnLog } = createComponentLog('row')
 
 export default defineVxeComponent({
   name: 'VxeRow',
   props: {
+    gridLayout: {
+      type: Boolean as PropType<VxeRowPropTypes.GridLayout>,
+      default: () => getConfig().row.gridLayout
+    },
     gutter: [Number, String, Array] as PropType<VxeRowPropTypes.Gutter>,
     wrap: {
       type: Boolean as PropType<VxeRowPropTypes.Wrap>,
@@ -40,23 +47,28 @@ export default defineVxeComponent({
     }
 
     const computeRowStyle = computed(() => {
-      const { gutter, vertical } = props
+      const { gridLayout, gutter, vertical } = props
       const style: Record<string, string | number> = {}
       if (gutter) {
         let [lrGutter, tbGutter] = XEUtils.isArray(gutter) ? gutter : [gutter]
-        if (vertical) {
-          tbGutter = lrGutter
-          lrGutter = ''
-        }
-        if (lrGutter) {
-          const offsetSize = XEUtils.isNumber(lrGutter) ? toCssUnit(-(lrGutter / 2)) : `calc(${toCssUnit(lrGutter)} / 2 * -1)`
-          style.marginLeft = offsetSize
-          style.marginRight = offsetSize
-        }
-        if (tbGutter) {
-          const offsetSize = XEUtils.isNumber(tbGutter) ? toCssUnit(-(tbGutter / 2)) : `calc(${toCssUnit(tbGutter)} / 2 * -1)`
-          style.marginTop = offsetSize
-          style.marginBottom = offsetSize
+        if (gridLayout) {
+          style.columnGap = toCssUnit(lrGutter)
+          style.rowGap = toCssUnit(tbGutter || lrGutter)
+        } else {
+          if (vertical) {
+            tbGutter = lrGutter
+            lrGutter = ''
+          }
+          if (lrGutter) {
+            const offsetSize = XEUtils.isNumber(lrGutter) ? toCssUnit(-(lrGutter / 2)) : `calc(${toCssUnit(lrGutter)} / 2 * -1)`
+            style.marginLeft = offsetSize
+            style.marginRight = offsetSize
+          }
+          if (tbGutter) {
+            const offsetSize = XEUtils.isNumber(tbGutter) ? toCssUnit(-(tbGutter / 2)) : `calc(${toCssUnit(tbGutter)} / 2 * -1)`
+            style.marginTop = offsetSize
+            style.marginBottom = offsetSize
+          }
         }
       }
       return style
@@ -93,12 +105,12 @@ export default defineVxeComponent({
     Object.assign($xeRow, rowMethods, rowPrivateMethods)
 
     const renderVN = () => {
-      const { vertical, wrap } = props
+      const { gridLayout, vertical, wrap } = props
       const rowStyle = computeRowStyle.value
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
-        class: ['vxe-row', {
+        class: ['vxe-row', gridLayout ? 'grid--layout' : 'def--layout', {
           'is--vertical': vertical,
           'is--wrap': wrap
         }],
@@ -106,6 +118,13 @@ export default defineVxeComponent({
         onClick: clickEvent
       }, defaultSlot ? defaultSlot({}) : [])
     }
+
+    onMounted(() => {
+      const { gridLayout, wrap } = props
+      if (gridLayout && !wrap) {
+        warnLog('vxe.error.notSupportProp', ['grid-layout', 'wrap=false', 'wrap=true'])
+      }
+    })
 
     provide('$xeRow', $xeRow)
 

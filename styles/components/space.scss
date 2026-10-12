@@ -38,6 +38,7 @@
   &.is--fill {
     & > .vxe-space--item {
       flex-grow: 1;
+      min-width: 100%;
     }
   }
 }

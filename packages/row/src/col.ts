@@ -1,10 +1,13 @@
-import { ref, h, reactive, computed, PropType, inject } from 'vue'
+import { ref, h, reactive, computed, PropType, inject, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, useSize } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
+import { createComponentLog } from '../../ui/src/log'
 
 import type { ColReactData, VxeColPropTypes, ColPrivateRef, VxeColEmits, ColMethods, ColPrivateMethods, VxeColPrivateComputed, VxeColConstructor, VxeColPrivateMethods, ValueOf, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
+
+const { errLog } = createComponentLog('col')
 
 export default defineVxeComponent({
   name: 'VxeCol',
@@ -56,26 +59,32 @@ export default defineVxeComponent({
       const { width } = props
       const rowGutter = computeRowGutter.value
       const rowVertical = computeRowVertical.value
-      const style: Record<string, string | number> = {}
-      if (rowGutter) {
-        let [lrGutter, tbGutter] = XEUtils.isArray(rowGutter) ? rowGutter : [rowGutter]
-        if (rowVertical) {
-          tbGutter = lrGutter
-          lrGutter = ''
-        }
-        if (lrGutter) {
-          const padding = XEUtils.isNumber(lrGutter) ? toCssUnit(lrGutter / 2) : `calc(${toCssUnit(lrGutter)} / 2)`
-          style.paddingLeft = padding
-          style.paddingRight = padding
-        }
-        if (tbGutter) {
-          const padding = XEUtils.isNumber(tbGutter) ? toCssUnit(tbGutter / 2) : `calc(${toCssUnit(tbGutter)} / 2)`
-          style.paddingTop = padding
-          style.paddingBottom = padding
-        }
+      let gridLayout = false
+      if ($xeRow) {
+        gridLayout = !!$xeRow.props.gridLayout
       }
-      if (width) {
-        style.width = toCssUnit(width)
+      const style: Record<string, string | number> = {}
+      if (!gridLayout) {
+        if (rowGutter) {
+          let [lrGutter, tbGutter] = XEUtils.isArray(rowGutter) ? rowGutter : [rowGutter]
+          if (rowVertical) {
+            tbGutter = lrGutter
+            lrGutter = ''
+          }
+          if (lrGutter) {
+            const padding = XEUtils.isNumber(lrGutter) ? toCssUnit(lrGutter / 2) : `calc(${toCssUnit(lrGutter)} / 2)`
+            style.paddingLeft = padding
+            style.paddingRight = padding
+          }
+          if (tbGutter) {
+            const padding = XEUtils.isNumber(tbGutter) ? toCssUnit(tbGutter / 2) : `calc(${toCssUnit(tbGutter)} / 2)`
+            style.paddingTop = padding
+            style.paddingBottom = padding
+          }
+        }
+        if (width) {
+          style.width = toCssUnit(width)
+        }
       }
       return style
     })
@@ -125,6 +134,20 @@ export default defineVxeComponent({
         }, defaultSlot ? defaultSlot({}) : [])
       ])
     }
+
+    onMounted(() => {
+      const { width, fill } = props
+      if ($xeRow) {
+        if ($xeRow.props.gridLayout) {
+          if (width) {
+            errLog('vxe.error.notSupportProp', ['grid-layout', `width=${width}`, 'width=null'])
+          }
+          if (fill) {
+            errLog('vxe.error.notSupportProp', ['grid-layout', `fill=${fill}`, 'fill=false'])
+          }
+        }
+      }
+    })
 
     $xeCol.renderVN = renderVN
 

@@ -84,6 +84,32 @@
         </vxe-col>
       </vxe-row>
     </div>
+
+    <div class="row-wrapper">
+      <vxe-row :gutter="['5px', '16px']" gridLayout wrap>
+        <vxe-col span="24">
+          <div class="mybg">平分1</div>
+        </vxe-col>
+        <vxe-col span="12">
+          <div class="mybg">平分2</div>
+        </vxe-col>
+        <vxe-col span="12">
+          <div class="mybg">平分3</div>
+        </vxe-col>
+        <vxe-col span="8">
+          <div class="mybg">平分4</div>
+        </vxe-col>
+        <vxe-col span="8">
+          <div class="mybg">平分5</div>
+        </vxe-col>
+        <vxe-col span="8">
+          <div class="mybg">平分6</div>
+        </vxe-col>
+        <vxe-col span="8">
+          <div class="mybg">平分7</div>
+        </vxe-col>
+      </vxe-row>
+    </div>
   </div>
 </template>
 
