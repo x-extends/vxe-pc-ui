@@ -12,7 +12,16 @@
     width: var(--vxe-ui-layout-aside-collapse-width);
   }
   &.is--padding {
-    padding: var(--vxe-ui-layout-padding-default);
+    & > .vxe-layout-aside--inner {
+      padding: var(--vxe-ui-layout-padding-default);
+    }
+    & > .vxe-layout-aside--scrollbar{
+      & > .vxe-layout-aside--scrollbar-view {
+        & > .vxe-layout-aside--scrollbar-inner {
+          padding: var(--vxe-ui-layout-padding-default);
+        }
+      }
+    }
   }
 }
 
