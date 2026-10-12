@@ -5,7 +5,16 @@
   flex-grow: 1;
   overflow: hidden;
   &.is--padding {
-    padding: var(--vxe-ui-layout-padding-double);
+    & > .vxe-layout-body--inner {
+      padding: var(--vxe-ui-layout-padding-double);
+    }
+    & > .vxe-layout-body--scrollbar {
+      & > .vxe-layout-body--scrollbar-view {
+        & >  .vxe-layout-body--scrollbar-inner {
+          padding: var(--vxe-ui-layout-padding-double);
+        }
+      }
+    }
   }
 }
 .vxe-layout-body--inner {

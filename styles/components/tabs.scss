@@ -732,6 +732,10 @@ $scrollbarOffsetSize: 20px;
   }
 }
 
+.vxe-tabs-slots {
+  display: none;
+}
+
 .vxe-tabs {
   @include getTabsSizeStyle(var(--vxe-ui-font-size-default), var(--vxe-ui-tabs-header-height-default));
   &.size--medium {
