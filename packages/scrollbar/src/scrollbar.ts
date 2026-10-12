@@ -8,7 +8,7 @@ import VxeLoadingComponent from '../../loading'
 
 import type { ScrollbarReactData, ScrollbarInternalData, VxeScrollbarEmits, ValueOf, VxeScrollbarPropTypes, VxeComponentStyleType } from '../../../types'
 
-const { getConfig, createEvent, domUtils, globalResize, renderEmptyElement } = VxeUI
+const { getConfig, createEvent, domUtils, globalResize, globalEvents, renderEmptyElement } = VxeUI
 
 function createReactData (): ScrollbarReactData {
   return {
@@ -693,6 +693,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
 
     $xeScrollbar.reFlag++
+    globalEvents.on($xeScrollbar, 'resize', () => {
+      $xeScrollbar.reFlag++
+    })
   },
   beforeDestroy () {
     const $xeScrollbar = this
@@ -702,6 +705,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (resizeObserver) {
       resizeObserver.disconnect()
     }
+    globalEvents.off($xeScrollbar, 'resize')
   },
   destroyed () {
     const $xeScrollbar = this

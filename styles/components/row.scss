@@ -36,9 +36,27 @@
   &.align--right {
     text-align: right;
   }
-  @for $i from 0 to list.length(base_var.$colSpanList) {
-    &.span#{$i + 1} {
-      width: list.nth(base_var.$colSpanList, $i + 1);
+}
+
+.vxe-row {
+  &.def--layout {
+    & > .vxe-col {
+      @for $i from 0 to list.length(base_var.$colSpanList) {
+        &.span#{$i + 1} {
+          width: list.nth(base_var.$colSpanList, $i + 1);
+        }
+      }
+    }
+  }
+  &.grid--layout {
+    display: grid;
+    grid-template-columns: repeat(24, minmax(0, 1fr));
+    & > .vxe-col {
+      @for $i from 0 to list.length(base_var.$colSpanList) {
+        &.span#{$i + 1} {
+          grid-column: span $i + 1;
+        }
+      }
     }
   }
 }
