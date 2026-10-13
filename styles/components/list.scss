@@ -287,3 +287,54 @@
   padding-right: var(--vxe-ui-list-current-padding);
   @include baseMixin.createRadioIcon();
 }
+
+// 滚动条
+.vxe-list {
+  & > .vxe-scrollbar {
+    position: unset;
+  }
+  &.is--virtual-scrollbar {
+    & > .vxe-list--virtual-wrapper {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    & > .vxe-list--virtual-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.vxe-list {
+  &.is--virtual-scrollbar {
+    &.ov-x--auto-hide {
+      &:hover {
+        & > .vxe-scrollbar {
+          & > .vxe-scrollbar--track-x {
+            opacity: 1;
+          }
+        }
+      }
+      & > .vxe-scrollbar {
+        & > .vxe-scrollbar--track-x {
+          opacity: 0;
+          @include baseMixin.createAnimationTransition(opacity, 0.8s);
+        }
+      }
+    }
+    &.ov-y--auto-hide {
+      &:hover {
+        & > .vxe-scrollbar {
+          & > .vxe-scrollbar--track-y {
+            opacity: 1;
+          }
+        }
+      }
+      & > .vxe-scrollbar {
+        & > .vxe-scrollbar--track-y {
+          opacity: 0;
+          @include baseMixin.createAnimationTransition(opacity, 0.8s);
+        }
+      }
+    }
+  }
+}

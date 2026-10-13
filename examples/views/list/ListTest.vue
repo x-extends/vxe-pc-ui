@@ -14,6 +14,16 @@
         <vxe-button mode="text" status="error" icon="vxe-icon-delete-fill" @click="removeEvent(row)">删除</vxe-button>
       </template>
     </vxe-list>
+
+    <br>
+
+    <vxe-list ref="listRef2" v-bind="listOptions" use-scrollbar>
+      <template #extra="{ row }">
+        <vxe-button mode="text" status="primary" icon="vxe-icon-add" @click="insertNodeEvent(row)">当前插入</vxe-button>
+        <vxe-button mode="text" status="primary" icon="vxe-icon-add" @click="insertNextNodeEvent(row)">下一行插入</vxe-button>
+        <vxe-button mode="text" status="error" icon="vxe-icon-delete-fill" @click="removeEvent(row)">删除</vxe-button>
+      </template>
+    </vxe-list>
   </div>
 </template>
 

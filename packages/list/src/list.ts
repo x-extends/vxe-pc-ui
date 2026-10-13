@@ -1,12 +1,13 @@
 import { h, PropType, ref, Ref, computed, onBeforeUnmount, watch, reactive, nextTick, onActivated, onMounted, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getIcon, getI18n, menus, globalEvents, globalResize, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI, getConfig, getIcon, getI18n, domUtils, menus, globalEvents, globalResize, useSize, createEvent, renderEmptyElement } from '../../ui'
 import { getCrossListDragRowInfo } from './store'
 import { isScale, removeClass, addClass, getTpImg, toCssUnit, hasClass } from '../../ui/src/dom'
 import { isEnableConf, getText, enModelValue, deModelValue } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
+import { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } from '../../scrollbar/src/util'
 import { getItemCacheObj } from './util'
 import VxeLoadingComponent from '../../loading'
 
@@ -42,6 +43,11 @@ function createReactData (): ListReactData {
     updateCheckboxFlag: 1,
     isAllChecked: false,
     isAllIndeterminate: false,
+
+    // 滚动条
+    yThumbHeight: 0,
+    xThumbWidth: 0,
+
     insertRowFlag: 1,
     removeRowFlag: 1,
     dragRow: null,
@@ -52,13 +58,20 @@ function createReactData (): ListReactData {
 
 function createInternalData (): ListInternalData {
   return {
-    resizeObserver: undefined,
     fullData: [],
     afterList: [],
     fullKeyMaps: {},
     rowMaps: {},
-    lastScrollLeft: 0,
+
+    // 滚动条
+    // resizeObserver: undefined,
+    // isThumbDrag: false,
+    thumbDragOffset: 0,
+    yThumbTop: 0,
+    xThumbLeft: 0,
     lastScrollTop: 0,
+    lastScrollLeft: 0,
+
     scrollYStore: {
       startIndex: 0,
       endIndex: 0,
@@ -117,7 +130,12 @@ export default defineVxeComponent({
     dragConfig: Object as PropType<VxeListPropTypes.DragConfig>,
     menuConfig: Object as PropType<VxeListPropTypes.MenuConfig>,
     virtualYConfig: Object as PropType<VxeListPropTypes.VirtualYConfig>,
-    scrollY: Object as PropType<VxeListPropTypes.ScrollY>
+    scrollY: Object as PropType<VxeListPropTypes.ScrollY>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeListPropTypes.UseScrollbar>,
+      default: () => getConfig().list.useScrollbar
+    },
+    scrollbarConfig: Object as PropType<VxeListPropTypes.ScrollbarConfig>
   },
   emits: [
     'update:checkRowKey',
@@ -157,6 +175,12 @@ export default defineVxeComponent({
     const refFooterElem = ref() as Ref<HTMLDivElement>
     const refVirtualWrapper = ref() as Ref<HTMLDivElement>
     const refVirtualBody = ref() as Ref<HTMLDivElement>
+
+    const refViewInnerElem = ref<HTMLDivElement>()
+    const refTrackXElem = ref<HTMLDivElement>()
+    const refTrackYElem = ref<HTMLDivElement>()
+    const refThumbXElem = ref<HTMLDivElement>()
+    const refThumbYElem = ref<HTMLDivElement>()
 
     const refDragRowLineElem = ref<HTMLDivElement>()
     const refDragTipElem = ref<HTMLDivElement>()
@@ -218,11 +242,19 @@ export default defineVxeComponent({
 
     const computeWrapperStyles = computed(() => {
       const rowHeight = computeRowHeight.value
-      const style: VxeComponentStyleType = {}
+      const scrollbarXOpts = computeScrollbarXOpts.value
+      const scrollbarYOpts = computeScrollbarYOpts.value
+      const stys: VxeComponentStyleType = {}
       if (rowHeight) {
-        style['--vxe-ui-list-row-height'] = toCssUnit(rowHeight)
+        stys['--vxe-ui-list-row-height'] = toCssUnit(rowHeight)
       }
-      return style
+      if (scrollbarYOpts.width) {
+        stys['--vxe-ui-scrollbar-y-width'] = toCssUnit(scrollbarYOpts.width)
+      }
+      if (scrollbarXOpts.height) {
+        stys['--vxe-ui-scrollbar-x-height'] = toCssUnit(scrollbarXOpts.height)
+      }
+      return stys
     })
 
     const computeVirtualStyles = computed(() => {
@@ -236,6 +268,53 @@ export default defineVxeComponent({
         style.maxHeight = toCssUnit(Math.max(20, customMaxHeight - headHeight - footHeight))
       }
       return style
+    })
+
+    const computeScrollbarOpts = computed(() => {
+      return Object.assign({}, getConfig().list.scrollbarConfig, props.scrollbarConfig)
+    })
+
+    const computeScrollbarXOpts = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      return Object.assign({}, getConfig().scrollbar.xConfig, scrollbarOpts.xConfig)
+    })
+
+    const computeScrollbarYOpts = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      return Object.assign({}, getConfig().scrollbar.yConfig, scrollbarOpts.yConfig)
+    })
+
+    const computeScrollbarWrapperClss = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      const { padding } = scrollbarOpts
+      const { yThumbHeight, xThumbWidth } = reactData
+      const scrollbarXOpts = computeScrollbarXOpts.value
+      const scrollbarYOpts = computeScrollbarYOpts.value
+      const scrollbarXToTop = computeScrollbarXToTop.value
+      const scrollbarYToLeft = computeScrollbarYToLeft.value
+      return domUtils.buildClass([
+        'vxe-scrollbar is--virtual',
+        `ov-x--${scrollbarXOpts.visible || 'visible'}`,
+        `ov-y--${scrollbarYOpts.visible || 'visible'}`,
+        `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
+        `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
+      ], {
+        'is--padding': padding,
+        'ov-x--auto-hide': scrollbarXOpts.autoHide,
+        'ov-y--auto-hide': scrollbarYOpts.autoHide,
+        'overflow-y': yThumbHeight,
+        'overflow-x': xThumbWidth
+      })
+    })
+
+    const computeScrollbarXToTop = computed(() => {
+      const scrollbarXOpts = computeScrollbarXOpts.value
+      return scrollbarXOpts.position === 'top'
+    })
+
+    const computeScrollbarYToLeft = computed(() => {
+      const scrollbarYOpts = computeScrollbarYOpts.value
+      return scrollbarYOpts.position === 'left'
     })
 
     const dispatchEvent = (type: ValueOf<VxeListEmits>, params: Record<string, any>, evnt: Event | null) => {
@@ -404,6 +483,7 @@ export default defineVxeComponent({
      */
     const refreshScroll = () => {
       const { lastScrollLeft, lastScrollTop } = internalData
+      updateScrollbar()
       return clearScroll().then(() => {
         if (lastScrollLeft || lastScrollTop) {
           internalData.lastScrollLeft = 0
@@ -411,6 +491,11 @@ export default defineVxeComponent({
           return scrollTo(lastScrollLeft, lastScrollTop)
         }
       })
+    }
+
+    const updateScrollbar = () => {
+      updateThumbSize()
+      updateThumbOffset()
     }
 
     /**
@@ -430,6 +515,7 @@ export default defineVxeComponent({
           parentHeight = parentEl.clientHeight - Math.ceil(XEUtils.toNumber(parentStyle.paddingLeft) + XEUtils.toNumber(parentStyle.paddingRight))
         }
         reactData.parentHeight = parentHeight
+        updateScrollbar()
         updateHeight()
         if (el.clientWidth && el.clientHeight) {
           return computeScrollLoad()
@@ -461,6 +547,7 @@ export default defineVxeComponent({
       const scrollLeft = scrollBodyElem.scrollLeft
       const isX = scrollLeft !== internalData.lastScrollLeft
       const isY = scrollTop !== internalData.lastScrollTop
+      updateThumbOffset()
       internalData.lastScrollTop = scrollTop
       internalData.lastScrollLeft = scrollLeft
       if (reactData.scrollYLoad) {
@@ -1815,6 +1902,176 @@ export default defineVxeComponent({
       }
     }
 
+    const updateThumbSize = () => {
+      const viewEl = refVirtualWrapper.value
+      if (!viewEl) {
+        return
+      }
+      if (!viewEl.clientHeight || !viewEl.clientHeight) {
+        return
+      }
+      const trackXEl = refTrackXElem.value
+      const xThumbWidth = trackXEl ? getThumbSize(viewEl.clientWidth, viewEl.scrollWidth, trackXEl.clientWidth) : 0
+      const thumbXElem = refThumbXElem.value
+      if (thumbXElem) {
+        thumbXElem.style.width = xThumbWidth + 'px'
+      }
+      reactData.xThumbWidth = xThumbWidth
+
+      const trackYEl = refTrackYElem.value
+
+      const yThumbHeight = trackYEl ? getThumbSize(viewEl.clientHeight, viewEl.scrollHeight, trackYEl.clientHeight) : 0
+      const thumbYElem = refThumbYElem.value
+      if (thumbYElem) {
+        thumbYElem.style.height = yThumbHeight + 'px'
+      }
+      reactData.yThumbHeight = yThumbHeight
+    }
+
+    const updateThumbOffset = () => {
+      const viewEl = refVirtualWrapper.value
+      if (!viewEl) {
+        return
+      }
+      if (!viewEl.clientHeight || !viewEl.clientHeight) {
+        return
+      }
+      const { xThumbWidth, yThumbHeight } = reactData
+      const trackXEl = refTrackXElem.value
+      const thumbXElem = refThumbXElem.value
+      const xThumbLeft = trackXEl && xThumbWidth ? getThumbOffsetSize(viewEl.scrollLeft, viewEl.clientWidth, viewEl.scrollWidth, trackXEl.clientWidth, xThumbWidth) : 0
+      internalData.xThumbLeft = xThumbLeft
+      if (thumbXElem && xThumbWidth) {
+        thumbXElem.style.width = xThumbWidth + 'px'
+        thumbXElem.style.transform = `translateX(${xThumbLeft}px)`
+      }
+
+      const trackYEl = refTrackYElem.value
+      const thumbYElem = refThumbYElem.value
+      const yThumbTop = trackYEl && yThumbHeight ? getThumbOffsetSize(viewEl.scrollTop, viewEl.clientHeight, viewEl.scrollHeight, trackYEl.clientHeight, yThumbHeight) : 0
+      internalData.yThumbTop = yThumbTop
+      if (thumbYElem && yThumbHeight) {
+        thumbYElem.style.height = yThumbHeight + 'px'
+        thumbYElem.style.transform = `translateY(${yThumbTop}px)`
+      }
+    }
+
+    const clickTrackXEvent = (evnt: MouseEvent) => {
+      const trackEl = evnt.currentTarget as HTMLDivElement
+      if (trackEl !== evnt.target) {
+        return
+      }
+      const viewEl = refVirtualWrapper.value
+      if (!viewEl) {
+        return
+      }
+      const { xThumbWidth } = reactData
+      const trackRect = trackEl.getBoundingClientRect()
+      viewEl.scrollTo({
+        left: getScrollFromClick(evnt.clientX - trackRect.left, viewEl.clientWidth, viewEl.scrollWidth, trackEl.clientWidth, xThumbWidth),
+        behavior: 'auto'
+      })
+    }
+
+    const clickTrackYEvent = (evnt: MouseEvent) => {
+      const trackEl = evnt.currentTarget as HTMLDivElement
+      if (trackEl !== evnt.target) {
+        return
+      }
+      const viewEl = refVirtualWrapper.value
+      if (!viewEl) {
+        return
+      }
+      const { yThumbHeight } = reactData
+      const trackRect = trackEl.getBoundingClientRect()
+      viewEl.scrollTo({
+        top: getScrollFromClick(evnt.clientY - trackRect.top, viewEl.clientHeight, viewEl.scrollHeight, trackEl.clientHeight, yThumbHeight),
+        behavior: 'auto'
+      })
+    }
+
+    const pointerdownThumbXEvent = (evnt: PointerEvent) => {
+      const thumbEl = evnt.currentTarget as HTMLDivElement
+      internalData.isThumbDrag = true
+      thumbEl.setPointerCapture(evnt.pointerId)
+
+      const viewEl = refVirtualWrapper.value
+      if (!viewEl) {
+        return
+      }
+      const { xThumbWidth } = reactData
+      const trackEl = thumbEl.parentElement as HTMLDivElement
+      const trackRect = trackEl.getBoundingClientRect()
+      const pointerPosition = evnt.clientX - trackRect.left
+      // 记录 thumb 的偏移
+      const thumbOffset = getThumbOffsetSize(viewEl.scrollLeft, viewEl.clientWidth, viewEl.scrollWidth, trackEl.clientWidth, xThumbWidth)
+      internalData.thumbDragOffset = pointerPosition - thumbOffset
+    }
+
+    const pointermoveThumbXEvent = (evnt: PointerEvent) => {
+      const thumbEl = evnt.currentTarget as HTMLDivElement
+      if (!thumbEl.hasPointerCapture(evnt.pointerId)) {
+        return
+      }
+      const { isThumbDrag, thumbDragOffset } = internalData
+      if (isThumbDrag) {
+        const viewEl = refVirtualWrapper.value
+        if (!viewEl) {
+          return
+        }
+        const { xThumbWidth } = reactData
+        const thumbEl = evnt.currentTarget as HTMLDivElement
+        const trackEl = thumbEl.parentElement as HTMLDivElement
+        const trackRect = trackEl.getBoundingClientRect()
+        // 更新偏移
+        viewEl.scrollLeft = getScrollFromDrag(evnt.clientX - trackRect.left, thumbDragOffset, viewEl.clientWidth, viewEl.scrollWidth, trackEl.clientWidth, xThumbWidth)
+      }
+    }
+
+    const cleatPointerThumbEvent = (evnt: PointerEvent) => {
+      const thumbEl = evnt.currentTarget as HTMLDivElement
+      thumbEl.releasePointerCapture(evnt.pointerId)
+      internalData.isThumbDrag = false
+    }
+
+    const pointerdownThumbYEvent = (evnt: PointerEvent) => {
+      const thumbEl = evnt.currentTarget as HTMLDivElement
+      internalData.isThumbDrag = true
+      thumbEl.setPointerCapture(evnt.pointerId)
+
+      const viewEl = refVirtualWrapper.value
+      if (!viewEl) {
+        return
+      }
+      const { yThumbHeight } = reactData
+      const trackEl = thumbEl.parentElement as HTMLDivElement
+      const trackRect = trackEl.getBoundingClientRect()
+      const pointerPosition = evnt.clientY - trackRect.top
+      // 记录 thumb 的偏移
+      const thumbOffset = getThumbOffsetSize(viewEl.scrollTop, viewEl.clientHeight, viewEl.scrollHeight, trackEl.clientHeight, yThumbHeight)
+      internalData.thumbDragOffset = pointerPosition - thumbOffset
+    }
+
+    const pointermoveThumbYEvent = (evnt: PointerEvent) => {
+      const thumbEl = evnt.currentTarget as HTMLDivElement
+      if (!thumbEl.hasPointerCapture(evnt.pointerId)) {
+        return
+      }
+      const { isThumbDrag, thumbDragOffset } = internalData
+      if (isThumbDrag) {
+        const viewEl = refVirtualWrapper.value
+        if (!viewEl) {
+          return
+        }
+        const { yThumbHeight } = reactData
+        const thumbEl = evnt.currentTarget as HTMLDivElement
+        const trackEl = thumbEl.parentElement as HTMLDivElement
+        const trackRect = trackEl.getBoundingClientRect()
+        // 更新偏移
+        viewEl.scrollTop = getScrollFromDrag(evnt.clientY - trackRect.top, thumbDragOffset, viewEl.clientHeight, viewEl.scrollHeight, trackEl.clientHeight, yThumbHeight)
+      }
+    }
+
     Object.assign($xeList, listMethods, listPrivateMethods)
 
     const renderDragTip = () => {
@@ -2053,7 +2310,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { showCheckbox, className, loading } = props
+      const { showCheckbox, className, loading, useScrollbar } = props
       const { bodyHeight, topSpaceHeight, rowList, isAllChecked, isAllIndeterminate } = reactData
       const defaultSlot = slots.default
       const headerSlot = slots.header
@@ -2069,6 +2326,9 @@ export default defineVxeComponent({
       const rowOpts = computeRowOpts.value
       const { isHover, padding } = rowOpts
       const isDrag = computeIsDrag.value
+      const scrollbarXOpts = computeScrollbarXOpts.value
+      const scrollbarYOpts = computeScrollbarYOpts.value
+      const scrollbarWrapperClss = computeScrollbarWrapperClss.value
       const showDefChekboxHead = showCheckbox && showHeader !== false
 
       const leOns: {
@@ -2081,6 +2341,9 @@ export default defineVxeComponent({
         ref: refElem,
         class: ['vxe-list', className ? (XEUtils.isFunction(className) ? className({ $list: $xeList }) : className) : '', {
           [`size--${vSize}`]: vSize,
+          'is--virtual-scrollbar': useScrollbar,
+          'ov-x--auto-hide': useScrollbar && scrollbarXOpts.autoHide,
+          'ov-y--auto-hide': useScrollbar && scrollbarYOpts.autoHide,
           'is--drag': isDrag,
           'is--loading': loading
         }],
@@ -2143,13 +2406,66 @@ export default defineVxeComponent({
             style: {
               marginTop: topSpaceHeight ? `${topSpaceHeight}px` : ''
             }
-          }, defaultSlot ? defaultSlot({ items: rowList, $list: $xeList }) : rowList.map((row, i) => renderRow(row, i)))
+          }, useScrollbar
+            ? (
+                defaultSlot ? defaultSlot({ items: rowList, $list: $xeList }) : rowList.map((row, i) => renderRow(row, i))
+              )
+            : [
+                h('div', {
+                  key: 'vi',
+                  ref: refViewInnerElem,
+                  class: 'vxe-scrollbar--view-inner'
+                }, defaultSlot ? defaultSlot({ items: rowList, $list: $xeList }) : rowList.map((row, i) => renderRow(row, i)))
+              ])
         ]),
         footerSlot
           ? h('div', {
             ref: refFooterElem,
             class: 'vxe-list--footer-wrapper'
           }, footerSlot({ items: rowList, $list: $xeList }))
+          : renderEmptyElement($xeList),
+        /**
+         * 滚动条
+         */
+        useScrollbar
+          ? h('div', {
+            class: scrollbarWrapperClss
+          }, [
+            scrollbarXOpts.visible === 'hidden'
+              ? renderEmptyElement($xeList)
+              : h('div', {
+                ref: refTrackXElem,
+                class: 'vxe-scrollbar--track-x',
+                onClick: clickTrackXEvent
+              }, [
+                h('div', {
+                  ref: refThumbXElem,
+                  class: 'vxe-scrollbar--thumb-x',
+                  onPointerdown: pointerdownThumbXEvent,
+                  onPointermove: pointermoveThumbXEvent,
+                  onPointerup: cleatPointerThumbEvent,
+                  onPointercancel: cleatPointerThumbEvent,
+                  onLostpointercapture: cleatPointerThumbEvent
+                })
+              ]),
+            scrollbarYOpts.visible === 'hidden'
+              ? renderEmptyElement($xeList)
+              : h('div', {
+                ref: refTrackYElem,
+                class: 'vxe-scrollbar--track-y',
+                onClick: clickTrackYEvent
+              }, [
+                h('div', {
+                  ref: refThumbYElem,
+                  class: 'vxe-scrollbar--thumb-y',
+                  onPointerdown: pointerdownThumbYEvent,
+                  onPointermove: pointermoveThumbYEvent,
+                  onPointerup: cleatPointerThumbEvent,
+                  onPointercancel: cleatPointerThumbEvent,
+                  onLostpointercapture: cleatPointerThumbEvent
+                })
+              ])
+          ])
           : renderEmptyElement($xeList),
         /**
          * 拖拽提示
@@ -2211,7 +2527,9 @@ export default defineVxeComponent({
     })
 
     onActivated(() => {
-      recalculate().then(() => refreshScroll())
+      recalculate().then(() => {
+        refreshScroll()
+      })
     })
 
     nextTick(() => {
@@ -2219,7 +2537,7 @@ export default defineVxeComponent({
     })
 
     onMounted(() => {
-      const { showSeq, showRadio, showCheckbox } = props
+      const { showSeq, showRadio, showCheckbox, autoResize, useScrollbar } = props
       const rowOpts = computeRowOpts.value
       const { useKey } = rowOpts
 
@@ -2242,17 +2560,27 @@ export default defineVxeComponent({
       if (useKey && !keyField) {
         errLog('vxe.error.reqSupportProp', ['row-config.useKey', 'row-config.keyField'])
       }
-      if (props.autoResize) {
+      if (useScrollbar || autoResize) {
         const el = refElem.value
-        const resizeObserver = globalResize.create(() => recalculate())
+        const viewInnerEl = refViewInnerElem.value
+        const resizeObserver = globalResize.create(() => {
+          reFlag.value++
+        })
         resizeObserver.observe(el)
-        if (el) {
-          resizeObserver.observe(el.parentElement as HTMLDivElement)
+        if (autoResize) {
+          if (el) {
+            resizeObserver.observe(el.parentElement as HTMLDivElement)
+          }
+        }
+        if (viewInnerEl) {
+          resizeObserver.observe(viewInnerEl)
         }
         internalData.resizeObserver = resizeObserver
       }
-      recalculate()
-      globalEvents.on($xeList, 'resize', recalculate)
+      reFlag.value++
+      globalEvents.on($xeList, 'resize', () => {
+        reFlag.value++
+      })
     })
 
     onBeforeUnmount(() => {

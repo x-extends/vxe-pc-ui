@@ -1908,6 +1908,10 @@ export namespace VxeTablePropTypes {
    */
   export interface MouseConfig {
     /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
+    /**
      * 开启单元格选中功能（只对 edit-config.mode=cell 有效）
      */
     selected?: boolean
@@ -1926,6 +1930,10 @@ export namespace VxeTablePropTypes {
    * 区域配置项
    */
   export interface AreaConfig<D = any> {
+    /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
     /**
      * 是否显示操作提示消息
      */
@@ -2062,6 +2070,10 @@ export namespace VxeTablePropTypes {
    * 按键配置项
    */
   export interface KeyboardConfig<D = any> {
+    /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
     /**
      * 是否启用全选
      * Window/Linux对应按键: Ctrl+A
@@ -3025,6 +3037,10 @@ export namespace VxeTablePropTypes {
      */
   export interface ImportConfig<D = any> {
     /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
+    /**
      * 内置属性
      * @private
      */
@@ -3332,6 +3348,10 @@ export namespace VxeTablePropTypes {
    * 导出参数
    */
   export interface ExportConfig<D = any> extends ExportAndPrintConfig<D> {
+    /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
     // 内置属性
     _typeMaps?: Record<string, number>
     /**
@@ -3412,6 +3432,10 @@ export namespace VxeTablePropTypes {
    * 打印参数
    */
   export interface PrintConfig<D = any> extends ExportAndPrintConfig<D> {
+    /**
+     * 是否启用，支持局部/全局启用
+     */
+    enabled?: boolean
     /**
      * 列宽计算模式，支持默认default，等比例scale，自适应auto
      */

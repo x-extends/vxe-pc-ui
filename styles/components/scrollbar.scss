@@ -49,6 +49,9 @@
       background-color: var(--vxe-ui-scrollbar-thumb-active-background-color);
     }
   }
+}
+
+.vxe-scrollbar {
   &.ov-x--hidden {
     & > .vxe-scrollbar--view {
       overflow-x: hidden;
