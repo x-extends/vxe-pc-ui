@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, getI18n, menus, globalEvents, globalResize, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getCrossListDragRowInfo } from './store'
-import { isScale, removeClass, addClass, getTpImg, toCssUnit } from '../../ui/src/dom'
+import { isScale, removeClass, addClass, getTpImg, toCssUnit, hasClass } from '../../ui/src/dom'
 import { isEnableConf, getText, enModelValue, deModelValue } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
@@ -419,8 +419,12 @@ export default defineVxeComponent({
     const recalculate = () => {
       const el = refElem.value
       if (el) {
-        const parentEl = el.parentElement
+        let parentEl = el.parentElement
         let parentHeight = 0
+        // 如果是虚拟滚动条
+        if (parentEl && hasClass(parentEl, 'vxe-scrollbar--view-inner')) {
+          parentEl = parentEl.parentElement
+        }
         if (parentEl) {
           const parentStyle = getComputedStyle(parentEl)
           parentHeight = parentEl.clientHeight - Math.ceil(XEUtils.toNumber(parentStyle.paddingLeft) + XEUtils.toNumber(parentStyle.paddingRight))

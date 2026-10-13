@@ -109,7 +109,13 @@ export interface VxeMenuProps {
   expandKeys?: VxeMenuPropTypes.ExpandKeys
   options?: VxeMenuPropTypes.Options
   menuConfig?: VxeMenuPropTypes.MenuConfig
+  /**
+   * 使用虚拟滚动条
+   */
   useScrollbar?: VxeMenuPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
   scrollbarConfig?: VxeMenuPropTypes.ScrollbarConfig
   /**
    * 挂载到指定元素下

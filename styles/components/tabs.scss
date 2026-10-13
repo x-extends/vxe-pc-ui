@@ -470,7 +470,8 @@ $scrollbarOffsetSize: 20px;
   overflow: auto;
 }
 
-.vxe-tabs-pane--item {
+.vxe-tabs-pane--item,
+.vxe-tabs-pane--scrollbar-item {
   display: none;
   height: 100%;
   overflow: auto;

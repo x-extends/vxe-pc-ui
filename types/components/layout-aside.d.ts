@@ -48,7 +48,13 @@ export interface VxeLayoutAsideProps {
   padding?: VxeLayoutAsidePropTypes.Padding
   size?: VxeLayoutAsidePropTypes.Size
   collapseConfig?: VxeLayoutAsidePropTypes.CollapseConfig
+  /**
+   * 使用虚拟滚动条
+   */
   useScrollbar?: VxeLayoutAsidePropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
   scrollbarConfig?: VxeLayoutAsidePropTypes.ScrollbarConfig
 }
 export interface LayoutAsidePrivateComputed {

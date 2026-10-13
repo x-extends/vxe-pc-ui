@@ -1,8 +1,34 @@
+// 局部变量
+.vxe-card {
+  --vxe-ui-card-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-card-current-padding: var(--vxe-ui-card-padding-default);
+  &.size--xlarge {
+    --vxe-ui-card-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-card-current-padding: var(--vxe-ui-card-padding-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-card-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-card-current-padding: var(--vxe-ui-card-padding-large);
+  }
+  &.size--medium {
+    --vxe-ui-card-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-card-current-padding: var(--vxe-ui-card-padding-medium);
+  }
+  &.size--small {
+    --vxe-ui-card-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-card-current-padding: var(--vxe-ui-card-padding-small);
+  }
+  &.size--mini {
+    --vxe-ui-card-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-card-current-padding: var(--vxe-ui-card-padding-mini);
+  }
+}
+
 .vxe-card {
   position: relative;
   display: inline-flex;
   flex-direction: column;
-  font-size: var(--vxe-ui-font-size-default);
+  font-size: var(--vxe-ui-card-current-font-size);
   color: var(--vxe-ui-font-color);
   font-family: var(--vxe-ui-font-family);
   background-color: var(--vxe-ui-layout-background-color);
@@ -33,19 +59,25 @@
   flex-grow: 1;
 }
 .vxe-card--body-left,
+.vxe-card--body-scrollbar-left,
 .vxe-card--body-right,
-.vxe-card--body-content {
+.vxe-card--body-scrollbar-right,
+.vxe-card--body-content,
+.vxe-card--body-scrollbar-content {
   overflow: auto;
 }
 .vxe-card--header,
 .vxe-card--header-extra,
 .vxe-card--footer,
 .vxe-card--body-left,
-.vxe-card--body-right {
+.vxe-card--body-scrollbar-left,
+.vxe-card--body-right,
+.vxe-card--body-scrollbar-right {
   flex-shrink: 0;
 }
 .vxe-card--header-title,
-.vxe-card--body-content {
+.vxe-card--body-content,
+.vxe-card--body-scrollbar-content {
   flex-grow: 1;
 }
 .vxe-card--header-title {
@@ -57,65 +89,19 @@
 }
 
 .vxe-card {
-  font-size: var(--vxe-ui-font-size-default);
   & > .vxe-card--header,
   & > .vxe-card--footer {
-    padding: var(--vxe-ui-card-padding-default);
+    padding: var(--vxe-ui-card-current-padding);
   }
   &.is--padding {
     & > .vxe-card--body {
-      .vxe-card--body-content,
       .vxe-card--body-left,
-      .vxe-card--body-right {
-        padding: var(--vxe-ui-card-padding-default);
-      }
-    }
-  }
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-    & > .vxe-card--header,
-    & > .vxe-card--footer {
-      padding: var(--vxe-ui-card-padding-medium);
-    }
-    &.is--padding {
-      & > .vxe-card--body {
-        .vxe-card--body-content,
-        .vxe-card--body-left,
-        .vxe-card--body-right {
-          padding: var(--vxe-ui-card-padding-medium);
-        }
-      }
-    }
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-    & > .vxe-card--header,
-    & > .vxe-card--footer {
-      padding: var(--vxe-ui-card-padding-small);
-    }
-    &.is--padding {
-      & > .vxe-card--body {
-        .vxe-card--body-content,
-        .vxe-card--body-left,
-        .vxe-card--body-right {
-          padding: var(--vxe-ui-card-padding-small);
-        }
-      }
-    }
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-    & > .vxe-card--header,
-    & > .vxe-card--footer {
-      padding: var(--vxe-ui-card-padding-mini);
-    }
-    &.is--padding {
-      & > .vxe-card--body {
-        .vxe-card--body-content,
-        .vxe-card--body-left,
-        .vxe-card--body-right {
-          padding: var(--vxe-ui-card-padding-mini);
-        }
+      .vxe-card--body-scrollbar-left-view,
+      .vxe-card--body-right,
+      .vxe-card--body-scrollbar-right-view,
+      .vxe-card--body-content,
+      .vxe-card--body-scrollbar-content-view {
+        padding: var(--vxe-ui-card-current-padding);
       }
     }
   }

@@ -268,6 +268,9 @@ export default defineVxeComponent({
       if (!viewEl) {
         return
       }
+      if (!viewEl.clientHeight || !viewEl.clientHeight) {
+        return
+      }
       const trackXEl = refTrackXElem.value
       const xThumbWidth = trackXEl ? getThumbSize(viewEl.clientWidth, viewEl.scrollWidth, trackXEl.clientWidth) : 0
       const thumbXElem = refThumbXElem.value
@@ -277,6 +280,7 @@ export default defineVxeComponent({
       reactData.xThumbWidth = xThumbWidth
 
       const trackYEl = refTrackYElem.value
+
       const yThumbHeight = trackYEl ? getThumbSize(viewEl.clientHeight, viewEl.scrollHeight, trackYEl.clientHeight) : 0
       const thumbYElem = refThumbYElem.value
       if (thumbYElem) {
@@ -288,6 +292,9 @@ export default defineVxeComponent({
     const updateThumbOffset = () => {
       const viewEl = refViewElem.value
       if (!viewEl) {
+        return
+      }
+      if (!viewEl.clientHeight || !viewEl.clientHeight) {
         return
       }
       const { xThumbWidth, yThumbHeight } = reactData
@@ -599,7 +606,9 @@ export default defineVxeComponent({
       reFlag.value++
     })
     watch(reFlag, () => {
-      $xeScrollbar.recalculate()
+      $xeScrollbar.recalculate().then(() => {
+        $xeScrollbar.recalculate()
+      })
     })
 
     onMounted(() => {

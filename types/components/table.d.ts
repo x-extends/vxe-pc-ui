@@ -5514,12 +5514,11 @@ export interface TablePrivateMethods<D = any> {
    * @private
    */
   callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T): VxeComponentSlotType[]
-
   /**
    * 内部方法
    * @private
    */
-  getParentElem(): Element | null
+  getParentElem(): HTMLElement | null
   /**
    * 内部方法
    * @private

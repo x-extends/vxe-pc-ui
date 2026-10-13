@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -32,6 +33,8 @@ export namespace VxeCardPropTypes {
   export type Shadow = boolean
   export type Padding = boolean
   export type Size = VxeComponentSizeType
+  export type UseScrollbar = boolean
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'yConfig' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
 }
 
 export type VxeCardProps = {
@@ -44,6 +47,14 @@ export type VxeCardProps = {
   shadow?: VxeCardPropTypes.Shadow
   padding?: VxeCardPropTypes.Padding
   size?: VxeCardPropTypes.Size
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeCardPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeCardPropTypes.ScrollbarConfig
 }
 
 export interface CardPrivateComputed {

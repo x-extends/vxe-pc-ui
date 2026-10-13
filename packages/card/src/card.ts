@@ -1,10 +1,11 @@
 import { ref, h, reactive, PropType, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
+import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading'
-import XEUtils from 'xe-utils'
+import VxeScrollbarComponent from '../../scrollbar'
 
 import type { CardReactData, VxeCardEmits, VxeCardPropTypes, CardPrivateRef, ValueOf, CardMethods, CardPrivateMethods, VxeCardPrivateComputed, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
 
@@ -34,7 +35,12 @@ export default defineVxeComponent({
     size: {
       type: String as PropType<VxeCardPropTypes.Size>,
       default: () => getConfig().card.size || getConfig().size
-    }
+    },
+    useScrollbar: {
+      type: Boolean as PropType<VxeCardPropTypes.UseScrollbar>,
+      default: () => getConfig().card.useScrollbar
+    },
+    scrollbarConfig: Object as PropType<VxeCardPropTypes.ScrollbarConfig>
   },
   emits: [
   ] as VxeCardEmits,
@@ -66,6 +72,10 @@ export default defineVxeComponent({
       return stys
     })
 
+    const computeScrollbarOpts = computed(() => {
+      return Object.assign({}, getConfig().card.scrollbarConfig, props.scrollbarConfig)
+    })
+
     const computeMaps: VxeCardPrivateComputed = {
       computeSize
     }
@@ -94,7 +104,7 @@ export default defineVxeComponent({
     Object.assign($xeCard, cardMethods, cardPrivateMethods)
 
     const renderVN = () => {
-      const { title, border, shadow, padding, loading, showTitleOverflow } = props
+      const { title, border, shadow, padding, loading, showTitleOverflow, useScrollbar } = props
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const titleSlot = slots.title
@@ -104,6 +114,8 @@ export default defineVxeComponent({
       const rightSlot = slots.right
       const vSize = computeSize.value
       const cardStyle = computeCardStyle.value
+      const scrollbarOpts = computeScrollbarOpts.value
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
 
       return h('div', {
         ref: refElem,
@@ -137,17 +149,48 @@ export default defineVxeComponent({
           class: 'vxe-card--body'
         }, [
           leftSlot
-            ? h('div', {
-              class: 'vxe-card--body-left'
-            }, getSlotVNs(leftSlot({})))
+            ? (
+                useScrollbar
+                  ? h(VxeScrollbarComponent, {
+                    class: 'vxe-card--body-scrollbar-left',
+                    ...scrollbarOpts,
+                    viewClassName: 'vxe-card--body-scrollbar-left-view',
+                    viewInnerClassName: 'vxe-card--body-scrollbar-left-inner'
+                  }, {
+                    default: () => getSlotVNs(leftSlot({}))
+                  })
+                  : h('div', {
+                    class: 'vxe-card--body-left'
+                  }, getSlotVNs(leftSlot({})))
+              )
             : renderEmptyElement($xeCard),
-          h('div', {
-            class: 'vxe-card--body-content'
-          }, defaultSlot ? getSlotVNs(defaultSlot({})) : []),
+          useScrollbar
+            ? h(VxeScrollbarComponent, {
+              class: 'vxe-card--body-scrollbar-content',
+              ...scrollbarOpts,
+              viewClassName: 'vxe-card--body-scrollbar-content-view' + (viewClassName ? (' ' + viewClassName) : ''),
+              viewInnerClassName: 'vxe-card--body-scrollbar-content-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+            }, {
+              default: () => defaultSlot ? getSlotVNs(defaultSlot({})) : []
+            })
+            : h('div', {
+              class: 'vxe-card--body-content'
+            }, defaultSlot ? getSlotVNs(defaultSlot({})) : []),
           rightSlot
-            ? h('div', {
-              class: 'vxe-card--body-right'
-            }, getSlotVNs(rightSlot({})))
+            ? (
+                useScrollbar
+                  ? h(VxeScrollbarComponent, {
+                    class: 'vxe-card--body-scrollbar-right',
+                    ...scrollbarOpts,
+                    viewClassName: 'vxe-card--body-scrollbar-right-view',
+                    viewInnerClassName: 'vxe-card--body-scrollbar-right-inner'
+                  }, {
+                    default: () => getSlotVNs(rightSlot({}))
+                  })
+                  : h('div', {
+                    class: 'vxe-card--body-right'
+                  }, getSlotVNs(rightSlot({})))
+              )
             : renderEmptyElement($xeCard)
         ]),
         footerSlot
