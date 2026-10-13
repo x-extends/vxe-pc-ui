@@ -3,6 +3,8 @@
     <vxe-button status="success" @click="resultEvent">获取数据</vxe-button>
 
     <vxe-list ref="listRef" v-bind="listOptions"></vxe-list>
+
+    <vxe-list ref="listRef2" v-bind="listOptions" use-scrollbar></vxe-list>
   </div>
 </template>
 

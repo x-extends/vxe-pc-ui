@@ -30,7 +30,7 @@ export namespace VxeLayoutAsidePropTypes {
     animation?: boolean
   }
   export type UseScrollbar = boolean
-  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'yConfig' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'yConfig' | 'padding' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
 }
 
 export interface VxeLayoutAsideProps {

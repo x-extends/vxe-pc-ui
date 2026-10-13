@@ -25,7 +25,7 @@ export namespace VxeLayoutBodyPropTypes {
   export type ShowBacktop = boolean
   export interface BacktopConfig extends Omit<VxeBacktopProps, 'target'> {}
   export type UseScrollbar = boolean
-  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'xConfig' | 'yConfig' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'xConfig' | 'yConfig' | 'padding' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
 }
 export interface VxeLayoutBodyProps {
   size?: VxeLayoutBodyPropTypes.Size

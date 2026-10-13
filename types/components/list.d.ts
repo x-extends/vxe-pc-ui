@@ -1,5 +1,6 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
@@ -218,6 +219,8 @@ export namespace VxeListPropTypes {
      */
     enabled?: boolean
   }
+  export type UseScrollbar = boolean
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding'> {}
 }
 
 export interface VxeListProps<D = any> {
@@ -240,6 +243,14 @@ export interface VxeListProps<D = any> {
   dragConfig?: VxeListPropTypes.DragConfig
   menuConfig?: VxeListPropTypes.MenuConfig
   virtualYConfig?: VxeListPropTypes.VirtualYConfig
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeListPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeListPropTypes.ScrollbarConfig
 
   /**
    * 已废弃，被 virtual-y-config 替换
@@ -268,6 +279,10 @@ export interface ListReactData {
   isAllChecked: boolean
   isAllIndeterminate: boolean
 
+  // 滚动条
+  yThumbHeight: number
+  xThumbWidth: number
+
   insertRowFlag: number
   removeRowFlag: number
 
@@ -277,13 +292,20 @@ export interface ListReactData {
 }
 
 export interface ListInternalData {
-  resizeObserver: ResizeObserver | undefined
   fullData: any[]
   afterList: any[]
   fullKeyMaps: Record<string, any>
   rowMaps: Record<string, VxeListDefines.RowCacheItem>
-  lastScrollLeft: number
+
+  // 滚动条
+  resizeObserver?: ResizeObserver
+  isThumbDrag?: boolean
+  thumbDragOffset: number
+  yThumbTop: number
+  xThumbLeft: number
   lastScrollTop: number
+  lastScrollLeft: number
+
   scrollYStore: {
     startIndex: number
     endIndex: number

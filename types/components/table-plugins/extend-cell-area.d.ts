@@ -92,7 +92,7 @@ export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  triggerClAreaMnEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
+  triggerClAaMnEvent(evnt: MouseEvent, params: VxeTableDefines.CellClickEventParams<D>): void
   /**
    * 内部方法
    * @private
