@@ -33,7 +33,13 @@ export interface VxeLayoutBodyProps {
   padding?: VxeLayoutBodyPropTypes.Padding
   showBacktop?: VxeLayoutBodyPropTypes.ShowBacktop
   backtopConfig?: VxeLayoutBodyPropTypes.BacktopConfig
+  /**
+   * 使用虚拟滚动条
+   */
   useScrollbar?: VxeLayoutBodyPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
   scrollbarConfig?: VxeLayoutBodyPropTypes.ScrollbarConfig
 }
 

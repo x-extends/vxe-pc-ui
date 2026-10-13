@@ -1,5 +1,6 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeTabPaneProps, VxeTabPaneDefines, VxeTabPanePropTypes } from './tab-pane'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -105,6 +106,8 @@ export namespace VxeTabsPropTypes {
       option: Omit<VxeTabPaneProps, 'slots'>
     }) => boolean
   }
+  export type UseScrollbar = boolean
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'yConfig' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
 }
 
 export type VxeTabsProps = {
@@ -131,6 +134,14 @@ export type VxeTabsProps = {
    * 刷新配置项
    */
   refreshConfig?: VxeTabsPropTypes.RefreshConfig
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeTabsPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeTabsPropTypes.ScrollbarConfig
 
   /**
    * 请使用 closeConfig.beforeMethod

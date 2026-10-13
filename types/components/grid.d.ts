@@ -659,13 +659,50 @@ export interface GridMethods<D = any> {
 export interface VxeGridMethods<D = any> extends GridMethods<D>, Omit<TableMethods<D>, 'dispatchEvent'> { }
 
 export interface GridPrivateMethods<D = any> {
+  /**
+   * 内部方法
+   * @private
+   */
   callSlot<T = any>(slotFunc: NormalizedScopedSlot | ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
+  /**
+   * 内部方法
+   * @private
+   */
   extendTableMethods<T>(methodKeys: T[]): any
+  /**
+   * 内部方法
+   * @private
+   */
   triggerToolbarCommitEvent(params: VxeToolbarPropTypes.ButtonConfig | VxeToolbarPropTypes.ToolConfig, evnt: Event): Promise<any>
+  /**
+   * 内部方法
+   * @private
+   */
   triggerToolbarBtnEvent(button: VxeToolbarPropTypes.ButtonConfig, evnt: Event): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerToolbarTolEvent(button: VxeToolbarPropTypes.ToolConfig, evnt: Event): void
+  /**
+   * 内部方法
+   * @private
+   */
   triggerZoomEvent(evnt: Event): void
+  /**
+   * 内部方法
+   * @private
+   */
+  getParentElem(): HTMLElement | null
+  /**
+   * 内部方法
+   * @private
+   */
   getParentHeight(): number
+  /**
+   * 内部方法
+   * @private
+   */
   getExcludeHeight(): number
 }
 export interface VxeGridPrivateMethods<D = any> extends GridPrivateMethods<D> { }

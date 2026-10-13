@@ -3,7 +3,7 @@ import { NormalizedScopedSlot } from 'vue/types/vnode'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeGlobalRendererOptions } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
-import { VxeGridConstructor } from './grid'
+import { VxeGridConstructor, VxeGridPrivateMethods } from './grid'
 import { VxeTooltipPropTypes } from './tooltip'
 import { VxeModalConstructor, VxeModalPrivateMethods, VxeModalPropTypes } from './modal'
 import { VxeDrawerPropTypes } from './drawer'
@@ -30,7 +30,7 @@ export type VxeTableInstance<D = any> = DefineVxeComponentInstance<{
    */
   internalData: TableInternalData<D>
   $xeParentTable: (VxeTableConstructor<D> & VxeTablePrivateMethods) | null | undefined
-  $xeGrid: VxeGridConstructor<D> | null | undefined
+  $xeGrid: (VxeGridConstructor<D> & VxeGridPrivateMethods)| null | undefined
   $xeGantt: VxeTableDefines.InjectGanttType | null | undefined
   $xeTabs: (VxeTabsConstructor & VxeTabsPrivateMethods) | null
   $xeModal: (VxeModalConstructor & VxeModalPrivateMethods) | null
@@ -5530,12 +5530,11 @@ export interface TablePrivateMethods<D = any> {
    * @private
    */
   callSlot<T>(slotFunc: NormalizedScopedSlot | ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
-
   /**
    * 内部方法
    * @private
    */
-  getParentElem(): Element | null
+  getParentElem(): HTMLElement | null
   /**
    * 内部方法
    * @private

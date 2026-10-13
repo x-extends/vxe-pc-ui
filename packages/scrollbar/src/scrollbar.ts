@@ -279,6 +279,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!viewEl) {
         return
       }
+      if (!viewEl.clientHeight || !viewEl.clientHeight) {
+        return
+      }
       const trackXEl = $xeScrollbar.$refs.refTrackXElem as HTMLDivElement
       const xThumbWidth = trackXEl ? getThumbSize(viewEl.clientWidth, viewEl.scrollWidth, trackXEl.clientWidth) : 0
       const thumbXElem = $xeScrollbar.$refs.refThumbXElem as HTMLDivElement
@@ -303,6 +306,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
       if (!viewEl) {
         return
+        if (!viewEl.clientHeight || !viewEl.clientHeight) {
+          return
+        }
       }
       const { xThumbWidth, yThumbHeight } = reactData
       const trackXEl = $xeScrollbar.$refs.refTrackXElem as HTMLDivElement

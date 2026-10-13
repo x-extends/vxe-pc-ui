@@ -1,7 +1,6 @@
 @use '../helpers/baseMixin.scss';
 
 .vxe-scrollbar {
-  width: 100%;
   position: relative;
   &.is--virtual {
     & > .vxe-scrollbar--view {
@@ -74,6 +73,7 @@
   display: none;
   position: absolute;
   background-color: var(--vxe-ui-scrollbar-track-background-color);
+  overflow: hidden;
   user-select: none;
 }
 .vxe-scrollbar {
@@ -152,17 +152,21 @@
 
 .vxe-scrollbar {
   &.is--padding {
-    &.sx-pos--top {
-      padding-top: var(--vxe-ui-scrollbar-x-height);
+    &.overflow-x {
+      &.sx-pos--top {
+        padding-top: var(--vxe-ui-scrollbar-x-height);
+      }
+      &.sx-pos--bottom {
+        padding-bottom: var(--vxe-ui-scrollbar-x-height);
+      }
     }
-    &.sx-pos--bottom {
-      padding-bottom: var(--vxe-ui-scrollbar-x-height);
-    }
-    &.sy-pos--left {
-      padding-left: var(--vxe-ui-scrollbar-y-width);
-    }
-    &.sy-pos--right {
-      padding-right: var(--vxe-ui-scrollbar-y-width);
+    &.overflow-y {
+      &.sy-pos--left {
+        padding-left: var(--vxe-ui-scrollbar-y-width);
+      }
+      &.sy-pos--right {
+        padding-right: var(--vxe-ui-scrollbar-y-width);
+      }
     }
   }
 }

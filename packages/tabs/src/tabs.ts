@@ -7,6 +7,7 @@ import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
+import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, VxeComponentSizeType, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, VxeComponentStyleType } from '../../../types'
 
@@ -55,6 +56,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: String as PropType<VxeTabsPropTypes.Size>,
       default: () => getConfig().tabs.size || getConfig().size
     },
+    useScrollbar: {
+      type: Boolean as PropType<VxeTabsPropTypes.UseScrollbar>,
+      default: () => getConfig().tabs.useScrollbar
+    },
+    scrollbarConfig: Object as PropType<VxeTabsPropTypes.ScrollbarConfig>,
     // 已废弃
     beforeCloseMethod: Function as PropType<VxeTabsPropTypes.BeforeCloseMethod>
   },
@@ -181,6 +187,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const staticTabs = reactData.staticTabs as VxeTabPaneDefines.TabConfig[]
       return staticTabs.filter((item) => $xeTabs.handleFilterTab(item))
+    },
+    computeScrollbarOpts () {
+      const $xeTabs = this
+      const props = $xeTabs
+
+      return Object.assign({}, getConfig().tabs.scrollbarConfig, props.scrollbarConfig)
     }
   },
   methods: {
@@ -821,19 +833,39 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     renderTabPane (h: CreateElement, item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) {
       const $xeTabs = this
+      const props = $xeTabs
       const reactData = $xeTabs.reactData
 
+      const { useScrollbar } = props
       const { initNames, activeName } = reactData
       const { name, slots } = item
       const defaultSlot = slots ? slots.default : null
-      return name && initNames.includes(name)
-        ? h('div', {
-          key: `${name}`,
-          class: ['vxe-tabs-pane--item', {
-            'is--visible': activeName === name
-          }]
-        }, defaultSlot ? $xeTabs.callSlot(defaultSlot, { name }, h) : [])
-        : renderEmptyElement($xeTabs)
+      const scrollbarOpts = $xeTabs.computeScrollbarOpts
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
+      if (name && initNames.includes(name)) {
+        return useScrollbar
+          ? h(VxeScrollbarComponent, {
+            key: `${name}`,
+            class: ['vxe-tabs-pane--scrollbar-item', {
+              'is--visible': activeName === name
+            }],
+            props: {
+              ...scrollbarOpts,
+              viewClassName: 'vxe-tabs-pane--scrollbar-item-view' + (viewClassName ? (' ' + viewClassName) : ''),
+              viewInnerClassName: 'vxe-tabs-pane--scrollbar-item-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+            },
+            scopedSlots: {
+              default: () => defaultSlot ? $xeTabs.callSlot(defaultSlot, { name }, h) : []
+            }
+          })
+          : h('div', {
+            key: `${name}`,
+            class: ['vxe-tabs-pane--item', {
+              'is--visible': activeName === name
+            }]
+          }, defaultSlot ? $xeTabs.callSlot(defaultSlot, { name }, h) : [])
+      }
+      return renderEmptyElement($xeTabs)
     },
     renderTabContent  (h: CreateElement, tabList: VxeTabsPropTypes.Options | VxeTabPaneDefines.TabConfig[]) {
       const $xeTabs = this

@@ -6,7 +6,7 @@ import { calcTreeLine, getItemCacheObj } from './util'
 import { createComponentLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
 import { crossTreeDragNodeGlobal, getCrossTreeDragNodeInfo } from './store'
-import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode } from '../../ui/src/dom'
+import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode, hasClass } from '../../ui/src/dom'
 import { isEnableConf, enModelValue, deModelValue, getText } from '../../ui/src/utils'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
@@ -1574,11 +1574,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { rowHeight } = scrollYStore
       const el = $xeTree.$refs.refElem as HTMLDivElement
       if (el && el.clientWidth && el.clientHeight) {
-        const parentEl = $xeTree.getParentElem()
+        let parentEl = $xeTree.getParentElem()
         const headerWrapperEl = $xeTree.$refs.refHeaderWrapperElem as HTMLDivElement
         const footerWrapperEl = $xeTree.$refs.refFooterWrapperElem as HTMLDivElement
         const headHeight = headerWrapperEl ? headerWrapperEl.clientHeight : 0
         const footHeight = footerWrapperEl ? footerWrapperEl.clientHeight : 0
+        // 如果是虚拟滚动条
+        if (parentEl && hasClass(parentEl, 'vxe-scrollbar--view-inner')) {
+          parentEl = parentEl.parentElement
+        }
         if (parentEl) {
           const parentPaddingSize = getPaddingTopBottomSize(parentEl)
           reactData.parentHeight = Math.max(headHeight + footHeight + rowHeight, parentEl.clientHeight - parentPaddingSize - headHeight - footHeight)
