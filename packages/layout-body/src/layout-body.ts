@@ -64,6 +64,27 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().layoutBody.scrollbarConfig, props.scrollbarConfig)
     })
 
+    const computeScrollbarProps = computed(() => {
+      const { showBacktop } = props
+      const scrollbarOpts = computeScrollbarOpts.value
+      const { className, viewClassName, viewInnerClassName } = scrollbarOpts
+      return {
+        width: scrollbarOpts.width,
+        height: scrollbarOpts.height,
+        autoHide: scrollbarOpts.autoHide,
+        visible: scrollbarOpts.visible,
+        xConfig: scrollbarOpts.xConfig,
+        yConfig: scrollbarOpts.yConfig,
+        className: 'vxe-layout-body--scrollbar' + (className ? (' ' + className) : ''),
+        viewAttrs: {
+          ...scrollbarOpts.viewAttrs,
+          id: showBacktop ? (backtopId || null) : null
+        },
+        viewClassName: 'vxe-layout-body--scrollbar-view' + (viewClassName ? (' ' + viewClassName) : ''),
+        viewInnerClassName: 'vxe-layout-body--scrollbar-inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
+      }
+    })
+
     const computeMaps: VxeLayoutBodyPrivateComputed = {
       computeSize
     }
@@ -95,8 +116,7 @@ export default defineVxeComponent({
     const renderVN = () => {
       const { loading, padding, showBacktop, useScrollbar } = props
       const backtopOpts = computeBacktopOpts.value
-      const scrollbarOpts = computeScrollbarOpts.value
-      const { native, xConfig, yConfig, className, viewAttrs, viewClassName, viewInnerClassName } = scrollbarOpts
+      const scrollbarProps = computeScrollbarProps.value
       const vSize = computeSize.value
       const defaultSlot = slots.default
       const backtopSlot = slots.backtop
@@ -125,18 +145,7 @@ export default defineVxeComponent({
         }]
       }, [
         useScrollbar
-          ? h(VxeScrollbarComponent, {
-            native,
-            xConfig,
-            yConfig,
-            className: 'vxe-layout-body--scrollbar' + (className ? (' ' + className) : ''),
-            viewAttrs: {
-              ...viewAttrs,
-              id: showBacktop ? (backtopId || null) : null
-            },
-            viewClassName: 'vxe-layout-body--scrollbar-view' + (viewClassName ? (' ' + viewClassName) : ''),
-            viewInnerClassName: 'vxe-layout-body--scrollbar-inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
-          }, {
+          ? h(VxeScrollbarComponent, scrollbarProps, {
             default: () => defaultSlot ? defaultSlot({}) : []
           })
           : h('div', {

@@ -175,6 +175,23 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().tabs.scrollbarConfig, props.scrollbarConfig)
     })
 
+    const computeScrollbarProps = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
+      return {
+        width: scrollbarOpts.width,
+        height: scrollbarOpts.height,
+        autoHide: scrollbarOpts.autoHide,
+        visible: scrollbarOpts.visible,
+        xConfig: scrollbarOpts.xConfig,
+        yConfig: scrollbarOpts.yConfig,
+        className: scrollbarOpts.className,
+        viewAttrs: scrollbarOpts.viewAttrs,
+        viewClassName: 'vxe-tabs-pane--scrollbar-item-view' + (viewClassName ? (' ' + viewClassName) : ''),
+        viewInnerClassName: 'vxe-tabs-pane--scrollbar-item-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+      }
+    })
+
     const computeMaps: VxeTabsPrivateComputed = {
     }
 
@@ -775,8 +792,7 @@ export default defineVxeComponent({
       const { initNames, activeName } = reactData
       const { name, slots } = item
       const defaultSlot = slots ? slots.default : null
-      const scrollbarOpts = computeScrollbarOpts.value
-      const { viewClassName, viewInnerClassName } = scrollbarOpts
+      const scrollbarProps = computeScrollbarProps.value
       if (name && initNames.includes(name)) {
         return useScrollbar
           ? h(VxeScrollbarComponent, {
@@ -784,9 +800,7 @@ export default defineVxeComponent({
             class: ['vxe-tabs-pane--scrollbar-item', {
               'is--visible': activeName === name
             }],
-            ...scrollbarOpts,
-            viewClassName: 'vxe-tabs-pane--scrollbar-item-view' + (viewClassName ? (' ' + viewClassName) : ''),
-            viewInnerClassName: 'vxe-tabs-pane--scrollbar-item-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+            ...scrollbarProps
           }, {
             default: () => defaultSlot ? callSlot(defaultSlot, { name }) : []
           })

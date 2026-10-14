@@ -25,6 +25,7 @@ export interface VxeScrollbarPrivateRef extends ScrollbarPrivateRef { }
 
 export namespace VxeScrollbarPropTypes {
   export type Id = number | string
+  export type ViewId = number | string
   export type Width = number | string
   export type Height = number | string
   export type MinWidth = number | string
@@ -34,6 +35,8 @@ export namespace VxeScrollbarPropTypes {
   export type Loading = boolean
   export type Native = boolean
   export type Padding = boolean
+  export type AutoHide = boolean
+  export type Visible = boolean
   export interface XConfig {
     height?: number | string
     // showArrows?: boolean
@@ -45,7 +48,7 @@ export namespace VxeScrollbarPropTypes {
      * 滚动条显示位置
      */
     position?: 'top' | 'bottom' | ''
-    visible?: 'auto' | 'hidden' | 'visible' | ''
+    visible?: boolean
     /**
      * 滚动到边界触发的阈值会触发 scroll-boundary 事件
      */
@@ -62,7 +65,7 @@ export namespace VxeScrollbarPropTypes {
      * 滚动条显示位置
      */
     position?: 'left' | 'right' | ''
-    visible?: 'auto' | 'hidden' | 'visible' | ''
+    visible?: boolean
     /**
      * 滚动到边界触发的阈值会触发 scroll-boundary 事件
      */
@@ -81,6 +84,10 @@ export interface VxeScrollbarProps {
    * ID
    */
   id?: VxeScrollbarPropTypes.Id
+  /**
+   * View ID
+   */
+  viewId?: VxeScrollbarPropTypes.ViewId
   /**
    * 容器宽度
    */
@@ -109,6 +116,14 @@ export interface VxeScrollbarProps {
    * 是否加载中
    */
   loading?: VxeScrollbarPropTypes.Loading
+  /**
+   * 是否自动隐藏
+   */
+  autoHide?: VxeScrollbarPropTypes.AutoHide
+  /**
+   * 是否显示
+   */
+  visible?: VxeScrollbarPropTypes.Visible
   /**
    * 是否使用原生滚动条
    */

@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { VxeUI } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } from './util'
+import { getDefaultConfig } from '../../ui/src/utils'
 import VxeLoadingComponent from '../../loading'
 
 import type { ScrollbarReactData, ScrollbarInternalData, VxeScrollbarEmits, ScrollbarMethods, ScrollbarPrivateMethods, VxeScrollbarPropTypes, ValueOf, ScrollbarPrivateRef, VxeScrollbarPrivateComputed, VxeScrollbarConstructor, VxeScrollbarPrivateMethods, VxeComponentStyleType } from '../../../types'
@@ -33,6 +34,7 @@ export default defineVxeComponent({
   name: 'VxeScrollbar',
   props: {
     id: [String, Number] as PropType<VxeScrollbarPropTypes.Id>,
+    viewId: [String, Number] as PropType<VxeScrollbarPropTypes.ViewId>,
     width: [String, Number] as PropType<VxeScrollbarPropTypes.Width>,
     height: [String, Number] as PropType<VxeScrollbarPropTypes.Height>,
     minWidth: [String, Number] as PropType<VxeScrollbarPropTypes.MinWidth>,
@@ -47,6 +49,14 @@ export default defineVxeComponent({
     padding: {
       type: Boolean as PropType<VxeScrollbarPropTypes.Padding>,
       default: () => getConfig().scrollbar.padding
+    },
+    autoHide: {
+      type: Boolean as PropType<VxeScrollbarPropTypes.AutoHide>,
+      default: () => getConfig().scrollbar.autoHide
+    },
+    visible: {
+      type: Boolean as PropType<VxeScrollbarPropTypes.Visible>,
+      default: () => getConfig().scrollbar.visible
     },
     xConfig: Object as PropType<VxeScrollbarPropTypes.XConfig>,
     yConfig: Object as PropType<VxeScrollbarPropTypes.YConfig>,
@@ -97,6 +107,8 @@ export default defineVxeComponent({
       const { width, height, minWidth, minHeight, maxWidth, maxHeight } = props
       const xOpts = computeXOpts.value
       const yOpts = computeYOpts.value
+      const barWidth = yOpts.width
+      const barHeight = xOpts.height
       const stys: VxeComponentStyleType = {}
       if (width) {
         stys.width = toCssUnit(width)
@@ -116,34 +128,58 @@ export default defineVxeComponent({
       if (maxHeight) {
         stys.maxHeight = toCssUnit(maxHeight)
       }
-      if (yOpts.width) {
-        stys['--vxe-ui-scrollbar-y-width'] = toCssUnit(yOpts.width)
-      }
-      if (xOpts.height) {
-        stys['--vxe-ui-scrollbar-x-height'] = toCssUnit(xOpts.height)
+      if (barWidth || barHeight) {
+        stys['--vxe-ui-scrollbar-y-width'] = toCssUnit(barWidth || barHeight)
+        stys['--vxe-ui-scrollbar-x-height'] = toCssUnit(barHeight || barWidth)
       }
       return stys
+    })
+
+    const computeXVisible = computed(() => {
+      const { visible } = props
+      const xOpts = computeXOpts.value
+      return getDefaultConfig(xOpts.visible, visible)
+    })
+
+    const computeYVisible = computed(() => {
+      const { visible } = props
+      const yOpts = computeYOpts.value
+      return getDefaultConfig(yOpts.visible, visible)
+    })
+
+    const computeXAutoHide = computed(() => {
+      const { autoHide } = props
+      const xOpts = computeXOpts.value
+      return getDefaultConfig(xOpts.autoHide, autoHide)
+    })
+
+    const computeYAutoHide = computed(() => {
+      const { autoHide } = props
+      const yOpts = computeYOpts.value
+      return getDefaultConfig(yOpts.autoHide, autoHide)
     })
 
     const computeWrapperClss = computed(() => {
       const { native, className, padding } = props
       const { yThumbHeight, xThumbWidth } = reactData
-      const xOpts = computeXOpts.value
-      const yOpts = computeYOpts.value
       const xToTop = computeXToTop.value
       const yToLeft = computeYToLeft.value
+      const xVisible = computeXVisible.value
+      const yVisible = computeYVisible.value
+      const xAutoHide = computeXAutoHide.value
+      const yAutoHide = computeYAutoHide.value
       return domUtils.buildClass([
         'vxe-scrollbar',
-        `ov-x--${xOpts.visible || 'visible'}`,
-        `ov-y--${yOpts.visible || 'visible'}`,
+        `ov-x--${xVisible === false ? 'hidden' : 'visible'}`,
+        `ov-y--${yVisible === false ? 'hidden' : 'visible'}`,
         `sx-pos--${xToTop ? 'top' : 'bottom'}`,
         `sy-pos--${yToLeft ? 'left' : 'right'}`,
         native ? 'is--native' : 'is--virtual',
         className
       ], {
         'is--padding': padding,
-        'ov-x--auto-hide': xOpts.autoHide,
-        'ov-y--auto-hide': yOpts.autoHide,
+        'ov-x--auto-hide': xAutoHide,
+        'ov-y--auto-hide': yAutoHide,
         'overflow-y': yThumbHeight,
         'overflow-x': xThumbWidth
       })
@@ -512,13 +548,13 @@ export default defineVxeComponent({
     Object.assign($xeScrollbar, scrollbarMethods, scrollbarPrivateMethods)
 
     const renderVN = () => {
-      const { id, native, loading, viewAttrs } = props
+      const { id, native, loading, viewId, viewAttrs } = props
       const wrapperStyle = computeWrapperStyle.value
       const wrapperClss = computeWrapperClss.value
       const viewClss = computeViewClss.value
       const viewInnerClss = computeViewInnerClss.value
-      const xOpts = computeXOpts.value
-      const yOpts = computeYOpts.value
+      const xVisible = computeXVisible.value
+      const yVisible = computeYVisible.value
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
@@ -530,6 +566,7 @@ export default defineVxeComponent({
           ref: refViewElem,
           class: viewClss,
           onScroll: scrollEvent,
+          id: viewId || null,
           ...viewAttrs
         }, [
           h('div', {
@@ -538,7 +575,7 @@ export default defineVxeComponent({
             class: viewInnerClss
           }, defaultSlot ? defaultSlot({}) : [])
         ]),
-        native || xOpts.visible === 'hidden'
+        native || xVisible === false
           ? renderEmptyElement($xeScrollbar)
           : h('div', {
             ref: refTrackXElem,
@@ -555,7 +592,7 @@ export default defineVxeComponent({
               onLostpointercapture: cleatPointerThumbEvent
             })
           ]),
-        native || yOpts.visible === 'hidden'
+        native || yVisible === false
           ? renderEmptyElement($xeScrollbar)
           : h('div', {
             ref: refTrackYElem,
@@ -604,6 +641,16 @@ export default defineVxeComponent({
     })
     watch(() => props.syncResize, () => {
       reFlag.value++
+    })
+    watch(computeXVisible, () => {
+      nextTick(() => {
+        reFlag.value++
+      })
+    })
+    watch(computeYVisible, () => {
+      nextTick(() => {
+        reFlag.value++
+      })
     })
     watch(reFlag, () => {
       $xeScrollbar.recalculate().then(() => {

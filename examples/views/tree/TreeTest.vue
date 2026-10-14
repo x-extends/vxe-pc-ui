@@ -1,6 +1,7 @@
 <template>
   <div>
     <vxe-tree :data="treeList" v-bind="treeConfig"></vxe-tree>
+    <vxe-tree :data="treeList" v-bind="treeConfig" use-scrollbar></vxe-tree>
   </div>
 </template>
 
@@ -49,7 +50,7 @@ export default {
       val1: '258',
       treeList,
       treeConfig: {
-        lazy: true,
+        height: 100,
         valueField: 'value',
         titleField: 'label'
       }

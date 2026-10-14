@@ -308,3 +308,79 @@
   width: 0;
   float: left;
 }
+
+// 滚动条
+.vxe-tree {
+  &.ov-padding {
+    &.overflow-x {
+      &.sx-pos--top {
+        padding-top: var(--vxe-ui-scrollbar-x-height);
+      }
+      &.sx-pos--bottom {
+        padding-bottom: var(--vxe-ui-scrollbar-x-height);
+      }
+    }
+    &.overflow-y {
+      &.sy-pos--left {
+        padding-left: var(--vxe-ui-scrollbar-y-width);
+      }
+      &.sy-pos--right {
+        padding-right: var(--vxe-ui-scrollbar-y-width);
+      }
+    }
+  }
+  &.ov-x--hidden {
+    & > .vxe-tree--node-list-wrapper {
+      overflow-x: hidden;
+    }
+  }
+  &.ov-y--hidden {
+    & > .vxe-tree--node-list-wrapper {
+      overflow-y: hidden;
+    }
+  }
+  &.is--virtual-scrollbar {
+    &.ov-x--auto-hide {
+      &:hover {
+        & > .vxe-scrollbar {
+          & > .vxe-scrollbar--track-x {
+            opacity: 1;
+          }
+        }
+      }
+      & > .vxe-scrollbar {
+        & > .vxe-scrollbar--track-x {
+          opacity: 0;
+          @include baseMixin.createAnimationTransition(opacity, 0.8s);
+        }
+      }
+    }
+    &.ov-y--auto-hide {
+      &:hover {
+        & > .vxe-scrollbar {
+          & > .vxe-scrollbar--track-y {
+            opacity: 1;
+          }
+        }
+      }
+      & > .vxe-scrollbar {
+        & > .vxe-scrollbar--track-y {
+          opacity: 0;
+          @include baseMixin.createAnimationTransition(opacity, 0.8s);
+        }
+      }
+    }
+  }
+  & > .vxe-scrollbar {
+    position: unset;
+  }
+  &.is--virtual-scrollbar {
+    & > .vxe-tree--node-list-wrapper {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    & > .vxe-tree--node-list-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

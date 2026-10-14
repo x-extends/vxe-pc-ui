@@ -97,7 +97,7 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const collapseOpts = computeCollapseOpts.value
       const scrollbarOpts = computeScrollbarOpts.value
-      const { native, yConfig, className, viewAttrs, viewClassName, viewInnerClassName } = scrollbarOpts
+      const { className, viewClassName, viewInnerClassName } = scrollbarOpts
       const defaultSlot = slots.default
 
       return h('aside', {
@@ -113,13 +113,16 @@ export default defineVxeComponent({
       }, [
         useScrollbar
           ? h(VxeScrollbarComponent, {
-            native,
+            width: scrollbarOpts.width,
+            height: scrollbarOpts.height,
+            autoHide: scrollbarOpts.autoHide,
+            visible: scrollbarOpts.visible,
             xConfig: {
-              visible: 'hidden'
+              visible: false
             },
-            yConfig,
+            yConfig: scrollbarOpts.yConfig,
             className: 'vxe-layout-aside--scrollbar' + (className ? (' ' + className) : ''),
-            viewAttrs,
+            viewAttrs: scrollbarOpts.viewAttrs,
             viewClassName: 'vxe-layout-aside--scrollbar-view' + (viewClassName ? (' ' + viewClassName) : ''),
             viewInnerClassName: 'vxe-layout-aside--scrollbar-inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
           }, {

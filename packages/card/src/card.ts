@@ -76,6 +76,20 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().card.scrollbarConfig, props.scrollbarConfig)
     })
 
+    const computeScrollbarProps = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      return {
+        width: scrollbarOpts.width,
+        height: scrollbarOpts.height,
+        autoHide: scrollbarOpts.autoHide,
+        visible: scrollbarOpts.visible,
+        xConfig: scrollbarOpts.xConfig,
+        yConfig: scrollbarOpts.yConfig,
+        className: scrollbarOpts.className,
+        viewAttrs: scrollbarOpts.viewAttrs
+      }
+    })
+
     const computeMaps: VxeCardPrivateComputed = {
       computeSize
     }
@@ -115,6 +129,7 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const cardStyle = computeCardStyle.value
       const scrollbarOpts = computeScrollbarOpts.value
+      const scrollbarProps = computeScrollbarProps.value
       const { viewClassName, viewInnerClassName } = scrollbarOpts
 
       return h('div', {
@@ -153,7 +168,7 @@ export default defineVxeComponent({
                 useScrollbar
                   ? h(VxeScrollbarComponent, {
                     class: 'vxe-card--body-scrollbar-left',
-                    ...scrollbarOpts,
+                    ...scrollbarProps,
                     viewClassName: 'vxe-card--body-scrollbar-left-view',
                     viewInnerClassName: 'vxe-card--body-scrollbar-left-inner'
                   }, {
@@ -167,7 +182,7 @@ export default defineVxeComponent({
           useScrollbar
             ? h(VxeScrollbarComponent, {
               class: 'vxe-card--body-scrollbar-content',
-              ...scrollbarOpts,
+              ...scrollbarProps,
               viewClassName: 'vxe-card--body-scrollbar-content-view' + (viewClassName ? (' ' + viewClassName) : ''),
               viewInnerClassName: 'vxe-card--body-scrollbar-content-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
             }, {
@@ -181,7 +196,7 @@ export default defineVxeComponent({
                 useScrollbar
                   ? h(VxeScrollbarComponent, {
                     class: 'vxe-card--body-scrollbar-right',
-                    ...scrollbarOpts,
+                    ...scrollbarProps,
                     viewClassName: 'vxe-card--body-scrollbar-right-view',
                     viewInnerClassName: 'vxe-card--body-scrollbar-right-inner'
                   }, {

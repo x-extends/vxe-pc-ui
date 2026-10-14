@@ -2973,32 +2973,51 @@ export namespace VxeTablePropTypes {
 
   export interface ScrollbarXConfig {
     /**
+     * 滚动条高度
+     */
+    height?: number
+    /**
      * 滚动条显示位置
      */
     position?: 'top' | 'bottom' | ''
     /**
-     * 滚动条显示方式
+     * 是否显示
      */
     visible?: 'auto' | 'visible' | 'hidden' | boolean
     /**
+     * 是否自动隐藏滚动条
+     */
+    autoHide?: boolean
+    /**
      * 滚动行为
+     * @deprecated
      */
     overscrollBehavior?: 'contain' | 'none' | ''
   }
   export interface ScrollbarYConfig {
     /**
+     * 滚动条宽度
+     */
+    width?: number
+    /**
      * 滚动条显示位置
      */
     position?: 'left' | 'right' | ''
     /**
-     * 滚动条显示方式
+     * 是否显示
      */
     visible?: 'auto' | 'visible' | 'hidden' | boolean
     /**
+     * 是否自动隐藏滚动条
+     */
+    autoHide?: boolean
+    /**
      * 滚动行为
+     * @deprecated
      */
     overscrollBehavior?: 'contain' | 'none' | ''
   }
+  export type UseScrollbar = boolean
   /**
    * 滚动条配置项
    */
@@ -3011,18 +3030,38 @@ export namespace VxeTablePropTypes {
      * 滚动条高度
      */
     height?: number
+    padding?: boolean
+    /**
+     * 是否自动隐藏滚动条
+     */
+    autoHide?: boolean
+    /**
+     * 是否显示
+     */
+    visible?: boolean
     /**
      * 滚动行为
+     * @deprecated
      */
     overscrollBehavior?: 'contain' | 'none' | ''
     /**
-     * 横向滚动条
+     * 已废弃，请使用 xConfig
+     * @deprecated
      */
     x?: ScrollbarXConfig
     /**
-     * 纵向滚动条
+     * 横向滚动条
+     */
+    xConfig?: ScrollbarXConfig
+    /**
+     * 已废弃，请使用 yConfig
+     * @deprecated
      */
     y?: ScrollbarYConfig
+    /**
+     * 纵向滚动条
+     */
+    yConfig?: ScrollbarYConfig
   }
 
   /**
@@ -3868,6 +3907,10 @@ export interface VxeTableProps<D = any> {
    * 纵向虚拟滚动配置
    */
   virtualYConfig?: VxeTablePropTypes.VirtualYConfig
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeTablePropTypes.UseScrollbar
   /**
    * 滚动条配置项
    */
