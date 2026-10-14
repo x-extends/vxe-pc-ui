@@ -193,6 +193,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTabs
 
       return Object.assign({}, getConfig().tabs.scrollbarConfig, props.scrollbarConfig)
+    },
+    computeScrollbarProps () {
+      const $xeTabs = this
+
+      const scrollbarOpts = $xeTabs.computeScrollbarOpts as VxeTabsPropTypes.ScrollbarConfig
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
+      return {
+        width: scrollbarOpts.width,
+        height: scrollbarOpts.height,
+        autoHide: scrollbarOpts.autoHide,
+        visible: scrollbarOpts.visible,
+        xConfig: scrollbarOpts.xConfig,
+        yConfig: scrollbarOpts.yConfig,
+        className: scrollbarOpts.className,
+        viewAttrs: scrollbarOpts.viewAttrs,
+        viewClassName: 'vxe-tabs-pane--scrollbar-item-view' + (viewClassName ? (' ' + viewClassName) : ''),
+        viewInnerClassName: 'vxe-tabs-pane--scrollbar-item-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+      }
     }
   },
   methods: {
@@ -840,8 +858,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { initNames, activeName } = reactData
       const { name, slots } = item
       const defaultSlot = slots ? slots.default : null
-      const scrollbarOpts = $xeTabs.computeScrollbarOpts
-      const { viewClassName, viewInnerClassName } = scrollbarOpts
+      const scrollbarProps = $xeTabs.computeScrollbarProps
       if (name && initNames.includes(name)) {
         return useScrollbar
           ? h(VxeScrollbarComponent, {
@@ -849,11 +866,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             class: ['vxe-tabs-pane--scrollbar-item', {
               'is--visible': activeName === name
             }],
-            props: {
-              ...scrollbarOpts,
-              viewClassName: 'vxe-tabs-pane--scrollbar-item-view' + (viewClassName ? (' ' + viewClassName) : ''),
-              viewInnerClassName: 'vxe-tabs-pane--scrollbar-item-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
-            },
+            props: scrollbarProps,
             scopedSlots: {
               default: () => defaultSlot ? $xeTabs.callSlot(defaultSlot, { name }, h) : []
             }

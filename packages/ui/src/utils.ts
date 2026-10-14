@@ -72,3 +72,7 @@ export function enModelValue (nodeid: string | number | null | undefined) {
 export function deModelValue (nodeid: string | number | null) {
   return nodeid ? decodeURIComponent(`${nodeid}`) : nodeid
 }
+
+export function getDefaultConfig <T = any, D = any> (val1: T, def1: D): (T | D) {
+  return XEUtils.eqNull(val1) ? def1 : val1
+}

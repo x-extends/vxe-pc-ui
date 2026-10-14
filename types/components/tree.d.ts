@@ -1,6 +1,7 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
 import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 import { VxeTooltipPropTypes } from './tooltip'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
@@ -324,6 +325,17 @@ export namespace VxeTreePropTypes {
      */
     enabled?: boolean
   }
+  export type UseScrollbar = boolean
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible'> {
+    /**
+     * 滚动条宽度
+     */
+    width?: number | string
+    /**
+     * 滚动条高度
+     */
+    height?: number | string
+  }
 }
 
 export interface VxeTreeProps<D = any> {
@@ -403,6 +415,14 @@ export interface VxeTreeProps<D = any> {
   iconLoaded?: VxeTreePropTypes.IconLoaded
   size?: VxeTreePropTypes.Size
   virtualYConfig?: VxeTreePropTypes.VirtualYConfig
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeTreePropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeTreePropTypes.ScrollbarConfig
 }
 
 export interface TreePrivateComputed<D = any> {
@@ -431,6 +451,10 @@ export interface TreeReactData {
   updateExpandedFlag: number
   updateCheckboxFlag: number
 
+  // 滚动条
+  yThumbHeight: number
+  xThumbWidth: number
+
   insertNodeFlag: number
   removeNodeFlag: number
 
@@ -446,7 +470,6 @@ export interface TreeReactData {
 
 export interface TreeInternalData {
   initialized?: boolean
-  resizeObserver?: ResizeObserver
   lastFilterValue?: string
   afterTreeList: any[]
   treeFullData: any[]
@@ -456,8 +479,16 @@ export interface TreeInternalData {
   selectCheckboxMaps: Record<string, any>
   treeExpandedMaps: Record<string, boolean>
   treeExpandLazyLoadedMaps: Record<string, boolean>
-  lastScrollLeft: number
+
+  // 滚动条
+  resizeObserver?: ResizeObserver
+  isThumbDrag?: boolean
+  thumbDragOffset: number
+  yThumbTop: number
+  xThumbLeft: number
   lastScrollTop: number
+  lastScrollLeft: number
+
   scrollYStore: {
     startIndex: number
     endIndex: number

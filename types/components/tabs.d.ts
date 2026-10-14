@@ -107,7 +107,16 @@ export namespace VxeTabsPropTypes {
     }) => boolean
   }
   export type UseScrollbar = boolean
-  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'native' | 'xConfig' | 'yConfig' | 'padding' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {}
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
+    /**
+     * 滚动条宽度
+     */
+    width?: number | string
+    /**
+     * 滚动条高度
+     */
+    height?: number | string
+  }
 }
 
 export type VxeTabsProps = {
