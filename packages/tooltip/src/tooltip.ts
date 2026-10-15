@@ -234,7 +234,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
 
-      const { placement, defaultPlacement, isArrow } = props
+      const { placement, defaultPlacement, appendTo, isArrow } = props
       const { tipTarget: targetElem, tipStore, tipPos, tipZindex } = reactData
       const panelElem = $xeTooltip.$refs.refElem as HTMLElement
       if (!targetElem || !panelElem) {
@@ -268,6 +268,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         defaultLeft: left,
         placement: placement,
         defaultPlacement: defaultPlacement,
+        appendTo: appendTo,
         isMinWidth: false,
         teleportTo: true
       })
