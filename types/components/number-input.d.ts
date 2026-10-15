@@ -39,7 +39,6 @@ export namespace VxeNumberInputPropTypes {
   export type FloatContent = string
   export type FloatAlign = VxeComponentAlignType
   export type MaxLength = string | number | null
-  export type Multiple = boolean
   export type AutoComplete = string
   export type Align = VxeComponentAlignType
   export type Form = string
@@ -126,6 +125,9 @@ export namespace VxeNumberInputPropTypes {
 }
 
 export interface VxeNumberInputProps {
+  /**
+   * 尺寸大小
+   */
   size?: VxeNumberInputPropTypes.Size
   modelValue?: VxeNumberInputPropTypes.ModelValue
   className?: VxeNumberInputPropTypes.ClassName
@@ -136,7 +138,13 @@ export interface VxeNumberInputProps {
   width?: VxeNumberInputPropTypes.Width
   immediate?: VxeNumberInputPropTypes.Immediate
   name?: VxeNumberInputPropTypes.Name
+  /**
+   * 控件类型
+   */
   type?: VxeNumberInputPropTypes.Type
+  /**
+   * 显示清除按钮
+   */
   clearable?: VxeNumberInputPropTypes.Clearable
   readonly?: VxeNumberInputPropTypes.Readonly
   disabled?: VxeNumberInputPropTypes.Disabled
@@ -144,8 +152,10 @@ export interface VxeNumberInputProps {
   floatContent?: VxeNumberInputPropTypes.FloatContent
   floatAlign?: VxeNumberInputPropTypes.FloatAlign
   maxLength?: VxeNumberInputPropTypes.MaxLength
-  multiple?: VxeNumberInputPropTypes.Multiple
   autoComplete?: VxeNumberInputPropTypes.AutoComplete
+  /**
+   * 对齐方式
+   */
   align?: VxeNumberInputPropTypes.Align
   form?: VxeNumberInputPropTypes.Form
 

@@ -346,10 +346,22 @@ export namespace VxeTreePropTypes {
 }
 
 export interface VxeTreeProps<D = any> {
+  /**
+   * 数据源
+   */
   data?: VxeTreePropTypes.Data<D>
   autoResize?: VxeTreePropTypes.AutoResize
+  /**
+   * 高度
+   */
   height?: VxeTreePropTypes.Height
+  /**
+   * 最小高度
+   */
   minHeight?: VxeTreePropTypes.MinHeight
+  /**
+   * 最大高度
+   */
   maxHeight?: VxeTreePropTypes.MaxHeight
   loading?: VxeTreePropTypes.Loading
   loadingConfig?: VxeTreePropTypes.LoadingConfig

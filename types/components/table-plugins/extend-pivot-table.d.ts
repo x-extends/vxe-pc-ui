@@ -44,7 +44,7 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  handlePivotTableAggregatePanelDragendEvent(evnt: DragEvent): void
+  handlePivotTableAggPanelDragendEvent(evnt: DragEvent): void
 }
 
 declare module '../table' {

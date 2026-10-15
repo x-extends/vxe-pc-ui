@@ -1,17 +1,20 @@
 import { h, PropType, ref, Ref, computed, onBeforeUnmount, watch, reactive, nextTick, onActivated, onMounted, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getIcon, getI18n, domUtils, menus, globalEvents, globalResize, useSize, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI, useSize, createEvent, renderEmptyElement } from '../../ui'
 import { getCrossListDragRowInfo } from './store'
 import { isScale, removeClass, addClass, getTpImg, toCssUnit, hasClass } from '../../ui/src/dom'
 import { isEnableConf, getText, enModelValue, deModelValue, getDefaultConfig } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
-import { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } from '../../scrollbar/src/util'
 import { getItemCacheObj } from './util'
 import VxeLoadingComponent from '../../loading'
 
 import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, VxeListPrivateMethods, ListInternalData, VxeListDefines, ValueOf, ListMethods, ListPrivateMethods, ListPrivateRef, VxeComponentStyleType } from '../../../types'
+
+const { getConfig, getIcon, getI18n, domUtils, scrollbarUtils, menus, globalEvents, globalResize } = VxeUI
+
+const { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } = scrollbarUtils
 
 const { warnLog, errLog } = createComponentLog('tree')
 

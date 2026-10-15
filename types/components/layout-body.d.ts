@@ -45,6 +45,9 @@ export namespace VxeLayoutBodyPropTypes {
 }
 export interface VxeLayoutBodyProps {
   size?: VxeLayoutBodyPropTypes.Size
+  /**
+   * 加载中
+   */
   loading?: VxeLayoutBodyPropTypes.Loading
   padding?: VxeLayoutBodyPropTypes.Padding
   showBacktop?: VxeLayoutBodyPropTypes.ShowBacktop

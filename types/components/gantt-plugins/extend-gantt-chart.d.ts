@@ -37,7 +37,7 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  handleTaskBarMousedownEvent(evnt: MouseEvent, params: {
+  handleTaskBarModnEvent(evnt: MouseEvent, params: {
     $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
     row: D
     scaleType: VxeGanttDefines.ColumnScaleType

@@ -243,8 +243,17 @@ export namespace VxeListPropTypes {
 export interface VxeListProps<D = any> {
   size?: VxeListPropTypes.Size
   data?: D[]
+  /**
+   * 高度
+   */
   height?: VxeListPropTypes.Height
+  /**
+   * 最大高度
+   */
   maxHeight?: VxeListPropTypes.MaxHeight
+  /**
+   * 加载中
+   */
   loading?: VxeListPropTypes.Loading
   autoResize?: VxeListPropTypes.AutoResize
   syncResize?: VxeListPropTypes.SyncResize
@@ -258,7 +267,13 @@ export interface VxeListProps<D = any> {
   checkboxConfig?: VxeListPropTypes.CheckboxConfig
   rowConfig?: VxeListPropTypes.RowConfig
   dragConfig?: VxeListPropTypes.DragConfig
+  /**
+   * 右键菜单配置项
+   */
   menuConfig?: VxeListPropTypes.MenuConfig
+  /**
+   * 纵向虚拟滚动配置
+   */
   virtualYConfig?: VxeListPropTypes.VirtualYConfig
   /**
    * 使用虚拟滚动条
