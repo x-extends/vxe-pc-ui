@@ -1,15 +1,18 @@
 import { ref, h, reactive, inject, PropType, provide, computed, onUnmounted, watch, nextTick, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { createEvent, getConfig, getIcon, globalEvents, permission, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI, useSize } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
-import { getDefaultConfig, isEnableConf } from '../../ui/src/utils'
+import { isEnableConf } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, TabsPrivateRef, VxeTabsPrivateComputed, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, TabsMethods, TabsPrivateMethods, VxeComponentStyleType } from '../../../types'
+
+const { baseUtils, createEvent, getConfig, getIcon, globalEvents, permission, renderEmptyElement } = VxeUI
+const { getDefVal } = baseUtils
 
 const { warnLog, errLog } = createComponentLog('tabs')
 
@@ -55,7 +58,7 @@ export default defineVxeComponent({
     },
     useScrollbar: {
       type: Boolean as PropType<VxeTabsPropTypes.UseScrollbar>,
-      default: () => getDefaultConfig(getConfig().tabs.useScrollbar, getConfig().useScrollbar)
+      default: () => getDefVal(getConfig().tabs.useScrollbar, getConfig().useScrollbar)
     },
     scrollbarConfig: Object as PropType<VxeTabsPropTypes.ScrollbarConfig>,
     // 已废弃

@@ -28,7 +28,8 @@
       pointer-events: all;
     }
   }
-  .vxe-tooltip--content {
+  .vxe-tooltip--content,
+  .vxe-tooltip--scrollbar-content-view {
     padding: 8px 12px;
     max-width: 600px;
     max-height: 800px;

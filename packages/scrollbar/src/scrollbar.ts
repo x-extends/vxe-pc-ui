@@ -36,6 +36,10 @@ export default defineVxeComponent({
   props: {
     id: [String, Number] as PropType<VxeScrollbarPropTypes.Id>,
     viewId: [String, Number] as PropType<VxeScrollbarPropTypes.ViewId>,
+    theme: {
+      type: String as PropType<VxeScrollbarPropTypes.Theme>,
+      default: () => getConfig().scrollbar.theme
+    },
     width: [String, Number] as PropType<VxeScrollbarPropTypes.Width>,
     height: [String, Number] as PropType<VxeScrollbarPropTypes.Height>,
     minWidth: [String, Number] as PropType<VxeScrollbarPropTypes.MinWidth>,
@@ -68,6 +72,10 @@ export default defineVxeComponent({
     viewAttrs: {
       type: Object as PropType<VxeScrollbarPropTypes.ViewAttrs>,
       default: () => getConfig().scrollbar.viewAttrs
+    },
+    viewStyle: {
+      type: Object as PropType<VxeScrollbarPropTypes.ViewStyle>,
+      default: () => getConfig().scrollbar.viewStyle
     },
     viewClassName: {
       type: String as PropType<VxeScrollbarPropTypes.ViewClassName>,
@@ -169,7 +177,7 @@ export default defineVxeComponent({
     })
 
     const computeWrapperClss = computed(() => {
-      const { native, className, padding } = props
+      const { native, theme, className, padding } = props
       const { yThumbHeight, xThumbWidth } = reactData
       const xToTop = computeXToTop.value
       const yToLeft = computeYToLeft.value
@@ -179,6 +187,7 @@ export default defineVxeComponent({
       const yAutoHide = computeYAutoHide.value
       return domUtils.buildClass([
         'vxe-scrollbar',
+        theme ? `theme--${theme}` : '',
         `ov-x--${xVisible === false ? 'hidden' : 'visible'}`,
         `ov-y--${yVisible === false ? 'hidden' : 'visible'}`,
         `sx-pos--${xToTop ? 'top' : 'bottom'}`,
@@ -252,6 +261,14 @@ export default defineVxeComponent({
 
     const scrollbarMethods: ScrollbarMethods = {
       dispatchEvent,
+      getViewElem () {
+        const viewEl = refViewElem.value
+        return viewEl || null
+      },
+      getViewInnerElem () {
+        const viewInnerEl = refViewInnerElem.value
+        return viewInnerEl || null
+      },
       scrollTo (left: ScrollToOptions | number, top?: number) {
         const viewEl = refViewElem.value
         if (viewEl) {
@@ -557,7 +574,7 @@ export default defineVxeComponent({
     Object.assign($xeScrollbar, scrollbarMethods, scrollbarPrivateMethods)
 
     const renderVN = () => {
-      const { id, native, loading, viewId, viewAttrs } = props
+      const { id, native, loading, viewId, viewAttrs, viewStyle } = props
       const wrapperStyle = computeWrapperStyle.value
       const wrapperClss = computeWrapperClss.value
       const viewClss = computeViewClss.value
@@ -576,6 +593,7 @@ export default defineVxeComponent({
           class: viewClss,
           onScroll: scrollEvent,
           id: viewId || null,
+          style: viewStyle,
           ...viewAttrs
         }, [
           h('div', {

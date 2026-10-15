@@ -1,12 +1,16 @@
 import { h, ref, nextTick, onBeforeUnmount, onMounted, computed, reactive, watch, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize, globalEvents } from '../../ui'
+import { VxeUI, useSize } from '../../ui'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
+import VxeScrollbarComponent from '../../scrollbar'
 
-import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipInternalData, TooltipPrivateMethods, TooltipReactData, TooltipMethods, TooltipPrivateRef, VxeComponentStyleType, ValueOf } from '../../../types'
+import type { VxeTooltipPropTypes, VxeTooltipConstructor, VxeTooltipEmits, TooltipInternalData, TooltipPrivateMethods, TooltipReactData, TooltipMethods, TooltipPrivateRef, VxeComponentStyleType, ValueOf, VxeScrollbarInstance } from '../../../types'
+
+const { baseUtils, getConfig, createEvent, globalEvents } = VxeUI
+const { getDefVal } = baseUtils
 
 function createReactData (): TooltipReactData {
   return {
@@ -28,6 +32,7 @@ function createReactData (): TooltipReactData {
 
 function createInternalData (): TooltipInternalData {
   return {
+    // scrollbarViewEl: undefined,
     // showDelayTip: undefined
   }
 }
@@ -115,7 +120,12 @@ export default defineVxeComponent({
     appendTo: {
       type: [String, Function] as PropType<VxeTooltipPropTypes.AppendTo>,
       default: () => getConfig().tooltip.appendTo
-    }
+    },
+    useScrollbar: {
+      type: Boolean as PropType<VxeTooltipPropTypes.UseScrollbar>,
+      default: () => getDefVal(getConfig().tooltip.useScrollbar, getConfig().useScrollbar)
+    },
+    scrollbarConfig: Object as PropType<VxeTooltipPropTypes.ScrollbarConfig>
   },
   emits: [
     'update:modelValue',
@@ -134,7 +144,8 @@ export default defineVxeComponent({
     const internalData = createInternalData()
 
     const refElem = ref<HTMLDivElement>()
-    const contentWrapperfElem = ref<HTMLDivElement>()
+    const contentScrollbar = ref<VxeScrollbarInstance>()
+    const contentWrapperElem = ref<HTMLDivElement>()
 
     const computeWrapperStyle = computed(() => {
       const { width, height, minHeight, minWidth, maxHeight, maxWidth } = props
@@ -251,7 +262,9 @@ export default defineVxeComponent({
       tipStore.placement = 'top'
       tipStore.style = { width: 'auto', left: 0, top: 0, zIndex: props.zIndex || reactData.tipZindex }
       tipStore.arrowStyle = { left: '50%' }
-      return $xeTooltip.updatePlacement()
+      return $xeTooltip.updatePlacement().then(() => {
+        return $xeTooltip.updatePlacement()
+      })
     }
 
     const handleDelayFn = () => {
@@ -417,7 +430,7 @@ export default defineVxeComponent({
     Object.assign($xeTooltip, tooltipMethods, tooltipPrivateMethods)
 
     const renderContent = () => {
-      const { useHtml, useHTML } = props
+      const { useScrollbar, theme, useHtml, useHTML } = props
       const { tipContent } = reactData
       const wrapperStyle = computeWrapperStyle.value
       const contentSlot = slots.content
@@ -440,9 +453,22 @@ export default defineVxeComponent({
           key: 'cd'
         }, `${tipContent}`))
       }
+      if (useScrollbar) {
+        return h(VxeScrollbarComponent, {
+          key: 5,
+          ref: contentScrollbar,
+          class: 'vxe-tooltip--scrollbar-content',
+          theme,
+          viewClassName: 'vxe-tooltip--scrollbar-content-view',
+          viewInnerClassName: 'vxe-tooltip--scrollbar-content-inner',
+          viewStyle: wrapperStyle
+        }, {
+          default: () => contVNs
+        })
+      }
       return h('div', {
         key: 3,
-        ref: contentWrapperfElem,
+        ref: contentWrapperElem,
         class: 'vxe-tooltip--content',
         style: wrapperStyle
       }, contVNs)
@@ -509,7 +535,15 @@ export default defineVxeComponent({
     handleDelayFn()
 
     onMounted(() => {
-      const contentWrapperfEl = contentWrapperfElem.value
+      const $scrollbar = contentScrollbar.value
+      if ($scrollbar) {
+        const viewEl = $scrollbar.getViewElem()
+        if (viewEl) {
+          viewEl.addEventListener('wheel', wheelEvent, { passive: false })
+          internalData.scrollbarViewEl = viewEl
+        }
+      }
+      const contentWrapperfEl = contentWrapperElem.value
       if (contentWrapperfEl) {
         contentWrapperfEl.addEventListener('wheel', wheelEvent, { passive: false })
       }
@@ -551,15 +585,19 @@ export default defineVxeComponent({
 
     onBeforeUnmount(() => {
       const { target } = reactData
+      const { scrollbarViewEl } = internalData
       const panelElem = refElem.value
       if (target) {
         target.onmouseenter = null
         target.onmouseleave = null
         target.onclick = null
       }
-      const contentWrapperfEl = contentWrapperfElem.value
+      const contentWrapperfEl = contentWrapperElem.value
       if (contentWrapperfEl) {
         contentWrapperfEl.removeEventListener('wheel', wheelEvent)
+      }
+      if (scrollbarViewEl) {
+        scrollbarViewEl.removeEventListener('wheel', wheelEvent)
       }
       if (panelElem) {
         const parentNode = panelElem.parentNode

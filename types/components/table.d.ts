@@ -1598,6 +1598,7 @@ export namespace VxeTablePropTypes {
      */
     defaultPlacement?: VxeTooltipPropTypes.DefaultPlacement
     popupClassName?: VxeTooltipPropTypes.PopupClassName
+    useScrollbar?: VxeTooltipPropTypes.UseScrollbar
     /**
      * 该方法可以通过返回值来重写默认的提示内容，可以返回 null 使用默认的提示内容，可以返回空内容去掉指定单元格的提示内容
      */

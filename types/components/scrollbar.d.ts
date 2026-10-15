@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -26,6 +26,7 @@ export interface VxeScrollbarPrivateRef extends ScrollbarPrivateRef { }
 export namespace VxeScrollbarPropTypes {
   export type Id = number | string
   export type ViewId = number | string
+  export type Theme = '' | 'light' | 'dark'
   export type Width = number | string
   export type Height = number | string
   export type MinWidth = number | string
@@ -73,6 +74,7 @@ export namespace VxeScrollbarPropTypes {
   }
   export type ClassName = string
   export type ViewAttrs = Record<string, any>
+  export type ViewStyle = VxeComponentStyleType
   export type ViewClassName = string
   export type ViewInnerClassName = string
   export type AutoResize = boolean
@@ -88,6 +90,10 @@ export interface VxeScrollbarProps {
    * View ID
    */
   viewId?: VxeScrollbarPropTypes.ViewId
+  /**
+   * 主题色
+   */
+  theme?: VxeScrollbarPropTypes.Theme
   /**
    * 容器宽度
    */
@@ -148,6 +154,10 @@ export interface VxeScrollbarProps {
    * 给视图元素附加属性
    */
   viewAttrs?: VxeScrollbarPropTypes.ViewAttrs
+  /**
+   * 给视图元素附加样式
+   */
+  viewStyle?: VxeScrollbarPropTypes.ViewStyle
   /**
    * 给视图元素附加 class
    */
@@ -215,6 +225,14 @@ export interface ScrollbarMethods {
    * 滚动元素到可见位置
    */
   scrollIntoView(): void
+  /**
+   * 获取滚动视图元素
+   */
+  getViewElem(): HTMLElement | null
+  /**
+   * 获取滚动视图内容包裹元素
+   */
+  getViewInnerElem(): HTMLElement | null
   /**
    * 重新计算样式
    * 对于某些特殊场景可能会用到，比如更新内容
