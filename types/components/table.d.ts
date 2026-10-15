@@ -12,6 +12,7 @@ import { VxeTabsConstructor, VxeTabsPrivateMethods } from './tabs'
 import { VxeSplitterConstructor, VxeSplitterMethods } from './splitter'
 import { VxeGanttConstructor, VxeGanttPrivateMethods } from './gantt'
 import { VxeGanttViewConstructor, VxeGanttViewInstance, VxeGanttViewPrivateMethods } from './gantt-module/gantt-view'
+import { VxeScrollbarPropTypes } from './scrollbar'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types,@typescript-eslint/no-unused-vars */
 
@@ -3970,8 +3971,15 @@ export interface TablePrivateComputed<D = any> {
   computeScrollbarOpts: VxeTablePropTypes.ScrollbarConfig
   computeScrollbarXOpts: VxeTablePropTypes.ScrollbarXConfig
   computeScrollbarYOpts: VxeTablePropTypes.ScrollbarYConfig
+  computeScrollXHeight: number | undefined
+  computeScrollYWidth: number | undefined
+  computeScrollXVisible: 'auto' | 'visible' | 'hidden' | boolean | undefined
+  computeScrollYVisible: 'auto' | 'visible' | 'hidden' | boolean | undefined
+  computeScrollXAutoHide: VxeScrollbarPropTypes.AutoHide | undefined
+  computeScrollYAutoHide: VxeScrollbarPropTypes.AutoHide | undefined
   computeScrollbarXToTop: boolean
   computeScrollbarYToLeft: boolean
+  computeScrollbarWrapperClss: string
   computeColumnOpts: VxeTablePropTypes.ColumnOpts
   computeCurrentColumnOpts: VxeTablePropTypes.CurrentColumnConfig
   computeScrollXThreshold: number
@@ -4138,6 +4146,11 @@ export interface TableReactData<D = any> {
   scrollbarWidth: number
   // 横向滚动条的高度
   scrollbarHeight: number
+
+  // 滚动条
+  yThumbHeight: number
+  xThumbWidth: number
+
   /**
    * 行高
    * @deprecated
@@ -4379,9 +4392,17 @@ export interface TableInternalData<D = any> {
   currentRow: D | null
   currentCol: VxeTableDefines.ColumnInfo | null
 
-  // 最后滚动位置
-  lastScrollLeft: number
+  resizeObserver?: ResizeObserver
+
+  // 滚动条
+  scrollObserver?: ResizeObserver
+  isThumbDrag?: boolean
+  thumbDragOffset: number
+  yThumbTop: number
+  xThumbLeft: number
   lastScrollTop: number
+  lastScrollLeft: number
+
   // 单选框属性，已选中保留的行
   radioReserveRow: any
   // 复选框属性，已选中保留的行
@@ -5981,6 +6002,16 @@ export interface TablePrivateMethods<D = any> {
     row: any
     column: VxeTableDefines.ColumnInfo
   }, cellValue?: any): Promise<any>
+  /**
+   * 内部方法
+   * @private
+   */
+  updateScrollbar(): void
+  /**
+   * 内部方法
+   * @private
+   */
+  updateThumbOffset(): void
   /**
    * 内部方法
    * @private

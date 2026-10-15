@@ -73,8 +73,10 @@ function createInternalData (): ListInternalData {
     fullKeyMaps: {},
     rowMaps: {},
 
-    // 滚动条
     // resizeObserver: undefined,
+
+    // 滚动条
+    // scrollObserver: undefined,
     // isThumbDrag: false,
     thumbDragOffset: 0,
     yThumbTop: 0,
@@ -141,7 +143,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     scrollY: Object as PropType<VxeListPropTypes.ScrollY>,
     useScrollbar: {
       type: Boolean as PropType<VxeListPropTypes.UseScrollbar>,
-      default: () => getConfig().list.useScrollbar
+      default: () => getDefaultConfig(getConfig().list.useScrollbar, getConfig().useScrollbar)
     },
     scrollbarConfig: Object as PropType<VxeListPropTypes.ScrollbarConfig>
   },
@@ -226,11 +228,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeList = this
 
       const rowHeight = $xeList.computeRowHeight
-      const scrollbarOpts = $xeList.computeScrollbarOpts
-      const scrollbarXOpts = $xeList.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
-      const scrollbarYOpts = $xeList.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
-      const barWidth = getDefaultConfig(getDefaultConfig(scrollbarYOpts.width, scrollbarOpts.width), getConfig().scrollbar.width)
-      const barHeight = getDefaultConfig(getDefaultConfig(scrollbarXOpts.height, scrollbarOpts.height), getConfig().scrollbar.height)
+      const barWidth = $xeList.computeScrollYWidth
+      const barHeight = $xeList.computeScrollXHeight
       const stys: VxeComponentStyleType = {}
       if (rowHeight) {
         stys['--vxe-ui-list-row-height'] = toCssUnit(rowHeight)
@@ -275,6 +274,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollbarOpts = $xeList.computeScrollbarOpts as VxeListPropTypes.ScrollbarConfig
       return Object.assign({}, getConfig().scrollbar.yConfig, scrollbarOpts.yConfig)
     },
+    computeScrollXHeight () {
+      const $xeList = this
+
+      const scrollbarOpts = $xeList.computeScrollbarOpts as VxeListPropTypes.ScrollbarConfig
+      const scrollbarXOpts = $xeList.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
+      return getDefaultConfig(getDefaultConfig(scrollbarXOpts.height, scrollbarOpts.height), getConfig().scrollbar.height)
+    },
+    computeScrollYWidth () {
+      const $xeList = this
+
+      const scrollbarOpts = $xeList.computeScrollbarOpts as VxeListPropTypes.ScrollbarConfig
+      const scrollbarYOpts = $xeList.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
+      return getDefaultConfig(getDefaultConfig(scrollbarYOpts.width, scrollbarOpts.width), getConfig().scrollbar.width)
+    },
     computeScrollXVisible () {
       const $xeList = this
 
@@ -307,15 +320,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeList = this
       const reactData = $xeList.reactData
 
-      const scrollbarOpts = $xeList.computeScrollbarOpts as VxeListPropTypes.ScrollbarConfig
-      const { padding } = scrollbarOpts
       const { yThumbHeight, xThumbWidth } = reactData
       const scrollbarXToTop = $xeList.computeScrollbarXToTop
       const scrollbarYToLeft = $xeList.computeScrollbarYToLeft
       const scrollXVisible = $xeList.computeScrollXVisible
       const scrollYVisible = $xeList.computeScrollYVisible
-      const scrollXAutoHide = $xeList.computeScrollXAutoHide as boolean
-      const scrollYAutoHide = $xeList.computeScrollYAutoHide as boolean
       return domUtils.buildClass([
         'vxe-scrollbar is--virtual',
         `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
@@ -323,9 +332,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
         `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
       ], {
-        'is--padding': padding,
-        'ov-x--auto-hide': scrollXAutoHide,
-        'ov-y--auto-hide': scrollYAutoHide,
         'overflow-y': yThumbHeight,
         'overflow-x': xThumbWidth
       })
@@ -502,6 +508,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { fullData } = internalData
       return fullData
+    },
+    getParentElem () {
+      const $xeList = this
+
+      const el = $xeList.$refs.refElem as HTMLDivElement
+      return el ? el.parentElement : null
     },
     calcTableHeight (key: 'height' | 'maxHeight') {
       const $xeList = this
@@ -2747,6 +2759,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeList.reFlag++
     },
+    computeScrollYWidth () {
+      const $xeList = this
+
+      $xeList.reFlag++
+    },
+    computeScrollXHeight () {
+      const $xeList = this
+
+      $xeList.reFlag++
+    },
     computeScrollXVisible () {
       const $xeList = this
 
@@ -2814,20 +2836,33 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (useKey && !keyField) {
       errLog('vxe.error.reqSupportProp', ['row-config.useKey', 'row-config.keyField'])
     }
-    if (useScrollbar || autoResize) {
-      const el = $xeList.$refs.refElem as HTMLDivElement
+    const el = $xeList.$refs.refElem as HTMLDivElement
+    if (useScrollbar) {
       const viewInnerEl = $xeList.$refs.refVirtualBody as HTMLDivElement
-      const resizeObserver = globalResize.create(() => {
+      const scrollObserver = globalResize.create(() => {
         $xeList.reFlag++
       })
       if (el) {
-        resizeObserver.observe(el)
-        if (autoResize) {
-          resizeObserver.observe(el.parentElement as HTMLDivElement)
-        }
+        scrollObserver.observe(el)
       }
       if (viewInnerEl) {
-        resizeObserver.observe(viewInnerEl)
+        scrollObserver.observe(viewInnerEl)
+      }
+      internalData.scrollObserver = scrollObserver
+    }
+    if (autoResize) {
+      const parentEl = $xeList.getParentElem()
+      const resizeObserver = globalResize.create(() => {
+        if (props.autoResize) {
+          $xeList.reFlag++
+        }
+      })
+      if (el) {
+        resizeObserver.observe(el)
+      }
+
+      if (parentEl) {
+        resizeObserver.observe(parentEl)
       }
       internalData.resizeObserver = resizeObserver
     }
@@ -2848,9 +2883,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const reactData = $xeList.reactData
     const internalData = $xeList.internalData
 
-    const { resizeObserver } = internalData
+    const { scrollObserver, resizeObserver } = internalData
     if (resizeObserver) {
       resizeObserver.disconnect()
+    }
+    if (scrollObserver) {
+      scrollObserver.disconnect()
     }
     globalEvents.off($xeList, 'resize')
     XEUtils.assign(reactData, createReactData())

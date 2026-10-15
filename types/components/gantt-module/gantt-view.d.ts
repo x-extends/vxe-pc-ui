@@ -1,6 +1,7 @@
 import { DefineVxeComponentInstance } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
 import { VxeGanttDefines, VxeGanttConstructor } from '../gantt'
+import { VxeScrollbarPropTypes } from '../scrollbar'
 
 /* eslint-disable no-use-before-define */
 
@@ -33,6 +34,10 @@ export interface GanttViewReactData {
   // 最后滚动时间戳
   lastScrollTime: number
   lazScrollLoading: boolean
+
+  // 滚动条
+  yThumbHeight: number
+  xThumbWidth: number
 
   scrollVMLoading: boolean
   scrollYHeight: number
@@ -72,7 +77,13 @@ export interface GanttViewInternalData {
     startIndex: number
     endIndex: number
   }
-  // 最后滚动位置
+
+  // 滚动条
+  scrollObserver?: ResizeObserver
+  isThumbDrag?: boolean
+  thumbDragOffset: number
+  yThumbTop: number
+  xThumbLeft: number
   lastScrollLeft: number
   lastScrollTop: number
 
@@ -105,6 +116,14 @@ export interface GanttViewPrivateRef {
 }
 
 export interface GanttViewPrivateComputed {
+  computeScrollXHeight: number | undefined
+  computeScrollYWidth: number | undefined
+  computeScrollXVisible: 'auto' | 'visible' | 'hidden' | boolean | undefined
+  computeScrollYVisible: 'auto' | 'visible' | 'hidden' | boolean | undefined
+  computeScrollXAutoHide: VxeScrollbarPropTypes.AutoHide | undefined
+  computeScrollYAutoHide: VxeScrollbarPropTypes.AutoHide | undefined
+  computeScrollbarXToTop: boolean
+  computeScrollbarYToLeft: boolean
   computeScaleDateList: Date[]
   computeNowLineLeft: number
 }
@@ -158,6 +177,10 @@ export interface VxeGanttViewPrivateMethods {
    * @private
    */
   handleUpdateSYStatus(scrollYLoad: boolean): void
+  /**
+   * @private
+   */
+  updateScrollbar(): void
 }
 
 export interface VxeGanttViewMethods {

@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { createEvent, getConfig, getIcon, globalEvents, globalMixins, permission, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
-import { isEnableConf } from '../../ui/src/utils'
+import { getDefaultConfig, isEnableConf } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
@@ -58,7 +58,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     useScrollbar: {
       type: Boolean as PropType<VxeTabsPropTypes.UseScrollbar>,
-      default: () => getConfig().tabs.useScrollbar
+      default: () => getDefaultConfig(getConfig().tabs.useScrollbar, getConfig().useScrollbar)
     },
     scrollbarConfig: Object as PropType<VxeTabsPropTypes.ScrollbarConfig>,
     // 已废弃

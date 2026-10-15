@@ -2,6 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { toCssUnit } from '../../ui/src/dom'
 import { getConfig, createEvent, globalMixins } from '../../ui'
+import { getDefaultConfig } from '../../ui/src/utils'
 import XEUtils from 'xe-utils'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
@@ -22,7 +23,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     collapseConfig: Object as PropType<VxeLayoutAsidePropTypes.CollapseConfig>,
     useScrollbar: {
       type: Boolean as PropType<VxeLayoutAsidePropTypes.UseScrollbar>,
-      default: () => getConfig().layoutAside.useScrollbar
+      default: () => getDefaultConfig(getConfig().layoutAside.useScrollbar, getConfig().useScrollbar)
     },
     scrollbarConfig: Object as PropType<VxeLayoutAsidePropTypes.ScrollbarConfig>,
     size: {

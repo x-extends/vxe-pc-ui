@@ -103,10 +103,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeScrollbar
 
       const { width, height, minWidth, minHeight, maxWidth, maxHeight } = props
-      const xOpts = $xeScrollbar.computeXOpts
-      const yOpts = $xeScrollbar.computeYOpts
-      const barWidth = yOpts.width
-      const barHeight = xOpts.height
+      const barWidth = $xeScrollbar.computeYWidth
+      const barHeight = $xeScrollbar.computeXHeight
       const stys: VxeComponentStyleType = {}
       if (width) {
         stys.width = toCssUnit(width)
@@ -131,6 +129,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
         stys['--vxe-ui-scrollbar-x-height'] = toCssUnit(barHeight || barWidth)
       }
       return stys
+    },
+    computeXHeight () {
+      const $xeScrollbar = this
+
+      const xOpts = ($xeScrollbar as any).computeXOpts as VxeScrollbarPropTypes.XConfig
+      return xOpts.height
+    },
+    computeYWidth () {
+      const $xeScrollbar = this
+
+      const yOpts = ($xeScrollbar as any).computeYOpts as VxeScrollbarPropTypes.YConfig
+      return yOpts.width
     },
     computeXVisible () {
       const $xeScrollbar = this
@@ -706,6 +716,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeScrollbar.reFlag++
     },
     syncResize () {
+      const $xeScrollbar = this
+
+      $xeScrollbar.reFlag++
+    },
+    computeYWidth () {
+      const $xeScrollbar = this
+
+      $xeScrollbar.reFlag++
+    },
+    computeXHeight () {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++

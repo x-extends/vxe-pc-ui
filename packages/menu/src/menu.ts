@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, createEvent, permission, globalMixins, globalEvents, renderEmptyElement } from '../../ui'
 import { getPopupAppendElement, scrollToView, toCssUnit } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, isEnableConf, getDefaultConfig } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
@@ -78,7 +78,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     menuConfig: Object as PropType<VxeMenuPropTypes.MenuConfig>,
     useScrollbar: {
       type: Boolean as PropType<VxeMenuPropTypes.UseScrollbar>,
-      default: () => getConfig().menu.useScrollbar
+      default: () => getDefaultConfig(getConfig().menu.useScrollbar, getConfig().useScrollbar)
     },
     scrollbarConfig: Object as PropType<VxeMenuPropTypes.ScrollbarConfig>,
     appendTo: {

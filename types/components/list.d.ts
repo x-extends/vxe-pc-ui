@@ -306,8 +306,10 @@ export interface ListInternalData {
   fullKeyMaps: Record<string, any>
   rowMaps: Record<string, VxeListDefines.RowCacheItem>
 
-  // 滚动条
   resizeObserver?: ResizeObserver
+
+  // 滚动条
+  scrollObserver?: ResizeObserver
   isThumbDrag?: boolean
   thumbDragOffset: number
   yThumbTop: number

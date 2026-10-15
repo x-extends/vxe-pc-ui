@@ -181,8 +181,8 @@
   &.is--drag {
     cursor: move;
     transition: none;
-   .vxe-modal--body,
-   .vxe-modal--footer {
+   .vxe-drawer--body,
+   .vxe-drawer--footer {
       &:after {
         content: "";
         position: absolute;
@@ -192,9 +192,10 @@
         height: 100%;
       }
     }
-    .vxe-modal--body {
+    .vxe-drawer--body {
       overflow: hidden;
-      .vxe-modal--content {
+      .vxe-drawer--content,
+      .vxe-drawer--scrollbar-content {
         overflow: hidden;
       }
     }
@@ -213,7 +214,8 @@
   overflow: auto;
   outline: 0;
 }
-.vxe-drawer--content {
+.vxe-drawer--content,
+.vxe-drawer--scrollbar-content  {
   flex-grow: 1;
   white-space: pre-line;
 }
@@ -227,7 +229,8 @@
   flex-grow: 1;
   overflow: auto;
   outline: 0;
-  .vxe-drawer--content {
+  .vxe-drawer--content,
+  .vxe-drawer--scrollbar-content  {
     overflow: auto;
   }
 }
@@ -348,4 +351,8 @@
   &[data-effect] {
     overflow: hidden;
   }
+}
+
+.vxe-drawer--scrollbar-content {
+  width: 100%;
 }

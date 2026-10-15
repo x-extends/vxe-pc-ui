@@ -3,12 +3,13 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, createEvent, globalEvents, globalMixins, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
 import { getEventTargetNode, getPopupAppendElement, getPopupWrapperElement, isScale, toCssUnit } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue, getDefaultConfig } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { allActiveModals } from './store'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
+import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalMethods, ModalEventTypes, VxeModalEmits, VxeComponentSizeType, VxeComponentPermissionInfo, ValueOf, VxeButtonConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
@@ -227,6 +228,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     beforeHideMethod: Function as PropType<VxeModalPropTypes.BeforeHideMethod>,
     slots: Object as PropType<VxeModalPropTypes.Slots>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeModalPropTypes.UseScrollbar>,
+      default: () => getDefaultConfig(getConfig().modal.useScrollbar, getConfig().useScrollbar)
+    },
+    scrollbarConfig: Object as PropType<VxeModalPropTypes.ScrollbarConfig>,
 
     /**
      * 已废弃
@@ -316,23 +322,47 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return props.type === 'modal'
     },
-    computeIsMinimizeStatus  () {
+    computeIsMinimizeStatus () {
       const $xeModal = this
       const reactData = $xeModal.reactData as ModalReactData
 
       return reactData.zoomStatus === 'minimize'
     },
-    computeIsMaximizeStatus  () {
+    computeIsMaximizeStatus () {
       const $xeModal = this
       const reactData = $xeModal.reactData as ModalReactData
 
       return reactData.zoomStatus === 'maximize'
     },
-    computeZoomOpts  () {
+    computeZoomOpts () {
       const $xeModal = this
       const props = $xeModal
 
       return Object.assign({}, getConfig().modal.zoomConfig, props.zoomConfig)
+    },
+    computeScrollbarOpts () {
+      const $xeModal = this
+      const props = $xeModal
+
+      return Object.assign({}, getConfig().modal.scrollbarConfig, props.scrollbarConfig)
+    },
+    computeScrollbarProps () {
+      const $xeModal = this
+
+      const scrollbarOpts = $xeModal.computeScrollbarOpts as VxeModalPropTypes.ScrollbarConfig
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
+      return {
+        width: scrollbarOpts.width,
+        height: scrollbarOpts.height,
+        autoHide: scrollbarOpts.autoHide,
+        visible: scrollbarOpts.visible,
+        xConfig: scrollbarOpts.xConfig,
+        yConfig: scrollbarOpts.yConfig,
+        className: scrollbarOpts.className,
+        viewAttrs: scrollbarOpts.viewAttrs,
+        viewClassName: 'vxe-modal--scrollbar-content-view' + (viewClassName ? (' ' + viewClassName) : ''),
+        viewInnerClassName: 'vxe-modal--scrollbar-content-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+      }
     }
   },
   watch: {
@@ -1539,9 +1569,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeModal
       const slots = $xeModal.$scopedSlots
 
-      const { slots: propSlots = {}, status, message, iconStatus, useHtml } = props
+      const { slots: propSlots = {}, status, message, iconStatus, useScrollbar, useHtml } = props
       const content = props.content || message
       const isMsg = $xeModal.computeIsMsg
+      const scrollbarProps = $xeModal.computeScrollbarProps
       const defaultSlot = slots.default || propSlots.default
       const leftSlot = slots.left || propSlots.left
       const rightSlot = slots.right || propSlots.right
@@ -1557,20 +1588,53 @@ export default /* define-vxe-component start */ defineVxeComponent({
           ])
         )
       }
-      contVNs.push(
-        useHtml && !defaultSlot
-          ? h('div', {
-            key: 'hc',
-            class: 'vxe-modal--content',
-            domProps: {
-              innerHTML: getFuncText(content)
-            }
-          })
-          : h('div', {
-            key: 'dc',
-            class: 'vxe-modal--content'
-          }, defaultSlot ? $xeModal.callSlot(defaultSlot, { $modal: $xeModal }, h) : getFuncText(content))
-      )
+
+      if (useHtml && !defaultSlot) {
+        contVNs.push(
+          useScrollbar
+            ? h(VxeScrollbarComponent, {
+              key: 'shc',
+              class: 'vxe-modal--scrollbar-content',
+              props: scrollbarProps,
+              scopedSlots: {
+                default () {
+                  return [
+                    h('div', {
+                      class: 'vxe-modal--scrollbar-content-html',
+                      domProps: {
+                        innerHTML: getFuncText(content)
+                      }
+                    })
+                  ]
+                }
+              }
+            })
+            : h('div', {
+              key: 'hc',
+              class: 'vxe-modal--content',
+              domProps: {
+                innerHTML: getFuncText(content)
+              }
+            })
+        )
+      } else {
+        contVNs.push(
+          useScrollbar
+            ? h(VxeScrollbarComponent, {
+              key: 'sdc',
+              class: 'vxe-modal--scrollbar-content',
+              props: scrollbarProps,
+              scopedSlots: {
+                default: () => defaultSlot ? $xeModal.callSlot(defaultSlot, { $modal: $xeModal }, h) : getFuncText(content)
+              }
+            })
+            : h('div', {
+              key: 'dc',
+              class: 'vxe-modal--content'
+            }, defaultSlot ? $xeModal.callSlot(defaultSlot, { $modal: $xeModal }, h) : getFuncText(content))
+        )
+      }
+
       return h('div', {
         class: 'vxe-modal--body'
       }, [

@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
+import { getDefaultConfig } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
@@ -41,7 +42,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     useScrollbar: {
       type: Boolean as PropType<VxeCardPropTypes.UseScrollbar>,
-      default: () => getConfig().card.useScrollbar
+      default: () => getDefaultConfig(getConfig().card.useScrollbar, getConfig().useScrollbar)
     },
     scrollbarConfig: Object as PropType<VxeCardPropTypes.ScrollbarConfig>
   },
