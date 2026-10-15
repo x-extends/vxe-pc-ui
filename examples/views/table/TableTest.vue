@@ -1,51 +1,134 @@
 <template>
   <div>
-    <vxe-grid v-bind="gridOptions"></vxe-grid>
+    <vxe-grid v-bind="gridOptions">
+      <template #header-tooltip="{ column }">
+        <div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+          <div style="color: red">自定义表头：{{ column.title }}</div>
+        </div>
+      </template>
+      <template #tooltip="{ row, column }">
+        <div style="width: 800px">
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+          <div style="color: orange">自定义：{{ row[column.field] }}</div>
+          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
+        </div>
+      </template>
+      <template #footer-tooltip="{ row, column }">
+        <div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
+        </div>
+      </template>
+    </vxe-grid>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import type { VxeGridProps } from '../../../types/components/grid'
-
-interface RowVO {
-  id: number
-  name: string
-  role: string
-  sex: string
-  age: number
-  address: string
-}
-
-export default Vue.extend({
+<script>
+export default {
   data () {
-    const gridOptions: VxeGridProps<RowVO> = {
-      border: true,
+    const gridOptions = {
+      height: 300,
       showOverflow: true,
-      rowConfig: {
-        keyField: 'id'
+      showHeaderOverflow: true,
+      showFooterOverflow: true,
+      showFooter: true,
+      useScrollbar: true,
+      headerTooltipConfig: {
+        maxWidth: 200,
+        maxHeight: 100
       },
-      editConfig: {
-        trigger: 'click',
-        mode: 'cell'
+      tooltipConfig: {
+        maxWidth: 400,
+        maxHeight: 300
+      },
+      footerTooltipConfig: {
+        maxWidth: 200,
+        maxHeight: 100
       },
       columns: [
-        { type: 'seq', width: 70 },
-        { field: 'name', title: 'Name', editRender: { name: 'input' } },
-        { field: 'sex', title: 'Sex', editRender: { name: 'input' } },
-        { field: 'age', title: 'Age', editRender: { name: 'input' } }
+        { field: 'seq', type: 'seq', width: 70 },
+        { field: 'name', title: '名称' },
+        { field: 'role', title: '角色' },
+        { field: 'date', title: '日期日期日期日期日期日期日期日期日期', width: 200 },
+        { field: 'rate', title: 'Rate' },
+        { field: 'address', title: '地址地址地址地址地址地址地址地址地址地址', width: 200 }
       ],
       data: [
-        { id: 10001, name: 'Test1', role: 'Develop', sex: 'Man', age: 28, address: 'test abc' },
-        { id: 10002, name: 'Test2', role: 'Test', sex: 'Women', age: 22, address: 'Guangzhou' },
-        { id: 10003, name: 'Test3', role: 'PM', sex: 'Man', age: 32, address: 'Shanghai' },
-        { id: 10004, name: 'Test4', role: 'Designer', sex: 'Women', age: 24, address: 'Shanghai' }
-      ]
+        { name: 'Test1', role: '前端', date: '2020-02-14', rate: 5, address: 'address1' },
+        { name: 'Test2', role: '后端', date: '2020-02-22', rate: 2, address: 'address1' },
+        { name: 'Test3', role: '前端前端前端前端前端前端前端前端', date: '2020-01-01', rate: 0, address: '深圳市深圳市深圳市深圳市深圳市深圳市' },
+        { name: 'Test4', role: '设计师设计师设计师设计师设计师设计师设计师', date: '2020-02-23', rate: 1, address: '上海市上海市上海市上海市上海市上海市' },
+        { name: 'Test5', role: '前端', date: '2020-01-20', rate: 3, address: '广州市广州市广州市广州市广州市广州市广州市广州市广州市' }
+      ],
+      footerData: [{ seq: '合计', date: '2020-02-23', rate: '123456789123456789123456789123456789' }]
     }
-
     return {
       gridOptions
     }
   }
-})
+}
 </script>

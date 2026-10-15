@@ -37,6 +37,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   props: {
     id: [String, Number] as PropType<VxeScrollbarPropTypes.Id>,
     viewId: [String, Number] as PropType<VxeScrollbarPropTypes.ViewId>,
+    theme: {
+      type: String as PropType<VxeScrollbarPropTypes.Theme>,
+      default: () => getConfig().scrollbar.theme
+    },
     width: [String, Number] as PropType<VxeScrollbarPropTypes.Width>,
     height: [String, Number] as PropType<VxeScrollbarPropTypes.Height>,
     minWidth: [String, Number] as PropType<VxeScrollbarPropTypes.MinWidth>,
@@ -69,6 +73,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
     viewAttrs: {
       type: Object as PropType<VxeScrollbarPropTypes.ViewAttrs>,
       default: () => getConfig().scrollbar.viewAttrs
+    },
+    viewStyle: {
+      type: Object as PropType<VxeScrollbarPropTypes.ViewStyle>,
+      default: () => getConfig().scrollbar.viewStyle
     },
     viewClassName: {
       type: String as PropType<VxeScrollbarPropTypes.ViewClassName>,
@@ -180,7 +188,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeScrollbar
       const reactData = $xeScrollbar.reactData
 
-      const { native, className, padding } = props
+      const { native, theme, className, padding } = props
       const { yThumbHeight, xThumbWidth } = reactData
       const xToTop = ($xeScrollbar as any).computeXToTop as boolean
       const yToLeft = ($xeScrollbar as any).computeYToLeft as boolean
@@ -190,6 +198,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const yAutoHide = ($xeScrollbar as any).computeYAutoHide
       return domUtils.buildClass([
         'vxe-scrollbar',
+        theme ? `theme--${theme}` : '',
         `ov-x--${xVisible === false ? 'hidden' : 'visible'}`,
         `ov-y--${yVisible === false ? 'hidden' : 'visible'}`,
         `sx-pos--${xToTop ? 'top' : 'bottom'}`,
@@ -256,6 +265,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
     dispatchEvent (type: ValueOf<VxeScrollbarEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeScrollbar = this
       $xeScrollbar.$emit(type, createEvent(evnt, { $scrollbar: $xeScrollbar }, params))
+    },
+    getViewElem () {
+      const $xeScrollbar = this
+
+      const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
+      return viewEl || null
+    },
+    getViewInnerElem () {
+      const $xeScrollbar = this
+
+      const viewInnerEl = $xeScrollbar.$refs.refViewInnerElem as HTMLDivElement
+      return viewInnerEl || null
     },
     scrollTo (left: ScrollToOptions | number, top?: number) {
       const $xeScrollbar = this
@@ -596,7 +617,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeScrollbar
       const slots = $xeScrollbar.$scopedSlots
 
-      const { id, native, loading, viewId, viewAttrs } = props
+      const { id, native, loading, viewId, viewAttrs, viewStyle } = props
       const wrapperStyle = $xeScrollbar.computeWrapperStyle
       const wrapperClss = $xeScrollbar.computeWrapperClss
       const viewClss = $xeScrollbar.computeViewClss
@@ -615,6 +636,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         h('div', {
           ref: 'refViewElem',
           class: viewClss,
+          style: viewStyle,
           attrs: {
             id: viewId || null,
             ...viewAttrs

@@ -1,5 +1,6 @@
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
 import { VxeIconPropTypes } from './icon'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -41,6 +42,17 @@ export namespace VxeTooltipPropTypes {
   export type LeaveMethod = (params: { $event: MouseEvent }) => boolean
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
   export type Transfer = boolean
+  export type UseScrollbar = boolean
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
+    /**
+     * 滚动条宽度
+     */
+    width?: number | string
+    /**
+     * 滚动条高度
+     */
+    height?: number | string
+  }
 
   /**
    * 已废弃，请使用 UseHtml
@@ -91,6 +103,14 @@ export interface VxeTooltipProps {
   leaveMethod?: VxeTooltipPropTypes.LeaveMethod
   transfer?: VxeTooltipPropTypes.Transfer
   appendTo?: VxeTooltipPropTypes.AppendTo
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeTooltipPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeTooltipPropTypes.ScrollbarConfig
 }
 
 export interface TooltipPrivateComputed {
@@ -119,6 +139,7 @@ export interface TooltipReactData {
 }
 
 export interface TooltipInternalData {
+  scrollbarViewEl?: HTMLElement
   showDelayTip?(): void
 }
 
