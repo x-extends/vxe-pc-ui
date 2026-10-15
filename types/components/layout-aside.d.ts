@@ -43,10 +43,25 @@ export namespace VxeLayoutAsidePropTypes {
 }
 
 export interface VxeLayoutAsideProps {
+  /**
+   * 宽度
+   */
   width?: VxeLayoutAsidePropTypes.Width
+  /**
+   * 是否折叠
+   */
   collapsed?: VxeLayoutAsidePropTypes.Collapsed
+  /**
+   * 折叠后宽度
+   */
   collapseWidth?: VxeLayoutAsidePropTypes.CollapseWidth
+  /**
+   * 加载中
+   */
   loading?: VxeLayoutAsidePropTypes.Loading
+  /**
+   * 显示内边距
+   */
   padding?: VxeLayoutAsidePropTypes.Padding
   size?: VxeLayoutAsidePropTypes.Size
   collapseConfig?: VxeLayoutAsidePropTypes.CollapseConfig

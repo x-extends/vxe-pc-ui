@@ -9,7 +9,6 @@ import { crossTreeDragNodeGlobal, getCrossTreeDragNodeInfo } from './store'
 import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode, hasClass } from '../../ui/src/dom'
 import { isEnableConf, enModelValue, deModelValue, getText, getDefaultConfig } from '../../ui/src/utils'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
-import { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } from '../../scrollbar/src/util'
 import VxeLoadingComponent from '../../loading'
 import VxeTooltipComponent from '../../tooltip'
 
@@ -17,7 +16,9 @@ import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes,
 
 const { warnLog, errLog } = createComponentLog('tree')
 
-const { menus, getConfig, getI18n, getIcon } = VxeUI
+const { menus, scrollbarUtils, getConfig, getI18n, getIcon } = VxeUI
+
+const { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } = scrollbarUtils
 
 let crossTreeDragNodeObj: {
   $oldTree: VxeTreeConstructor & VxeTreePrivateMethods

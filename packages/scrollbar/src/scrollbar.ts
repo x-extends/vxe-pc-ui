@@ -3,14 +3,15 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
-import { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } from './util'
 import { getDefaultConfig } from '../../ui/src/utils'
 
 import VxeLoadingComponent from '../../loading'
 
 import type { ScrollbarReactData, ScrollbarInternalData, VxeScrollbarEmits, ValueOf, VxeScrollbarPropTypes, VxeComponentStyleType } from '../../../types'
 
-const { getConfig, createEvent, domUtils, globalResize, globalEvents, renderEmptyElement } = VxeUI
+const { getConfig, createEvent, domUtils, scrollbarUtils, globalResize, globalEvents, renderEmptyElement } = VxeUI
+
+const { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } = scrollbarUtils
 
 function createReactData (): ScrollbarReactData {
   return {

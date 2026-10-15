@@ -3514,6 +3514,9 @@ export namespace VxeTablePropTypes {
 }
 
 export interface VxeTableProps<D = any> {
+  /**
+   * 尺寸大小
+   */
   size?: VxeTablePropTypes.Size
   /**
    * 唯一标识
