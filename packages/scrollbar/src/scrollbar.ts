@@ -105,10 +105,8 @@ export default defineVxeComponent({
 
     const computeWrapperStyle = computed(() => {
       const { width, height, minWidth, minHeight, maxWidth, maxHeight } = props
-      const xOpts = computeXOpts.value
-      const yOpts = computeYOpts.value
-      const barWidth = yOpts.width
-      const barHeight = xOpts.height
+      const barWidth = computeYWidth.value
+      const barHeight = computeXHeight.value
       const stys: VxeComponentStyleType = {}
       if (width) {
         stys.width = toCssUnit(width)
@@ -133,6 +131,16 @@ export default defineVxeComponent({
         stys['--vxe-ui-scrollbar-x-height'] = toCssUnit(barHeight || barWidth)
       }
       return stys
+    })
+
+    const computeXHeight = computed(() => {
+      const xOpts = computeXOpts.value
+      return xOpts.height
+    })
+
+    const computeYWidth = computed(() => {
+      const yOpts = computeYOpts.value
+      return yOpts.width
     })
 
     const computeXVisible = computed(() => {
@@ -640,6 +648,12 @@ export default defineVxeComponent({
       reFlag.value++
     })
     watch(() => props.syncResize, () => {
+      reFlag.value++
+    })
+    watch(computeYWidth, () => {
+      reFlag.value++
+    })
+    watch(computeXHeight, () => {
       reFlag.value++
     })
     watch(computeXVisible, () => {

@@ -52,7 +52,8 @@ html[data-vxe-lock-scroll] {
     }
     .vxe-modal--body {
       overflow: hidden;
-      .vxe-modal--content {
+      .vxe-modal--content,
+      .vxe-modal--scrollbar-content {
         overflow: hidden;
       }
     }
@@ -74,7 +75,8 @@ html[data-vxe-lock-scroll] {
   align-items: center;
   font-size: 1.6em;
 }
-.vxe-modal--content {
+.vxe-modal--content,
+.vxe-modal--scrollbar-content {
   flex-grow: 1;
   white-space: pre-line;
 }
@@ -447,7 +449,8 @@ html[data-vxe-lock-scroll] {
           visibility: hidden;
         }
       }
-      .vxe-modal--content {
+      .vxe-modal--content,
+      .vxe-modal--scrollbar-content {
         max-width: 800px;
         float: left;
       }
@@ -478,7 +481,8 @@ html[data-vxe-lock-scroll] {
     }
     .vxe-modal--body {
       overflow: auto;
-      .vxe-modal--content {
+      .vxe-modal--content,
+      .vxe-modal--scrollbar-content {
         overflow: auto;
       }
     }
@@ -537,4 +541,8 @@ html[data-vxe-lock-scroll] {
   &[data-effect] {
     overflow: hidden;
   }
+}
+
+.vxe-modal--scrollbar-content {
+  width: 100%;
 }

@@ -487,8 +487,10 @@ export interface TreeInternalData {
   treeExpandedMaps: Record<string, boolean>
   treeExpandLazyLoadedMaps: Record<string, boolean>
 
-  // 滚动条
   resizeObserver?: ResizeObserver
+
+  // 滚动条
+  scrollObserver?: ResizeObserver
   isThumbDrag?: boolean
   thumbDragOffset: number
   yThumbTop: number

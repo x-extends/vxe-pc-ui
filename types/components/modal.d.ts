@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentSizeType, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSlotType } from '@vxe-ui/core'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -126,6 +127,17 @@ export namespace VxeModalPropTypes {
     type: ModalEventTypes
   }) => Promise<any>
   export type Slots = VxeModalSlots
+  export type UseScrollbar = boolean
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
+    /**
+     * 滚动条宽度
+     */
+    width?: number | string
+    /**
+     * 滚动条高度
+     */
+    height?: number | string
+  }
 }
 
 export interface VxeModalProps {
@@ -194,6 +206,14 @@ export interface VxeModalProps {
   animat?: VxeModalPropTypes.Animat
   padding?: VxeModalPropTypes.Padding
   beforeHideMethod?: VxeModalPropTypes.BeforeHideMethod
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeModalPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeModalPropTypes.ScrollbarConfig
   slots?: VxeModalPropTypes.Slots
   /**
    * @deprecated 已废弃，请使用 content

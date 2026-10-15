@@ -1,13 +1,14 @@
-import { h, Teleport, ref, Ref, inject, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed } from 'vue'
+import { h, Teleport, ref, Ref, inject, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
-import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, getFuncText, getDefaultConfig } from '../../ui/src/utils'
 import { getPopupContainer, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
 import { allActiveDrawers } from './store'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
+import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, DrawerPrivateRef, DrawerMethods, DrawerPrivateMethods, VxeDrawerPrivateComputed, VxeDrawerConstructor, VxeDrawerMethods, VxeButtonInstance, DrawerEventTypes, ValueOf, VxeModalConstructor, VxeModalMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
@@ -144,7 +145,12 @@ export default defineVxeComponent({
       default: () => getConfig().drawer.size || getConfig().size
     },
     beforeHideMethod: Function as PropType<VxeDrawerPropTypes.BeforeHideMethod>,
-    slots: Object as PropType<VxeDrawerPropTypes.Slots>
+    slots: Object as PropType<VxeDrawerPropTypes.Slots>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeDrawerPropTypes.UseScrollbar>,
+      default: () => getDefaultConfig(getConfig().drawer.useScrollbar, getConfig().useScrollbar)
+    },
+    scrollbarConfig: Object as PropType<VxeDrawerPropTypes.ScrollbarConfig>
   },
   emits: [
     'update:modelValue',
@@ -213,6 +219,27 @@ export default defineVxeComponent({
           return 'wr'
       }
       return 'wl'
+    })
+
+    const computeScrollbarOpts = computed(() => {
+      return Object.assign({}, getConfig().modal.scrollbarConfig, props.scrollbarConfig)
+    })
+
+    const computeScrollbarProps = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
+      return {
+        width: scrollbarOpts.width,
+        height: scrollbarOpts.height,
+        autoHide: scrollbarOpts.autoHide,
+        visible: scrollbarOpts.visible,
+        xConfig: scrollbarOpts.xConfig,
+        yConfig: scrollbarOpts.yConfig,
+        className: scrollbarOpts.className,
+        viewAttrs: scrollbarOpts.viewAttrs,
+        viewClassName: 'vxe-drawer--scrollbar-content-view' + (viewClassName ? (' ' + viewClassName) : ''),
+        viewInnerClassName: 'vxe-drawer--scrollbar-content-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+      }
     })
 
     const computeMaps: VxeDrawerPrivateComputed = {
@@ -537,10 +564,51 @@ export default defineVxeComponent({
     }
 
     const renderBody = () => {
-      const { slots: propSlots = {}, content, useHtml } = props
+      const { slots: propSlots = {}, content, useScrollbar, useHtml } = props
+      const scrollbarProps = computeScrollbarProps.value
       const defaultSlot = slots.default || propSlots.default
       const leftSlot = slots.left || propSlots.left
       const rightSlot = slots.right || propSlots.right
+      const contVNs: VNode[] = []
+      if (useHtml && !defaultSlot) {
+        contVNs.push(
+          useScrollbar
+            ? h(VxeScrollbarComponent, {
+              key: 'shc',
+              class: 'vxe-drawer--scrollbar-content',
+              ...scrollbarProps
+            }, {
+              default () {
+                return [
+                  h('div', {
+                    class: 'vxe-drawer--scrollbar-content-html',
+                    innerHTML: getFuncText(content)
+                  })
+                ]
+              }
+            })
+            : h('div', {
+              key: 'hc',
+              class: 'vxe-drawer--content',
+              innerHTML: getFuncText(content)
+            })
+        )
+      } else {
+        contVNs.push(
+          useScrollbar
+            ? h(VxeScrollbarComponent, {
+              key: 'sdc',
+              class: 'vxe-drawer--scrollbar-content',
+              ...scrollbarProps
+            }, {
+              default: () => defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer })) : getFuncText(content)
+            })
+            : h('div', {
+              key: 'dc',
+              class: 'vxe-drawer--content'
+            }, defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer })) : getFuncText(content))
+        )
+      }
       return h('div', {
         class: 'vxe-drawer--body'
       }, [
@@ -551,18 +619,7 @@ export default defineVxeComponent({
           : renderEmptyElement($xeDrawer),
         h('div', {
           class: 'vxe-drawer--body-default'
-        }, [
-          useHtml && !defaultSlot
-            ? h('div', {
-              key: 'hc',
-              class: 'vxe-drawer--content',
-              innerHTML: getFuncText(content)
-            })
-            : h('div', {
-              key: 'dc',
-              class: 'vxe-drawer--content'
-            }, defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer })) : getFuncText(content))
-        ]),
+        }, contVNs),
         rightSlot
           ? h('div', {
             class: 'vxe-drawer--body-right'

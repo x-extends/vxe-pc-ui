@@ -16,6 +16,7 @@ import VxeUIGantt from 'vxe-gantt'
 import 'vxe-gantt/lib/style.css'
 
 VxeUI.setConfig({
+  // useScrollbar: true,
   permissionMethod ({ code }) {
     if (code === 'xx') {
       return {

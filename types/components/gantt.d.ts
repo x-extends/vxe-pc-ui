@@ -731,6 +731,8 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeTypeField: ComputedRef<string>
   computeProgressField: ComputedRef<string>
   computeScrollbarOpts: ComputedRef<VxeTablePropTypes.ScrollbarConfig>
+  computeScrollbarXOpts: ComputedRef<VxeTablePropTypes.ScrollbarXConfig>
+  computeScrollbarYOpts: ComputedRef<VxeTablePropTypes.ScrollbarYConfig>
   computeScrollbarXToTop: ComputedRef<boolean>
   computeScrollbarYToLeft: ComputedRef<boolean>
 }

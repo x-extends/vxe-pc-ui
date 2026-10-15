@@ -2,6 +2,7 @@ import { ref, h, reactive, PropType, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, useSize, createEvent, renderEmptyElement } from '../../ui'
 import XEUtils from 'xe-utils'
+import { getDefaultConfig } from '../../ui/src/utils'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 import VxeUIBacktopComponent from '../../backtop'
@@ -28,7 +29,7 @@ export default defineVxeComponent({
     backtopConfig: Object as PropType<VxeLayoutBodyPropTypes.BacktopConfig>,
     useScrollbar: {
       type: Boolean as PropType<VxeLayoutBodyPropTypes.UseScrollbar>,
-      default: () => getConfig().layoutBody.useScrollbar
+      default: () => getDefaultConfig(getConfig().layoutBody.useScrollbar, getConfig().useScrollbar)
     },
     scrollbarConfig: Object as PropType<VxeLayoutBodyPropTypes.ScrollbarConfig>,
     size: {

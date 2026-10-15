@@ -70,8 +70,10 @@ function createInternalData (): TreeInternalData {
     treeExpandedMaps: {},
     treeExpandLazyLoadedMaps: {},
 
-    // 滚动条
     // resizeObserver: undefined,
+
+    // 滚动条
+    // scrollObserver: undefined,
     // isThumbDrag: false,
     thumbDragOffset: 0,
     yThumbTop: 0,
@@ -236,7 +238,7 @@ export default defineVxeComponent({
     virtualYConfig: Object as PropType<VxeTreePropTypes.VirtualYConfig>,
     useScrollbar: {
       type: Boolean as PropType<VxeTreePropTypes.UseScrollbar>,
-      default: () => getConfig().tree.useScrollbar
+      default: () => getDefaultConfig(getConfig().tree.useScrollbar, getConfig().useScrollbar)
     },
     scrollbarConfig: Object as PropType<VxeTreePropTypes.ScrollbarConfig>
   },
@@ -373,11 +375,8 @@ export default defineVxeComponent({
     })
 
     const computeWrapperStyles = computed(() => {
-      const scrollbarOpts = computeScrollbarOpts.value
-      const scrollbarXOpts = computeScrollbarXOpts.value
-      const scrollbarYOpts = computeScrollbarYOpts.value
-      const barWidth = getDefaultConfig(getDefaultConfig(scrollbarYOpts.width, scrollbarOpts.width), getConfig().scrollbar.width)
-      const barHeight = getDefaultConfig(getDefaultConfig(scrollbarXOpts.height, scrollbarOpts.height), getConfig().scrollbar.height)
+      const barWidth = computeScrollYWidth.value
+      const barHeight = computeScrollXHeight.value
       const stys: VxeComponentStyleType = {}
       if (barWidth || barHeight) {
         stys['--vxe-ui-scrollbar-y-width'] = toCssUnit(barWidth || barHeight)
@@ -436,6 +435,18 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().scrollbar.yConfig, scrollbarOpts.yConfig)
     })
 
+    const computeScrollXHeight = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      const scrollbarXOpts = computeScrollbarXOpts.value
+      return getDefaultConfig(getDefaultConfig(scrollbarXOpts.height, scrollbarOpts.height), getConfig().scrollbar.height)
+    })
+
+    const computeScrollYWidth = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      const scrollbarYOpts = computeScrollbarYOpts.value
+      return getDefaultConfig(getDefaultConfig(scrollbarYOpts.width, scrollbarOpts.width), getConfig().scrollbar.width)
+    })
+
     const computeScrollXVisible = computed(() => {
       const scrollbarOpts = computeScrollbarOpts.value
       const scrollbarXOpts = computeScrollbarXOpts.value
@@ -461,15 +472,11 @@ export default defineVxeComponent({
     })
 
     const computeScrollbarWrapperClss = computed(() => {
-      const scrollbarOpts = computeScrollbarOpts.value
-      const { padding } = scrollbarOpts
       const { yThumbHeight, xThumbWidth } = reactData
       const scrollbarXToTop = computeScrollbarXToTop.value
       const scrollbarYToLeft = computeScrollbarYToLeft.value
       const scrollXVisible = computeScrollXVisible.value
       const scrollYVisible = computeScrollYVisible.value
-      const scrollXAutoHide = computeScrollXAutoHide.value
-      const scrollYAutoHide = computeScrollYAutoHide.value
       return domUtils.buildClass([
         'vxe-scrollbar is--virtual',
         `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
@@ -477,9 +484,6 @@ export default defineVxeComponent({
         `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
         `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
       ], {
-        'is--padding': padding,
-        'ov-x--auto-hide': scrollXAutoHide,
-        'ov-y--auto-hide': scrollYAutoHide,
         'overflow-y': yThumbHeight,
         'overflow-x': xThumbWidth
       })
@@ -3855,6 +3859,12 @@ export default defineVxeComponent({
     watch(() => props.useScrollbar, () => {
       reFlag.value++
     })
+    watch(computeScrollYWidth, () => {
+      reFlag.value++
+    })
+    watch(computeScrollXHeight, () => {
+      reFlag.value++
+    })
     watch(computeScrollXVisible, () => {
       nextTick(() => {
         reFlag.value++
@@ -3893,23 +3903,32 @@ export default defineVxeComponent({
       if (menuConfig && !VxeUIContextMenu) {
         errLog('vxe.error.reqComp', ['vxe-context-menu'])
       }
+      const el = refElem.value
       if (useScrollbar || autoResize) {
-        const el = refElem.value
         const viewInnerEl = refVirtualBody.value
+        const scrollObserver = globalResize.create(() => {
+          updateScrollbar()
+        })
+        if (el) {
+          scrollObserver.observe(el)
+        }
+        if (viewInnerEl) {
+          scrollObserver.observe(viewInnerEl)
+        }
+        internalData.scrollObserver = scrollObserver
+      }
+      if (autoResize) {
         const parentEl = getParentElem()
         const resizeObserver = globalResize.create(() => {
-          reFlag.value++
+          if (props.autoResize) {
+            reFlag.value++
+          }
         })
         if (el) {
           resizeObserver.observe(el)
-          if (autoResize) {
-            if (parentEl) {
-              resizeObserver.observe(parentEl)
-            }
-          }
         }
-        if (viewInnerEl) {
-          resizeObserver.observe(viewInnerEl)
+        if (parentEl) {
+          resizeObserver.observe(parentEl)
         }
         internalData.resizeObserver = resizeObserver
       }
@@ -3921,9 +3940,12 @@ export default defineVxeComponent({
     })
 
     onBeforeUnmount(() => {
-      const { resizeObserver } = internalData
+      const { scrollObserver, resizeObserver } = internalData
       if (resizeObserver) {
         resizeObserver.disconnect()
+      }
+      if (scrollObserver) {
+        scrollObserver.disconnect()
       }
       globalEvents.off($xeTree, 'resize')
       XEUtils.assign(reactData, createReactData())

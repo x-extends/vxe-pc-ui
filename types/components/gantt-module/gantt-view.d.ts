@@ -2,6 +2,7 @@ import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
 import { VxeComponentBaseOptions, DefineVxeComponentInstance } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
 import { VxeGanttDefines } from '../gantt'
+import { VxeScrollbarPropTypes } from '../scrollbar'
 
 /* eslint-disable no-use-before-define */
 
@@ -36,6 +37,10 @@ export interface GanttViewReactData {
   // 最后滚动时间戳
   lastScrollTime: number
   lazScrollLoading: boolean
+
+  // 滚动条
+  yThumbHeight: number
+  xThumbWidth: number
 
   scrollVMLoading: boolean
   scrollYHeight: number
@@ -75,7 +80,13 @@ export interface GanttViewInternalData {
     startIndex: number
     endIndex: number
   }
-  // 最后滚动位置
+
+  // 滚动条
+  scrollObserver?: ResizeObserver
+  isThumbDrag?: boolean
+  thumbDragOffset: number
+  yThumbTop: number
+  xThumbLeft: number
   lastScrollLeft: number
   lastScrollTop: number
 
@@ -111,6 +122,14 @@ export interface GanttViewPrivateRef {
 }
 
 export interface GanttViewPrivateComputed {
+  computeScrollXHeight: ComputedRef<number | undefined>
+  computeScrollYWidth: ComputedRef<number | undefined>
+  computeScrollXVisible: ComputedRef<'auto' | 'visible' | 'hidden' | boolean | undefined>
+  computeScrollYVisible: ComputedRef<'auto' | 'visible' | 'hidden' | boolean | undefined>
+  computeScrollXAutoHide: ComputedRef<VxeScrollbarPropTypes.AutoHide | undefined>
+  computeScrollYAutoHide: ComputedRef<VxeScrollbarPropTypes.AutoHide | undefined>
+  computeScrollbarXToTop: ComputedRef<boolean>
+  computeScrollbarYToLeft: ComputedRef<boolean>
   computeScaleDateList: ComputedRef<Date[]>
   computeNowLineLeft: ComputedRef<number>
 }
@@ -164,6 +183,10 @@ export interface VxeGanttViewPrivateMethods {
    * @private
    */
   handleUpdateSYStatus(scrollYLoad: boolean): void
+  /**
+   * @private
+   */
+  updateScrollbar(): void
 }
 
 export interface VxeGanttViewMethods {

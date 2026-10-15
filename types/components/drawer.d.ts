@@ -1,5 +1,6 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
 import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -73,6 +74,17 @@ export namespace VxeDrawerPropTypes {
   export type Padding = boolean
   export type BeforeHideMethod = (params: VxeDrawerDefines.DrawerVisibleParams) => Promise<any>
   export type Slots = VxeDrawerSlots
+  export type UseScrollbar = boolean
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
+    /**
+     * 滚动条宽度
+     */
+    width?: number | string
+    /**
+     * 滚动条高度
+     */
+    height?: number | string
+  }
 }
 
 export interface VxeDrawerProps {
@@ -125,6 +137,14 @@ export interface VxeDrawerProps {
   padding?: VxeDrawerPropTypes.Padding
   beforeHideMethod?: VxeDrawerPropTypes.BeforeHideMethod
   slots?: VxeDrawerPropTypes.Slots
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeDrawerPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeDrawerPropTypes.ScrollbarConfig
 }
 
 export interface DrawerPrivateComputed {

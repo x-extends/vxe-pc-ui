@@ -2,13 +2,14 @@ import { h, Teleport, ref, Ref, inject, computed, reactive, provide, nextTick, w
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getEventTargetNode, getPopupContainer, getPopupWrapperElement, isScale, toCssUnit } from '../../ui/src/dom'
-import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue, getDefaultConfig } from '../../ui/src/utils'
 import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { allActiveModals } from './store'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
+import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods, ValueOf, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
@@ -223,6 +224,11 @@ export default defineVxeComponent({
     },
     beforeHideMethod: Function as PropType<VxeModalPropTypes.BeforeHideMethod>,
     slots: Object as PropType<VxeModalPropTypes.Slots>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeModalPropTypes.UseScrollbar>,
+      default: () => getDefaultConfig(getConfig().modal.useScrollbar, getConfig().useScrollbar)
+    },
+    scrollbarConfig: Object as PropType<VxeModalPropTypes.ScrollbarConfig>,
 
     /**
      * 已废弃
@@ -308,6 +314,27 @@ export default defineVxeComponent({
 
     const computeZoomOpts = computed(() => {
       return Object.assign({}, getConfig().modal.zoomConfig, props.zoomConfig)
+    })
+
+    const computeScrollbarOpts = computed(() => {
+      return Object.assign({}, getConfig().modal.scrollbarConfig, props.scrollbarConfig)
+    })
+
+    const computeScrollbarProps = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
+      return {
+        width: scrollbarOpts.width,
+        height: scrollbarOpts.height,
+        autoHide: scrollbarOpts.autoHide,
+        visible: scrollbarOpts.visible,
+        xConfig: scrollbarOpts.xConfig,
+        yConfig: scrollbarOpts.yConfig,
+        className: scrollbarOpts.className,
+        viewAttrs: scrollbarOpts.viewAttrs,
+        viewClassName: 'vxe-modal--scrollbar-content-view' + (viewClassName ? (' ' + viewClassName) : ''),
+        viewInnerClassName: 'vxe-modal--scrollbar-content-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+      }
     })
 
     const computeMaps: VxeModalPrivateComputed = {
@@ -1371,9 +1398,10 @@ export default defineVxeComponent({
     }
 
     const renderBody = () => {
-      const { slots: propSlots = {}, status, message, iconStatus, useHtml } = props
+      const { slots: propSlots = {}, status, message, iconStatus, useScrollbar, useHtml } = props
       const content = props.content || message
       const isMsg = computeIsMsg.value
+      const scrollbarProps = computeScrollbarProps.value
       const defaultSlot = slots.default || propSlots.default
       const leftSlot = slots.left || propSlots.left
       const rightSlot = slots.right || propSlots.right
@@ -1389,18 +1417,47 @@ export default defineVxeComponent({
           ])
         )
       }
-      contVNs.push(
-        useHtml && !defaultSlot
-          ? h('div', {
-            key: 'hc',
-            class: 'vxe-modal--content',
-            innerHTML: getFuncText(content)
-          })
-          : h('div', {
-            key: 'dc',
-            class: 'vxe-modal--content'
-          }, defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content))
-      )
+
+      if (useHtml && !defaultSlot) {
+        contVNs.push(
+          useScrollbar
+            ? h(VxeScrollbarComponent, {
+              key: 'shc',
+              class: 'vxe-modal--scrollbar-content',
+              ...scrollbarProps
+            }, {
+              default () {
+                return [
+                  h('div', {
+                    class: 'vxe-modal--scrollbar-content-html',
+                    innerHTML: getFuncText(content)
+                  })
+                ]
+              }
+            })
+            : h('div', {
+              key: 'hc',
+              class: 'vxe-modal--content',
+              innerHTML: getFuncText(content)
+            })
+        )
+      } else {
+        contVNs.push(
+          useScrollbar
+            ? h(VxeScrollbarComponent, {
+              key: 'sdc',
+              class: 'vxe-modal--scrollbar-content',
+              ...scrollbarProps
+            }, {
+              default: () => defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content)
+            })
+            : h('div', {
+              key: 'dc',
+              class: 'vxe-modal--content'
+            }, defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content))
+        )
+      }
+
       return h('div', {
         class: 'vxe-modal--body'
       }, [
