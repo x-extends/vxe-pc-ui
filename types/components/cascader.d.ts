@@ -150,6 +150,10 @@ export namespace VxeCascaderPropTypes {
      */
     defaultPlacement?: 'top' | 'bottom' | '' | null
     transfer?: boolean
+    /**
+     * 挂载到指定元素下
+     */
+    appendTo?: string | HTMLElement | ((params: {}) => string | HTMLElement)
     height?: number | string
     nodeWidth?: number | string
     nodeHeight?: number | string

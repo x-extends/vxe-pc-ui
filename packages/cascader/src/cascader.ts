@@ -816,6 +816,7 @@ export default defineVxeComponent({
         const ppObj = updatePanelPlacement(targetElem, panelElem, {
           placement: popupOpts.placement,
           defaultPlacement: popupOpts.defaultPlacement,
+          appendTo: popupOpts.appendTo,
           teleportTo: btnTransfer,
           isMinWidth: false
         })

@@ -95,6 +95,10 @@ export namespace VxeButtonPropTypes {
   export type DestroyOnClose = boolean
   export interface PopupConfig {
     /**
+     * 默认弹出面板方向
+     */
+    defaultPlacement?: 'top' | 'bottom' | '' | null
+    /**
      * 设置弹出面板方向
      */
     placement?: 'top' | 'bottom' | '' | null

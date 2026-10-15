@@ -314,7 +314,7 @@ export default defineVxeComponent({
     }
 
     const updateTipStyle = () => {
-      const { placement, defaultPlacement, isArrow } = props
+      const { placement, defaultPlacement, appendTo, isArrow } = props
       const { tipTarget: targetElem, tipStore, tipPos, tipZindex } = reactData
       const panelElem = refElem.value
       if (!targetElem || !panelElem) {
@@ -348,6 +348,7 @@ export default defineVxeComponent({
         defaultLeft: left,
         placement: placement,
         defaultPlacement: defaultPlacement,
+        appendTo: appendTo,
         isMinWidth: false,
         teleportTo: true
       })
