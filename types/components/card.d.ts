@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentIsVScrollbar } from '@vxe-ui/core'
 import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
@@ -26,7 +26,7 @@ export namespace VxeCardPropTypes {
   export type Shadow = boolean
   export type Padding = boolean
   export type Size = VxeComponentSizeType
-  export type UseScrollbar = boolean
+  export type UseScrollbar = VxeComponentIsVScrollbar
   export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
     /**
      * 滚动条宽度

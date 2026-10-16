@@ -1,6 +1,6 @@
 import { VNode, CreateElement } from 'vue'
 import { NormalizedScopedSlot } from 'vue/types/vnode'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeGlobalRendererOptions } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeGlobalRendererOptions, VxeComponentIsVScrollbar } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
 import { VxeGridConstructor, VxeGridPrivateMethods } from './grid'
@@ -1392,6 +1392,10 @@ export namespace VxeTablePropTypes {
      * 是否显示底部按钮
      */
     showFooter?: boolean
+    /**
+     * 使用虚拟滚动条
+     */
+    useScrollbar?: VxeTooltipPropTypes.UseScrollbar
   }
   export interface FilterOpts<D = VxeTablePropTypes.Row> extends FilterConfig<D> { }
 
@@ -2987,7 +2991,7 @@ export namespace VxeTablePropTypes {
      */
     overscrollBehavior?: 'contain' | 'none' | ''
   }
-  export type UseScrollbar = boolean
+  export type UseScrollbar = VxeComponentIsVScrollbar
   /**
    * 滚动条配置项
    */
@@ -3965,7 +3969,8 @@ export interface VxeTableProps<D = any> {
 }
 
 export interface TablePrivateComputed<D = any> {
-  computeSize: VxeTablePropTypes.Size
+  computeSize: VxeComponentSizeType
+  computeIsVScrollbar: VxeComponentIsVScrollbar
   computeTableId: string
   computeRowField: string
   computeEditDirtyOpts: VxeTablePropTypes.EditDirtyConfig
@@ -6010,7 +6015,7 @@ export interface TablePrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  updateScrollbar(): void
+  updateScrollbar(): Promise<void>
   /**
    * 内部方法
    * @private
@@ -6359,7 +6364,6 @@ export namespace VxeTableDefines {
     style: any
     column: VxeTableDefines.ColumnInfo | null | undefined
     visible: boolean
-    maxHeight: number | string | null
   }
 
   export interface HistoryStackObj<D = any> {

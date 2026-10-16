@@ -7,7 +7,7 @@ import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 import VxeUIBacktopComponent from '../../backtop'
 
-import type { LayoutBodyInternalData, VxeLayoutBodyPropTypes, LayoutBodyReactData, VxeLayoutBodyEmits, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { LayoutBodyInternalData, VxeLayoutBodyPropTypes, LayoutBodyReactData, VxeLayoutBodyEmits, VxeComponentSizeType, VxeComponentIsVScrollbar, ValueOf } from '../../../types'
 
 function createInternalData (): LayoutBodyInternalData {
   return {}
@@ -20,7 +20,8 @@ function createReactData (): LayoutBodyReactData {
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutBody',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin
   ],
   props: {
     loading: Boolean as PropType<VxeLayoutBodyPropTypes.Loading>,
@@ -56,6 +57,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
+      computeIsVScrollbar(): VxeComponentIsVScrollbar
     }),
     computeBacktopOpts () {
       const $xeLayoutBody = this

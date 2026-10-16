@@ -7,12 +7,13 @@ import XEUtils from 'xe-utils'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeComponentSizeType, VxeLayoutAsideEmits, ValueOf, VxeComponentStyleType } from '../../../types'
+import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeComponentSizeType, VxeLayoutAsideEmits, ValueOf, VxeComponentStyleType, VxeComponentIsVScrollbar } from '../../../types'
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutAside',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin
   ],
   props: {
     width: [String, Number] as PropType<VxeLayoutAsidePropTypes.Width>,
@@ -49,6 +50,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
+      computeIsVScrollbar(): VxeComponentIsVScrollbar
     }),
     computeCollapseOpts () {
       const $xeLayoutAside = this

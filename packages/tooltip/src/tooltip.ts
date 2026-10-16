@@ -7,7 +7,7 @@ import { getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type { VxeTooltipPropTypes, VxeTooltipEmits, TooltipReactData, TooltipInternalData, VxeComponentSizeType, ValueOf, VxeScrollbarInstance, VxeComponentStyleType } from '../../../types'
+import type { VxeTooltipPropTypes, VxeTooltipEmits, TooltipReactData, TooltipInternalData, VxeComponentSizeType, VxeComponentIsVScrollbar, ValueOf, VxeScrollbarInstance, VxeComponentStyleType } from '../../../types'
 
 const { baseUtils, getConfig, createEvent, globalEvents } = VxeUI
 const { getDefVal } = baseUtils
@@ -40,7 +40,8 @@ function createInternalData (): TooltipInternalData {
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTooltip',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin
   ],
   props: {
     value: Boolean,
@@ -143,7 +144,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   computed: {
     ...({} as {
-      computeSize(): VxeComponentSizeType
+      computeSize(): VxeComponentSizeType,
+      computeIsVScrollbar(): VxeComponentIsVScrollbar
     }),
     computeWrapperStyle () {
       const $xeTooltip = this
@@ -293,11 +295,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     updatePlacement () {
       const $xeTooltip = this
 
-      $xeTooltip.updateTipStyle()
-      return $xeTooltip.$nextTick().then(() => {
+      return $xeTooltip.updateTipStyle().then(() => {
         return $xeTooltip.updateTipStyle()
       }).then(() => {
-        return $xeTooltip.updateTipStyle()
+        setTimeout(() => {
+          return $xeTooltip.updateTipStyle()
+        }, 15)
       })
     },
     isActived () {
@@ -500,8 +503,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeTooltip.$scopedSlots
       const reactData = $xeTooltip.reactData
 
-      const { useHtml, theme, useScrollbar, useHTML } = props
+      const { useHtml, theme, useHTML } = props
       const { tipContent } = reactData
+      const isVScrollbar = $xeTooltip.computeIsVScrollbar
       const wrapperStyle = $xeTooltip.computeWrapperStyle
       const contentSlot = slots.content
       const contVNs: VNode[] = []
@@ -525,7 +529,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           key: 'cd'
         }, `${tipContent}`))
       }
-      if (useScrollbar) {
+      if (isVScrollbar) {
         return h(VxeScrollbarComponent, {
           key: 5,
           ref: 'contentScrollbar',

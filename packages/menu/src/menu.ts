@@ -9,7 +9,7 @@ import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type { VxeMenuDefines, MenuInternalData, MenuReactData, VxeMenuPropTypes, VxeLayoutAsideConstructor, VxeMenuEmits, VxeLayoutAsidePropTypes, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf, VxeScrollbarInstance } from '../../../types'
+import type { VxeMenuDefines, MenuInternalData, MenuReactData, VxeMenuPropTypes, VxeLayoutAsideConstructor, VxeMenuEmits, VxeLayoutAsidePropTypes, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf, VxeScrollbarInstance, VxeComponentIsVScrollbar } from '../../../types'
 
 const { errLog } = createComponentLog('menu')
 
@@ -43,6 +43,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeMenu',
   mixins: [
     globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin,
     globalMixins.permissionMixin
   ],
   props: {
@@ -105,6 +106,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computePermissionInfo(): VxeComponentPermissionInfo
       computeSize(): VxeComponentSizeType
+      computeIsVScrollbar(): VxeComponentIsVScrollbar
       $xeLayoutAside(): VxeLayoutAsideConstructor | null
     }),
     computePropsOpts () {

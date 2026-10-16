@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentIsVScrollbar } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -17,11 +17,13 @@ export interface VxeLayoutContainerPrivateRef extends LayoutContainerPrivateRef 
 
 export namespace VxeLayoutContainerPropTypes {
   export type Size = VxeComponentSizeType
+  export type UseScrollbar = VxeComponentIsVScrollbar
   export type Vertical = boolean
 }
 
 export interface VxeLayoutContainerProps {
   size?: VxeLayoutContainerPropTypes.Size
+  useScrollbar?: VxeLayoutContainerPropTypes.UseScrollbar
   vertical?: VxeLayoutContainerPropTypes.Vertical
 }
 

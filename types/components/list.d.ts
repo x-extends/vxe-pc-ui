@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentIsVScrollbar } from '@vxe-ui/core'
 import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 import { VxeScrollbarProps } from './scrollbar'
 
@@ -219,7 +219,7 @@ export namespace VxeListPropTypes {
      */
     enabled?: boolean
   }
-  export type UseScrollbar = boolean
+  export type UseScrollbar = VxeComponentIsVScrollbar
   export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible'> {
     /**
      * 滚动条宽度

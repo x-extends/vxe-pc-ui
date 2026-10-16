@@ -1,17 +1,26 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, globalMixins, createEvent } from '../../ui'
+import { VxeUI, globalMixins } from '../../ui'
 
-import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, VxeLayoutContainerEmits, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, VxeLayoutContainerEmits, VxeComponentSizeType, ValueOf, VxeComponentIsVScrollbar } from '../../../types'
+
+const { getConfig, baseUtils, createEvent } = VxeUI
+
+const { getDefVal } = baseUtils
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutContainer',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin
   ],
   props: {
     vertical: Boolean as PropType<VxeLayoutContainerPropTypes.Vertical>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeLayoutContainerPropTypes.UseScrollbar>,
+      default: () => getDefVal(getConfig().layoutContainer.useScrollbar, getConfig().useScrollbar)
+    },
     size: {
       type: String as PropType<VxeLayoutContainerPropTypes.Size>,
       default: () => getConfig().layoutContainer.size || getConfig().size
@@ -29,6 +38,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
+      computeIsVScrollbar(): VxeComponentIsVScrollbar
     })
   },
   methods: {

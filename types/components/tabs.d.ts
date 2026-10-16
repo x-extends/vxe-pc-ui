@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentIsVScrollbar } from '@vxe-ui/core'
 import { VxeTabPaneProps, VxeTabPaneDefines, VxeTabPanePropTypes } from './tab-pane'
 import { VxeScrollbarProps } from './scrollbar'
 
@@ -106,7 +106,7 @@ export namespace VxeTabsPropTypes {
       option: Omit<VxeTabPaneProps, 'slots'>
     }) => boolean
   }
-  export type UseScrollbar = boolean
+  export type UseScrollbar = VxeComponentIsVScrollbar
   export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
     /**
      * 滚动条宽度

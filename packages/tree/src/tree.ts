@@ -12,7 +12,7 @@ import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 import VxeTooltipComponent from '../../tooltip'
 
-import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, VxeComponentSizeType, ValueOf, VxeTooltipInstance, VxeComponentStyleType, VxeScrollbarPropTypes } from '../../../types'
+import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, VxeComponentSizeType, VxeComponentIsVScrollbar, ValueOf, VxeTooltipInstance, VxeComponentStyleType, VxeScrollbarPropTypes } from '../../../types'
 
 const { warnLog, errLog } = createComponentLog('tree')
 
@@ -619,7 +619,8 @@ function createInternalData (): TreeInternalData {
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTree',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin
   ],
   props: {
     data: Array as PropType<VxeTreePropTypes.Data>,
@@ -772,13 +773,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData,
       crossTreeDragNodeInfo: crossTreeDragNodeGlobal,
 
-      reFlag: 0,
+      reLayoutFlag: 0,
+      reScrollFlag: 0,
       dataFlag: 0
     }
   },
   computed: {
     ...({} as {
-      computeSize(): VxeComponentSizeType
+      computeSize(): VxeComponentSizeType,
+      computeIsVScrollbar(): VxeComponentIsVScrollbar
     }),
     computeTitleField () {
       const $xeTree = this
@@ -1692,8 +1695,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     updateScrollbar () {
       const $xeTree = this
 
-      $xeTree.updateThumbSize()
-      $xeTree.updateThumbOffset()
+      const isVScrollbar = $xeTree.computeIsVScrollbar
+      if (isVScrollbar) {
+        return $xeTree.$nextTick().then(() => {
+          $xeTree.updateThumbSize()
+          $xeTree.updateThumbOffset()
+        })
+      }
+      return Promise.resolve()
     },
     /**
      * 重新计算列表
@@ -1720,11 +1729,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const parentPaddingSize = getPaddingTopBottomSize(parentEl)
           reactData.parentHeight = Math.max(headHeight + footHeight + rowHeight, parentEl.clientHeight - parentPaddingSize - headHeight - footHeight)
         }
-        $xeTree.updateScrollbar()
         $xeTree.updateHeight()
         return $xeTree.computeScrollLoad().then(() => {
           $xeTree.updateHeight()
           $xeTree.updateYSpace()
+          $xeTree.updateScrollbar()
         })
       }
       return $xeTree.$nextTick()
@@ -1763,7 +1772,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
 
-      const scrollBodyElem = evnt.target as HTMLDivElement
+      const scrollBodyElem = evnt.currentTarget as HTMLDivElement
       const scrollTop = scrollBodyElem.scrollTop
       const scrollLeft = scrollBodyElem.scrollLeft
       const isX = scrollLeft !== internalData.lastScrollLeft
@@ -3452,6 +3461,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
 
     // 滚动条
+    bindScrollbarResize () {
+      const $xeTree = this
+      const internalData = $xeTree.internalData
+
+      const isVScrollbar = $xeTree.computeIsVScrollbar
+      const { scrollObserver } = internalData
+      if (isVScrollbar) {
+        if (!scrollObserver) {
+          const el = $xeTree.$refs.refElem as HTMLDivElement
+          const viewInnerEl = $xeTree.$refs.refVirtualSpaceElem as HTMLDivElement
+          const scrollObserver = globalResize.create(() => {
+            $xeTree.reScrollFlag++
+          })
+          if (el) {
+            scrollObserver.observe(el)
+          }
+          if (viewInnerEl) {
+            scrollObserver.observe(viewInnerEl)
+          }
+          internalData.scrollObserver = scrollObserver
+        }
+      }
+    },
     updateThumbSize () {
       const $xeTree = this
       const reactData = $xeTree.reactData
@@ -4011,9 +4043,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeTree.$scopedSlots
       const reactData = $xeTree.reactData
 
-      const { loading, trigger, showLine, useScrollbar } = props
+      const { loading, trigger, showLine } = props
       const { bodyHeight, topSpaceHeight, treeList, tooltipStore, xThumbWidth, yThumbHeight } = reactData
       const vSize = $xeTree.computeSize
+      const isVScrollbar = $xeTree.computeIsVScrollbar
       const radioOpts = $xeTree.computeRadioOpts
       const checkboxOpts = $xeTree.computeCheckboxOpts
       const loadingOpts = $xeTree.computeLoadingOpts
@@ -4046,17 +4079,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ref: 'refElem',
         class: [
           'vxe-tree',
-          useScrollbar ? `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}` : '',
-          useScrollbar ? `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}` : '',
-          useScrollbar ? `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}` : '',
-          useScrollbar ? `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}` : '',
+          isVScrollbar ? `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}` : '',
+          isVScrollbar ? `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}` : '',
+          isVScrollbar ? `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}` : '',
+          isVScrollbar ? `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}` : '',
           {
             [`size--${vSize}`]: vSize,
             'show--line': showLine,
-            'is--virtual-scrollbar': useScrollbar,
-            'ov-padding': useScrollbar && scrollbarOpts.padding,
-            'ov-x--auto-hide': useScrollbar && scrollXAutoHide,
-            'ov-y--auto-hide': useScrollbar && scrollYAutoHide,
+            'is--virtual-scrollbar': isVScrollbar,
+            'ov-padding': isVScrollbar && scrollbarOpts.padding,
+            'ov-x--auto-hide': isVScrollbar && scrollXAutoHide,
+            'ov-y--auto-hide': isVScrollbar && scrollYAutoHide,
             'overflow-y': yThumbHeight,
             'overflow-x': xThumbWidth,
             'checkbox--highlight': checkboxOpts.highlight,
@@ -4084,6 +4117,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }, [
           h('div', {
+            ref: 'refVirtualSpaceElem',
             class: 'vxe-tree--y-space',
             style: {
               height: bodyHeight ? `${bodyHeight}px` : ''
@@ -4106,7 +4140,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         /**
          * 滚动条
          */
-        useScrollbar
+        isVScrollbar
           ? h('div', {
             class: scrollbarWrapperClss
           }, [
@@ -4252,52 +4286,64 @@ export default /* define-vxe-component start */ defineVxeComponent({
     height () {
       const $xeTree = this
 
-      $xeTree.reFlag++
+      $xeTree.reLayoutFlag++
     },
     minHeight () {
       const $xeTree = this
 
-      $xeTree.reFlag++
+      $xeTree.reLayoutFlag++
     },
     maxHeight () {
       const $xeTree = this
 
-      $xeTree.reFlag++
+      $xeTree.reLayoutFlag++
     },
-    useScrollbar () {
+    computeIsVScrollbar () {
       const $xeTree = this
 
-      $xeTree.reFlag++
+      $xeTree.$nextTick(() => {
+        $xeTree.bindScrollbarResize()
+        $xeTree.$nextTick(() => {
+          $xeTree.reLayoutFlag++
+        })
+      })
     },
     computeScrollYWidth () {
       const $xeTree = this
 
-      $xeTree.reFlag++
+      $xeTree.reLayoutFlag++
     },
     computeScrollXHeight () {
       const $xeTree = this
 
-      $xeTree.reFlag++
+      $xeTree.reLayoutFlag++
     },
     computeScrollXVisible () {
       const $xeTree = this
 
       $xeTree.$nextTick(() => {
-        $xeTree.reFlag++
+        $xeTree.reLayoutFlag++
       })
     },
     computeScrollYVisible () {
       const $xeTree = this
 
       $xeTree.$nextTick(() => {
-        $xeTree.reFlag++
+        $xeTree.reLayoutFlag++
       })
     },
-    reFlag () {
+    reLayoutFlag () {
       const $xeTree = this
 
       $xeTree.recalculate().then(() => {
         $xeTree.recalculate()
+      })
+    },
+    reScrollFlag () {
+      const $xeTree = this
+
+      $xeTree.updateScrollbar().then(() => {
+        $xeTree.updateScrollbar()
       })
     }
   },
@@ -4316,7 +4362,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const props = $xeTree
     const internalData = $xeTree.internalData
 
-    const { transform, drag, menuConfig, showOverflow, lazy, loadMethod, autoResize, useScrollbar } = props
+    const { transform, drag, menuConfig, showOverflow, lazy, loadMethod, autoResize } = props
     const dragOpts = $xeTree.computeDragOpts
     if (!showOverflow) {
       errLog('vxe.error.errProp', ['show-overflow=false', 'show-overflow=true'])
@@ -4337,25 +4383,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     if (menuConfig && !VxeUIContextMenu) {
       errLog('vxe.error.reqComp', ['vxe-context-menu'])
     }
-    const el = $xeTree.$refs.refElem as HTMLDivElement
-    if (useScrollbar) {
-      const viewInnerEl = $xeTree.$refs.refVirtualBody as HTMLDivElement
-      const scrollObserver = globalResize.create(() => {
-        $xeTree.updateScrollbar()
-      })
-      if (el) {
-        scrollObserver.observe(el)
-      }
-      if (viewInnerEl) {
-        scrollObserver.observe(viewInnerEl)
-      }
-      internalData.scrollObserver = scrollObserver
-    }
     if (autoResize) {
+      const el = $xeTree.$refs.refElem as HTMLDivElement
       const parentEl = $xeTree.getParentElem()
       const resizeObserver = globalResize.create(() => {
         if (props.autoResize) {
-          $xeTree.reFlag++
+          $xeTree.reLayoutFlag++
         }
       })
       if (el) {
@@ -4367,9 +4400,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.resizeObserver = resizeObserver
     }
 
-    $xeTree.reFlag++
+    $xeTree.reLayoutFlag++
+    $xeTree.bindScrollbarResize()
     globalEvents.on($xeTree, 'resize', () => {
-      $xeTree.reFlag++
+      $xeTree.reLayoutFlag++
     })
   },
   beforeDestroy () {

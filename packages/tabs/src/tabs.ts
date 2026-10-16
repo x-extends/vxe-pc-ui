@@ -9,7 +9,7 @@ import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, VxeComponentSizeType, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, VxeComponentStyleType } from '../../../types'
+import type { VxeTabsPropTypes, VxeTabPaneProps, VxeTabsEmits, TabsInternalData, TabsReactData, VxeComponentSizeType, VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines, ValueOf, VxeComponentStyleType, VxeComponentIsVScrollbar } from '../../../types'
 
 const { baseUtils, createEvent, getConfig, getIcon, globalEvents, permission, renderEmptyElement } = VxeUI
 const { getDefVal } = baseUtils
@@ -21,7 +21,8 @@ const scrollbarOffsetSize = 20
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTabs',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin
   ],
   props: {
     value: [String, Number, Boolean] as PropType<VxeTabsPropTypes.ModelValue>,
@@ -107,6 +108,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
+      computeIsVScrollbar(): VxeComponentIsVScrollbar
       $xeParentTabs():(VxeTabsConstructor & VxeTabsPrivateMethods) | null
     }),
     computeParentTabsResizeFlag () {

@@ -8,12 +8,13 @@ import { getSlotVNs } from '../../ui/src/vn'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type { CardReactData, VxeCardEmits, VxeCardPropTypes, ValueOf, VxeComponentSizeType } from '../../../types'
+import type { CardReactData, VxeCardEmits, VxeCardPropTypes, ValueOf, VxeComponentSizeType, VxeComponentIsVScrollbar } from '../../../types'
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCard',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin
   ],
   props: {
     title: String as PropType<VxeCardPropTypes.Title>,
@@ -58,6 +59,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
+      computeIsVScrollbar(): VxeComponentIsVScrollbar
     }),
     computeCardStyle () {
       const $xeCard = this

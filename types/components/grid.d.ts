@@ -1,6 +1,6 @@
 import { CreateElement } from 'vue'
 import { NormalizedScopedSlot } from 'vue/types/vnode'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, VxeComponentIsVScrollbar, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 import { VxeToolbarProps, VxeToolbarPropTypes, VxeToolbarSlotTypes } from './toolbar'
 import { VxeTableDefines, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods, VxeTableSlotTypes } from './table'
 import { VxeColumnPropTypes } from './column'
@@ -461,7 +461,8 @@ export interface VxeGridProps<D = any> extends VxeTableProps<D> {
 }
 
 export interface GridPrivateComputed<D = any> {
-  computeSize: VxeGridPropTypes.Size
+  computeSize: VxeComponentSizeType
+  computeIsVScrollbar: VxeComponentIsVScrollbar
   computeProxyOpts: VxeGridPropTypes.ProxyConfig<D>
   computePagerOpts: VxeGridPropTypes.PagerConfig
   computeFormOpts: VxeGridPropTypes.FormConfig

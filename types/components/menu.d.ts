@@ -1,5 +1,5 @@
 import { CreateElement } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType, VxeComponentPermissionCodeType, VxeComponentSlotType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType, VxeComponentPermissionCodeType, VxeComponentSlotType, VxeComponentIsVScrollbar } from '@vxe-ui/core'
 import { VxeLinkPropTypes } from './link'
 import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 import { VxeScrollbarProps } from './scrollbar'
@@ -80,7 +80,7 @@ export namespace VxeMenuPropTypes {
     }): boolean
   }
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
-  export type UseScrollbar = boolean
+  export type UseScrollbar = VxeComponentIsVScrollbar
   export interface ScrollbarConfig extends VxeScrollbarProps {}
 }
 
