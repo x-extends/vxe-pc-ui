@@ -331,7 +331,7 @@ export default defineVxeComponent({
       const { tipTarget: targetElem, tipStore, tipPos, tipZindex } = reactData
       const panelElem = refElem.value
       if (!targetElem || !panelElem) {
-        return
+        return nextTick()
       }
       const targetRect = targetElem.getBoundingClientRect()
 
@@ -371,6 +371,7 @@ export default defineVxeComponent({
       tipStore.placement = ppObj.placement
       tipStore.style = panelStyle
       tipStore.arrowStyle.left = ppObj.arrowLeft ? `${ppObj.arrowLeft}px` : ''
+      return nextTick()
     }
 
     const tooltipMethods: TooltipMethods = {
@@ -398,8 +399,11 @@ export default defineVxeComponent({
         return handleVisible(target, content)
       },
       updatePlacement () {
-        updateTipStyle()
-        return nextTick().then(updateTipStyle)
+        return updateTipStyle().then(() => {
+          return updateTipStyle()
+        }).then(() => {
+          return updateTipStyle()
+        })
       },
       isActived () {
         return reactData.tipActive
