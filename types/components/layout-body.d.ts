@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentIsVScrollbar } from '@vxe-ui/core'
 import { VxeBacktopProps, VxeBacktopSlotTypes } from './backtop'
 import { VxeScrollbarProps } from './scrollbar'
 
@@ -31,7 +31,7 @@ export namespace VxeLayoutBodyPropTypes {
   export type Padding = boolean
   export type ShowBacktop = boolean
   export interface BacktopConfig extends Omit<VxeBacktopProps, 'target'> {}
-  export type UseScrollbar = boolean
+  export type UseScrollbar = VxeComponentIsVScrollbar
   export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
     /**
      * 滚动条宽度

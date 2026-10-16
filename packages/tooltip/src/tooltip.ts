@@ -1,7 +1,7 @@
 import { h, ref, nextTick, onBeforeUnmount, onMounted, computed, reactive, watch, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, useSize } from '../../ui'
+import { VxeUI, useFns } from '../../ui'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -137,7 +137,8 @@ export default defineVxeComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const reactData = reactive(createReactData())
 
@@ -402,7 +403,9 @@ export default defineVxeComponent({
         return updateTipStyle().then(() => {
           return updateTipStyle()
         }).then(() => {
-          return updateTipStyle()
+          setTimeout(() => {
+            updateTipStyle()
+          }, 15)
         })
       },
       isActived () {
@@ -434,8 +437,9 @@ export default defineVxeComponent({
     Object.assign($xeTooltip, tooltipMethods, tooltipPrivateMethods)
 
     const renderContent = () => {
-      const { useScrollbar, theme, useHtml, useHTML } = props
+      const { theme, useHtml, useHTML } = props
       const { tipContent } = reactData
+      const isVScrollbar = computeIsVScrollbar.value
       const wrapperStyle = computeWrapperStyle.value
       const contentSlot = slots.content
       const contVNs: VNode[] = []
@@ -457,7 +461,7 @@ export default defineVxeComponent({
           key: 'cd'
         }, `${tipContent}`))
       }
-      if (useScrollbar) {
+      if (isVScrollbar) {
         return h(VxeScrollbarComponent, {
           key: 5,
           ref: contentScrollbar,

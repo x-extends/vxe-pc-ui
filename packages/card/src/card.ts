@@ -2,7 +2,7 @@ import { ref, h, reactive, PropType, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../../ui/src/vn'
-import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { getConfig, createEvent, useFns, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { getDefaultConfig } from '../../ui/src/utils'
 import VxeLoadingComponent from '../../loading'
@@ -52,7 +52,8 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const reactData = reactive<CardReactData>({
     })
@@ -119,7 +120,7 @@ export default defineVxeComponent({
     Object.assign($xeCard, cardMethods, cardPrivateMethods)
 
     const renderVN = () => {
-      const { title, border, shadow, padding, loading, showTitleOverflow, useScrollbar } = props
+      const { title, border, shadow, padding, loading, showTitleOverflow } = props
       const defaultSlot = slots.default
       const headerSlot = slots.header
       const titleSlot = slots.title
@@ -128,6 +129,7 @@ export default defineVxeComponent({
       const leftSlot = slots.left
       const rightSlot = slots.right
       const vSize = computeSize.value
+      const isVScrollbar = computeIsVScrollbar.value
       const cardStyle = computeCardStyle.value
       const scrollbarOpts = computeScrollbarOpts.value
       const scrollbarProps = computeScrollbarProps.value
@@ -166,7 +168,7 @@ export default defineVxeComponent({
         }, [
           leftSlot
             ? (
-                useScrollbar
+                isVScrollbar
                   ? h(VxeScrollbarComponent, {
                     class: 'vxe-card--body-scrollbar-left',
                     ...scrollbarProps,
@@ -180,7 +182,7 @@ export default defineVxeComponent({
                   }, getSlotVNs(leftSlot({})))
               )
             : renderEmptyElement($xeCard),
-          useScrollbar
+          isVScrollbar
             ? h(VxeScrollbarComponent, {
               class: 'vxe-card--body-scrollbar-content',
               ...scrollbarProps,
@@ -194,7 +196,7 @@ export default defineVxeComponent({
             }, defaultSlot ? getSlotVNs(defaultSlot({})) : []),
           rightSlot
             ? (
-                useScrollbar
+                isVScrollbar
                   ? h(VxeScrollbarComponent, {
                     class: 'vxe-card--body-scrollbar-right',
                     ...scrollbarProps,

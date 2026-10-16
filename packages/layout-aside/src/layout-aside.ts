@@ -1,7 +1,7 @@
 import { ref, h, reactive, computed, provide, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { toCssUnit } from '../../ui/src/dom'
-import { getConfig, useSize, createEvent } from '../../ui'
+import { getConfig, useFns, createEvent } from '../../ui'
 import { getDefaultConfig } from '../../ui/src/utils'
 import XEUtils from 'xe-utils'
 import VxeLoadingComponent from '../../loading'
@@ -36,7 +36,8 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const reactData = reactive<LayoutAsideReactData>({})
 
@@ -93,9 +94,10 @@ export default defineVxeComponent({
     Object.assign($xeLayoutAside, layoutAsideMethods, layoutAsidePrivateMethods)
 
     const renderVN = () => {
-      const { collapsed, loading, padding, useScrollbar } = props
+      const { collapsed, loading, padding } = props
       const varStyle = computeVarStyle.value
       const vSize = computeSize.value
+      const isVScrollbar = computeIsVScrollbar.value
       const collapseOpts = computeCollapseOpts.value
       const scrollbarOpts = computeScrollbarOpts.value
       const { className, viewClassName, viewInnerClassName } = scrollbarOpts
@@ -112,7 +114,7 @@ export default defineVxeComponent({
         }],
         style: varStyle
       }, [
-        useScrollbar
+        isVScrollbar
           ? h(VxeScrollbarComponent, {
             width: scrollbarOpts.width,
             height: scrollbarOpts.height,

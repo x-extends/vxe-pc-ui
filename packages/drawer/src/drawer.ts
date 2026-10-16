@@ -1,7 +1,7 @@
 import { h, Teleport, ref, Ref, inject, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { useSize, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
+import { useFns, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText, getDefaultConfig } from '../../ui/src/utils'
 import { getPopupContainer, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
 import { allActiveDrawers } from './store'
@@ -172,7 +172,8 @@ export default defineVxeComponent({
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
     const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const refElem = ref<HTMLDivElement>()
     const refDrawerBox = ref() as Ref<HTMLDivElement>
@@ -564,7 +565,8 @@ export default defineVxeComponent({
     }
 
     const renderBody = () => {
-      const { slots: propSlots = {}, content, useScrollbar, useHtml } = props
+      const { slots: propSlots = {}, content, useHtml } = props
+      const isVScrollbar = computeIsVScrollbar.value
       const scrollbarProps = computeScrollbarProps.value
       const defaultSlot = slots.default || propSlots.default
       const leftSlot = slots.left || propSlots.left
@@ -572,7 +574,7 @@ export default defineVxeComponent({
       const contVNs: VNode[] = []
       if (useHtml && !defaultSlot) {
         contVNs.push(
-          useScrollbar
+          isVScrollbar
             ? h(VxeScrollbarComponent, {
               key: 'shc',
               class: 'vxe-drawer--scrollbar-content',
@@ -595,7 +597,7 @@ export default defineVxeComponent({
         )
       } else {
         contVNs.push(
-          useScrollbar
+          isVScrollbar
             ? h(VxeScrollbarComponent, {
               key: 'sdc',
               class: 'vxe-drawer--scrollbar-content',

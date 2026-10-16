@@ -1,14 +1,22 @@
 import { ref, h, reactive, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, useSize, createEvent } from '../../ui'
+import { VxeUI, useFns } from '../../ui'
 import XEUtils from 'xe-utils'
 
 import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, LayoutContainerPrivateMethods, VxeLayoutContainerEmits, LayoutContainerMethods, LayoutContainerPrivateRef, VxeLayoutContainerPrivateComputed, VxeLayoutContainerConstructor, VxeLayoutContainerPrivateMethods, ValueOf } from '../../../types'
+
+const { getConfig, baseUtils, createEvent } = VxeUI
+
+const { getDefVal } = baseUtils
 
 export default defineVxeComponent({
   name: 'VxeLayoutContainer',
   props: {
     vertical: Boolean as PropType<VxeLayoutContainerPropTypes.Vertical>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeLayoutContainerPropTypes.UseScrollbar>,
+      default: () => getDefVal(getConfig().layoutContainer.useScrollbar, getConfig().useScrollbar)
+    },
     size: {
       type: String as PropType<VxeLayoutContainerPropTypes.Size>,
       default: () => getConfig().layoutContainer.size || getConfig().size
@@ -22,7 +30,8 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const reactData = reactive<LayoutContainerReactData>({
     })
@@ -32,7 +41,8 @@ export default defineVxeComponent({
     }
 
     const computeMaps: VxeLayoutContainerPrivateComputed = {
-      computeSize
+      computeSize,
+      computeIsVScrollbar
     }
 
     const $xeLayoutContainer = {

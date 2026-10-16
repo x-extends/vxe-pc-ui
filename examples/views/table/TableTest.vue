@@ -1,128 +1,96 @@
 <template>
   <div>
-    <vxe-grid v-bind="gridOptions">
-      <template #header-tooltip="{ column }">
-        <div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-          <div style="color: red">自定义表头：{{ column.title }}</div>
-        </div>
-      </template>
-      <template #tooltip="{ row, column }">
-        <div style="width: 800px">
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-          <div style="color: orange">自定义：{{ row[column.field] }}</div>
-          <vxe-link status="primary" href="https://vxeui.com/" target="_blank">点击查看官网</vxe-link>
-        </div>
-      </template>
-      <template #footer-tooltip="{ row, column }">
-        <div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-          <div style="color: chartreuse">自定义表尾：{{ row[column.field] }}</div>
-        </div>
-      </template>
-    </vxe-grid>
+    <vxe-button status="success" @click="getDataEvent">获取筛选后数据</vxe-button>
+
+    <vxe-grid ref="gridRef" v-bind="gridOptions"></vxe-grid>
   </div>
 </template>
 
-<script setup>
-import { reactive } from 'vue'
-const gridOptions = reactive({
-  height: 300,
-  showOverflow: true,
-  showHeaderOverflow: true,
-  showFooterOverflow: true,
-  showFooter: true,
-  useScrollbar: true,
-  headerTooltipConfig: {
-    maxWidth: 200,
-    maxHeight: 100
-  },
-  tooltipConfig: {
-    maxWidth: 400,
-    maxHeight: 300
-  },
-  footerTooltipConfig: {
-    maxWidth: 200,
-    maxHeight: 100
-  },
+<script lang="ts" setup>
+import { ref, reactive } from 'vue'
+import { VxeGridInstance, VxeGridProps } from 'vxe-table'
+
+interface RowVO {
+  id: number
+  name: string
+  role: string
+  sex: string
+  age: number
+  address: string
+}
+
+const gridRef = ref<VxeGridInstance<RowVO>>()
+
+const gridOptions = reactive<VxeGridProps<RowVO>>({
+  border: true,
+  height: 400,
   columns: [
-    { field: 'seq', type: 'seq', width: 70 },
-    { field: 'name', title: '名称' },
-    { field: 'role', title: '角色' },
-    { field: 'date', title: '日期日期日期日期日期日期日期日期日期', width: 200 },
-    { field: 'rate', title: 'Rate' },
-    { field: 'address', title: '地址地址地址地址地址地址地址地址地址地址', width: 200 }
+    { field: 'id', title: 'ID' },
+    {
+      field: 'name',
+      title: 'Name',
+      filters: [
+        { label: 'Test1', value: 'Test1' },
+        { label: 'Test2', value: 'Test2' },
+        { label: 'Test3', value: 'Test3' },
+        { label: 'Test4', value: 'Test4' },
+        { label: 'Test5', value: 'Test5' },
+        { label: 'Test6', value: 'Test6' },
+        { label: 'Test7', value: 'Test7' },
+        { label: 'Test8', value: 'Test8' },
+        { label: 'Test9', value: 'Test9' },
+        { label: 'Test10', value: 'Test10' }
+      ]
+    },
+    {
+      field: 'sex',
+      title: 'Sex',
+      filterMultiple: false,
+      filters: [
+        { label: 'Man', value: 'Man' },
+        { label: 'Woman', value: 'Woman' }
+      ]
+    },
+    {
+      field: 'age',
+      title: 'Age',
+      filters: [
+        { label: '28', value: 28 },
+        { label: '22', value: 22 },
+        { label: '38', value: 38 }
+      ]
+    },
+    { field: 'address', title: 'Address' }
   ],
   data: [
-    { name: 'Test1', role: '前端', date: '2020-02-14', rate: 5, address: 'address1' },
-    { name: 'Test2', role: '后端', date: '2020-02-22', rate: 2, address: 'address1' },
-    { name: 'Test3', role: '前端前端前端前端前端前端前端前端', date: '2020-01-01', rate: 0, address: '深圳市深圳市深圳市深圳市深圳市深圳市' },
-    { name: 'Test4', role: '设计师设计师设计师设计师设计师设计师设计师', date: '2020-02-23', rate: 1, address: '上海市上海市上海市上海市上海市上海市' },
-    { name: 'Test5', role: '前端', date: '2020-01-20', rate: 3, address: '广州市广州市广州市广州市广州市广州市广州市广州市广州市' }
-  ],
-  footerData: [{ seq: '合计', date: '2020-02-23', rate: '123456789123456789123456789123456789' }]
+    { id: 10001, name: 'Test1', role: 'Develop', sex: 'Woman', age: 28, address: 'test abc' },
+    { id: 10002, name: 'Test2', role: 'Test', sex: 'Man', age: 22, address: 'Guangzhou' },
+    { id: 10003, name: 'Test3', role: 'PM', sex: 'Woman', age: 32, address: 'Shanghai' },
+    { id: 10004, name: 'Test4', role: 'Designer', sex: 'Man', age: 54, address: 'Shanghai' },
+    { id: 10005, name: 'Test5', role: 'Develop', sex: 'Man', age: 44, address: 'Guangzhou' },
+    { id: 10006, name: 'Test6', role: 'Develop', sex: 'Woman', age: 24, address: 'Shanghai' },
+    { id: 10007, name: 'Test7', role: 'Test', sex: 'Man', age: 52, address: 'test abc' },
+    { id: 10008, name: 'Test8', role: 'PM', sex: 'Woman', age: 34, address: 'Guangzhou' },
+    { id: 10009, name: 'Test9', role: 'PM', sex: 'Man', age: 24, address: 'test abc' },
+    { id: 100010, name: 'Test10', role: 'Test', sex: 'Woman', age: 39, address: 'Shanghai' },
+    { id: 100011, name: 'Test12', role: 'PM', sex: 'Woman', age: 37, address: 'test abc' },
+    { id: 100012, name: 'Test12', role: 'Develop', sex: 'Man', age: 44, address: 'test abc' },
+    { id: 100013, name: 'Test13', role: 'Develop', sex: 'Woman', age: 33, address: 'Shanghai' },
+    { id: 100014, name: 'Test14', role: 'PM', sex: 'Man', age: 46, address: 'Shanghai' },
+    { id: 100015, name: 'Test15', role: 'Test', sex: 'Woman', age: 39, address: 'Guangzhou' },
+    { id: 100016, name: 'Test16', role: 'Develop', sex: 'Man', age: 24, address: 'test abc' },
+    { id: 100017, name: 'Test17', role: 'Test', sex: 'Woman', age: 42, address: 'test abc' },
+    { id: 100018, name: 'Test18', role: 'Develop', sex: 'Man', age: 24, address: 'Shanghai' },
+    { id: 100019, name: 'Test19', role: 'PM', sex: 'Woman', age: 51, address: 'Guangzhou' },
+    { id: 100020, name: 'Test20', role: 'Develop', sex: 'Woman', age: 49, address: 'Shanghai' }
+  ]
 })
+
+const getDataEvent = () => {
+  const $grid = gridRef.value
+  if ($grid) {
+    const { visibleData } = $grid.getTableData()
+    console.log(visibleData)
+  }
+}
 </script>

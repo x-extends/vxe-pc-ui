@@ -45,6 +45,9 @@ const listOptions = reactive<VxeListProps>({
     keyField: 'id',
     isHover: true
   },
+  virtualYConfig: {
+    gt: 0
+  },
   data: [
     { id: '10001', label: '数据10001' },
     { id: '10002', label: '数据10002' },

@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentIsVScrollbar, VxeComponentSlotType, ValueOf } from '@vxe-ui/core'
 import { VxeToolbarInstance, VxeToolbarProps, VxeToolbarPropTypes, VxeToolbarSlotTypes } from './toolbar'
 import { VxeTableDefines, VxeTablePrivateMethods, VxeTableEmits, VxeTableConstructor, VxeTableProps, TableMethods, VxeTableSlotTypes } from './table'
 import { VxeColumnPropTypes } from './column'
@@ -469,6 +469,8 @@ export interface VxeGridProps<D = any> extends VxeTableProps<D> {
 }
 
 export interface GridPrivateComputed<D = any> {
+  computeSize: ComputedRef<VxeComponentSizeType>
+  computeIsVScrollbar: ComputedRef<VxeComponentIsVScrollbar>
   computeProxyOpts: ComputedRef<VxeGridPropTypes.ProxyConfig<D>>
   computePagerOpts: ComputedRef<VxeGridPropTypes.PagerOpts>
   computeFormOpts: ComputedRef<VxeGridPropTypes.FormOpts>

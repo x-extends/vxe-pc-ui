@@ -1,6 +1,6 @@
 import { ref, h, reactive, PropType, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, useSize, createEvent, renderEmptyElement } from '../../ui'
+import { getConfig, useFns, createEvent, renderEmptyElement } from '../../ui'
 import XEUtils from 'xe-utils'
 import { getDefaultConfig } from '../../ui/src/utils'
 import VxeLoadingComponent from '../../loading'
@@ -46,7 +46,8 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const internalData = createInternalData()
     const reactData = reactive(createReactData())
@@ -115,7 +116,8 @@ export default defineVxeComponent({
     Object.assign($xeLayoutBody, layoutBodyMethods, layoutBodyPrivateMethods)
 
     const renderVN = () => {
-      const { loading, padding, showBacktop, useScrollbar } = props
+      const { loading, padding, showBacktop } = props
+      const isVScrollbar = computeIsVScrollbar.value
       const backtopOpts = computeBacktopOpts.value
       const scrollbarProps = computeScrollbarProps.value
       const vSize = computeSize.value
@@ -145,7 +147,7 @@ export default defineVxeComponent({
           'is--padding': padding
         }]
       }, [
-        useScrollbar
+        isVScrollbar
           ? h(VxeScrollbarComponent, scrollbarProps, {
             default: () => defaultSlot ? defaultSlot({}) : []
           })

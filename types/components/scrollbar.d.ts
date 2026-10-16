@@ -77,7 +77,15 @@ export namespace VxeScrollbarPropTypes {
   export type ViewStyle = VxeComponentStyleType
   export type ViewClassName = string
   export type ViewInnerClassName = string
+  /**
+   * 已废弃
+   * @deprecated
+   */
   export type AutoResize = boolean
+  /**
+   * 已废弃
+   * @deprecated
+   */
   export type SyncResize = boolean
 }
 
@@ -168,10 +176,12 @@ export interface VxeScrollbarProps {
   viewInnerClassName?: VxeScrollbarPropTypes.ViewInnerClassName
   /**
    * 自动监听元素的变化去重新计算样式
+   * @deprecated
    */
   autoResize?: VxeScrollbarPropTypes.AutoResize
   /**
    * 自动跟随某个属性的变化去重新计算表格，和手动调用 recalculate 方法是一样的效果（对于通过某个属性来更新内容时可能会用到）
+   * @deprecated
    */
   syncResize?: VxeScrollbarPropTypes.SyncResize
 }

@@ -85,10 +85,18 @@ export default defineVxeComponent({
       type: String as PropType<VxeScrollbarPropTypes.ViewInnerClassName>,
       default: () => getConfig().scrollbar.viewInnerClassName
     },
+    /**
+     * 已废弃
+     * @deprecated
+     */
     autoResize: {
       type: Boolean as PropType<VxeScrollbarPropTypes.AutoResize>,
       default: () => getConfig().scrollbar.autoResize
     },
+    /**
+     * 已废弃
+     * @deprecated
+     */
     syncResize: [Boolean, String, Number] as PropType<VxeScrollbarPropTypes.SyncResize>
   },
   emits: [
@@ -711,7 +719,6 @@ export default defineVxeComponent({
       }
 
       reFlag.value++
-
       globalEvents.on($xeScrollbar, 'resize', () => {
         reFlag.value++
       })

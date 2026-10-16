@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, VNode } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeComponentAlignType, VxeGlobalRendererOptions } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeComponentAlignType, VxeGlobalRendererOptions, VxeComponentIsVScrollbar } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
@@ -1426,6 +1426,10 @@ export namespace VxeTablePropTypes {
      * 是否显示底部按钮
      */
     showFooter?: boolean
+    /**
+     * 使用虚拟滚动条
+     */
+    useScrollbar?: VxeTooltipPropTypes.UseScrollbar
   }
   export interface FilterOpts<D = VxeTablePropTypes.Row> extends FilterConfig<D> { }
 
@@ -3019,7 +3023,7 @@ export namespace VxeTablePropTypes {
      */
     overscrollBehavior?: 'contain' | 'none' | ''
   }
-  export type UseScrollbar = boolean
+  export type UseScrollbar = VxeComponentIsVScrollbar
   /**
    * 滚动条配置项
    */
@@ -3994,7 +3998,8 @@ export interface VxeTableProps<D = any> {
 }
 
 export interface TablePrivateComputed<D = any> {
-  computeSize: ComputedRef<VxeTablePropTypes.Size>
+  computeSize: ComputedRef<VxeComponentSizeType>
+  computeIsVScrollbar: ComputedRef<VxeComponentIsVScrollbar>
   computeTableId: ComputedRef<string>
   computeRowField: ComputedRef<string>
   computeEditDirtyOpts: ComputedRef<VxeTablePropTypes.EditDirtyConfig>
@@ -5988,7 +5993,7 @@ export interface TablePrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  updateScrollbar(): void
+  updateScrollbar(): Promise<void>
   /**
    * 内部方法
    * @private
@@ -6337,7 +6342,6 @@ export namespace VxeTableDefines {
     style: any
     column: VxeTableDefines.ColumnInfo | null | undefined
     visible: boolean
-    maxHeight: number | string | null
   }
 
   export interface HistoryStackObj<D = any> {

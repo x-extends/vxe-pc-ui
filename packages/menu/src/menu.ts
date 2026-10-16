@@ -1,7 +1,7 @@
 import { ref, h, reactive, Teleport, PropType, inject, resolveComponent, watch, VNode, computed, nextTick, onBeforeUnmount, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, createEvent, permission, useSize, globalEvents, renderEmptyElement } from '../../ui'
+import { VxeUI, createEvent, permission, globalEvents, renderEmptyElement } from '../../ui'
 import { getPopupContainer, scrollToView, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, isEnableConf, getDefaultConfig } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -13,7 +13,7 @@ import type { VxeMenuDefines, VxeMenuPropTypes, MenuInternalData, MenuReactData,
 
 const { errLog } = createComponentLog('menu')
 
-const { menus, getConfig, getIcon } = VxeUI
+const { menus, useFns, getConfig, getIcon } = VxeUI
 
 function createInternalData (): MenuInternalData {
   return {
@@ -100,7 +100,8 @@ export default defineVxeComponent({
     const refCollapseBodyElem = ref<HTMLDivElement>()
     const refCollapseBodyScrollbar = ref<VxeScrollbarInstance>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const reactData = reactive(createReactData())
     const internalData = createInternalData()
@@ -701,9 +702,10 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { loading, collapseFixed, appendTo, useScrollbar } = props
+      const { loading, collapseFixed, appendTo } = props
       const { initialized, menuList, collapseStyle, isEnterCollapse } = reactData
       const vSize = computeSize.value
+      const isVScrollbar = computeIsVScrollbar.value
       const isCollapsed = computeIsCollapsed.value
       const currBorder = computeCurrBorder.value
       const varStyle = computeVarStyle.value
@@ -762,7 +764,7 @@ export default defineVxeComponent({
                     class: 'vxe-menu--header'
                   }, headerSlot(stParams))
                   : renderEmptyElement($xeMenu),
-                useScrollbar && isEnterCollapse
+                isVScrollbar && isEnterCollapse
                   ? h(VxeScrollbarComponent, {
                     ref: refCollapseBodyScrollbar,
                     class: 'vxe-menu--scrollbar-body',

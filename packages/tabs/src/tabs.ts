@@ -1,6 +1,6 @@
 import { ref, h, reactive, inject, PropType, provide, computed, onUnmounted, watch, nextTick, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { VxeUI, useSize } from '../../ui'
+import { VxeUI, useFns } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
@@ -81,7 +81,8 @@ export default defineVxeComponent({
 
     const $xeParentTabs = inject<(VxeTabsConstructor & VxeTabsPrivateMethods) | null>('$xeTabs', null)
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const refElem = ref<HTMLDivElement>()
     const refHeadWrapperElem = ref<HTMLDivElement>()
@@ -791,13 +792,13 @@ export default defineVxeComponent({
     }
 
     const renderTabPane = (item: VxeTabPaneProps | VxeTabPaneDefines.TabConfig) => {
-      const { useScrollbar } = props
       const { initNames, activeName } = reactData
       const { name, slots } = item
       const defaultSlot = slots ? slots.default : null
       const scrollbarProps = computeScrollbarProps.value
+      const isVScrollbar = computeIsVScrollbar.value
       if (name && initNames.includes(name)) {
-        return useScrollbar
+        return isVScrollbar
           ? h(VxeScrollbarComponent, {
             key: `${name}`,
             class: ['vxe-tabs-pane--scrollbar-item', {

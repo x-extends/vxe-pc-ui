@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf, VxeComponentIsVScrollbar } from '@vxe-ui/core'
 import { VxeIconPropTypes } from './icon'
 import { VxeScrollbarProps } from './scrollbar'
 
@@ -49,7 +49,7 @@ export namespace VxeTooltipPropTypes {
   export type LeaveMethod = (params: { $event: MouseEvent }) => boolean
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
   export type Transfer = boolean
-  export type UseScrollbar = boolean
+  export type UseScrollbar = VxeComponentIsVScrollbar
   export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
     /**
      * 滚动条宽度

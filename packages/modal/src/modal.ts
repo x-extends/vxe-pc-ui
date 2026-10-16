@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getEventTargetNode, getPopupContainer, getPopupWrapperElement, isScale, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue, getDefaultConfig } from '../../ui/src/utils'
-import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useFns, renderEmptyElement } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { allActiveModals } from './store'
@@ -266,7 +266,8 @@ export default defineVxeComponent({
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
     const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const reactData = reactive(createReactData())
     const internalData = createInternalData()
@@ -1398,8 +1399,9 @@ export default defineVxeComponent({
     }
 
     const renderBody = () => {
-      const { slots: propSlots = {}, status, message, iconStatus, useScrollbar, useHtml } = props
+      const { slots: propSlots = {}, status, message, iconStatus, useHtml } = props
       const content = props.content || message
+      const isVScrollbar = computeIsVScrollbar.value
       const isMsg = computeIsMsg.value
       const scrollbarProps = computeScrollbarProps.value
       const defaultSlot = slots.default || propSlots.default
@@ -1420,7 +1422,7 @@ export default defineVxeComponent({
 
       if (useHtml && !defaultSlot) {
         contVNs.push(
-          useScrollbar
+          isVScrollbar
             ? h(VxeScrollbarComponent, {
               key: 'shc',
               class: 'vxe-modal--scrollbar-content',
@@ -1443,7 +1445,7 @@ export default defineVxeComponent({
         )
       } else {
         contVNs.push(
-          useScrollbar
+          isVScrollbar
             ? h(VxeScrollbarComponent, {
               key: 'sdc',
               class: 'vxe-modal--scrollbar-content',
