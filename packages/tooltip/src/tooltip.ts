@@ -248,7 +248,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { tipTarget: targetElem, tipStore, tipPos, tipZindex } = reactData
       const panelElem = $xeTooltip.$refs.refElem as HTMLElement
       if (!targetElem || !panelElem) {
-        return
+        return $xeTooltip.$nextTick()
       }
       const targetRect = targetElem.getBoundingClientRect()
 
@@ -288,12 +288,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       tipStore.placement = ppObj.placement
       tipStore.style = panelStyle
       tipStore.arrowStyle.left = ppObj.arrowLeft ? `${ppObj.arrowLeft}px` : ''
+      return $xeTooltip.$nextTick()
     },
     updatePlacement () {
       const $xeTooltip = this
 
       $xeTooltip.updateTipStyle()
-      return $xeTooltip.$nextTick().then(() => $xeTooltip.updateTipStyle())
+      return $xeTooltip.$nextTick().then(() => {
+        return $xeTooltip.updateTipStyle()
+      }).then(() => {
+        return $xeTooltip.updateTipStyle()
+      })
     },
     isActived () {
       const $xeTooltip = this
