@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { toStringTimeDate, getDateQuarter, parseDateValue, parseDateObj, handleValueFormat, hasDateValueType, hasTimestampValueType } from './util'
 import { createComponentLog } from '../../ui/src/log'
+import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeDatePanelConstructor, DatePanelInternalData, DatePanelReactData, VxeDatePanelPropTypes, VxeDatePanelPrivateComputed, DatePanelMethods, ValueOf, VxeDatePanelEmits, VxeDatePanelDefines } from '../../../types'
 
@@ -1746,45 +1747,66 @@ export default defineVxeComponent({
           ref: refInputTimeBody,
           class: 'vxe-date-panel--time-body'
         }, [
-          h('ul', {
-            class: 'vxe-date-panel--time-hour-list'
-          }, hourList.map((item, index) => {
-            return h('li', {
-              key: index,
-              class: {
-                'is--disabled': item.disabled,
-                'is--selected': datetimePanelValue && datetimePanelValue.getHours() === item.value
-              },
-              onClick: (evnt: MouseEvent) => dateHourEvent(evnt, item)
-            }, item.label)
-          })),
+          h(VxeScrollbarComponent, {
+            autoHide: true,
+            class: 'vxe-date-panel--time-hour-list',
+            viewClassName: 'vxe-date-panel--time-list-view',
+            viewInnerClassName: 'vxe-date-panel--time-list-inner'
+          }, {
+            default: () => {
+              return hourList.map((item, index) => {
+                return h('div', {
+                  key: index,
+                  class: ['vxe-date-panel--time-item', {
+                    'is--disabled': item.disabled,
+                    'is--selected': datetimePanelValue && datetimePanelValue.getHours() === item.value
+                  }],
+                  onClick: (evnt: MouseEvent) => dateHourEvent(evnt, item)
+                }, item.label)
+              })
+            }
+          }),
           hasTimeMinute
-            ? h('ul', {
-              class: 'vxe-date-panel--time-minute-list'
-            }, minuteList.map((item, index) => {
-              return h('li', {
-                key: index,
-                class: {
-                  'is--disabled': item.disabled,
-                  'is--selected': datetimePanelValue && datetimePanelValue.getMinutes() === item.value
-                },
-                onClick: (evnt: MouseEvent) => dateMinuteEvent(evnt, item)
-              }, item.label)
-            }))
+            ? h(VxeScrollbarComponent, {
+              autoHide: true,
+              class: 'vxe-date-panel--time-minute-list',
+              viewClassName: 'vxe-date-panel--time-list-view',
+              viewInnerClassName: 'vxe-date-panel--time-list-inner'
+            }, {
+              default: () => {
+                return minuteList.map((item, index) => {
+                  return h('div', {
+                    key: index,
+                    class: ['vxe-date-panel--time-item', {
+                      'is--disabled': item.disabled,
+                      'is--selected': datetimePanelValue && datetimePanelValue.getMinutes() === item.value
+                    }],
+                    onClick: (evnt: MouseEvent) => dateMinuteEvent(evnt, item)
+                  }, item.label)
+                })
+              }
+            })
             : renderEmptyElement($xeDatePanel),
           hasTimeMinute && hasTimeSecond
-            ? h('ul', {
-              class: 'vxe-date-panel--time-second-list'
-            }, secondList.map((item, index) => {
-              return h('li', {
-                key: index,
-                class: {
-                  'is--disabled': item.disabled,
-                  'is--selected': datetimePanelValue && datetimePanelValue.getSeconds() === item.value
-                },
-                onClick: (evnt: MouseEvent) => dateSecondEvent(evnt, item)
-              }, item.label)
-            }))
+            ? h(VxeScrollbarComponent, {
+              autoHide: true,
+              class: 'vxe-date-panel--time-second-list',
+              viewClassName: 'vxe-date-panel--time-list-view',
+              viewInnerClassName: 'vxe-date-panel--time-list-inner'
+            }, {
+              default: () => {
+                return secondList.map((item, index) => {
+                  return h('div', {
+                    key: index,
+                    class: ['vxe-date-panel--time-item', {
+                      'is--disabled': item.disabled,
+                      'is--selected': datetimePanelValue && datetimePanelValue.getSeconds() === item.value
+                    }],
+                    onClick: (evnt: MouseEvent) => dateSecondEvent(evnt, item)
+                  }, item.label)
+                })
+              }
+            })
             : renderEmptyElement($xeDatePanel)
         ])
       ]

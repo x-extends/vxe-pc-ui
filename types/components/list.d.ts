@@ -360,6 +360,10 @@ export interface ListInternalData {
 export interface ListMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeListEmits>, params: Record<string, any>, evnt: Event | null): void
   /**
+   * 获取滚动视图元素
+   */
+  getScrollViewElem(): HTMLElement | null | undefined
+  /**
    * 加载数据
    * @param data 列表数据
    */

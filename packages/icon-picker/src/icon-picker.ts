@@ -1,14 +1,18 @@
 import { h, Teleport, PropType, ref, inject, watch, computed, provide, onBeforeUnmount, reactive, nextTick, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, createEvent, renderer, useSize, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
+import { VxeUI } from '../../ui'
 import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeInputComponent from '../../input'
+import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeIconPickerPropTypes, VxeIconPickerConstructor, IconPickerInternalData, VxeInputConstructor, ValueOf, IconPickerReactData, VxeIconPickerEmits, IconPickerMethods, IconPickerPrivateRef, VxeIconPickerMethods, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { getConfig, getIcon, getI18n, baseUtils, globalEvents, createEvent, renderer, useFns, GLOBAL_EVENT_KEYS, renderEmptyElement } = VxeUI
+const { getDefVal } = baseUtils
 
 function createReactData (): IconPickerReactData {
   return {
@@ -72,7 +76,12 @@ export default defineVxeComponent({
     transfer: {
       type: Boolean as PropType<VxeIconPickerPropTypes.Transfer>,
       default: null
-    }
+    },
+    useScrollbar: {
+      type: Boolean as PropType<VxeIconPickerPropTypes.UseScrollbar>,
+      default: () => getDefVal(getConfig().iconPicker.useScrollbar, getConfig().useScrollbar)
+    },
+    scrollbarConfig: Object as PropType<VxeIconPickerPropTypes.ScrollbarConfig>
   },
   emits: [
     'update:modelValue',
@@ -91,7 +100,8 @@ export default defineVxeComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const reactData = reactive(createReactData())
 
@@ -225,6 +235,27 @@ export default defineVxeComponent({
       const { selectIcon } = reactData
       const iconList = computeIconList.value
       return selectIcon ? iconList.find(item => item.icon === selectIcon) : null
+    })
+
+    const computeScrollbarOpts = computed(() => {
+      return Object.assign({}, getConfig().iconPicker.scrollbarConfig, props.scrollbarConfig)
+    })
+
+    const computeScrollbarProps = computed(() => {
+      const scrollbarOpts = computeScrollbarOpts.value
+      const { viewClassName, viewInnerClassName } = scrollbarOpts
+      return {
+        width: scrollbarOpts.width,
+        height: scrollbarOpts.height,
+        autoHide: scrollbarOpts.autoHide,
+        visible: scrollbarOpts.visible,
+        xConfig: scrollbarOpts.xConfig,
+        yConfig: scrollbarOpts.yConfig,
+        className: scrollbarOpts.className,
+        viewAttrs: scrollbarOpts.viewAttrs,
+        viewClassName: 'vxe-ico-picker--scrollbar-list-wrapper-view' + (viewClassName ? (' ' + viewClassName) : ''),
+        viewInnerClassName: 'vxe-ico-picker--scrollbar-list-wrapper-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+      }
     })
 
     const updateZindex = () => {
@@ -533,52 +564,63 @@ export default defineVxeComponent({
     const renderIconWrapper = () => {
       const { showIconTitle } = props
       const { selectIcon, iconList } = reactData
+      const isVScrollbar = computeIsVScrollbar.value
+      const scrollbarProps = computeScrollbarProps.value
 
       if (!iconList.length) {
         return h('div', {
           class: 'vxe-ico-picker--empty-placeholder'
         }, getI18n('vxe.iconPicker.emptyText'))
       }
+      const iconVNs = iconList.map(item => {
+        const { iconRender } = item
+        const compConf = iconRender ? renderer.get(iconRender.name) : null
+        const iconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
+        return h('div', {
+          class: ['vxe-ico-picker--item', {
+            'is--selected': selectIcon === item.icon
+          }]
+        }, [
+          h('div', {
+            class: 'vxe-ico-picker--item-inner',
+            onClick (evnt) {
+              const isDisabled = computeIsDisabled.value
+              if (!isDisabled) {
+                handleClickIconEvent(evnt, item)
+              }
+            }
+          }, [
+            h('div', {
+              class: 'vxe-ico-picker--item-icon'
+            }, iconMethod && iconRender
+              ? getSlotVNs(iconMethod(iconRender, { $iconPicker: $xeIconPicker, option: item }))
+              : [
+                  h('i', {
+                    class: item.icon || ''
+                  })
+                ]),
+            showIconTitle
+              ? h('div', {
+                class: 'vxe-ico-picker--item-title'
+              }, `${item.title || ''}`)
+              : renderEmptyElement($xeIconPicker)
+          ])
+        ])
+      })
+      if (isVScrollbar) {
+        return h(VxeScrollbarComponent, {
+          class: 'vxe-ico-picker--scrollbar-list-wrapper',
+          ...scrollbarProps
+        }, {
+          default: () => iconVNs
+        })
+      }
       return h('div', {
         class: 'vxe-ico-picker--list-wrapper'
       }, [
         h('div', {
           class: 'vxe-ico-picker--list'
-        }, iconList.map(item => {
-          const { iconRender } = item
-          const compConf = iconRender ? renderer.get(iconRender.name) : null
-          const iconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
-          return h('div', {
-            class: ['vxe-ico-picker--item', {
-              'is--selected': selectIcon === item.icon
-            }]
-          }, [
-            h('div', {
-              class: 'vxe-ico-picker--item-inner',
-              onClick (evnt) {
-                const isDisabled = computeIsDisabled.value
-                if (!isDisabled) {
-                  handleClickIconEvent(evnt, item)
-                }
-              }
-            }, [
-              h('div', {
-                class: 'vxe-ico-picker--item-icon'
-              }, iconMethod && iconRender
-                ? getSlotVNs(iconMethod(iconRender, { $iconPicker: $xeIconPicker, option: item }))
-                : [
-                    h('i', {
-                      class: item.icon || ''
-                    })
-                  ]),
-              showIconTitle
-                ? h('div', {
-                  class: 'vxe-ico-picker--item-title'
-                }, `${item.title || ''}`)
-                : renderEmptyElement($xeIconPicker)
-            ])
-          ])
-        }))
+        }, iconVNs)
       ])
     }
 

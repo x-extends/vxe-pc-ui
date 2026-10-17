@@ -1,7 +1,8 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf, VxeComponentIsVScrollbar, VxeUseInitVScrollbarReactData, VxeUseInitVScrollbarInternalData } from '@vxe-ui/core'
 import { VxeOptgroupProps } from './optgroup'
 import { VxeOptionProps, VxeOptionPropTypes } from './option'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -14,6 +15,7 @@ export interface VxeSelectConstructor extends VxeComponentBaseOptions, VxeSelect
   props: VxeSelectProps
   context: SetupContext<VxeSelectEmits>
   reactData: SelectReactData
+  internalData: SelectInternalData
   getRefMaps(): SelectPrivateRef
   getComputeMaps(): SelectPrivateComputed
   renderVN: RenderFunction
@@ -200,6 +202,17 @@ export namespace VxeSelectPropTypes {
    * @deprecated
    */
   export interface ScrollY extends VirtualYConfig {}
+  export type UseScrollbar = VxeComponentIsVScrollbar
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
+    /**
+     * 滚动条宽度
+     */
+    width?: number | string
+    /**
+     * 滚动条高度
+     */
+    height?: number | string
+  }
 }
 
 export interface VxeSelectProps {
@@ -280,6 +293,14 @@ export interface VxeSelectProps {
    * 纵向虚拟滚动配置项
    */
   virtualYConfig?: VxeSelectPropTypes.VirtualYConfig
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeSelectPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeSelectPropTypes.ScrollbarConfig
 
   /**
    * 已废弃，被 remote-config.queryMethod 替换
@@ -307,7 +328,7 @@ export interface SelectPrivateComputed {
 }
 export interface VxeSelectPrivateComputed extends SelectPrivateComputed { }
 
-export interface SelectReactData {
+export interface SelectReactData extends VxeUseInitVScrollbarReactData {
   initialized: boolean
   scrollYLoad: boolean
   bodyHeight: number
@@ -329,7 +350,7 @@ export interface SelectReactData {
   isActivated: boolean
 }
 
-export interface SelectInternalData {
+export interface SelectInternalData extends VxeUseInitVScrollbarInternalData {
   isLoaded?: boolean
   synchData: any[]
   fullData: any[]
@@ -353,6 +374,10 @@ export interface SelectInternalData {
 
 export interface SelectMethods {
   dispatchEvent(type: ValueOf<VxeSelectEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 获取滚动视图元素
+   */
+  getScrollViewElem(): HTMLElement | null | undefined
   /**
    * 加载数据
    * @param data 列表数据

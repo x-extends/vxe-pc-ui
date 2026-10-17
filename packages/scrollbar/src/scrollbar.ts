@@ -1,16 +1,14 @@
 import { ref, h, reactive, computed, PropType, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI } from '../../ui'
+import { VxeUI, useFns } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
 import { getDefaultConfig } from '../../ui/src/utils'
 import VxeLoadingComponent from '../../loading'
 
 import type { ScrollbarReactData, ScrollbarInternalData, VxeScrollbarEmits, ScrollbarMethods, ScrollbarPrivateMethods, VxeScrollbarPropTypes, ValueOf, ScrollbarPrivateRef, VxeScrollbarPrivateComputed, VxeScrollbarConstructor, VxeScrollbarPrivateMethods, VxeComponentStyleType } from '../../../types'
 
-const { getConfig, createEvent, domUtils, scrollbarUtils, globalResize, globalEvents, renderEmptyElement } = VxeUI
-
-const { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } = scrollbarUtils
+const { getConfig, createEvent, domUtils, globalResize, globalEvents, renderEmptyElement } = VxeUI
 
 function createReactData (): ScrollbarReactData {
   return {
@@ -21,7 +19,7 @@ function createReactData (): ScrollbarReactData {
 
 function createInternalData (): ScrollbarInternalData {
   return {
-    // resizeObserver: undefined,
+    // scrollObserver: undefined,
     // isThumbDrag: false,
     thumbDragOffset: 0,
     yThumbTop: 0,
@@ -85,6 +83,10 @@ export default defineVxeComponent({
       type: String as PropType<VxeScrollbarPropTypes.ViewInnerClassName>,
       default: () => getConfig().scrollbar.viewInnerClassName
     },
+    size: {
+      type: String as PropType<VxeScrollbarPropTypes.Size>,
+      default: () => getConfig().scrollbar.size || getConfig().size
+    },
     /**
      * 已废弃
      * @deprecated
@@ -111,14 +113,12 @@ export default defineVxeComponent({
     const refElem = ref<HTMLDivElement>()
     const refViewElem = ref<HTMLDivElement>()
     const refViewInnerElem = ref<HTMLDivElement>()
-    const refTrackXElem = ref<HTMLDivElement>()
-    const refTrackYElem = ref<HTMLDivElement>()
-    const refThumbXElem = ref<HTMLDivElement>()
-    const refThumbYElem = ref<HTMLDivElement>()
 
     const reactData = reactive(createReactData())
 
     const internalData = createInternalData()
+
+    const { computeSize } = useFns.useSize(props)
 
     const computeWrapperStyle = computed(() => {
       const { width, height, minWidth, minHeight, maxWidth, maxHeight } = props
@@ -187,6 +187,7 @@ export default defineVxeComponent({
     const computeWrapperClss = computed(() => {
       const { native, theme, className, padding } = props
       const { yThumbHeight, xThumbWidth } = reactData
+      const vSize = computeSize.value
       const xToTop = computeXToTop.value
       const yToLeft = computeYToLeft.value
       const xVisible = computeXVisible.value
@@ -195,6 +196,7 @@ export default defineVxeComponent({
       const yAutoHide = computeYAutoHide.value
       return domUtils.buildClass([
         'vxe-scrollbar',
+        vSize ? `size--${vSize}` : '',
         theme ? `theme--${theme}` : '',
         `ov-x--${xVisible === false ? 'hidden' : 'visible'}`,
         `ov-y--${yVisible === false ? 'hidden' : 'visible'}`,
@@ -263,17 +265,33 @@ export default defineVxeComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeScrollbarConstructor & VxeScrollbarPrivateMethods
 
+    const {
+      refTrackXElem,
+      refTrackYElem,
+      refThumbXElem,
+      refThumbYElem,
+      updateThumbSize,
+      updateThumbOffset,
+      clickTrackXEvent,
+      clickTrackYEvent,
+      pointerdownThumbXEvent,
+      pointermoveThumbXEvent,
+      cleatPointerThumbEvent,
+      pointerdownThumbYEvent,
+      pointermoveThumbYEvent
+    } = useFns.useInitVScrollbar($xeScrollbar)
+
     const dispatchEvent = (type: ValueOf<VxeScrollbarEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $scrollbar: $xeScrollbar }, params))
     }
 
     const scrollbarMethods: ScrollbarMethods = {
       dispatchEvent,
-      getViewElem () {
+      getScrollViewElem () {
         const viewEl = refViewElem.value
         return viewEl || null
       },
-      getViewInnerElem () {
+      getScrollViewInnerElem () {
         const viewInnerEl = refViewInnerElem.value
         return viewInnerEl || null
       },
@@ -330,60 +348,6 @@ export default defineVxeComponent({
         updateThumbSize()
         updateThumbOffset()
         return nextTick()
-      }
-    }
-
-    const updateThumbSize = () => {
-      const viewEl = refViewElem.value
-      if (!viewEl) {
-        return
-      }
-      if (!viewEl.clientHeight || !viewEl.clientHeight) {
-        return
-      }
-      const trackXEl = refTrackXElem.value
-      const xThumbWidth = trackXEl ? getThumbSize(viewEl.clientWidth, viewEl.scrollWidth, trackXEl.clientWidth) : 0
-      const thumbXElem = refThumbXElem.value
-      if (thumbXElem) {
-        thumbXElem.style.width = xThumbWidth + 'px'
-      }
-      reactData.xThumbWidth = xThumbWidth
-
-      const trackYEl = refTrackYElem.value
-
-      const yThumbHeight = trackYEl ? getThumbSize(viewEl.clientHeight, viewEl.scrollHeight, trackYEl.clientHeight) : 0
-      const thumbYElem = refThumbYElem.value
-      if (thumbYElem) {
-        thumbYElem.style.height = yThumbHeight + 'px'
-      }
-      reactData.yThumbHeight = yThumbHeight
-    }
-
-    const updateThumbOffset = () => {
-      const viewEl = refViewElem.value
-      if (!viewEl) {
-        return
-      }
-      if (!viewEl.clientHeight || !viewEl.clientHeight) {
-        return
-      }
-      const { xThumbWidth, yThumbHeight } = reactData
-      const trackXEl = refTrackXElem.value
-      const thumbXElem = refThumbXElem.value
-      const xThumbLeft = trackXEl && xThumbWidth ? getThumbOffsetSize(viewEl.scrollLeft, viewEl.clientWidth, viewEl.scrollWidth, trackXEl.clientWidth, xThumbWidth) : 0
-      internalData.xThumbLeft = xThumbLeft
-      if (thumbXElem && xThumbWidth) {
-        thumbXElem.style.width = xThumbWidth + 'px'
-        thumbXElem.style.transform = `translateX(${xThumbLeft}px)`
-      }
-
-      const trackYEl = refTrackYElem.value
-      const thumbYElem = refThumbYElem.value
-      const yThumbTop = trackYEl && yThumbHeight ? getThumbOffsetSize(viewEl.scrollTop, viewEl.clientHeight, viewEl.scrollHeight, trackYEl.clientHeight, yThumbHeight) : 0
-      internalData.yThumbTop = yThumbTop
-      if (thumbYElem && yThumbHeight) {
-        thumbYElem.style.height = yThumbHeight + 'px'
-        thumbYElem.style.transform = `translateY(${yThumbTop}px)`
       }
     }
 
@@ -458,122 +422,6 @@ export default defineVxeComponent({
         scrollHeight: scrollHeight,
         scrollWidth: scrollWidth
       }, evnt)
-    }
-
-    const clickTrackXEvent = (evnt: MouseEvent) => {
-      const trackEl = evnt.currentTarget as HTMLDivElement
-      if (trackEl !== evnt.target) {
-        return
-      }
-      const viewEl = refViewElem.value
-      if (!viewEl) {
-        return
-      }
-      const { xThumbWidth } = reactData
-      const trackRect = trackEl.getBoundingClientRect()
-      viewEl.scrollTo({
-        left: getScrollFromClick(evnt.clientX - trackRect.left, viewEl.clientWidth, viewEl.scrollWidth, trackEl.clientWidth, xThumbWidth),
-        behavior: 'auto'
-      })
-    }
-
-    const clickTrackYEvent = (evnt: MouseEvent) => {
-      const trackEl = evnt.currentTarget as HTMLDivElement
-      if (trackEl !== evnt.target) {
-        return
-      }
-      const viewEl = refViewElem.value
-      if (!viewEl) {
-        return
-      }
-      const { yThumbHeight } = reactData
-      const trackRect = trackEl.getBoundingClientRect()
-      viewEl.scrollTo({
-        top: getScrollFromClick(evnt.clientY - trackRect.top, viewEl.clientHeight, viewEl.scrollHeight, trackEl.clientHeight, yThumbHeight),
-        behavior: 'auto'
-      })
-    }
-
-    const pointerdownThumbXEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      internalData.isThumbDrag = true
-      thumbEl.setPointerCapture(evnt.pointerId)
-
-      const viewEl = refViewElem.value
-      if (!viewEl) {
-        return
-      }
-      const { xThumbWidth } = reactData
-      const trackEl = thumbEl.parentElement as HTMLDivElement
-      const trackRect = trackEl.getBoundingClientRect()
-      const pointerPosition = evnt.clientX - trackRect.left
-      // 记录 thumb 的偏移
-      const thumbOffset = getThumbOffsetSize(viewEl.scrollLeft, viewEl.clientWidth, viewEl.scrollWidth, trackEl.clientWidth, xThumbWidth)
-      internalData.thumbDragOffset = pointerPosition - thumbOffset
-    }
-
-    const pointermoveThumbXEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      if (!thumbEl.hasPointerCapture(evnt.pointerId)) {
-        return
-      }
-      const { isThumbDrag, thumbDragOffset } = internalData
-      if (isThumbDrag) {
-        const viewEl = refViewElem.value
-        if (!viewEl) {
-          return
-        }
-        const { xThumbWidth } = reactData
-        const thumbEl = evnt.currentTarget as HTMLDivElement
-        const trackEl = thumbEl.parentElement as HTMLDivElement
-        const trackRect = trackEl.getBoundingClientRect()
-        // 更新偏移
-        viewEl.scrollLeft = getScrollFromDrag(evnt.clientX - trackRect.left, thumbDragOffset, viewEl.clientWidth, viewEl.scrollWidth, trackEl.clientWidth, xThumbWidth)
-      }
-    }
-
-    const cleatPointerThumbEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      thumbEl.releasePointerCapture(evnt.pointerId)
-      internalData.isThumbDrag = false
-    }
-
-    const pointerdownThumbYEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      internalData.isThumbDrag = true
-      thumbEl.setPointerCapture(evnt.pointerId)
-
-      const viewEl = refViewElem.value
-      if (!viewEl) {
-        return
-      }
-      const { yThumbHeight } = reactData
-      const trackEl = thumbEl.parentElement as HTMLDivElement
-      const trackRect = trackEl.getBoundingClientRect()
-      const pointerPosition = evnt.clientY - trackRect.top
-      // 记录 thumb 的偏移
-      const thumbOffset = getThumbOffsetSize(viewEl.scrollTop, viewEl.clientHeight, viewEl.scrollHeight, trackEl.clientHeight, yThumbHeight)
-      internalData.thumbDragOffset = pointerPosition - thumbOffset
-    }
-
-    const pointermoveThumbYEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      if (!thumbEl.hasPointerCapture(evnt.pointerId)) {
-        return
-      }
-      const { isThumbDrag, thumbDragOffset } = internalData
-      if (isThumbDrag) {
-        const viewEl = refViewElem.value
-        if (!viewEl) {
-          return
-        }
-        const { yThumbHeight } = reactData
-        const thumbEl = evnt.currentTarget as HTMLDivElement
-        const trackEl = thumbEl.parentElement as HTMLDivElement
-        const trackRect = trackEl.getBoundingClientRect()
-        // 更新偏移
-        viewEl.scrollTop = getScrollFromDrag(evnt.clientY - trackRect.top, thumbDragOffset, viewEl.clientHeight, viewEl.scrollHeight, trackEl.clientHeight, yThumbHeight)
-      }
     }
 
     const scrollbarPrivateMethods: ScrollbarPrivateMethods = {
@@ -704,18 +552,18 @@ export default defineVxeComponent({
       const viewEl = refViewElem.value
       const viewInnerEl = refViewInnerElem.value
       if (autoResize) {
-        const resizeObserver = globalResize.create(() => {
+        const scrollObserver = globalResize.create(() => {
           if (props.autoResize) {
             reFlag.value++
           }
         })
         if (viewEl) {
-          resizeObserver.observe(viewEl)
+          scrollObserver.observe(viewEl)
         }
         if (viewInnerEl) {
-          resizeObserver.observe(viewInnerEl)
+          scrollObserver.observe(viewInnerEl)
         }
-        internalData.resizeObserver = resizeObserver
+        internalData.scrollObserver = scrollObserver
       }
 
       reFlag.value++
@@ -725,9 +573,9 @@ export default defineVxeComponent({
     })
 
     onBeforeUnmount(() => {
-      const { resizeObserver } = internalData
-      if (resizeObserver) {
-        resizeObserver.disconnect()
+      const { scrollObserver } = internalData
+      if (scrollObserver) {
+        scrollObserver.disconnect()
       }
       globalEvents.off($xeScrollbar, 'resize')
     })

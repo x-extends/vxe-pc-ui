@@ -403,9 +403,7 @@ export default defineVxeComponent({
         return updateTipStyle().then(() => {
           return updateTipStyle()
         }).then(() => {
-          setTimeout(() => {
-            updateTipStyle()
-          }, 15)
+          return updateTipStyle()
         })
       },
       isActived () {
@@ -545,7 +543,7 @@ export default defineVxeComponent({
     onMounted(() => {
       const $scrollbar = contentScrollbar.value
       if ($scrollbar) {
-        const viewEl = $scrollbar.getViewElem()
+        const viewEl = $scrollbar.getScrollViewElem()
         if (viewEl) {
           viewEl.addEventListener('wheel', wheelEvent, { passive: false })
           internalData.scrollbarViewEl = viewEl

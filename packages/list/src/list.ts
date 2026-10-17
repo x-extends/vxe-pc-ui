@@ -12,9 +12,7 @@ import VxeLoadingComponent from '../../loading'
 
 import type { VxeListConstructor, VxeListPropTypes, VxeListEmits, ListReactData, VxeListPrivateMethods, ListInternalData, VxeListDefines, ValueOf, ListMethods, ListPrivateMethods, ListPrivateRef, VxeComponentStyleType } from '../../../types'
 
-const { getConfig, getIcon, getI18n, domUtils, scrollbarUtils, useFns, menus, globalEvents, globalResize } = VxeUI
-
-const { getThumbOffsetSize, getThumbSize, getScrollFromClick, getScrollFromDrag } = scrollbarUtils
+const { getConfig, getIcon, getI18n, domUtils, useFns, menus, globalEvents, globalResize } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('tree')
 
@@ -167,9 +165,6 @@ export default defineVxeComponent({
 
     const browseObj = XEUtils.browse()
 
-    const { computeSize } = useFns.useSize(props)
-    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
-
     const reactData = reactive(createReactData())
 
     const internalData = createInternalData()
@@ -183,13 +178,11 @@ export default defineVxeComponent({
     const refVirtualSpaceElem = ref() as Ref<HTMLDivElement>
     const refVirtualBody = ref() as Ref<HTMLDivElement>
 
-    const refTrackXElem = ref<HTMLDivElement>()
-    const refTrackYElem = ref<HTMLDivElement>()
-    const refThumbXElem = ref<HTMLDivElement>()
-    const refThumbYElem = ref<HTMLDivElement>()
-
     const refDragRowLineElem = ref<HTMLDivElement>()
     const refDragTipElem = ref<HTMLDivElement>()
+
+    const { computeSize } = useFns.useSize(props)
+    const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
     const refMaps: ListPrivateRef = {
       refElem
@@ -203,6 +196,22 @@ export default defineVxeComponent({
       internalData,
       getRefMaps: () => refMaps
     } as unknown as VxeListConstructor & VxeListPrivateMethods
+
+    const {
+      refTrackXElem,
+      refTrackYElem,
+      refThumbXElem,
+      refThumbYElem,
+      updateThumbSize,
+      updateThumbOffset,
+      clickTrackXEvent,
+      clickTrackYEvent,
+      pointerdownThumbXEvent,
+      pointermoveThumbXEvent,
+      cleatPointerThumbEvent,
+      pointerdownThumbYEvent,
+      pointermoveThumbYEvent
+    } = useFns.useInitVScrollbar($xeList)
 
     const computeRowOpts = computed(() => {
       return Object.assign({}, getConfig().list.rowConfig, props.rowConfig)
@@ -1618,6 +1627,10 @@ export default defineVxeComponent({
 
     const listMethods: ListMethods = {
       dispatchEvent,
+      getScrollViewElem () {
+        const viewEl = refVirtualWrapper.value
+        return viewEl || null
+      },
       loadData,
       /**
        * 重新加载数据
@@ -1966,176 +1979,6 @@ export default defineVxeComponent({
           }
           internalData.scrollObserver = scrollObserver
         }
-      }
-    }
-
-    const updateThumbSize = () => {
-      const viewEl = refVirtualWrapper.value
-      if (!viewEl) {
-        return
-      }
-      if (!viewEl.clientHeight || !viewEl.clientHeight) {
-        return
-      }
-      const trackXEl = refTrackXElem.value
-      const xThumbWidth = trackXEl ? getThumbSize(viewEl.clientWidth, viewEl.scrollWidth, trackXEl.clientWidth) : 0
-      const thumbXElem = refThumbXElem.value
-      if (thumbXElem) {
-        thumbXElem.style.width = xThumbWidth + 'px'
-      }
-      reactData.xThumbWidth = xThumbWidth
-
-      const trackYEl = refTrackYElem.value
-
-      const yThumbHeight = trackYEl ? getThumbSize(viewEl.clientHeight, viewEl.scrollHeight, trackYEl.clientHeight) : 0
-      const thumbYElem = refThumbYElem.value
-      if (thumbYElem) {
-        thumbYElem.style.height = yThumbHeight + 'px'
-      }
-      reactData.yThumbHeight = yThumbHeight
-    }
-
-    const updateThumbOffset = () => {
-      const viewEl = refVirtualWrapper.value
-      if (!viewEl) {
-        return
-      }
-      if (!viewEl.clientHeight || !viewEl.clientHeight) {
-        return
-      }
-      const { xThumbWidth, yThumbHeight } = reactData
-      const trackXEl = refTrackXElem.value
-      const thumbXElem = refThumbXElem.value
-      const xThumbLeft = trackXEl && xThumbWidth ? getThumbOffsetSize(viewEl.scrollLeft, viewEl.clientWidth, viewEl.scrollWidth, trackXEl.clientWidth, xThumbWidth) : 0
-      internalData.xThumbLeft = xThumbLeft
-      if (thumbXElem && xThumbWidth) {
-        thumbXElem.style.width = xThumbWidth + 'px'
-        thumbXElem.style.transform = `translateX(${xThumbLeft}px)`
-      }
-
-      const trackYEl = refTrackYElem.value
-      const thumbYElem = refThumbYElem.value
-      const yThumbTop = trackYEl && yThumbHeight ? getThumbOffsetSize(viewEl.scrollTop, viewEl.clientHeight, viewEl.scrollHeight, trackYEl.clientHeight, yThumbHeight) : 0
-      internalData.yThumbTop = yThumbTop
-      if (thumbYElem && yThumbHeight) {
-        thumbYElem.style.height = yThumbHeight + 'px'
-        thumbYElem.style.transform = `translateY(${yThumbTop}px)`
-      }
-    }
-
-    const clickTrackXEvent = (evnt: MouseEvent) => {
-      const trackEl = evnt.currentTarget as HTMLDivElement
-      if (trackEl !== evnt.target) {
-        return
-      }
-      const viewEl = refVirtualWrapper.value
-      if (!viewEl) {
-        return
-      }
-      const { xThumbWidth } = reactData
-      const trackRect = trackEl.getBoundingClientRect()
-      viewEl.scrollTo({
-        left: getScrollFromClick(evnt.clientX - trackRect.left, viewEl.clientWidth, viewEl.scrollWidth, trackEl.clientWidth, xThumbWidth),
-        behavior: 'auto'
-      })
-    }
-
-    const clickTrackYEvent = (evnt: MouseEvent) => {
-      const trackEl = evnt.currentTarget as HTMLDivElement
-      if (trackEl !== evnt.target) {
-        return
-      }
-      const viewEl = refVirtualWrapper.value
-      if (!viewEl) {
-        return
-      }
-      const { yThumbHeight } = reactData
-      const trackRect = trackEl.getBoundingClientRect()
-      viewEl.scrollTo({
-        top: getScrollFromClick(evnt.clientY - trackRect.top, viewEl.clientHeight, viewEl.scrollHeight, trackEl.clientHeight, yThumbHeight),
-        behavior: 'auto'
-      })
-    }
-
-    const pointerdownThumbXEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      internalData.isThumbDrag = true
-      thumbEl.setPointerCapture(evnt.pointerId)
-
-      const viewEl = refVirtualWrapper.value
-      if (!viewEl) {
-        return
-      }
-      const { xThumbWidth } = reactData
-      const trackEl = thumbEl.parentElement as HTMLDivElement
-      const trackRect = trackEl.getBoundingClientRect()
-      const pointerPosition = evnt.clientX - trackRect.left
-      // 记录 thumb 的偏移
-      const thumbOffset = getThumbOffsetSize(viewEl.scrollLeft, viewEl.clientWidth, viewEl.scrollWidth, trackEl.clientWidth, xThumbWidth)
-      internalData.thumbDragOffset = pointerPosition - thumbOffset
-    }
-
-    const pointermoveThumbXEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      if (!thumbEl.hasPointerCapture(evnt.pointerId)) {
-        return
-      }
-      const { isThumbDrag, thumbDragOffset } = internalData
-      if (isThumbDrag) {
-        const viewEl = refVirtualWrapper.value
-        if (!viewEl) {
-          return
-        }
-        const { xThumbWidth } = reactData
-        const thumbEl = evnt.currentTarget as HTMLDivElement
-        const trackEl = thumbEl.parentElement as HTMLDivElement
-        const trackRect = trackEl.getBoundingClientRect()
-        // 更新偏移
-        viewEl.scrollLeft = getScrollFromDrag(evnt.clientX - trackRect.left, thumbDragOffset, viewEl.clientWidth, viewEl.scrollWidth, trackEl.clientWidth, xThumbWidth)
-      }
-    }
-
-    const cleatPointerThumbEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      thumbEl.releasePointerCapture(evnt.pointerId)
-      internalData.isThumbDrag = false
-    }
-
-    const pointerdownThumbYEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      internalData.isThumbDrag = true
-      thumbEl.setPointerCapture(evnt.pointerId)
-
-      const viewEl = refVirtualWrapper.value
-      if (!viewEl) {
-        return
-      }
-      const { yThumbHeight } = reactData
-      const trackEl = thumbEl.parentElement as HTMLDivElement
-      const trackRect = trackEl.getBoundingClientRect()
-      const pointerPosition = evnt.clientY - trackRect.top
-      // 记录 thumb 的偏移
-      const thumbOffset = getThumbOffsetSize(viewEl.scrollTop, viewEl.clientHeight, viewEl.scrollHeight, trackEl.clientHeight, yThumbHeight)
-      internalData.thumbDragOffset = pointerPosition - thumbOffset
-    }
-
-    const pointermoveThumbYEvent = (evnt: PointerEvent) => {
-      const thumbEl = evnt.currentTarget as HTMLDivElement
-      if (!thumbEl.hasPointerCapture(evnt.pointerId)) {
-        return
-      }
-      const { isThumbDrag, thumbDragOffset } = internalData
-      if (isThumbDrag) {
-        const viewEl = refVirtualWrapper.value
-        if (!viewEl) {
-          return
-        }
-        const { yThumbHeight } = reactData
-        const thumbEl = evnt.currentTarget as HTMLDivElement
-        const trackEl = thumbEl.parentElement as HTMLDivElement
-        const trackRect = trackEl.getBoundingClientRect()
-        // 更新偏移
-        viewEl.scrollTop = getScrollFromDrag(evnt.clientY - trackRect.top, thumbDragOffset, viewEl.clientHeight, viewEl.scrollHeight, trackEl.clientHeight, yThumbHeight)
       }
     }
 

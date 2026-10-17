@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentStyleType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, ValueOf, VxeComponentSizeType, VxeComponentStyleType, VxeUseInitVScrollbarReactData, VxeUseInitVScrollbarInternalData } from '@vxe-ui/core'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -24,6 +24,7 @@ export interface ScrollbarPrivateRef {
 export interface VxeScrollbarPrivateRef extends ScrollbarPrivateRef { }
 
 export namespace VxeScrollbarPropTypes {
+  export type Size = VxeComponentSizeType
   export type Id = number | string
   export type ViewId = number | string
   export type Theme = '' | 'light' | 'dark'
@@ -90,6 +91,7 @@ export namespace VxeScrollbarPropTypes {
 }
 
 export interface VxeScrollbarProps {
+  size?: VxeScrollbarPropTypes.Size
   /**
    * ID
    */
@@ -190,18 +192,9 @@ export interface ScrollbarPrivateComputed {
 }
 export interface VxeScrollbarPrivateComputed extends ScrollbarPrivateComputed { }
 
-export interface ScrollbarReactData {
-  yThumbHeight: number
-  xThumbWidth: number
+export interface ScrollbarReactData extends VxeUseInitVScrollbarReactData {
 }
-export interface ScrollbarInternalData {
-  resizeObserver?: ResizeObserver
-  isThumbDrag?: boolean
-  thumbDragOffset: number
-  yThumbTop: number
-  xThumbLeft: number
-  lastScrollTop: number
-  lastScrollLeft: number
+export interface ScrollbarInternalData extends VxeUseInitVScrollbarInternalData {
 }
 
 export interface ScrollbarMethods {
@@ -238,11 +231,11 @@ export interface ScrollbarMethods {
   /**
    * 获取滚动视图元素
    */
-  getViewElem(): HTMLElement | null
+  getScrollViewElem(): HTMLElement | null | undefined
   /**
    * 获取滚动视图内容包裹元素
    */
-  getViewInnerElem(): HTMLElement | null
+  getScrollViewInnerElem(): HTMLElement | null | undefined
   /**
    * 重新计算样式
    * 对于某些特殊场景可能会用到，比如更新内容

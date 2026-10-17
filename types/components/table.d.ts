@@ -1,5 +1,5 @@
 import { RenderFunction, SetupContext, Ref, ComputedRef, ComponentPublicInstance, VNode } from 'vue'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeComponentAlignType, VxeGlobalRendererOptions, VxeComponentIsVScrollbar } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeComponentAlignType, VxeGlobalRendererOptions, VxeComponentIsVScrollbar, VxeUseSizeResult, VxeUseVScrollbarResult, VxeUseInitVScrollbarResult, VxeUseInitVScrollbarReactData, VxeUseInitVScrollbarInternalData } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
 import { VxeGridConstructor } from './grid'
@@ -4001,6 +4001,7 @@ export interface TablePrivateComputed<D = any> {
   computeSize: ComputedRef<VxeComponentSizeType>
   computeIsVScrollbar: ComputedRef<VxeComponentIsVScrollbar>
   computeTableId: ComputedRef<string>
+  computeTableStyle: ComputedRef<VxeComponentStyleType>
   computeRowField: ComputedRef<string>
   computeEditDirtyOpts: ComputedRef<VxeTablePropTypes.EditDirtyConfig>
   computeValidOpts: ComputedRef<VxeTablePropTypes.ValidOpts<D>>
@@ -4112,9 +4113,9 @@ export interface TablePrivateComputed<D = any> {
    */
   computeSYOpts: ComputedRef<VxeTablePropTypes.VirtualYConfig & { gt: number }>
 }
-export interface VxeTablePrivateComputed extends TablePrivateComputed { }
+export interface VxeTablePrivateComputed extends TablePrivateComputed, VxeUseSizeResult, VxeUseVScrollbarResult { }
 
-export interface TableReactData<D = any> {
+export interface TableReactData<D = any> extends VxeUseInitVScrollbarReactData {
   updateColFlag: number
   // 低性能的静态列
   staticColumns: any[]
@@ -4136,10 +4137,6 @@ export interface TableReactData<D = any> {
   scrollbarWidth: number
   // 横向滚动条的高度
   scrollbarHeight: number
-
-  // 滚动条
-  yThumbHeight: number
-  xThumbWidth: number
 
   /**
    * 行高
@@ -4339,7 +4336,7 @@ export interface TableReactData<D = any> {
   currColFlag: number
 }
 
-export interface TableInternalData<D = any> {
+export interface TableInternalData<D = any> extends VxeUseInitVScrollbarInternalData {
   tZindex: number
   currKeyField: string
   isCurrDeepKey: boolean
@@ -4383,15 +4380,6 @@ export interface TableInternalData<D = any> {
   currentCol: VxeTableDefines.ColumnInfo | null
 
   resizeObserver?: ResizeObserver
-
-  // 滚动条
-  scrollObserver?: ResizeObserver
-  isThumbDrag?: boolean
-  thumbDragOffset: number
-  yThumbTop: number
-  xThumbLeft: number
-  lastScrollTop: number
-  lastScrollLeft: number
 
   // 单选框属性，已选中保留的行
   radioReserveRow: any
@@ -4581,6 +4569,10 @@ export interface TableMethods<DT = any> {
    * 获取根元素
    */
   getEl(): HTMLDivElement
+  /**
+   * 获取滚动视图元素
+   */
+  getScrollViewElem(): HTMLElement | null | undefined
   /**
    * 手动清除表格所有条件，还原到初始状态
    * 对于增删改查的场景中可能会用到，比如在数据保存之后清除表格缓存
@@ -5593,9 +5585,19 @@ export interface TableMethods<DT = any> {
    */
   getCustomStoreData(): VxeTableDefines.CustomStoreData
 }
-export interface VxeTableMethods<D = any> extends TableMethods<D> { }
+export interface VxeTableMethods<D = any> extends TableMethods<D>, VxeUseInitVScrollbarResult { }
 
 export interface TablePrivateMethods<D = any> {
+  /**
+   * 内部方法
+   * @private
+   */
+  getInternalData(): TableInternalData<D>
+  /**
+   * 内部方法
+   * @private
+   */
+  getReactData(): TableReactData<D>
   /**
    * 内部方法
    * @deprecated
