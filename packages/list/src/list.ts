@@ -774,7 +774,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollLeft = scrollBodyElem.scrollLeft
       const isX = scrollLeft !== internalData.lastScrollLeft
       const isY = scrollTop !== internalData.lastScrollTop
-      $xeList.updateThumbOffset()
+      const isVScrollbar = $xeList.computeIsVScrollbar
+      if (isVScrollbar) {
+        $xeList.updateThumbOffset()
+      }
       internalData.lastScrollTop = scrollTop
       internalData.lastScrollLeft = scrollLeft
       if (reactData.scrollYLoad) {

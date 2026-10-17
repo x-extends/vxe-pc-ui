@@ -4525,6 +4525,9 @@ export interface TableInternalData<D = any> extends VxeUseInitVScrollbarInternal
   inBodyScroll?: boolean
   inFooterScroll?: boolean
   scrollRenderType?: '' | 'left' | 'right'
+
+  isSyncGanttScrollTop?: boolean
+
   // 同步滚动
   lcsTimeout?: undefined | number
   lcsRunTime?: undefined | number
@@ -6111,6 +6114,13 @@ export interface TablePrivateMethods<D = any> {
    * @private
    */
   updateScrollYData(): Promise<any>
+  /**
+   * 内部方法
+   * @private
+   */
+  handleSyncScrollTop(params: {
+    scrollTop: number
+  }): void
   /**
    * 内部方法
    * @private

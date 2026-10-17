@@ -1732,7 +1732,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollBodyElem = evnt.target as HTMLDivElement
       const scrollTop = scrollBodyElem.scrollTop
       const scrollLeft = scrollBodyElem.scrollLeft
-      $xeSelect.updateThumbOffset()
+      const isVScrollbar = $xeSelect.computeIsVScrollbar
+      if (isVScrollbar) {
+        $xeSelect.updateThumbOffset()
+      }
       const isX = scrollLeft !== internalData.lastScrollLeft
       const isY = scrollTop !== internalData.lastScrollTop
       internalData.lastScrollTop = scrollTop
