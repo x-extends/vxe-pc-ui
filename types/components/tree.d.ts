@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentIsVScrollbar } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeComponentIsVScrollbar, VxeUseInitVScrollbarReactData, VxeUseInitVScrollbarInternalData } from '@vxe-ui/core'
 import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 import { VxeTooltipPropTypes } from './tooltip'
 import { VxeScrollbarProps } from './scrollbar'
@@ -449,7 +449,7 @@ export interface TreePrivateComputed<D = any> {
 }
 export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 
-export interface TreeReactData {
+export interface TreeReactData extends VxeUseInitVScrollbarReactData {
   parentHeight: number
   customHeight: number
   customMinHeight: number
@@ -462,10 +462,6 @@ export interface TreeReactData {
   treeList: any[]
   updateExpandedFlag: number
   updateCheckboxFlag: number
-
-  // 滚动条
-  yThumbHeight: number
-  xThumbWidth: number
 
   insertNodeFlag: number
   removeNodeFlag: number
@@ -480,7 +476,7 @@ export interface TreeReactData {
   }
 }
 
-export interface TreeInternalData {
+export interface TreeInternalData extends VxeUseInitVScrollbarInternalData {
   initialized?: boolean
   lastFilterValue?: string
   afterTreeList: any[]
@@ -493,15 +489,6 @@ export interface TreeInternalData {
   treeExpandLazyLoadedMaps: Record<string, boolean>
 
   resizeObserver?: ResizeObserver
-
-  // 滚动条
-  scrollObserver?: ResizeObserver
-  isThumbDrag?: boolean
-  thumbDragOffset: number
-  yThumbTop: number
-  xThumbLeft: number
-  lastScrollTop: number
-  lastScrollLeft: number
 
   scrollYStore: {
     startIndex: number
@@ -524,6 +511,10 @@ export interface TreeInternalData {
 
 export interface TreeMethods<D = any> {
   dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null): void
+  /**
+   * 获取滚动视图元素
+   */
+  getScrollViewElem(): HTMLElement | null | undefined
   /**
    * 加载数据
    */

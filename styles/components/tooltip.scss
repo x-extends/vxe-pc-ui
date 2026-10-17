@@ -31,6 +31,7 @@
   .vxe-tooltip--content,
   .vxe-tooltip--scrollbar-content-view {
     padding: 8px 12px;
+    width: max-content;
     max-width: 600px;
     max-height: 800px;
     white-space: pre-line;

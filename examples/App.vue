@@ -1,15 +1,15 @@
 <template>
-  <vxe-layout-container :size="componentsSize" vertical>
+  <vxe-layout-container :size="componentsSize" :use-scrollbar="isScrollbar" vertical>
     <vxe-layout-header>
       <vxe-button @click="collapsed = !collapsed">折叠</vxe-button>
-      <vxe-switch v-model="theme" close-value="light" open-value="dark" @change="changeTheme">主题切换</vxe-switch>
+      主题切换:<vxe-switch v-model="theme" close-value="light" open-value="dark" @change="changeTheme"></vxe-switch>
+      滚动条切换:<vxe-switch v-model="isScrollbar"></vxe-switch>
       <vxe-radio-group v-model="language" :options="langOptions" @change="changeLanguage"></vxe-radio-group>
       <vxe-radio-group class="switch-size" v-model="componentsSize" :options="sizeOptions" type="button" size="mini"></vxe-radio-group>
-      <vxe-button @click="showLoading">loading</vxe-button>
     </vxe-layout-header>
     <vxe-layout-container>
-      <vxe-layout-aside class="page-layout-aside" :collapsed="collapsed">
-        <VxeMenu :options="navList" />
+      <vxe-layout-aside class="page-layout-aside" :collapsed="collapsed" use-scrollbar>
+        <VxeMenu :options="navList" collapse-fixed />
       </vxe-layout-aside>
       <vxe-layout-container vertical>
         <vxe-layout-body padding>
@@ -22,6 +22,7 @@
       </vxe-layout-container>
     </vxe-layout-container>
   </vxe-layout-container>
+   <!-- <RouterView /> -->
 </template>
 
 <script lang="ts">
@@ -165,7 +166,8 @@ export default Vue.extend({
         { name: 'SpaceTest', routerLink: { name: 'SpaceTest' } },
         { name: 'DividerTest', routerLink: { name: 'DividerTest' } },
         { name: 'ScrollbarTest', routerLink: { name: 'ScrollbarTest' } }
-      ]
+      ],
+      isScrollbar: false
     }
   },
   methods: {

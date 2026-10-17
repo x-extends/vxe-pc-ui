@@ -122,14 +122,20 @@
   }
 }
 
-.vxe-ico-picker--list-wrapper {
+.vxe-ico-picker--list-wrapper,
+.vxe-ico-picker--scrollbar-list-wrapper {
   overflow-x: hidden;
   overflow-y: auto;
   height: var(--vxe-ui-icon-picker-panel-height);
-  max-height: var(--vxe-ui-icon-picker-panel-max-height, var(--vxe-ui-icon-picker-panel-height, 22.3em));
   padding: var(--vxe-ui-layout-padding-qtr);
 }
-.vxe-ico-picker--list {
+.vxe-ico-picker--list-wrapper,
+.vxe-ico-picker--scrollbar-list-wrapper-view {
+  max-height: var(--vxe-ui-icon-picker-panel-max-height, var(--vxe-ui-icon-picker-panel-height, 22.6em));
+}
+
+.vxe-ico-picker--list,
+.vxe-ico-picker--scrollbar-list-wrapper-inner {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

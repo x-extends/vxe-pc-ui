@@ -298,9 +298,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return $xeTooltip.updateTipStyle().then(() => {
         return $xeTooltip.updateTipStyle()
       }).then(() => {
-        setTimeout(() => {
-          return $xeTooltip.updateTipStyle()
-        }, 15)
+        return $xeTooltip.updateTipStyle()
       })
     },
     isActived () {
@@ -640,7 +638,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     const $scrollbar = $xeTooltip.$refs.contentScrollbar as VxeScrollbarInstance
     if ($scrollbar) {
-      const viewEl = $scrollbar.getViewElem()
+      const viewEl = $scrollbar.getScrollViewElem()
       if (viewEl) {
         viewEl.addEventListener('wheel', $xeTooltip.wheelEvent, { passive: false })
         internalData.scrollbarViewEl = viewEl

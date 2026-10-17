@@ -1,4 +1,4 @@
-import { DefineVxeComponentInstance } from '@vxe-ui/core'
+import { DefineVxeComponentInstance, VxeUseInitVScrollbarResult, VxeUseInitVScrollbarReactData, VxeUseInitVScrollbarInternalData } from '@vxe-ui/core'
 import { VxeTableConstructor, VxeTableMethods, VxeTablePrivateMethods } from '../table'
 import { VxeGanttDefines, VxeGanttConstructor } from '../gantt'
 import { VxeScrollbarPropTypes } from '../scrollbar'
@@ -17,7 +17,7 @@ export type VxeGanttViewConstructor = VxeGanttViewInstance
 interface VxeGanttViewProps {
 }
 
-export interface GanttViewReactData {
+export interface GanttViewReactData extends VxeUseInitVScrollbarReactData {
   // 是否启用了横向 X 可视渲染方式加载
   scrollXLoad: boolean
   // 是否启用了纵向 Y 可视渲染方式加载
@@ -34,10 +34,6 @@ export interface GanttViewReactData {
   // 最后滚动时间戳
   lastScrollTime: number
   lazScrollLoading: boolean
-
-  // 滚动条
-  yThumbHeight: number
-  xThumbWidth: number
 
   scrollVMLoading: boolean
   scrollYHeight: number
@@ -56,7 +52,7 @@ export interface GanttViewReactData {
   viewCellWidth: number
 }
 
-export interface GanttViewInternalData {
+export interface GanttViewInternalData extends VxeUseInitVScrollbarInternalData {
   xeTable: (VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods) | null
   // 渲染所有列
   visibleColumn: VxeGanttDefines.ViewColumn[]
@@ -77,15 +73,6 @@ export interface GanttViewInternalData {
     startIndex: number
     endIndex: number
   }
-
-  // 滚动条
-  scrollObserver?: ResizeObserver
-  isThumbDrag?: boolean
-  thumbDragOffset: number
-  yThumbTop: number
-  xThumbLeft: number
-  lastScrollLeft: number
-  lastScrollTop: number
 
   // 刷新布局
   rceTimeout?: undefined | number
@@ -183,7 +170,11 @@ export interface VxeGanttViewPrivateMethods {
   updateScrollbar(): void
 }
 
-export interface VxeGanttViewMethods {
+export interface VxeGanttViewMethods extends VxeUseInitVScrollbarResult {
+  /**
+   * 获取滚动视图元素
+   */
+  getScrollViewElem(): HTMLElement | null | undefined
   refreshData(): Promise<void>
   updateViewData(force?: boolean): Promise<void>
   connectUpdate(params: {

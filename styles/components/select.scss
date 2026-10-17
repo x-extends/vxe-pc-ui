@@ -112,6 +112,7 @@
 }
 
 .vxe-select--panel-body {
+  position: relative;
   display: flex;
   flex-direction: row;
   flex-grow: 1;
@@ -258,4 +259,80 @@
 .vxe-select--search-loading,
 .vxe-select--empty-placeholder {
   line-height: var(--vxe-ui-select-current-option-height);
+}
+
+// 滚动条
+.vxe-select--panel-body {
+  &.ov-padding {
+    &.overflow-x {
+      &.sx-pos--top {
+        padding-top: var(--vxe-ui-scrollbar-x-height);
+      }
+      &.sx-pos--bottom {
+        padding-bottom: var(--vxe-ui-scrollbar-x-height);
+      }
+    }
+    &.overflow-y {
+      &.sy-pos--left {
+        padding-left: var(--vxe-ui-scrollbar-y-width);
+      }
+      &.sy-pos--right {
+        padding-right: var(--vxe-ui-scrollbar-y-width);
+      }
+    }
+  }
+  &.ov-x--hidden {
+    & > .vxe-select-option--wrapper {
+      overflow-x: hidden;
+    }
+  }
+  &.ov-y--hidden {
+    & > .vxe-select-option--wrapper {
+      overflow-y: hidden;
+    }
+  }
+  &.is--virtual-scrollbar {
+    &.ov-x--auto-hide {
+      &:hover {
+        & > .vxe-scrollbar {
+          & > .vxe-scrollbar--track-x {
+            opacity: 1;
+          }
+        }
+      }
+      & > .vxe-scrollbar {
+        & > .vxe-scrollbar--track-x {
+          opacity: 0;
+          @include baseMixin.createAnimationTransition(opacity, 0.8s);
+        }
+      }
+    }
+    &.ov-y--auto-hide {
+      &:hover {
+        & > .vxe-scrollbar {
+          & > .vxe-scrollbar--track-y {
+            opacity: 1;
+          }
+        }
+      }
+      & > .vxe-scrollbar {
+        & > .vxe-scrollbar--track-y {
+          opacity: 0;
+          @include baseMixin.createAnimationTransition(opacity, 0.8s);
+        }
+      }
+    }
+  }
+  & > .vxe-scrollbar {
+    position: unset;
+  }
+  &.is--virtual-scrollbar {
+    & > .vxe-select-option--wrapper {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    & > .vxe-select-option--wrapper::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }

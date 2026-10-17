@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI, globalMixins } from '../../ui'
 import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -9,8 +9,11 @@ import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input'
 import VxeButtonComponent from '../../button'
 
-import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeComponentSizeType, SelectReactData, VxeSelectEmits, VxeButtonDefines, VxeInputDefines, VxeSelectDefines, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType, VxeComponentStyleType, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
+import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeUseSizeComputed, VxeUseVScrollbarComputed, VxeUseInitVScrollbarComputed, SelectReactData, VxeSelectEmits, VxeButtonDefines, VxeInputDefines, VxeSelectDefines, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType, VxeComponentStyleType, VxeCardConstructor, VxeCardPrivateMethods, VxeScrollbarPropTypes } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { getConfig, getIcon, getI18n, baseUtils, domUtils, globalEvents, GLOBAL_EVENT_KEYS, globalResize, createEvent, renderEmptyElement } = VxeUI
+const { getDefVal } = baseUtils
 
 const { errLog } = createComponentLog('select')
 
@@ -36,6 +39,10 @@ function createReactData (): SelectReactData {
     searchValue: '',
     searchLoading: false,
 
+    // 滚动条
+    yThumbHeight: 0,
+    xThumbWidth: 0,
+
     panelIndex: 0,
     panelStyle: {},
     panelPlacement: null,
@@ -57,8 +64,15 @@ function createInternalData (): SelectInternalData {
     optFullValMaps: {},
     remoteValMaps: {},
 
-    lastScrollLeft: 0,
+    // 滚动条
+    // scrollObserver: undefined,
+    // isThumbDrag: false,
+    thumbDragOffset: 0,
+    yThumbTop: 0,
+    xThumbLeft: 0,
     lastScrollTop: 0,
+    lastScrollLeft: 0,
+
     scrollYStore: {
       startIndex: 0,
       endIndex: 0,
@@ -75,7 +89,9 @@ function createInternalData (): SelectInternalData {
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSelect',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin,
+    globalMixins.initVScrollbarMixin
   ],
   model: {
     prop: 'value',
@@ -190,6 +206,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     popupConfig: Object as PropType<VxeSelectPropTypes.PopupConfig>,
     virtualYConfig: Object as PropType<VxeSelectPropTypes.VirtualYConfig>,
     scrollY: Object as PropType<VxeSelectPropTypes.ScrollY>,
+    useScrollbar: {
+      type: Boolean as PropType<VxeSelectPropTypes.UseScrollbar>,
+      default: () => getDefVal(getConfig().select.useScrollbar, getConfig().useScrollbar)
+    },
+    scrollbarConfig: Object as PropType<VxeSelectPropTypes.ScrollbarConfig>,
 
     /**
      * 已废弃，被 remote-config.queryMethod 替换
@@ -243,12 +264,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         internalData: SelectInternalData
       }),
       xID,
-      reactData
+      reactData,
+
+      reLayoutFlag: 0,
+      reScrollFlag: 0
     }
   },
   computed: {
-    ...({} as {
-      computeSize(): VxeComponentSizeType
+    ...({} as VxeUseSizeComputed & VxeUseVScrollbarComputed & VxeUseInitVScrollbarComputed & {
       $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
       $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
       $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
@@ -500,6 +523,100 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return `${labels.slice(0, multiMaxCharNum)}...`
       }
       return labels.join(', ')
+    },
+    computeScrollbarOpts () {
+      const $xeSelect = this
+      const props = $xeSelect
+
+      return Object.assign({}, getConfig().tree.scrollbarConfig, props.scrollbarConfig)
+    },
+    computeScrollbarXOpts () {
+      const $xeSelect = this
+
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
+      return Object.assign({}, getConfig().scrollbar.xConfig, scrollbarOpts.xConfig, {
+        visible: false
+      })
+    },
+    computeScrollbarYOpts () {
+      const $xeSelect = this
+
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
+      return Object.assign({}, getConfig().scrollbar.yConfig, scrollbarOpts.yConfig)
+    },
+    computeScrollXHeight () {
+      const $xeSelect = this
+
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
+      const scrollbarXOpts = $xeSelect.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
+      return getDefVal(getDefVal(scrollbarXOpts.height, scrollbarOpts.height), getConfig().scrollbar.height)
+    },
+    computeScrollYWidth () {
+      const $xeSelect = this
+
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
+      const scrollbarYOpts = $xeSelect.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
+      return getDefVal(getDefVal(scrollbarYOpts.width, scrollbarOpts.width), getConfig().scrollbar.width)
+    },
+    computeScrollXVisible () {
+      const $xeSelect = this
+
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
+      const scrollbarXOpts = $xeSelect.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
+      return getDefVal(scrollbarXOpts.visible, scrollbarOpts.visible)
+    },
+    computeScrollYVisible () {
+      const $xeSelect = this
+
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
+      const scrollbarYOpts = $xeSelect.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
+      return getDefVal(scrollbarYOpts.visible, scrollbarOpts.visible)
+    },
+    computeScrollXAutoHide () {
+      const $xeSelect = this
+
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
+      const scrollbarXOpts = $xeSelect.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
+      return getDefVal(getDefVal(scrollbarXOpts.autoHide, scrollbarOpts.autoHide), getConfig().scrollbar.autoHide)
+    },
+    computeScrollYAutoHide () {
+      const $xeSelect = this
+
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
+      const scrollbarYOpts = $xeSelect.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
+      return getDefVal(getDefVal(scrollbarYOpts.autoHide, scrollbarOpts.autoHide), getConfig().scrollbar.autoHide)
+    },
+    computeScrollbarWrapperClss () {
+      const $xeSelect = this
+      const reactData = ($xeSelect as any).reactData as SelectReactData
+
+      const { yThumbHeight, xThumbWidth } = reactData
+      const scrollbarXToTop = $xeSelect.computeScrollbarXToTop
+      const scrollbarYToLeft = $xeSelect.computeScrollbarYToLeft
+      const scrollXVisible = $xeSelect.computeScrollXVisible
+      const scrollYVisible = $xeSelect.computeScrollYVisible
+      return domUtils.buildClass([
+        'vxe-scrollbar is--virtual',
+            `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
+            `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}`,
+            `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
+            `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
+      ], {
+        'overflow-y': yThumbHeight,
+        'overflow-x': xThumbWidth
+      })
+    },
+    computeScrollbarXToTop () {
+      const $xeSelect = this
+
+      const scrollbarXOpts = $xeSelect.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
+      return scrollbarXOpts.position === 'top'
+    },
+    computeScrollbarYToLeft () {
+      const $xeSelect = this
+
+      const scrollbarYOpts = $xeSelect.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
+      return scrollbarYOpts.position === 'left'
     }
   },
   methods: {
@@ -525,6 +642,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       $xeSelect.emitModel(value)
       $xeSelect.dispatchEvent('default-change', { value }, null)
+    },
+    getScrollViewElem () {
+      const $xeSelect = this
+
+      const viewEl = $xeSelect.$refs.refVirtualWrapper as HTMLDivElement
+      return viewEl || null
     },
     isPanelVisible () {
       const $xeSelect = this
@@ -1547,6 +1670,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
+    updateScrollbar () {
+      const $xeSelect = this
+
+      const isVScrollbar = $xeSelect.computeIsVScrollbar
+      if (isVScrollbar) {
+        return $xeSelect.$nextTick().then(() => {
+          $xeSelect.updateThumbSize()
+          $xeSelect.updateThumbOffset()
+        })
+      }
+      return Promise.resolve()
+    },
     /**
      * 重新计算列表
      */
@@ -1555,7 +1690,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const el = $xeSelect.$refs.refElem as HTMLDivElement
       if (el && el.clientWidth && el.clientHeight) {
-        return $xeSelect.computeScrollLoad()
+        return $xeSelect.computeScrollLoad().then(() => {
+          return $xeSelect.updateScrollbar()
+        })
       }
       return Promise.resolve()
     },
@@ -1595,6 +1732,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollBodyElem = evnt.target as HTMLDivElement
       const scrollTop = scrollBodyElem.scrollTop
       const scrollLeft = scrollBodyElem.scrollLeft
+      $xeSelect.updateThumbOffset()
       const isX = scrollLeft !== internalData.lastScrollLeft
       const isY = scrollTop !== internalData.lastScrollTop
       internalData.lastScrollTop = scrollTop
@@ -1685,6 +1823,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { optGroupKeyMaps } = internalData
       return !!optGroupKeyMaps[optid]
+    },
+    // 滚动条
+    bindScrollbarResize () {
+      const $xeSelect = this
+      const internalData = $xeSelect.internalData
+
+      const isVScrollbar = $xeSelect.computeIsVScrollbar
+      const { scrollObserver } = internalData
+      if (isVScrollbar) {
+        if (!scrollObserver) {
+          const el = $xeSelect.$refs.refElem as HTMLDivElement
+          const viewInnerEl = $xeSelect.$refs.refVirtualSpaceElem as HTMLDivElement
+          const scrollObserver = globalResize.create(() => {
+            $xeSelect.reScrollFlag++
+          })
+          if (el) {
+            scrollObserver.observe(el)
+          }
+          if (viewInnerEl) {
+            scrollObserver.observe(viewInnerEl)
+          }
+          internalData.scrollObserver = scrollObserver
+        }
+      }
     },
 
     //
@@ -1909,8 +2071,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSelect.reactData
 
       const { className, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton, showCloseButton } = props
-      const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight } = reactData
+      const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight, xThumbWidth, yThumbHeight } = reactData
       const vSize = $xeSelect.computeSize
+      const isVScrollbar = $xeSelect.computeIsVScrollbar
       const isDisabled = $xeSelect.computeIsDisabled
       const selectLabel = $xeSelect.computeSelectLabel
       const fullLabel = $xeSelect.computeFullLabel
@@ -1943,6 +2106,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const footerSlot = slots.footer
       const prefixSlot = slots.prefix
       const ppClassName = popupOpts.className || props.popupClassName
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts
+      const scrollXVisible = $xeSelect.computeScrollXVisible
+      const scrollYVisible = $xeSelect.computeScrollYVisible
+      const scrollbarXToTop = $xeSelect.computeScrollbarXToTop
+      const scrollbarYToLeft = $xeSelect.computeScrollbarYToLeft
+      const scrollXAutoHide = $xeSelect.computeScrollXAutoHide
+      const scrollYAutoHide = $xeSelect.computeScrollYAutoHide
+      const scrollbarWrapperClss = $xeSelect.computeScrollbarWrapperClss
       return h('div', {
         ref: 'refElem',
         class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '', {
@@ -2068,7 +2239,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       ])
                   : renderEmptyElement($xeSelect),
                 h('div', {
-                  class: 'vxe-select--panel-body'
+                  class: [
+                    'vxe-select--panel-body',
+                    isVScrollbar ? `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}` : '',
+                    isVScrollbar ? `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}` : '',
+                    isVScrollbar ? `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}` : '',
+                    isVScrollbar ? `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}` : '',
+                    {
+
+                      'is--virtual-scrollbar': isVScrollbar,
+                      'ov-padding': isVScrollbar && scrollbarOpts.padding,
+                      'ov-x--auto-hide': isVScrollbar && scrollXAutoHide,
+                      'ov-y--auto-hide': isVScrollbar && scrollYAutoHide,
+                      'overflow-y': yThumbHeight,
+                      'overflow-x': xThumbWidth
+                    }
+                  ]
                 }, [
                   h('div', {
                     ref: 'refVirtualWrapper',
@@ -2078,6 +2264,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     }
                   }, [
                     h('div', {
+                      ref: 'refVirtualSpaceElem',
                       class: 'vxe-select--y-space',
                       style: {
                         height: bodyHeight ? `${bodyHeight}px` : ''
@@ -2090,7 +2277,58 @@ export default /* define-vxe-component start */ defineVxeComponent({
                         transform: `translateY(${topSpaceHeight}px)`
                       }
                     }, $xeSelect.renderOpts(h))
-                  ])
+                  ]),
+                  /**
+                   * 滚动条
+                   */
+                  isVScrollbar
+                    ? h('div', {
+                      class: scrollbarWrapperClss
+                    }, [
+                      scrollXVisible === false
+                        ? renderEmptyElement($xeSelect)
+                        : h('div', {
+                          ref: 'refTrackXElem',
+                          class: 'vxe-scrollbar--track-x',
+                          on: {
+                            click: $xeSelect.clickTrackXEvent
+                          }
+                        }, [
+                          h('div', {
+                            ref: 'refThumbXElem',
+                            class: 'vxe-scrollbar--thumb-x',
+                            on: {
+                              pointerdown: $xeSelect.pointerdownThumbXEvent,
+                              pointermove: $xeSelect.pointermoveThumbXEvent,
+                              pointerup: $xeSelect.cleatPointerThumbEvent,
+                              pointercancel: $xeSelect.cleatPointerThumbEvent,
+                              lostpointercapture: $xeSelect.cleatPointerThumbEvent
+                            }
+                          })
+                        ]),
+                      scrollYVisible === false
+                        ? renderEmptyElement($xeSelect)
+                        : h('div', {
+                          ref: 'refTrackYElem',
+                          class: 'vxe-scrollbar--track-y',
+                          on: {
+                            click: $xeSelect.clickTrackYEvent
+                          }
+                        }, [
+                          h('div', {
+                            ref: 'refThumbYElem',
+                            class: 'vxe-scrollbar--thumb-y',
+                            on: {
+                              pointerdown: $xeSelect.pointerdownThumbYEvent,
+                              pointermove: $xeSelect.pointermoveThumbYEvent,
+                              pointerup: $xeSelect.cleatPointerThumbEvent,
+                              pointercancel: $xeSelect.cleatPointerThumbEvent,
+                              lostpointercapture: $xeSelect.cleatPointerThumbEvent
+                            }
+                          })
+                        ])
+                    ])
+                    : renderEmptyElement($xeSelect)
                 ]),
                 footerSlot || showTotalButton || (showCloseButton && multiple)
                   ? h('div', {
@@ -2145,6 +2383,54 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSelect = this
 
       $xeSelect.loadData(val)
+    },
+    computeIsVScrollbar () {
+      const $xeSelect = this
+
+      $xeSelect.$nextTick(() => {
+        $xeSelect.bindScrollbarResize()
+        $xeSelect.$nextTick(() => {
+          $xeSelect.reLayoutFlag++
+        })
+      })
+    },
+    computeScrollYWidth () {
+      const $xeSelect = this
+
+      $xeSelect.reLayoutFlag++
+    },
+    computeScrollXHeight () {
+      const $xeSelect = this
+
+      $xeSelect.reLayoutFlag++
+    },
+    computeScrollXVisible () {
+      const $xeSelect = this
+
+      $xeSelect.$nextTick(() => {
+        $xeSelect.reLayoutFlag++
+      })
+    },
+    computeScrollYVisible () {
+      const $xeSelect = this
+
+      $xeSelect.$nextTick(() => {
+        $xeSelect.reLayoutFlag++
+      })
+    },
+    reLayoutFlag () {
+      const $xeSelect = this
+
+      $xeSelect.recalculate().then(() => {
+        $xeSelect.recalculate()
+      })
+    },
+    reScrollFlag () {
+      const $xeSelect = this
+
+      $xeSelect.updateScrollbar().then(() => {
+        $xeSelect.updateScrollbar()
+      })
     }
   },
   created () {
@@ -2164,6 +2450,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSelect.loadData(options)
       }
     })
+    $xeSelect.reLayoutFlag++
+    $xeSelect.bindScrollbarResize()
     globalEvents.on($xeSelect, 'mousedown', $xeSelect.handleGlobalMousedownEvent)
     globalEvents.on($xeSelect, 'keydown', $xeSelect.handleGlobalKeydownEvent)
     globalEvents.on($xeSelect, 'blur', $xeSelect.handleGlobalBlurEvent)
@@ -2172,10 +2460,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   beforeDestroy () {
     const $xeSelect = this
+    const internalData = $xeSelect.internalData
 
+    const { scrollObserver } = internalData
     const panelElem = $xeSelect.$refs.refOptionPanel as HTMLElement | undefined
     if (panelElem && panelElem.parentNode) {
       panelElem.parentNode.removeChild(panelElem)
+    }
+    if (scrollObserver) {
+      scrollObserver.disconnect()
     }
     globalEvents.off($xeSelect, 'mousedown')
     globalEvents.off($xeSelect, 'keydown')

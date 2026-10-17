@@ -434,40 +434,21 @@
   flex-grow: 1;
   border-radius: var(--vxe-ui-base-border-radius);
   user-select: none;
-  & > ul {
+  .vxe-date-panel--time-hour-list,
+  .vxe-date-panel--time-minute-list,
+  .vxe-date-panel--time-second-list {
     height: 100%;
     overflow: hidden;
     margin: 0;
     padding: 0;
-    width: 3.2em;
+    width: 3em;
+  }
+  .vxe-date-panel--time-list-inner {
     &:before,
     &:after {
       content: " ";
       display: block;
       height: 6em;
-    }
-    &:hover {
-      overflow-y: auto;
-    }
-    & > li {
-      display: block;
-      height: 2em;
-      line-height: 2em;
-      padding-left: 0.4em;
-      &:not(.is--disabled) {
-        &:hover {
-          background-color: var(--vxe-ui-input-date-picker-hover-background-color);
-          cursor: pointer;
-        }
-      }
-      &.is--selected {
-        font-weight: 700;
-        color: var(--vxe-ui-font-primary-color);
-      }
-      &.is--disabled {
-        color: var(--vxe-ui-font-disabled-color);
-        cursor: no-drop;
-      }
     }
   }
   .vxe-date-panel--time-minute-list {
@@ -476,16 +457,37 @@
   .vxe-date-panel--time-second-list {
     border-left: 1px solid var(--vxe-ui-base-popup-border-color);
   }
+  .vxe-date-panel--time-item {
+    display: block;
+    height: 2em;
+    line-height: 2em;
+    text-align: center;
+    &:not(.is--disabled) {
+      &:hover {
+        background-color: var(--vxe-ui-input-date-picker-hover-background-color);
+        cursor: pointer;
+      }
+    }
+    &.is--selected {
+      font-weight: 700;
+      color: var(--vxe-ui-font-primary-color);
+    }
+    &.is--disabled {
+      color: var(--vxe-ui-font-disabled-color);
+      cursor: no-drop;
+    }
+  }
 }
 .vxe-date-panel {
   &.type--time {
     .vxe-date-panel--time-body {
-      & > ul {
-        width: 4em;
-        & > li {
+      .vxe-date-panel--time-hour-list,
+      .vxe-date-panel--time-minute-list,
+      .vxe-date-panel--time-second-list {
+        width: 3.6em;
+        .vxe-date-panel--time-item {
           height: 2.2em;
           line-height: 2.2em;
-          padding-left: 0.8em;
         }
       }
     }

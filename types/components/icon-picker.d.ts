@@ -1,5 +1,6 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf, VxeComponentIsVScrollbar, VxeComponentStyleType, VxeComponentSizeType } from '@vxe-ui/core'
 import { VxeIconPropTypes } from './icon'
+import { VxeScrollbarProps } from './scrollbar'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -86,6 +87,17 @@ export namespace VxeIconPickerPropTypes {
     className?: string | ((params: { $iconPicker: VxeIconPickerConstructor }) => string)
   }
   export type Transfer = boolean
+  export type UseScrollbar = VxeComponentIsVScrollbar
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
+    /**
+     * 滚动条宽度
+     */
+    width?: number | string
+    /**
+     * 滚动条高度
+     */
+    height?: number | string
+  }
 }
 
 export interface VxeIconPickerProps {
@@ -112,6 +124,14 @@ export interface VxeIconPickerProps {
   placement?: VxeIconPickerPropTypes.Placement
   popupConfig?: VxeIconPickerPropTypes.PopupConfig
   transfer?: VxeIconPickerPropTypes.Transfer
+  /**
+   * 使用虚拟滚动条
+   */
+  useScrollbar?: VxeIconPickerPropTypes.UseScrollbar
+  /**
+   * 滚动条配置项
+   */
+  scrollbarConfig?: VxeIconPickerPropTypes.ScrollbarConfig
 }
 
 export interface IconPickerPrivateComputed {

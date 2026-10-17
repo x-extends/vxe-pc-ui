@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, globalEvents, renderer, createEvent, globalMixins, GLOBAL_EVENT_KEYS, renderEmptyElement } from '../../ui'
+import { VxeUI } from '../../ui'
 import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -9,6 +9,9 @@ import VxeInputComponent from '../../input'
 
 import type { VxeIconPickerPropTypes, IconPickerInternalData, ValueOf, IconPickerReactData, VxeInputConstructor, VxeComponentSizeType, VxeIconPickerEmits, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentStyleType } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { getConfig, getIcon, getI18n, baseUtils, globalEvents, createEvent, renderer, globalMixins, GLOBAL_EVENT_KEYS, renderEmptyElement } = VxeUI
+const { getDefVal } = baseUtils
 
 function createReactData (): IconPickerReactData {
   return {
@@ -35,7 +38,8 @@ function createInternalData (): IconPickerInternalData {
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeIconPicker',
   mixins: [
-    globalMixins.sizeMixin
+    globalMixins.sizeMixin,
+    globalMixins.vScrollbarMixin
   ],
   model: {
     prop: 'value',
@@ -79,7 +83,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     transfer: {
       type: Boolean as PropType<VxeIconPickerPropTypes.Transfer>,
       default: null
-    }
+    },
+    useScrollbar: {
+      type: Boolean as PropType<VxeIconPickerPropTypes.UseScrollbar>,
+      default: () => getDefVal(getConfig().iconPicker.useScrollbar, getConfig().useScrollbar)
+    },
+    scrollbarConfig: Object as PropType<VxeIconPickerPropTypes.ScrollbarConfig>
   },
   inject: {
     $xeModal: {
