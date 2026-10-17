@@ -90,6 +90,9 @@ export interface GanttViewInternalData extends VxeUseInitVScrollbarInternalData 
   inBodyScroll?: boolean
   inFooterScroll?: boolean
   scrollRenderType?: '' | 'left' | 'right'
+
+  isSyncTableScrollTop?: boolean
+
   // 同步滚动
   lcsTimeout?: undefined | number
   lcsRunTime?: undefined | number
@@ -138,6 +141,12 @@ export interface VxeGanttViewPrivateMethods {
    * @private
    */
   handleLazyRecalculate(): Promise<void>
+  /**
+   * @private
+   */
+  handleSyncScrollTop(params: {
+    scrollTop: number
+  }): void
   /**
    * @private
    */
