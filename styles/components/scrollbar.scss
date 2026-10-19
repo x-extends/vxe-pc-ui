@@ -35,8 +35,8 @@
   }
   &.is--native {
     & > .vxe-scrollbar--view::-webkit-scrollbar {
-      width: var(--vxe-ui-scrollbar-y-width);
-      height: var(--vxe-ui-scrollbar-x-height);
+      width: var(--vxe-ui-scrollbar-current-y-width);
+      height: var(--vxe-ui-scrollbar-current-x-height);
     }
     & > .vxe-scrollbar--view::-webkit-scrollbar-thumb {
       border-radius: var(--vxe-ui-base-border-radius);
@@ -95,13 +95,13 @@
 .vxe-scrollbar--track-x {
   width: 100%;
   left: 0;
-  height: var(--vxe-ui-scrollbar-x-height);
+  height: var(--vxe-ui-scrollbar-current-x-height);
   padding: var(--vxe-ui-scrollbar-track-padding) 0;
 }
 .vxe-scrollbar--track-y {
   height: 100%;
   top: 0;
-  width: var(--vxe-ui-scrollbar-y-width);
+  width: var(--vxe-ui-scrollbar-current-y-width);
   padding: 0 var(--vxe-ui-scrollbar-track-padding);
 }
 .vxe-scrollbar {
@@ -128,16 +128,16 @@
   &.overflow-x {
     &.overflow-y {
       & > .vxe-scrollbar--track-x {
-        width: calc(100% - var(--vxe-ui-scrollbar-x-height));
+        width: calc(100% - var(--vxe-ui-scrollbar-current-x-height));
       }
       & > .vxe-scrollbar--track-y {
-        height: calc(100% - var(--vxe-ui-scrollbar-y-width));
+        height: calc(100% - var(--vxe-ui-scrollbar-current-y-width));
       }
       &.sx-pos--top {
         &.sy-pos--left,
         &.sy-pos--right {
           & > .vxe-scrollbar--track-y {
-            top: var(--vxe-ui-scrollbar-x-height);
+            top: var(--vxe-ui-scrollbar-current-x-height);
           }
         }
       }
@@ -145,7 +145,7 @@
         &.sx-pos--top,
         &.sx-pos--bottom {
           & > .vxe-scrollbar--track-x {
-            left: var(--vxe-ui-scrollbar-y-width);
+            left: var(--vxe-ui-scrollbar-current-y-width);
           }
         }
       }
@@ -154,21 +154,39 @@
 }
 
 .vxe-scrollbar {
+  &.is--fluent-overlay {
+    --vxe-ui-scrollbar-current-y-width: var(--vxe-ui-scrollbar-overlay-y-width);
+    --vxe-ui-scrollbar-current-x-height: var(--vxe-ui-scrollbar-overlay-x-height);
+    & > .vxe-scrollbar--track-x,
+    & > .vxe-scrollbar--track-y {
+      &:hover {
+        --vxe-ui-scrollbar-current-y-width: var(--vxe-ui-scrollbar-overlay-action-y-width);
+        --vxe-ui-scrollbar-current-x-height: var(--vxe-ui-scrollbar-overlay-action-x-height);
+      }
+    }
+  }
+  &.is--default-mode {
+    --vxe-ui-scrollbar-current-y-width: var(--vxe-ui-scrollbar-y-width);
+    --vxe-ui-scrollbar-current-x-height: var(--vxe-ui-scrollbar-x-height);
+  }
+}
+
+.vxe-scrollbar {
   &.is--padding {
     &.overflow-x {
       &.sx-pos--top {
-        padding-top: var(--vxe-ui-scrollbar-x-height);
+        padding-top: var(--vxe-ui-scrollbar-current-x-height);
       }
       &.sx-pos--bottom {
-        padding-bottom: var(--vxe-ui-scrollbar-x-height);
+        padding-bottom: var(--vxe-ui-scrollbar-current-x-height);
       }
     }
     &.overflow-y {
       &.sy-pos--left {
-        padding-left: var(--vxe-ui-scrollbar-y-width);
+        padding-left: var(--vxe-ui-scrollbar-current-y-width);
       }
       &.sy-pos--right {
-        padding-right: var(--vxe-ui-scrollbar-y-width);
+        padding-right: var(--vxe-ui-scrollbar-current-y-width);
       }
     }
   }

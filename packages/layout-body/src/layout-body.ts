@@ -116,7 +116,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeLayoutBody.$scopedSlots
       const backtopId = $xeLayoutBody.backtopId
 
-      const { loading, padding, showBacktop, useScrollbar } = props
+      const { loading, padding, showBacktop } = props
+      const isVScrollbar = $xeLayoutBody.computeIsVScrollbar
       const backtopOpts = $xeLayoutBody.computeBacktopOpts
       const scrollbarProps = $xeLayoutBody.computeScrollbarProps
       const vSize = $xeLayoutBody.computeSize
@@ -145,7 +146,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           'is--padding': padding
         }]
       }, [
-        useScrollbar
+        isVScrollbar
           ? h(VxeScrollbarComponent, {
             props: scrollbarProps,
             scopedSlots: {

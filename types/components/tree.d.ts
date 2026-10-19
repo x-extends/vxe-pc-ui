@@ -326,7 +326,7 @@ export namespace VxeTreePropTypes {
     enabled?: boolean
   }
   export type UseScrollbar = VxeComponentIsVScrollbar
-  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible'> {
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'fluentOverlay' | 'visible'> {
     /**
      * 滚动条宽度
      */

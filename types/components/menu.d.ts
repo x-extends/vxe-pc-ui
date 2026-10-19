@@ -81,7 +81,16 @@ export namespace VxeMenuPropTypes {
   }
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
   export type UseScrollbar = VxeComponentIsVScrollbar
-  export interface ScrollbarConfig extends VxeScrollbarProps {}
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'yConfig' | 'padding' | 'autoHide' | 'fluentOverlay' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
+    /**
+     * 滚动条宽度
+     */
+    width?: number | string
+    /**
+     * 滚动条高度
+     */
+    height?: number | string
+  }
 }
 
 export interface VxeMenuProps {

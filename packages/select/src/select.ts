@@ -591,16 +591,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = ($xeSelect as any).reactData as SelectReactData
 
       const { yThumbHeight, xThumbWidth } = reactData
+      const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
       const scrollbarXToTop = $xeSelect.computeScrollbarXToTop
       const scrollbarYToLeft = $xeSelect.computeScrollbarYToLeft
       const scrollXVisible = $xeSelect.computeScrollXVisible
       const scrollYVisible = $xeSelect.computeScrollYVisible
       return domUtils.buildClass([
         'vxe-scrollbar is--virtual',
-            `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
-            `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}`,
-            `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
-            `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
+        scrollbarOpts.fluentOverlay ? 'is--fluent-overlay' : 'is--default-mode',
+        `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
+        `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}`,
+        `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
+        `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
       ], {
         'overflow-y': yThumbHeight,
         'overflow-x': xThumbWidth
@@ -1837,12 +1839,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (isVScrollbar) {
         if (!scrollObserver) {
           const el = $xeSelect.$refs.refElem as HTMLDivElement
-          const viewInnerEl = $xeSelect.$refs.refVirtualSpaceElem as HTMLDivElement
+          const viewSpaceEl = $xeSelect.$refs.refVirtualSpaceElem as HTMLDivElement
+          const viewInnerEl = $xeSelect.$refs.refVirtualBody as HTMLDivElement
           const scrollObserver = globalResize.create(() => {
             $xeSelect.reScrollFlag++
           })
           if (el) {
             scrollObserver.observe(el)
+          }
+          if (viewSpaceEl) {
+            scrollObserver.observe(viewSpaceEl)
           }
           if (viewInnerEl) {
             scrollObserver.observe(viewInnerEl)

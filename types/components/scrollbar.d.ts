@@ -31,6 +31,7 @@ export namespace VxeScrollbarPropTypes {
   export type Native = boolean
   export type Padding = boolean
   export type AutoHide = boolean
+  export type FluentOverlay = boolean
   export type Visible = boolean
   export interface XConfig {
     height?: number | string
@@ -137,6 +138,10 @@ export interface VxeScrollbarProps {
    * 是否自动隐藏
    */
   autoHide?: VxeScrollbarPropTypes.AutoHide
+  /**
+   * 是否悬浮叠加滚动条，默认细线，鼠标悬浮上去滑块变宽
+   */
+  fluentOverlay?: VxeScrollbarPropTypes.FluentOverlay
   /**
    * 是否显示
    */

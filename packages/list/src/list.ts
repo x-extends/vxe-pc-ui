@@ -323,12 +323,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeList.reactData
 
       const { yThumbHeight, xThumbWidth } = reactData
+      const scrollbarOpts = $xeList.computeScrollbarOpts as VxeListPropTypes.ScrollbarConfig
       const scrollbarXToTop = $xeList.computeScrollbarXToTop
       const scrollbarYToLeft = $xeList.computeScrollbarYToLeft
       const scrollXVisible = $xeList.computeScrollXVisible
       const scrollYVisible = $xeList.computeScrollYVisible
       return domUtils.buildClass([
         'vxe-scrollbar is--virtual',
+        scrollbarOpts.fluentOverlay ? 'is--fluent-overlay' : 'is--default-mode',
         `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
         `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}`,
         `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
@@ -2110,12 +2112,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (isVScrollbar) {
         if (!scrollObserver) {
           const el = $xeList.$refs.refElem as HTMLDivElement
-          const viewInnerEl = $xeList.$refs.refVirtualSpaceElem as HTMLDivElement
+          const viewSpaceEl = $xeList.$refs.refVirtualSpaceElem as HTMLDivElement
+          const viewInnerEl = $xeList.$refs.refVirtualBody as HTMLDivElement
           const scrollObserver = globalResize.create(() => {
             $xeList.reScrollFlag++
           })
           if (el) {
             scrollObserver.observe(el)
+          }
+          if (viewSpaceEl) {
+            scrollObserver.observe(viewSpaceEl)
           }
           if (viewInnerEl) {
             scrollObserver.observe(viewInnerEl)
