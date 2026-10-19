@@ -3042,6 +3042,10 @@ export namespace VxeTablePropTypes {
      */
     autoHide?: boolean
     /**
+     * 是否悬浮叠加滚动条，默认细线，鼠标悬浮上去滑块变宽
+     */
+    fluentOverlay?: boolean
+    /**
      * 是否显示
      */
     visible?: boolean

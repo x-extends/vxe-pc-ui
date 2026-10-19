@@ -49,6 +49,10 @@ export default defineVxeComponent({
       type: Boolean as PropType<VxeScrollbarPropTypes.Native>,
       default: () => getConfig().scrollbar.native
     },
+    fluentOverlay: {
+      type: Boolean as PropType<VxeScrollbarPropTypes.FluentOverlay>,
+      default: () => getConfig().scrollbar.fluentOverlay
+    },
     padding: {
       type: Boolean as PropType<VxeScrollbarPropTypes.Padding>,
       default: () => getConfig().scrollbar.padding
@@ -185,7 +189,7 @@ export default defineVxeComponent({
     })
 
     const computeWrapperClss = computed(() => {
-      const { native, theme, className, padding } = props
+      const { native, theme, className, padding, fluentOverlay } = props
       const { yThumbHeight, xThumbWidth } = reactData
       const vSize = computeSize.value
       const xToTop = computeXToTop.value
@@ -198,6 +202,7 @@ export default defineVxeComponent({
         'vxe-scrollbar',
         vSize ? `size--${vSize}` : '',
         theme ? `theme--${theme}` : '',
+        fluentOverlay ? 'is--fluent-overlay' : 'is--default-mode',
         `ov-x--${xVisible === false ? 'hidden' : 'visible'}`,
         `ov-y--${yVisible === false ? 'hidden' : 'visible'}`,
         `sx-pos--${xToTop ? 'top' : 'bottom'}`,

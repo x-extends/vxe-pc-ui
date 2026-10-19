@@ -50,7 +50,7 @@ export namespace VxeTooltipPropTypes {
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
   export type Transfer = boolean
   export type UseScrollbar = VxeComponentIsVScrollbar
-  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
+  export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'fluentOverlay' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
     /**
      * 滚动条宽度
      */
