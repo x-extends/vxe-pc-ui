@@ -280,7 +280,7 @@ export default defineVxeComponent({
             if (index > -1) {
               const tabEl = children[index] as HTMLDivElement
               if (tabEl) {
-                const tabHeight = tabEl.clientHeight
+                let tabHeight = tabEl.clientHeight
                 const tabWidth = tabEl.clientWidth
                 if (tabType === 'card') {
                   lintWidth = tabWidth
@@ -291,8 +291,12 @@ export default defineVxeComponent({
                   lintHeight = tabHeight
                   lintTop = tabEl.offsetTop - 1
                 } else {
-                  lintHeight = Math.max(4, Math.floor(tabHeight * 0.6))
-                  lintTop = tabEl.offsetTop + Math.floor((tabHeight - lintHeight) / 2)
+                  const tabStyle = getComputedStyle(tabEl)
+                  const paddingTop = XEUtils.toNumber(tabStyle.paddingTop)
+                  const paddingBottom = XEUtils.toNumber(tabStyle.paddingBottom)
+                  tabHeight -= (paddingTop + paddingBottom)
+                  lintHeight = Math.max(4, tabHeight)
+                  lintTop = tabEl.offsetTop + paddingTop + Math.floor((tabHeight - lintHeight) / 2)
                 }
               }
             }
@@ -301,7 +305,7 @@ export default defineVxeComponent({
             if (index > -1) {
               const tabEl = children[index] as HTMLDivElement
               if (tabEl) {
-                const tabWidth = tabEl.clientWidth
+                let tabWidth = tabEl.clientWidth
                 if (tabType === 'card') {
                   lintWidth = tabWidth + 1
                   lintLeft = tabEl.offsetLeft
@@ -309,8 +313,12 @@ export default defineVxeComponent({
                   lintWidth = tabWidth
                   lintLeft = tabEl.offsetLeft - 1
                 } else {
-                  lintWidth = Math.max(4, Math.floor(tabWidth * 0.6))
-                  lintLeft = tabEl.offsetLeft + Math.floor((tabWidth - lintWidth) / 2)
+                  const tabStyle = getComputedStyle(tabEl)
+                  const paddingLeft = XEUtils.toNumber(tabStyle.paddingLeft)
+                  const paddingRight = XEUtils.toNumber(tabStyle.paddingRight)
+                  tabWidth -= (paddingLeft + paddingRight)
+                  lintWidth = Math.max(4, tabWidth)
+                  lintLeft = tabEl.offsetLeft + paddingLeft + Math.floor((tabWidth - lintWidth) / 2)
                 }
               }
             }
