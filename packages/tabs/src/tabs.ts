@@ -326,44 +326,52 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (headerWrapperEl) {
           const index = XEUtils.findIndexOf(tabStaticOptions.length ? tabStaticOptions : tabOptions, item => item.name === activeName)
           const { children, offsetWidth, scrollWidth, offsetHeight, scrollHeight, clientWidth, clientHeight } = headerWrapperEl
+          const tabEl = children[index] as HTMLDivElement
+          const tabInnerEl = tabEl ? tabEl.firstElementChild as HTMLDivElement : null
           sBarWidth = offsetWidth - clientWidth
           sBarHeight = offsetHeight - clientHeight
           if (lrPosition) {
             isOver = scrollHeight !== clientHeight
             if (index > -1) {
-              const tabEl = children[index] as HTMLDivElement
-              if (tabEl) {
-                const tabHeight = tabEl.clientHeight
-                const tabWidth = tabEl.clientWidth
+              if (tabInnerEl) {
+                let tabHeight = tabInnerEl.clientHeight
+                const tabWidth = tabInnerEl.clientWidth
                 if (tabType === 'card') {
                   lintWidth = tabWidth
                   lintHeight = tabHeight
-                  lintTop = tabEl.offsetTop
+                  lintTop = tabInnerEl.offsetTop
                 } else if (tabType === 'border-card') {
                   lintWidth = tabWidth
                   lintHeight = tabHeight
-                  lintTop = tabEl.offsetTop - 1
+                  lintTop = tabInnerEl.offsetTop - 1
                 } else {
-                  lintHeight = Math.max(4, Math.floor(tabHeight * 0.6))
-                  lintTop = tabEl.offsetTop + Math.floor((tabHeight - lintHeight) / 2)
+                  const tabStyle = getComputedStyle(tabEl)
+                  const paddingTop = XEUtils.toNumber(tabStyle.paddingTop)
+                  const paddingBottom = XEUtils.toNumber(tabStyle.paddingBottom)
+                  tabHeight -= (paddingTop + paddingBottom)
+                  lintHeight = Math.max(4, tabHeight)
+                  lintTop = tabEl.offsetTop + paddingTop + Math.floor((tabHeight - lintHeight) / 2)
                 }
               }
             }
           } else {
             isOver = scrollWidth !== clientWidth
             if (index > -1) {
-              const tabEl = children[index] as HTMLDivElement
-              if (tabEl) {
-                const tabWidth = tabEl.clientWidth
+              if (tabInnerEl) {
+                let tabWidth = tabInnerEl.clientWidth
                 if (tabType === 'card') {
                   lintWidth = tabWidth + 1
-                  lintLeft = tabEl.offsetLeft
+                  lintLeft = tabInnerEl.offsetLeft
                 } else if (tabType === 'border-card') {
                   lintWidth = tabWidth
-                  lintLeft = tabEl.offsetLeft - 1
+                  lintLeft = tabInnerEl.offsetLeft - 1
                 } else {
-                  lintWidth = Math.max(4, Math.floor(tabWidth * 0.6))
-                  lintLeft = tabEl.offsetLeft + Math.floor((tabWidth - lintWidth) / 2)
+                  const tabStyle = getComputedStyle(tabEl)
+                  const paddingLeft = XEUtils.toNumber(tabStyle.paddingLeft)
+                  const paddingRight = XEUtils.toNumber(tabStyle.paddingRight)
+                  tabWidth -= paddingLeft + paddingRight
+                  lintWidth = Math.max(4, tabWidth)
+                  lintLeft = tabEl.offsetLeft + paddingLeft + Math.floor((tabWidth - lintWidth) / 2)
                 }
               }
             }
