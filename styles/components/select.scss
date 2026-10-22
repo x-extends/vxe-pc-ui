@@ -82,6 +82,27 @@
   display: inline-flex;
 }
 
+.vxe-select,
+.vxe-select--readonly {
+  &.is--badge {
+    position: relative;
+  }
+  &.is--badge-dot {
+    &::before {
+      content: "";
+      position: absolute;
+      top: -0.25em;
+      right: -0.25em;
+      text-align: center;
+      width: 0.5em;
+      height: 0.5em;
+      border-radius: 50%;
+      background-color: var(--vxe-ui-badge-label-background-color);
+      z-index: 1;
+    }
+  }
+}
+
 .vxe-select-slots {
   display: none;
 }

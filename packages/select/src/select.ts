@@ -165,6 +165,8 @@ export default defineVxeComponent({
     filterConfig: Object as PropType<VxeSelectPropTypes.FilterConfig>,
     remote: Boolean as PropType<VxeSelectPropTypes.Remote>,
     remoteConfig: Object as PropType<VxeSelectPropTypes.RemoteConfig>,
+    showBadge: Boolean as PropType<VxeSelectPropTypes.ShowBadge>,
+    badgeConfig: Object as PropType<VxeSelectPropTypes.BadgeConfig>,
     emptyText: String as PropType<VxeSelectPropTypes.EmptyText>,
     checkedClosable: {
       type: Boolean as PropType<VxeSelectPropTypes.CheckedClosable>,
@@ -388,6 +390,39 @@ export default defineVxeComponent({
 
     const computeRemoteOpts = computed(() => {
       return Object.assign({}, getConfig().select.remoteConfig, props.remoteConfig)
+    })
+
+    const computeBadgeOpts = computed(() => {
+      return Object.assign({}, getConfig().select.badgeConfig, props.badgeConfig)
+    })
+    const computeBadgeCountNum = computed(() => {
+      const { showBadge } = props
+      if (!showBadge) {
+        return 0
+      }
+      const badgeOpts = computeBadgeOpts.value
+      const { count } = badgeOpts
+      return count ? XEUtils.toNumber(count) : 0
+    })
+    const computeBadgeLabel = computed(() => {
+      const { showBadge } = props
+      if (!showBadge) {
+        return ''
+      }
+      const badgeOpts = computeBadgeOpts.value
+      const { dot, text, max } = badgeOpts
+      if (dot) {
+        return ''
+      }
+      if (text) {
+        return `${text}`
+      }
+      const countNum = computeBadgeCountNum.value
+      if (countNum) {
+        const maxNum = max ? XEUtils.toNumber(max) : 99
+        return countNum > maxNum ? `${maxNum}+` : `${countNum}`
+      }
+      return ''
     })
 
     const computeFilterOpts = computed(() => {
@@ -1787,7 +1822,7 @@ export default defineVxeComponent({
     }
 
     const renderVN = () => {
-      const { className, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton, showCloseButton } = props
+      const { className, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton, showCloseButton, showBadge } = props
       const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight, xThumbWidth, yThumbHeight } = reactData
       const vSize = computeSize.value
       const isVScrollbar = computeIsVScrollbar.value
@@ -1797,11 +1832,16 @@ export default defineVxeComponent({
       const btnTransfer = computeBtnTransfer.value
       const formReadonly = computeFormReadonly.value
       const inpPlaceholder = computeInpPlaceholder.value
+      const badgeOpts = computeBadgeOpts.value
+      const badgeLabel = computeBadgeLabel.value
       const defaultSlot = slots.default
       if (formReadonly) {
         return h('div', {
           ref: refElem,
-          class: ['vxe-select--readonly', className]
+          class: ['vxe-select--readonly', className, {
+            'is--badge': showBadge && badgeLabel,
+            'is--badge-dot': showBadge && badgeOpts.dot
+          }]
         }, [
           h('div', {
             class: 'vxe-select-slots',
@@ -1810,7 +1850,12 @@ export default defineVxeComponent({
           h('span', {
             class: 'vxe-select-label',
             title: fullLabel
-          }, selectLabel)
+          }, selectLabel),
+          showBadge && badgeLabel
+            ? h('div', {
+              class: 'vxe-badge--label'
+            }, badgeLabel)
+            : renderEmptyElement($xeSelect)
         ])
       }
       const currStyle = computeCurrStyle.value
@@ -1834,6 +1879,8 @@ export default defineVxeComponent({
         ref: refElem,
         class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '', {
           [`size--${vSize}`]: vSize,
+          'is--badge': showBadge && badgeLabel,
+          'is--badge-dot': showBadge && badgeOpts.dot,
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--filter': filterable,
@@ -1868,6 +1915,11 @@ export default defineVxeComponent({
               prefix: () => prefixSlot({})
             }
           : {}),
+        showBadge && badgeLabel
+          ? h('div', {
+            class: 'vxe-badge--label'
+          }, badgeLabel)
+          : renderEmptyElement($xeSelect),
         h(Teleport, {
           to: getPopupContainer(appendTo),
           disabled: btnTransfer ? !initialized : true

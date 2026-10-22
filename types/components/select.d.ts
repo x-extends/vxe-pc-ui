@@ -3,6 +3,7 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 import { VxeOptgroupProps } from './optgroup'
 import { VxeOptionProps, VxeOptionPropTypes } from './option'
 import { VxeScrollbarProps } from './scrollbar'
+import { VxeBadgePropTypes } from './badge'
 
 /* eslint-disable no-use-before-define,@typescript-eslint/ban-types */
 
@@ -135,6 +136,23 @@ export namespace VxeSelectPropTypes {
       searchValue: string
       value: ModelValue | undefined
     }): Promise<void> | void
+  }
+
+  export type ShowBadge = boolean
+  export interface BadgeConfig {
+    /**
+     * 显示数量
+     */
+    count?: VxeBadgePropTypes.Count
+    /**
+     * 显示文字
+     */
+    text?: VxeBadgePropTypes.Text
+    /**
+     * 显示小圆点
+     */
+    dot?: VxeBadgePropTypes.Dot
+    max?: VxeBadgePropTypes.Max
   }
 
   export type Max = number | string
@@ -285,6 +303,8 @@ export interface VxeSelectProps {
   remoteConfig?: VxeSelectPropTypes.RemoteConfig
   max?: VxeSelectPropTypes.Max
   transfer?: VxeSelectPropTypes.Transfer
+  showBadge?: VxeSelectPropTypes.ShowBadge
+  badgeConfig?: VxeSelectPropTypes.BadgeConfig
   /**
    * 下拉面板弹出层配置项
    */

@@ -191,8 +191,8 @@
 
     <div>
       <vxe-select v-model="demo1.value45" placeholder="加载中" :options="demo1.list45" loading></vxe-select>
-      <vxe-select v-model="demo1.value40" placeholder="空数据" :options="demo1.list40"></vxe-select>
-      <vxe-select v-model="demo1.value41" placeholder="分组配置式" :option-groups="demo1.list41" filterable  allow-create></vxe-select>
+      <vxe-select v-model="demo1.value40" placeholder="空数据" :options="demo1.list40" show-badge :badge-config="{count: 999}"></vxe-select>
+      <vxe-select v-model="demo1.value41" placeholder="分组配置式" :option-groups="demo1.list41" show-badge :badge-config="{dot: true}" filterable  allow-create></vxe-select>
       <vxe-select v-model="demo1.value42" placeholder="禁用选项" :options="demo1.list42" :empty-value="-1" clearable></vxe-select>
       <vxe-select v-model="demo1.value43" placeholder="禁用分组" :option-groups="demo1.list43" clearable filterable transfer></vxe-select>
       <vxe-select v-model="demo1.value44" placeholder="多选" :options="demo1.list44" multiple clearable transfer :popup-config="{appendTo:'#app'}"></vxe-select>

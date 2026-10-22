@@ -9,8 +9,13 @@ export default defineVxeComponent({
   name: 'VxeBadge',
   props: {
     count: [String, Number] as PropType<VxeBadgePropTypes.Count>,
+    text: [String, Number] as PropType<VxeBadgePropTypes.Text>,
     dot: Boolean as PropType<VxeBadgePropTypes.Dot>,
     content: [String, Number] as PropType<VxeBadgePropTypes.Content>,
+    max: {
+      type: [String, Number] as PropType<VxeBadgePropTypes.Content>,
+      default: () => getConfig().badge.max
+    },
     size: {
       type: String as PropType<VxeBadgePropTypes.Size>,
       default: () => getConfig().badge.size || getConfig().size
@@ -37,6 +42,19 @@ export default defineVxeComponent({
     const computeCountNum = computed(() => {
       const { count } = props
       return count ? XEUtils.toNumber(count) : 0
+    })
+
+    const computeLabel = computed(() => {
+      const { text, max } = props
+      if (text) {
+        return `${text}`
+      }
+      const countNum = computeCountNum.value
+      if (countNum) {
+        const maxNum = max ? XEUtils.toNumber(max) : 99
+        return countNum > maxNum ? `${maxNum}+` : `${countNum}`
+      }
+      return ''
     })
 
     const computeMaps: VxeBadgePrivateComputed = {
@@ -68,7 +86,7 @@ export default defineVxeComponent({
     const renderVN = () => {
       const { dot, content } = props
       const vSize = computeSize.value
-      const countNum = computeCountNum.value
+      const label = computeLabel.value
       const defaultSlot = slots.default
       return h('div', {
         ref: refElem,
@@ -82,10 +100,10 @@ export default defineVxeComponent({
             class: 'vxe-badge--content'
           }, defaultSlot ? defaultSlot({}) : `${content || ''}`)
           : [],
-        countNum
+        label
           ? h('span', {
-            class: 'vxe-badge--count'
-          }, countNum > 99 ? '99+' : `${countNum}`)
+            class: 'vxe-badge--label'
+          }, label)
           : renderEmptyElement($xeBadge)
       ])
     }

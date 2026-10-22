@@ -1,7 +1,28 @@
+// 局部变量
+.vxe-badge {
+  --vxe-ui-badge-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--xlarge {
+    --vxe-ui-badge-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-badge-current-font-size: var(--vxe-ui-font-size-large);
+  }
+  &.size--medium {
+    --vxe-ui-badge-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-badge-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-badge-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 .vxe-badge {
   position: relative;
   display: inline-block;
   vertical-align: middle;
+  font-size: var(--vxe-ui-badge-current-font-size);
   &.is--dot {
     &::before {
       content: "";
@@ -12,13 +33,13 @@
       width: 0.5em;
       height: 0.5em;
       border-radius: 50%;
-      background-color: #ff4d4f;
+      background-color: var(--vxe-ui-badge-label-background-color);
       z-index: 1;
     }
   }
 }
 
-.vxe-badge--count {
+.vxe-badge--label {
   position: absolute;
   top: -0.8em;
   right: -0.8em;
@@ -28,19 +49,7 @@
   padding: 0 0.4em;
   border-radius: 0.8em;
   font-size: 0.8em;
-  background-color: #ff4d4f;
-  color: #fff;
+  background-color: var(--vxe-ui-badge-label-background-color);
+  color: var(--vxe-ui-badge-label-font-color);
   z-index: 1;
-}
-
-.vxe-badge {
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
 }
