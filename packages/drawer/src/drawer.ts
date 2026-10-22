@@ -1,7 +1,7 @@
 import { h, Teleport, ref, Ref, inject, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { useFns, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '../../ui'
 import { getLastZIndex, nextZIndex, getFuncText, getDefaultConfig } from '../../ui/src/utils'
 import { getPopupContainer, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
 import { allActiveDrawers } from './store'
@@ -12,6 +12,8 @@ import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, DrawerPrivateRef, DrawerMethods, DrawerPrivateMethods, VxeDrawerPrivateComputed, VxeDrawerConstructor, VxeDrawerMethods, VxeButtonInstance, DrawerEventTypes, ValueOf, VxeModalConstructor, VxeModalMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { getIcon, getConfig, getI18n, useFns, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeDrawer',

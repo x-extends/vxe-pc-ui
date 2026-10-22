@@ -1,7 +1,7 @@
 import { h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, validators, renderer, createEvent, useSize, globalEvents } from '../../ui'
+import { VxeUI } from '../../ui'
 import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
@@ -15,6 +15,8 @@ import '../render'
 
 import type { VxeFormConstructor, VxeFormPropTypes, VxeFormEmits, FormReactData, FormMethods, FormPrivateRef, VxeFormPrivateMethods, VxeFormDefines, VxeFormItemPropTypes, VxeTooltipInstance, FormInternalData, VxeFormPrivateComputed, ValueOf } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
+
+const { getConfig, validators, renderer, createEvent, useFns, globalEvents } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('form')
 
@@ -267,7 +269,7 @@ export default defineVxeComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const reactData = reactive(createReactData())
 

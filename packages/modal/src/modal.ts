@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getEventTargetNode, getPopupContainer, getPopupWrapperElement, isScale, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue, getDefaultConfig } from '../../ui/src/utils'
-import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useFns, renderEmptyElement } from '../../ui'
+import { VxeUI } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { allActiveModals } from './store'
@@ -13,6 +13,8 @@ import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods, ValueOf, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useFns, renderEmptyElement } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('modal')
 

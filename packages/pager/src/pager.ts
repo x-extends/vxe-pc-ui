@@ -1,13 +1,15 @@
 import { h, PropType, computed, inject, ref, Ref, reactive, nextTick, watch } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize } from '../../ui'
+import { VxeUI } from '../../ui'
 import { createComponentLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select'
 import VxeNumberInputComponent from '../../number-input'
 
 import type { VxePagerPropTypes, VxePagerConstructor, VxePagerEmits, VxeSelectEvents, ValueOf, PagerPrivateRef, PagerMethods, PagerPrivateMethods, VxePagerPrivateMethods, PagerReactData, VxeInputEvents, VxeSelectDefines } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
+
+const { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useFns } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('pager')
 
@@ -100,7 +102,7 @@ export default defineVxeComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const $xeGrid = inject<(VxeGridConstructor & VxeGridPrivateMethods) | null>('$xeGrid', null)
 

@@ -1,7 +1,7 @@
 import { ref, h, PropType, computed, inject, watch, provide, nextTick, Teleport, onMounted, onUnmounted, reactive } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit, getPopupContainer } from '../../ui/src/dom'
 import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
@@ -9,8 +9,10 @@ import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
 import type { TableSelectReactData, VxeTableSelectEmits, VxeInputConstructor, TableSelectInternalData, VxeTableSelectPropTypes, VxeFormDefines, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, TableSelectMethods, TableSelectPrivateMethods, ValueOf, TableSelectPrivateRef, VxeTableSelectPrivateComputed, VxeTableSelectConstructor, VxeTableSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentStyleType } from '../../../types'
-import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+import type { VxeTableConstructor, VxeTablePrivateMethods, VxeTablePropTypes } from '../../../types/components/table'
 import type { VxeGridInstance, VxeGridEvents, VxeGridPropTypes } from '../../../types/components/grid'
+
+const { getConfig, getIcon, globalEvents, getI18n, createEvent, useFns, renderEmptyElement } = VxeUI
 
 const { errLog } = createComponentLog('table-select')
 
@@ -112,7 +114,7 @@ export default defineVxeComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
     const refInput = ref<VxeInputConstructor>()
@@ -172,11 +174,22 @@ export default defineVxeComponent({
       return props.optionProps || {}
     })
 
-    const computeRowOpts = computed(() => {
+    const computeCheckboxOpts = computed(() => {
+      const { multiple } = props
       const gridOpts = computeGridOpts.value
-      return Object.assign({}, gridOpts.rowConfig, {
+      return Object.assign({
+        reserve: multiple,
+        showReserveStatus: multiple
+      }, getConfig().table.checkboxConfig, gridOpts.checkboxConfig)
+    })
+
+    const computeRowOpts = computed<VxeTablePropTypes.RowConfig>(() => {
+      const { multiple } = props
+      const gridOpts = computeGridOpts.value
+      const valueField = computeValueField.value
+      return Object.assign({
         isCurrent: true
-      })
+      }, multiple ? { keyField: valueField } : {}, getConfig().table.rowConfig, gridOpts.rowConfig)
     })
 
     const computeRowKeyField = computed(() => {
@@ -206,6 +219,7 @@ export default defineVxeComponent({
 
     const computeSelectGridOpts = computed(() => {
       const gridOpts = computeGridOpts.value
+      const checkboxOpts = computeCheckboxOpts.value
       const { pagerConfig, proxyConfig } = gridOpts
       if (proxyConfig) {
         const proxyAjax = proxyConfig.ajax
@@ -231,10 +245,10 @@ export default defineVxeComponent({
               }
             })
           }
-          return Object.assign({}, gridOpts, { proxyConfig: newProxyConfig })
+          return Object.assign({}, gridOpts, { checkboxConfig: checkboxOpts, proxyConfig: newProxyConfig })
         }
       }
-      return gridOpts
+      return Object.assign({}, gridOpts, { checkboxConfig: checkboxOpts })
     })
 
     const computeSelectLabel = computed(() => {
@@ -316,21 +330,38 @@ export default defineVxeComponent({
     }
 
     const getRowid = (option: any) => {
-      const nodeKeyField = computeRowKeyField.value
-      const rowid = option[nodeKeyField]
+      const rowKeyField = computeRowKeyField.value
+      const rowid = option[rowKeyField]
       return rowid ? encodeURIComponent(rowid) : ''
     }
 
     const getRowsByValue = (modelValue: VxeTableSelectPropTypes.ModelValue) => {
       const { fullRowMaps } = internalData
+      const checkboxOpts = computeCheckboxOpts.value
+      const rowKeyField = computeRowKeyField.value
+      const valueField = computeValueField.value
+      const labelField = computeLabelField.value
       const rows: any[] = []
       const vals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
-      vals.forEach(val => {
-        const cacheItem = fullRowMaps[val]
-        if (cacheItem) {
-          rows.push(cacheItem.item)
-        }
-      })
+      if (checkboxOpts.reserve) {
+        vals.forEach(val => {
+          const cacheItem = fullRowMaps[val]
+          rows.push(cacheItem
+            ? cacheItem.item
+            : {
+                [rowKeyField]: val,
+                [valueField]: val,
+                [labelField]: val
+              })
+        })
+      } else {
+        vals.forEach(val => {
+          const cacheItem = fullRowMaps[val]
+          if (cacheItem) {
+            rows.push(cacheItem.item)
+          }
+        })
+      }
       return rows
     }
 
@@ -614,9 +645,13 @@ export default defineVxeComponent({
 
     const checkboxChangeEvent: VxeGridEvents.CheckboxChange = (params) => {
       const { $grid, $event, row } = params
+      const checkboxOpts = computeCheckboxOpts.value
       const valueField = computeValueField.value
       if ($grid) {
         const checkboxRecords = $grid.getCheckboxRecords()
+        if (checkboxOpts.reserve) {
+          checkboxRecords.push(...$grid.getCheckboxReserveRecords())
+        }
         const value = checkboxRecords.map(row => {
           return row[valueField]
         })

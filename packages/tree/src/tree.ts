@@ -1,6 +1,6 @@
 import { ref, h, reactive, PropType, computed, VNode, watch, onBeforeUnmount, nextTick, onMounted, provide } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { VxeUI, domUtils, createEvent, useFns, globalEvents, globalResize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '../../ui'
 import { calcTreeLine, getItemCacheObj } from './util'
 import { createComponentLog } from '../../ui/src/log'
 import { getCrossTreeDragNodeInfo } from './store'
@@ -16,7 +16,7 @@ import type { TreeReactData, VxeTreeEmits, VxeTreePropTypes, TreeInternalData, T
 
 const { warnLog, errLog } = createComponentLog('tree')
 
-const { menus, getConfig, getI18n, getIcon, baseUtils } = VxeUI
+const { menus, getConfig, getI18n, getIcon, baseUtils, domUtils, createEvent, useFns, globalEvents, globalResize, renderEmptyElement } = VxeUI
 const { getDefVal } = baseUtils
 
 /**

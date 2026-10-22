@@ -1,7 +1,7 @@
 import { h, Teleport, PropType, ref, inject, computed, provide, onUnmounted, reactive, nextTick, watch, onMounted, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, useFns } from '../../ui'
+import { VxeUI } from '../../ui'
 import { getEventTargetNode, getPopupContainer, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -12,7 +12,7 @@ import VxeButtonComponent from '../../button'
 import type { VxeSelectPropTypes, VxeSelectConstructor, SelectInternalData, SelectReactData, VxeSelectDefines, VxeButtonEvents, ValueOf, VxeSelectEmits, VxeComponentSlotType, VxeInputConstructor, SelectMethods, SelectPrivateRef, VxeSelectMethods, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputEvents, VxeComponentStyleType, VxeCardConstructor, VxeCardPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-const { getConfig, getIcon, getI18n, baseUtils, domUtils, globalEvents, GLOBAL_EVENT_KEYS, globalResize, createEvent, renderEmptyElement } = VxeUI
+const { getConfig, getIcon, getI18n, baseUtils, domUtils, useFns, globalEvents, GLOBAL_EVENT_KEYS, globalResize, createEvent, renderEmptyElement } = VxeUI
 const { getDefVal } = baseUtils
 
 const { errLog } = createComponentLog('select')
@@ -773,6 +773,9 @@ export default defineVxeComponent({
         }
         if (!reactData.initialized) {
           reactData.initialized = true
+          nextTick(() => {
+            bindScrollbarResize()
+          })
         }
         reactData.isActivated = true
         reactData.isAniVisible = true
@@ -2112,7 +2115,6 @@ export default defineVxeComponent({
         }
       })
       reLayoutFlag.value++
-      bindScrollbarResize()
       globalEvents.on($xeSelect, 'mousedown', handleGlobalMousedownEvent)
       globalEvents.on($xeSelect, 'keydown', handleGlobalKeydownEvent)
       globalEvents.on($xeSelect, 'blur', handleGlobalBlurEvent)
