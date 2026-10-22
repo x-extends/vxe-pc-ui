@@ -194,13 +194,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       return props.optionProps || {} as VxeTableSelectPropTypes.OptionProps
     },
+    computeCheckboxOpts () {
+      const $xeTableSelect = this
+      const props = $xeTableSelect
+
+      const { multiple } = props
+      const gridOpts = $xeTableSelect.computeGridOpts as VxeTableSelectPropTypes.GridConfig
+      return Object.assign({
+        reserve: multiple,
+        showReserveStatus: multiple
+      }, getConfig().table.checkboxConfig, gridOpts.checkboxConfig)
+    },
     computeRowOpts () {
       const $xeTableSelect = this
+      const props = $xeTableSelect
 
+      const { multiple } = props
       const gridOpts = $xeTableSelect.computeGridOpts as VxeTableSelectPropTypes.GridConfig
-      return Object.assign({}, gridOpts.rowConfig, {
+      const valueField = $xeTableSelect.computeValueField as string
+      return Object.assign({
         isCurrent: true
-      }) as VxeTablePropTypes.RowConfig
+      }, multiple ? { keyField: valueField } : {}, getConfig().table.rowConfig, gridOpts.rowConfig) as VxeTablePropTypes.RowConfig
     },
     computeRowKeyField () {
       const $xeTableSelect = this
@@ -238,6 +252,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTableSelect = this
 
       const gridOpts = $xeTableSelect.computeGridOpts as VxeTableSelectPropTypes.GridConfig
+      const checkboxOpts = $xeTableSelect.computeCheckboxOpts as VxeTablePropTypes.CheckboxConfig
       const { pagerConfig, proxyConfig } = gridOpts
       if (proxyConfig) {
         const proxyAjax = proxyConfig.ajax
@@ -263,10 +278,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
               }
             })
           }
-          return Object.assign({}, gridOpts, { proxyConfig: newProxyConfig })
+          return Object.assign({}, gridOpts, { checkboxConfig: checkboxOpts, proxyConfig: newProxyConfig })
         }
       }
-      return gridOpts
+      return Object.assign({}, gridOpts, { checkboxConfig: checkboxOpts })
     },
     computeSelectLabel () {
       const $xeTableSelect = this
@@ -327,8 +342,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     getRowid (option: any) {
       const $xeTableSelect = this
 
-      const nodeKeyField = $xeTableSelect.computeRowKeyField
-      const rowid = option[nodeKeyField]
+      const rowKeyField = $xeTableSelect.computeRowKeyField
+      const rowid = option[rowKeyField]
       return rowid ? encodeURIComponent(rowid) : ''
     },
     getRowsByValue (modelValue: VxeTableSelectPropTypes.ModelValue) {
@@ -336,14 +351,31 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const internalData = $xeTableSelect.internalData
 
       const { fullRowMaps } = internalData
+      const checkboxOpts = $xeTableSelect.computeCheckboxOpts
+      const rowKeyField = $xeTableSelect.computeRowKeyField
+      const valueField = $xeTableSelect.computeValueField
+      const labelField = $xeTableSelect.computeLabelField
       const rows: any[] = []
       const vals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
-      vals.forEach(val => {
-        const cacheItem = fullRowMaps[val]
-        if (cacheItem) {
-          rows.push(cacheItem.item)
-        }
-      })
+      if (checkboxOpts.reserve) {
+        vals.forEach(val => {
+          const cacheItem = fullRowMaps[val]
+          rows.push(cacheItem
+            ? cacheItem.item
+            : {
+                [rowKeyField]: val,
+                [valueField]: val,
+                [labelField]: val
+              })
+        })
+      } else {
+        vals.forEach(val => {
+          const cacheItem = fullRowMaps[val]
+          if (cacheItem) {
+            rows.push(cacheItem.item)
+          }
+        })
+      }
       return rows
     },
     updateModel (modelValue: VxeTableSelectPropTypes.ModelValue) {
@@ -674,9 +706,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeTableSelect = this
 
       const { $grid, $event, row } = params
+      const checkboxOpts = $xeTableSelect.computeCheckboxOpts
       const valueField = $xeTableSelect.computeValueField
       if ($grid) {
         const checkboxRecords = $grid.getCheckboxRecords()
+        if (checkboxOpts.reserve) {
+          checkboxRecords.push(...$grid.getCheckboxReserveRecords())
+        }
         const value = checkboxRecords.map(row => {
           return row[valueField]
         })

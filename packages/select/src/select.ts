@@ -1002,6 +1002,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
             const { appendTo } = popupOpts
             getPopupAppendElement(appendTo).appendChild(panelElem)
           }
+          $xeSelect.$nextTick(() => {
+            $xeSelect.bindScrollbarResize()
+          })
         }
         reactData.isActivated = true
         reactData.isAniVisible = true
@@ -2455,7 +2458,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     })
     $xeSelect.reLayoutFlag++
-    $xeSelect.bindScrollbarResize()
     globalEvents.on($xeSelect, 'mousedown', $xeSelect.handleGlobalMousedownEvent)
     globalEvents.on($xeSelect, 'keydown', $xeSelect.handleGlobalKeydownEvent)
     globalEvents.on($xeSelect, 'blur', $xeSelect.handleGlobalBlurEvent)
