@@ -1,10 +1,12 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, getIcon, renderEmptyElement } from '../../ui'
+import { VxeUI } from '../../ui'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeAlertPropTypes, AlertReactData, VxeAlertEmits, ValueOf } from '../../../types'
+
+const { getConfig, getIcon, createEvent, renderEmptyElement } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAlert',

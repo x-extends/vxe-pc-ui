@@ -1,13 +1,15 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '../../ui'
 import { createComponentLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select'
 import VxeNumberInputComponent from '../../number-input'
 
 import type { VxePagerPropTypes, VxePagerEmits, VxeInputDefines, VxeSelectDefines, ValueOf, VxeComponentSizeType, PagerReactData } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
+
+const { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('pager')
 

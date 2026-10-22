@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, domUtils, createEvent, globalEvents, globalResize, renderEmptyElement, globalMixins } from '../../ui'
+import { VxeUI } from '../../ui'
 import { calcTreeLine, getItemCacheObj } from './util'
 import { createComponentLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -16,7 +16,7 @@ import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes,
 
 const { warnLog, errLog } = createComponentLog('tree')
 
-const { menus, getConfig, getI18n, getIcon, baseUtils } = VxeUI
+const { menus, getConfig, getI18n, getIcon, baseUtils, domUtils, createEvent, globalEvents, globalResize, renderEmptyElement, globalMixins } = VxeUI
 const { getDefVal } = baseUtils
 
 let crossTreeDragNodeObj: {

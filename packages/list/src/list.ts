@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils, { XEBrowse } from 'xe-utils'
-import { VxeUI, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '../../ui'
 import { crossListDragRowGlobal, getCrossListDragRowInfo } from './store'
 import { addClass, getTpImg, hasClass, isScale, removeClass, toCssUnit } from '../../ui/src/dom'
 import { isEnableConf, getText, enModelValue, deModelValue, getDefaultConfig } from '../../ui/src/utils'
@@ -13,7 +13,7 @@ import VxeLoadingComponent from '../../loading'
 
 import type { VxeListPropTypes, VxeListEmits, ListReactData, VxeListDefines, ValueOf, ListInternalData, VxeListConstructor, VxeListPrivateMethods, VxeComponentStyleType, VxeScrollbarPropTypes, VxeUseSizeComputed, VxeUseVScrollbarComputed, VxeUseInitVScrollbarComputed } from '../../../types'
 
-const { getConfig, getIcon, getI18n, domUtils, menus, globalEvents, globalResize } = VxeUI
+const { getConfig, getIcon, getI18n, domUtils, menus, globalEvents, globalResize, createEvent, globalMixins, renderEmptyElement } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('tree')
 

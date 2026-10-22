@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, validators, renderer, createEvent, globalMixins, globalEvents } from '../../ui'
+import { VxeUI } from '../../ui'
 import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
@@ -15,6 +15,8 @@ import '../render'
 
 import type { VxeFormPropTypes, VxeFormEmits, VxeComponentSizeType, VxeFormConstructor, VxeFormPrivateMethods, ValueOf, FormReactData, VxeFormDefines, VxeFormItemPropTypes, FormInternalData, VxeTooltipConstructor } from '../../../types'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
+
+const { getConfig, validators, renderer, createEvent, globalMixins, globalEvents } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('form')
 

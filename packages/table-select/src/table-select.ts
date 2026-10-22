@@ -1,7 +1,7 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, renderEmptyElement, globalMixins } from '../../ui'
+import { VxeUI } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit, getPopupAppendElement } from '../../ui/src/dom'
 import { getOnName, handleEmitModelVal } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
@@ -11,6 +11,8 @@ import VxeInputComponent from '../../input'
 import type { TableSelectReactData, VxeTableSelectPropTypes, TableSelectInternalData, VxeTableSelectEmits, VxeInputConstructor, VxeFormDefines, ValueOf, VxeComponentStyleType, VxeComponentSizeType, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods, VxeTablePropTypes } from '../../../types/components/table'
 import type { VxeGridInstance, VxeGridDefines, VxeGridPropTypes } from '../../../types/components/grid'
+
+const { getConfig, getIcon, globalMixins, globalEvents, getI18n, createEvent, renderEmptyElement } = VxeUI
 
 const { errLog } = createComponentLog('table-select')
 
