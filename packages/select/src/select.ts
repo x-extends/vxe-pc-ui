@@ -174,6 +174,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     filterConfig: Object as PropType<VxeSelectPropTypes.FilterConfig>,
     remote: Boolean as PropType<VxeSelectPropTypes.Remote>,
     remoteConfig: Object as PropType<VxeSelectPropTypes.RemoteConfig>,
+    showBadge: Boolean as PropType<VxeSelectPropTypes.ShowBadge>,
+    badgeConfig: Object as PropType<VxeSelectPropTypes.BadgeConfig>,
     emptyText: String as PropType<VxeSelectPropTypes.EmptyText>,
     checkedClosable: {
       type: Boolean as PropType<VxeSelectPropTypes.CheckedClosable>,
@@ -411,6 +413,47 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeSelect
 
       return Object.assign({}, getConfig().select.remoteConfig, props.remoteConfig)
+    },
+    computeBadgeOpts () {
+      const $xeSelect = this
+      const props = $xeSelect
+
+      return Object.assign({}, getConfig().select.badgeConfig, props.badgeConfig)
+    },
+    computeBadgeCountNum () {
+      const $xeSelect = this
+      const props = $xeSelect
+
+      const { showBadge } = props
+      if (!showBadge) {
+        return 0
+      }
+      const badgeOpts = $xeSelect.computeBadgeOpts as VxeSelectPropTypes.BadgeConfig
+      const { count } = badgeOpts
+      return count ? XEUtils.toNumber(count) : 0
+    },
+    computeBadgeLabel () {
+      const $xeSelect = this
+      const props = $xeSelect
+
+      const badgeOpts = $xeSelect.computeBadgeOpts as VxeSelectPropTypes.BadgeConfig
+      const { showBadge } = props
+      if (!showBadge) {
+        return ''
+      }
+      const { dot, text, max } = badgeOpts
+      if (dot) {
+        return ''
+      }
+      if (text) {
+        return `${text}`
+      }
+      const countNum = $xeSelect.computeBadgeCountNum as number
+      if (countNum) {
+        const maxNum = max ? XEUtils.toNumber(max) : 99
+        return countNum > maxNum ? `${maxNum}+` : `${countNum}`
+      }
+      return ''
     },
     computeFilterOpts  () {
       const $xeSelect = this
@@ -2077,7 +2120,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const slots = $xeSelect.$scopedSlots
       const reactData = $xeSelect.reactData
 
-      const { className, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton, showCloseButton } = props
+      const { className, multiple, loading, filterable, showTotalButton, showCheckedButton, showClearButton, showCloseButton, showBadge } = props
       const { initialized, isActivated, isAniVisible, optList, visiblePanel, bodyHeight, topSpaceHeight, xThumbWidth, yThumbHeight } = reactData
       const vSize = $xeSelect.computeSize
       const isVScrollbar = $xeSelect.computeIsVScrollbar
@@ -2087,11 +2130,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const btnTransfer = $xeSelect.computeBtnTransfer
       const formReadonly = $xeSelect.computeFormReadonly
       const inpPlaceholder = $xeSelect.computeInpPlaceholder
+      const badgeOpts = $xeSelect.computeBadgeOpts
+      const badgeLabel = $xeSelect.computeBadgeLabel
       const defaultSlot = slots.default
       if (formReadonly) {
         return h('div', {
           ref: 'refElem',
-          class: ['vxe-select--readonly', className]
+          class: ['vxe-select--readonly', className, {
+            'is--badge': showBadge && badgeLabel,
+            'is--badge-dot': showBadge && badgeOpts.dot
+          }]
         }, [
           h('div', {
             class: 'vxe-select-slots',
@@ -2102,7 +2150,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
             attrs: {
               fullLabel
             }
-          }, selectLabel)
+          }, selectLabel),
+          showBadge && badgeLabel
+            ? h('div', {
+              class: 'vxe-badge--label'
+            }, badgeLabel)
+            : renderEmptyElement($xeSelect)
         ])
       }
       const currStyle = $xeSelect.computeCurrStyle
@@ -2125,6 +2178,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ref: 'refElem',
         class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '', {
           [`size--${vSize}`]: vSize,
+          'is--badge': showBadge && badgeLabel,
+          'is--badge-dot': showBadge && badgeOpts.dot,
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--filter': filterable,
@@ -2164,6 +2219,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
               }
             : {}
         }),
+        showBadge && badgeLabel
+          ? h('div', {
+            class: 'vxe-badge--label'
+          }, badgeLabel)
+          : renderEmptyElement($xeSelect),
         h('div', {
           ref: 'refOptionPanel',
           class: ['vxe-table--ignore-clear vxe-select--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $select: $xeSelect }) : ppClassName) : '', {

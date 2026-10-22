@@ -17,15 +17,19 @@ export interface VxeBadgePrivateRef extends BadgePrivateRef { }
 
 export namespace VxeBadgePropTypes {
   export type Count = string | number
+  export type Text = string | number
   export type Dot = boolean
   export type Content = string | number
+  export type Max = string | number
   export type Size = VxeComponentSizeType
 }
 
 export interface VxeBadgeProps {
   count?: VxeBadgePropTypes.Count
+  text?: VxeBadgePropTypes.Text
   dot?: VxeBadgePropTypes.Dot
   content?: VxeBadgePropTypes.Content
+  max?: VxeBadgePropTypes.Max
   size?: VxeBadgePropTypes.Size
 }
 

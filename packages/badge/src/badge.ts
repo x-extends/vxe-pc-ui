@@ -12,8 +12,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   ],
   props: {
     count: [String, Number] as PropType<VxeBadgePropTypes.Count>,
+    text: [String, Number] as PropType<VxeBadgePropTypes.Text>,
     dot: Boolean as PropType<VxeBadgePropTypes.Dot>,
     content: [String, Number] as PropType<VxeBadgePropTypes.Content>,
+    max: {
+      type: [String, Number] as PropType<VxeBadgePropTypes.Content>,
+      default: () => getConfig().badge.max
+    },
     size: {
       type: String as PropType<VxeBadgePropTypes.Size>,
       default: () => getConfig().badge.size || getConfig().size
@@ -38,6 +43,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { count } = props
       return count ? XEUtils.toNumber(count) : 0
+    },
+    computeLabel () {
+      const $xeAvatar = this
+      const props = $xeAvatar
+
+      const { text, max } = props
+      if (text) {
+        return `${text}`
+      }
+      const countNum = $xeAvatar.computeCountNum as number
+      if (countNum) {
+        const maxNum = max ? XEUtils.toNumber(max) : 99
+        return countNum > maxNum ? `${maxNum}+` : `${countNum}`
+      }
+      return ''
     }
   },
   methods: {
@@ -59,7 +79,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { dot, content } = props
       const vSize = $xeBadge.computeSize
-      const countNum = $xeBadge.computeCountNum
+      const label = $xeBadge.computeLabel
       const defaultSlot = slots.default
       return h('div', {
         ref: 'refElem',
@@ -73,10 +93,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
             class: 'vxe-badge--content'
           }, defaultSlot ? defaultSlot({}) : `${content || ''}`)
           : [],
-        countNum
+        label
           ? h('span', {
-            class: 'vxe-badge--count'
-          }, countNum > 99 ? '99+' : `${countNum}`)
+            class: 'vxe-badge--label'
+          }, label)
           : renderEmptyElement($xeBadge)
       ])
     }
