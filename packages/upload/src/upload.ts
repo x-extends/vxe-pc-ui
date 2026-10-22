@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, globalMixins, createEvent, globalEvents, renderEmptyElement } from '../../ui'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { initTpImg, getTpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
@@ -565,12 +565,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeUpload = this
 
-      const { _events } = $xeUpload as any
-      if (_events && _events.modelValue) {
-        $xeUpload.$emit('modelValue', value)
-      } else {
-        $xeUpload.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeUpload, value)
     },
     choose () {
       const $xeUpload = this

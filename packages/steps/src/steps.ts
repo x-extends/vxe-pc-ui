@@ -2,6 +2,7 @@ import { CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { createEvent } from '../../ui'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { StepsReactData, VxeStepsEmits, ValueOf } from '../../../types'
 
@@ -29,12 +30,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeSteps = this
 
-      const { _events } = $xeSteps as any
-      if (_events && _events.modelValue) {
-        $xeSteps.$emit('modelValue', value)
-      } else {
-        $xeSteps.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeSteps, value)
     },
 
     //

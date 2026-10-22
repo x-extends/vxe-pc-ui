@@ -2,6 +2,7 @@ import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, renderEmptyElement } from '../../ui'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { TransferReactData, TransferInternalData, VxeTransferPropTypes, VxeTransferEmits, ValueOf } from '../../../types'
 
@@ -47,12 +48,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeTransfer = this
 
-      const { _events } = $xeTransfer as any
-      if (_events && _events.modelValue) {
-        $xeTransfer.$emit('modelValue', value)
-      } else {
-        $xeTransfer.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeTransfer, value)
     },
 
     //

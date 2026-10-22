@@ -2,7 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, globalMixins } from '../../ui'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { toCssUnit, addClass, removeClass } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
@@ -227,13 +227,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeTabs = this
 
-      const { _events } = $xeTabs as any
       $xeTabs.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeTabs.$emit('modelValue', value)
-      } else {
-        $xeTabs.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeTabs, value)
     },
     prev () {
       const $xeTabs = this

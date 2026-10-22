@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getIcon, globalEvents, getI18n, createEvent, renderEmptyElement, globalMixins } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit, getPopupAppendElement } from '../../ui/src/dom'
-import { getOnName } from '../../ui/src/vn'
+import { getOnName, handleEmitModelVal } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input'
@@ -322,12 +322,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeTableSelect = this
 
-      const { _events } = $xeTableSelect as any
-      if (_events && _events.modelValue) {
-        $xeTableSelect.$emit('modelValue', value)
-      } else {
-        $xeTableSelect.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeTableSelect, value)
     },
     getRowid (option: any) {
       const $xeTableSelect = this

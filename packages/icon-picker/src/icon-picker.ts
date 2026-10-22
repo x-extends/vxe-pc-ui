@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { VxeUI } from '../../ui'
 import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import VxeInputComponent from '../../input'
 
 import type { VxeIconPickerPropTypes, IconPickerInternalData, ValueOf, IconPickerReactData, VxeInputConstructor, VxeComponentSizeType, VxeIconPickerEmits, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentStyleType } from '../../../types'
@@ -294,12 +294,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeIconPicker = this
 
-      const { _events } = $xeIconPicker as any
-      if (_events && _events.modelValue) {
-        $xeIconPicker.$emit('modelValue', value)
-      } else {
-        $xeIconPicker.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeIconPicker, value)
     },
     isPanelVisible () {
       const $xeIconPicker = this

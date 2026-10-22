@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { VxeUI, globalMixins } from '../../ui'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeTooltipPropTypes, VxeTooltipEmits, TooltipReactData, TooltipInternalData, VxeComponentSizeType, VxeComponentIsVScrollbar, ValueOf, VxeScrollbarInstance, VxeComponentStyleType } from '../../../types'
@@ -185,13 +185,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeTooltip = this
 
-      const { _events } = $xeTooltip as any
       $xeTooltip.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeTooltip.$emit('modelValue', value)
-      } else {
-        $xeTooltip.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeTooltip, value)
     },
     getSelectorEl  () {
       const $xeTooltip = this

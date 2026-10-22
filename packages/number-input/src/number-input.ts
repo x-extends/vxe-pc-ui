@@ -5,7 +5,7 @@ import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, cr
 import { getFuncText, eqEmptyValue, isEnableConf, getText } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import { hasClass, getEventTargetNode, hasControlKey, toCssUnit } from '../../ui/src/dom'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
 
 import type { NumberInputInternalData, VxeNumberInputEmits, NumberInputReactData, VxeNumberInputPropTypes, VxeComponentSizeType, VxeFormConstructor, ValueOf, VxeFormPrivateMethods, VxeFormDefines, VxeComponentStyleType } from '../../../types'
@@ -421,12 +421,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeNumberInput = this
 
-      const { _events } = $xeNumberInput as any
-      if (_events && _events.modelValue) {
-        $xeNumberInput.$emit('modelValue', value)
-      } else {
-        $xeNumberInput.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeNumberInput, value)
     },
     focus () {
       const $xeNumberInput = this

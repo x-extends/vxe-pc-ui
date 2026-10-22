@@ -2,6 +2,7 @@ import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, globalMixins } from '../../ui'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { RateReactData, VxeRateEmits, VxeRatePropTypes, ValueOf, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentSizeType, VxeComponentPermissionInfo } from '../../../types'
 
@@ -101,13 +102,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeRate = this
 
-      const { _events } = $xeRate as any
       $xeRate.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeRate.$emit('modelValue', value)
-      } else {
-        $xeRate.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeRate, value)
     },
     mouseenterEvent (evnt: MouseEvent, item: any) {
       const $xeRate = this

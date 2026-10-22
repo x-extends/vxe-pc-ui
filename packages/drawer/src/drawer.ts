@@ -5,7 +5,7 @@ import { globalMixins, getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_K
 import { getLastZIndex, nextZIndex, getFuncText, getDefaultConfig } from '../../ui/src/utils'
 import { getPopupAppendElement, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
 import { allActiveDrawers } from './store'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
@@ -275,13 +275,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeDrawer = this
 
-      const { _events } = $xeDrawer as any
       $xeDrawer.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeDrawer.$emit('modelValue', value)
-      } else {
-        $xeDrawer.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeDrawer, value)
     },
     callSlot  (slotFunc: ((params: any, h: CreateElement) => any) | string | null, params: any, h: CreateElement) {
       const $xeDrawer = this

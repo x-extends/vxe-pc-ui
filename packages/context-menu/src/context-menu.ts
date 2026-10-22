@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getI18n, getIcon, createEvent, globalMixins, globalEvents, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
 import { getLastZIndex, nextSubZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeContextMenuConstructor, VxeContextMenuPrivateMethods, ContextMenuInternalData, VxeContextMenuPropTypes, ContextMenuReactData, VxeContextMenuEmits, VxeComponentSizeType, ValueOf, VxeContextMenuDefines } from '../../../types'
 
@@ -253,13 +253,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeContextMenu = this
 
-      const { _events } = $xeContextMenu as any
       $xeContextMenu.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeContextMenu.$emit('modelValue', value)
-      } else {
-        $xeContextMenu.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeContextMenu, value)
     },
     open () {
       const $xeContextMenu = this

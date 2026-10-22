@@ -2,6 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalMixins } from '../../ui'
+import { handleEmitModelVal } from '../../ui/src/vn'
 import VxeRadioComponent from '../../radio'
 import VxeRadioButtonComponent from '../../radio-button'
 
@@ -166,13 +167,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeRadioGroup = this
 
-      const { _events } = $xeRadioGroup as any
       $xeRadioGroup.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeRadioGroup.$emit('modelValue', value)
-      } else {
-        $xeRadioGroup.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeRadioGroup, value)
     },
     emitDefaultValue (value: any) {
       const $xeRadioGroup = this

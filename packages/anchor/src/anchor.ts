@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { createEvent, renderEmptyElement } from '../../ui'
 import { getOffsetPos } from '../../ui/src/dom'
+import { handleEmitModelVal } from '../../ui/src/vn'
 import VxeAnchorLinkComponent from './anchor-link'
 
 import type { VxeAnchorPropTypes, AnchorReactData, VxeAnchorLinkPropTypes, VxeAnchorEmits, ValueOf } from '../../../types'
@@ -78,13 +79,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeAnchor = this
 
-      const { _events } = $xeAnchor as any
       $xeAnchor.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeAnchor.$emit('modelValue', value)
-      } else {
-        $xeAnchor.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeAnchor, value)
     },
     getContainerElem  () {
       const $xeAnchor = this

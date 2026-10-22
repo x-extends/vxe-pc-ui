@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeTextareaPropTypes, TextareaReactData, VxeComponentSizeType, VxeTextareaEmits, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
@@ -209,12 +210,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeTextarea = this
 
-      const { _events } = $xeTextarea as any
-      if (_events && _events.modelValue) {
-        $xeTextarea.$emit('modelValue', value)
-      } else {
-        $xeTextarea.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeTextarea, value)
     },
     focus () {
       const $xeTextarea = this

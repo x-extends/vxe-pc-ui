@@ -6,7 +6,7 @@ import { getFuncText, getLastZIndex, nextZIndex, eqEmptyValue, getText } from '.
 import { hasClass, getAbsolutePos, getEventTargetNode, hasControlKey, toCssUnit } from '../../ui/src/dom'
 import { toStringTimeDate, getDateQuarter } from '../../date-panel/src/util'
 import { handleNumber, toFloatValueFixed } from '../../number-input/src/util'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeInputConstructor, VxeInputEmits, InputInternalData, InputReactData, ValueOf, VxeInputPropTypes, VxeComponentStyleType, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeComponentSizeType, VxeDrawerConstructor, VxeDrawerMethods, VxeModalConstructor, VxeModalMethods, VxeDatePanelDefines, VxeSelectConstructor, VxeSelectMethods, VxeTreeSelectConstructor, VxeTreeSelectMethods } from '../../../types'
@@ -949,12 +949,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeInput
 
       const { trim } = props
-      const { _events } = $xeInput as any
-      if (_events && _events.modelValue) {
-        $xeInput.$emit('modelValue', trim ? `${value || ''}`.trim() : value)
-      } else {
-        $xeInput.$emit('model-value', trim ? `${value || ''}`.trim() : value)
-      }
+      handleEmitModelVal($xeInput, trim ? `${value || ''}`.trim() : value)
     },
     focus () {
       const $xeInput = this

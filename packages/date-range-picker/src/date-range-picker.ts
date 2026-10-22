@@ -5,7 +5,7 @@ import { getConfig, getIcon, getI18n, commands, globalEvents, createEvent, GLOBA
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode, getPopupAppendElement, toCssUnit } from '../../ui/src/dom'
 import { parseDateString, parseDateObj, getRangeDateByCode, handleValueFormat, hasTimestampValueType, hasDateValueType, parseDateValue, getNextMonth, getPrevMonth, getNextYear, getPrevYear } from '../../date-panel/src/util'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel'
 import VxeButtonComponent from '../../button'
@@ -453,12 +453,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeDateRangePicker = this
 
-      const { _events } = $xeDateRangePicker as any
-      if (_events && _events.modelValue) {
-        $xeDateRangePicker.$emit('modelValue', value)
-      } else {
-        $xeDateRangePicker.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeDateRangePicker, value)
     },
     formatRangeLabel (vals: string[]) {
       const $xeDateRangePicker = this

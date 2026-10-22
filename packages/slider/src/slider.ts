@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, createEvent, renderEmptyElement } from '../../ui'
 import { getText } from '../../ui/src/utils'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { SliderReactData, SliderInternalData, VxeSliderEmits, ValueOf, VxeSliderPropTypes, VxeFormDefines, VxeComponentSizeType, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
 
@@ -167,13 +168,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSlider = this
       const internalData = $xeSlider.internalData
 
-      const { _events } = $xeSlider as any
       internalData._isUp = true
-      if (_events && _events.modelValue) {
-        $xeSlider.$emit('modelValue', value)
-      } else {
-        $xeSlider.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeSlider, value)
     },
     getBarPercent (currValue: number) {
       const $xeSlider = this

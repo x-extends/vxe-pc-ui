@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { getConfig, getIcon, getI18n, globalMixins, createEvent, renderEmptyElement } from '../../ui'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
 import type { VxeLoadingPropTypes, LoadingReactData, VxeLoadingEmits, VxeComponentSizeType, ValueOf } from '../../../types'
@@ -79,13 +79,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeLoading = this
 
-      const { _events } = $xeLoading as any
       $xeLoading.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeLoading.$emit('modelValue', value)
-      } else {
-        $xeLoading.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeLoading, value)
     },
     handleInit () {
       const $xeLoading = this

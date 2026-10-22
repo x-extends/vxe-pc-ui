@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, globalEvents, createEvent, globalMixins, ValueOf, renderEmptyElement } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { PulldownInternalData, VxePulldownPropTypes, VxePulldownEmits, VxeComponentSizeType, PulldownReactData, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeModalMethods } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
@@ -144,12 +145,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xePulldown = this
 
-      const { _events } = $xePulldown as any
-      if (_events && _events.modelValue) {
-        $xePulldown.$emit('modelValue', value)
-      } else {
-        $xePulldown.$emit('model-value', value)
-      }
+      handleEmitModelVal($xePulldown, value)
     },
     updateZindex () {
       const $xePulldown = this

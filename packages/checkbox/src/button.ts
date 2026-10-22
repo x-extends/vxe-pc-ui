@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { createComponentLog } from '../../ui/src/log'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeCheckboxButtonPropTypes, CheckboxButtonReactData, CheckboxGroupPrivateComputed, VxeCheckboxGroupConstructor, ValueOf, VxeCheckboxButtonEmits, VxeCheckboxGroupPrivateMethods, VxeFormConstructor, VxeComponentPermissionInfo, VxeComponentSizeType, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -120,13 +121,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeCheckboxButton = this
 
-      const { _events } = $xeCheckboxButton as any
       $xeCheckboxButton.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeCheckboxButton.$emit('modelValue', value)
-      } else {
-        $xeCheckboxButton.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeCheckboxButton, value)
     },
     changeEvent  (evnt: Event & { target: { checked: boolean } }) {
       const $xeCheckboxButton = this

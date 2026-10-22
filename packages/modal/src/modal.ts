@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, getI18n, getIcon, createEvent, globalEvents, globalMixins, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
 import { getEventTargetNode, getPopupAppendElement, getPopupWrapperElement, isScale, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue, getDefaultConfig } from '../../ui/src/utils'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { allActiveModals } from './store'
 import VxeButtonComponent from '../../button'
@@ -399,13 +399,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeModal = this
 
-      const { _events } = $xeModal as any
       $xeModal.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeModal.$emit('modelValue', value)
-      } else {
-        $xeModal.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeModal, value)
     },
     callSlot  (slotFunc: ((params: any, h: CreateElement) => any) | string | null, params: any, h: CreateElement) {
       const $xeModal = this

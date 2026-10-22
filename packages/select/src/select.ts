@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { VxeUI, globalMixins } from '../../ui'
 import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input'
 import VxeButtonComponent from '../../button'
@@ -632,12 +632,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeSelect = this
 
-      const { _events } = $xeSelect as any
-      if (_events && _events.modelValue) {
-        $xeSelect.$emit('modelValue', value)
-      } else {
-        $xeSelect.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeSelect, value)
     },
     emitDefaultValue (value: any) {
       const $xeSelect = this

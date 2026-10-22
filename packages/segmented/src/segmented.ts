@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { toCssUnit } from '../../ui/src/dom'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeSegmentedPropTypes, SegmentedReactData, VxeSegmentedEmits, VxeComponentSizeType, ValueOf, VxeComponentStyleType } from '../../../types'
 
@@ -125,13 +126,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeSegmented = this
 
-      const { _events } = $xeSegmented as any
       $xeSegmented.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeSegmented.$emit('modelValue', value)
-      } else {
-        $xeSegmented.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeSegmented, value)
     },
     changeEvent (evnt: Event, item: VxeSegmentedPropTypes.Option) {
       const $xeSegmented = this

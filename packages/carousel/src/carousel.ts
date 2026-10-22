@@ -2,7 +2,7 @@ import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, createEvent, globalMixins, renderEmptyElement } from '../../ui'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading'
 
@@ -104,13 +104,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeCarousel = this
 
-      const { _events } = $xeCarousel as any
       $xeCarousel.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeCarousel.$emit('modelValue', value)
-      } else {
-        $xeCarousel.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeCarousel, value)
     },
     prev () {
       const $xeCarousel = this

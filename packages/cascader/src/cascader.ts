@@ -1,9 +1,10 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, getI18n, getIcon, globalEvents, createEvent, renderEmptyElement, getSlotVNs, globalMixins } from '../../ui'
+import { getConfig, getI18n, getIcon, globalEvents, createEvent, renderEmptyElement, globalMixins } from '../../ui'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { enNodeValue, deNodeValue } from './util'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 import VxeListComponent from '../../list'
 import VxeInputComponent from '../../input'
@@ -399,12 +400,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeCascader = this
 
-      const { _events } = $xeCascader as any
-      if (_events && _events.modelValue) {
-        $xeCascader.$emit('modelValue', value)
-      } else {
-        $xeCascader.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeCascader, value)
     },
     getNodeId (node: any) {
       const $xeCascader = this

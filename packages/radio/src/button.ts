@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
 import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { createComponentLog } from '../../ui/src/log'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeRadioButtonPropTypes, RadioButtonReactData, RadioGroupPrivateComputed, VxeRadioGroupConstructor, ValueOf, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, VxeFormConstructor, VxeComponentPermissionInfo, VxeComponentSizeType, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
@@ -130,13 +131,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeRadioButton = this
 
-      const { _events } = $xeRadioButton as any
       $xeRadioButton.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeRadioButton.$emit('modelValue', value)
-      } else {
-        $xeRadioButton.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeRadioButton, value)
     },
     handleValue (checkedValue: VxeRadioButtonPropTypes.CheckedValue, evnt: Event) {
       const $xeRadioButton = this

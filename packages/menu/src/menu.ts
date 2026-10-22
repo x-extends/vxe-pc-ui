@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { VxeUI, createEvent, permission, globalMixins, globalEvents, renderEmptyElement } from '../../ui'
 import { getPopupAppendElement, scrollToView, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, isEnableConf, getDefaultConfig } from '../../ui/src/utils'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
@@ -212,14 +212,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeMenu = this
       const reactData = $xeMenu.reactData
 
-      const { _events } = $xeMenu as any
       reactData.activeName = value
       $xeMenu.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeMenu.$emit('modelValue', value)
-      } else {
-        $xeMenu.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeMenu, value)
     },
     callSlot (slotFunc: any, params: any, h: CreateElement) {
       const $xeMenu = this

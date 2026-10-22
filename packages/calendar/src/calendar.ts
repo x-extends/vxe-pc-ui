@@ -5,6 +5,7 @@ import { VxeUI, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getDateQuarter } from '../../date-panel/src/util'
 import { toCssUnit } from '../../ui/src/dom'
 import { isEnableConf } from '../../ui/src/utils'
+import { handleEmitModelVal } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeButtonComponent from '../../button'
 
@@ -499,13 +500,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeCalendar = this
 
-      const { _events } = $xeCalendar as any
       $xeCalendar.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeCalendar.$emit('modelValue', value)
-      } else {
-        $xeCalendar.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeCalendar, value)
     },
     parseDate  (value: VxeCalendarPropTypes.ModelValue, format: string) {
       return XEUtils.toStringDate(value, format)

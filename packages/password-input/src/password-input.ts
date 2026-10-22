@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getText } from '../../ui/src/utils'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { VxePasswordInputEmits, VxeComponentSizeType, PasswordInputReactData, ValueOf, VxePasswordInputPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, VxeComponentStyleType } from '../../../types'
@@ -197,12 +197,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xePasswordInput = this
 
-      const { _events } = $xePasswordInput as any
-      if (_events && _events.modelValue) {
-        $xePasswordInput.$emit('modelValue', value)
-      } else {
-        $xePasswordInput.$emit('model-value', value)
-      }
+      handleEmitModelVal($xePasswordInput, value)
     },
     focus () {
       const $xePasswordInput = this

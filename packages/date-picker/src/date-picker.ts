@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getIcon, getI18n, commands, createEvent, globalEvents, GLOBAL_EVENT_KEYS, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText, getLastZIndex, nextZIndex, isEnableConf } from '../../ui/src/utils'
 import { updatePanelPlacement, getEventTargetNode, hasControlKey, getPopupAppendElement, toCssUnit } from '../../ui/src/dom'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { parseDateObj, parseDateValue, getDateByCode, handleValueFormat, hasDateValueType, hasTimestampValueType, isAllSameChar, getChunkDefaultNum, checkDateInputFormat } from '../../date-panel/src/util'
 import { createComponentLog } from '../../ui/src/log'
 import VxeDatePanelComponent from '../../date-panel'
@@ -517,12 +517,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeDatePicker = this
 
-      const { _events } = $xeDatePicker as any
-      if (_events && _events.modelValue) {
-        $xeDatePicker.$emit('modelValue', value)
-      } else {
-        $xeDatePicker.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeDatePicker, value)
     },
     updateModelValue () {
       const $xeDatePicker = this

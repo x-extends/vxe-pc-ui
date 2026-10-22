@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeSwitchPropTypes, VxeSwitchEmits, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, SwitchReactData, SwitchInternalData, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
@@ -129,13 +130,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeSwitch = this
 
-      const { _events } = $xeSwitch as any
       $xeSwitch.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeSwitch.$emit('modelValue', value)
-      } else {
-        $xeSwitch.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeSwitch, value)
     },
     focus () {
       const $xeSwitch = this

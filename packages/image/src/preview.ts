@@ -3,6 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n, renderEmptyElement } from '../../ui'
 import { getDomNode, addClass, removeClass, hasControlKey } from '../../ui/src/dom'
+import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { ImagePreviewReactData, VxeGlobalIcon, VxeImagePreviewEmits, VxeComponentSizeType, VxeImagePreviewPropTypes, ValueOf, VxeImagePreviewDefines } from '../../../types'
 
@@ -175,13 +176,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: VxeImagePreviewPropTypes.ModelValue) {
       const $xeImagePreview = this
 
-      const { _events } = $xeImagePreview as any
       $xeImagePreview.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeImagePreview.$emit('modelValue', value)
-      } else {
-        $xeImagePreview.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeImagePreview, value)
     },
     handleCloseEvent  (evnt: MouseEvent) {
       const $xeImagePreview = this

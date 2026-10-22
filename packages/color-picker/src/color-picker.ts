@@ -5,6 +5,7 @@ import { VxeUI, getIcon, getConfig, getI18n, globalEvents, createEvent, globalMi
 import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { parseValColor, updateColorAlpha, hexToHsv, rgbToHsv, rgbToHexVal, hexToRgb, hsvToRgb, toValRgb } from './util'
+import { handleEmitModelVal } from '../../ui/src/vn'
 import VxeButtonComponent from '../../button'
 import VxeInputComponent from '../../input'
 import VxeNumberInputComponent from '../../number-input'
@@ -273,12 +274,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeColorPicker = this
 
-      const { _events } = $xeColorPicker as any
-      if (_events && _events.modelValue) {
-        $xeColorPicker.$emit('modelValue', value)
-      } else {
-        $xeColorPicker.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeColorPicker, value)
     },
     updateMode () {
       const $xeColorPicker = this

@@ -4,6 +4,7 @@ import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
 import { toStringTimeDate, getDateQuarter, parseDateValue, parseDateObj, handleValueFormat, hasDateValueType, hasTimestampValueType } from './util'
 import { createComponentLog } from '../../ui/src/log'
+import { handleEmitModelVal } from '../../ui/src/vn'
 import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeDatePanelConstructor, DatePanelInternalData, DatePanelReactData, VxeDatePanelPropTypes, VxeComponentSizeType, ValueOf, VxeDatePanelEmits, VxeDatePanelDefines } from '../../../types'
@@ -677,13 +678,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
-      const { _events } = $xeDatePanel as any
       reactData.inputValue = value
-      if (_events && _events.modelValue) {
-        $xeDatePanel.$emit('modelValue', value)
-      } else {
-        $xeDatePanel.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeDatePanel, value)
     },
     updateModelValue (modelValue: VxeDatePanelPropTypes.ModelValue | undefined) {
       const $xeDatePanel = this

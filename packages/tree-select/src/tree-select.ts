@@ -5,7 +5,7 @@ import { getConfig, getI18n, getIcon, globalEvents, createEvent, globalMixins, r
 import { getEventTargetNode, updatePanelPlacement, toCssUnit, getPopupAppendElement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, deModelValue } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
-import { getSlotVNs } from '../../ui/src/vn'
+import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import VxeInputComponent from '../../input'
 import VxeButtonComponent from '../../button'
 import VxeTreeComponent from '../../tree'
@@ -432,12 +432,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel  (value: any) {
       const $xeTreeSelect = this
 
-      const { _events } = $xeTreeSelect as any
-      if (_events && _events.modelValue) {
-        $xeTreeSelect.$emit('modelValue', value)
-      } else {
-        $xeTreeSelect.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeTreeSelect, value)
     },
     callSlot (slotFunc: ((params: any, h: CreateElement) => any) | string | null, params: any, h: CreateElement) {
       const $xeTreeSelect = this

@@ -2,6 +2,7 @@ import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, createEvent, globalMixins } from '../../ui'
+import { handleEmitModelVal } from '../../ui/src/vn'
 import VxeCheckboxComponent from '../../checkbox'
 import VxeCheckboxButtonComponent from '../../checkbox-button'
 
@@ -172,13 +173,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     emitModel (value: any) {
       const $xeCheckboxGroup = this
 
-      const { _events } = $xeCheckboxGroup as any
       $xeCheckboxGroup.$emit('input', value)
-      if (_events && _events.modelValue) {
-        $xeCheckboxGroup.$emit('modelValue', value)
-      } else {
-        $xeCheckboxGroup.$emit('model-value', value)
-      }
+      handleEmitModelVal($xeCheckboxGroup, value)
     },
     emitDefaultValue (value: any) {
       const $xeCheckboxGroup = this
