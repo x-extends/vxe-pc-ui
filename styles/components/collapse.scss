@@ -1,5 +1,37 @@
 @use '../helpers/baseMixin.scss';
 
+// 局部变量
+.vxe-collapse {
+  --vxe-ui-collapse-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-default);
+  --vxe-ui-collapse-scope-padding: var(--vxe-ui-layout-padding-double);
+  &.size--xlarge {
+    --vxe-ui-collapse-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-xlarge);
+    --vxe-ui-collapse-scope-padding: calc(var(--vxe-ui-layout-padding-double));
+  }
+  &.size--large {
+    --vxe-ui-collapse-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-large);
+    --vxe-ui-collapse-scope-padding: calc(var(--vxe-ui-layout-padding-double) - 2px);
+  }
+  &.size--medium {
+    --vxe-ui-collapse-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-medium);
+    --vxe-ui-collapse-scope-padding: calc(var(--vxe-ui-layout-padding-double) - 4px);
+  }
+  &.size--small {
+    --vxe-ui-collapse-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-small);
+    --vxe-ui-collapse-scope-padding: calc(var(--vxe-ui-layout-padding-double) - 6px);
+  }
+  &.size--mini {
+    --vxe-ui-collapse-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-mini);
+    --vxe-ui-collapse-scope-padding: calc(var(--vxe-ui-layout-padding-double) - 8px);
+  }
+}
+
 .vxe-collapse {
   font-size: var(--vxe-ui-collapse-font-size);
   color: var(--vxe-ui-font-color);
@@ -57,26 +89,5 @@
   & > i {
     display: inline-block;
     @include baseMixin.createAnimationTransition(transform, .2s);
-  }
-}
-
-.vxe-collapse {
-  --vxe-ui-collapse-font-size: var(--vxe-ui-font-size-default);
-  --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-default);
-  --vxe-ui-collapse-scope-padding: var(--vxe-ui-layout-padding-double);
-  &.size--medium {
-    --vxe-ui-collapse-font-size:var(--vxe-ui-font-size-medium);
-    --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-medium);
-    --vxe-ui-collapse-scope-padding: calc(var(--vxe-ui-layout-padding-double) - 4px);
-  }
-  &.size--small {
-    --vxe-ui-collapse-font-size:var(--vxe-ui-font-size-small);
-    --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-small);
-    --vxe-ui-collapse-scope-padding: calc(var(--vxe-ui-layout-padding-double) - 6px);
-  }
-  &.size--mini {
-    --vxe-ui-collapse-font-size:var(--vxe-ui-font-size-mini);
-    --vxe-ui-collapse-scope-min-height: var(--vxe-ui-collapse-min-height-mini);
-    --vxe-ui-collapse-scope-padding: calc(var(--vxe-ui-layout-padding-double) - 8px);
   }
 }

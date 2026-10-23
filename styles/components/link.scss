@@ -1,6 +1,26 @@
 @use "sass:map";
 @use "sass:list";
 
+// 局部变量
+.vxe-link {
+  --vxe-ui-link-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--xlarge {
+    --vxe-ui-link-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-link-current-font-size: var(--vxe-ui-font-size-large);
+  }
+  &.size--medium {
+    --vxe-ui-link-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-link-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-link-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 $btnThemeList: (
   (
     name: "primary",
@@ -55,6 +75,10 @@ $btnThemeList: (
 .vxe-link {
   text-decoration: none;
   color: inherit;
+  &[class^="size--"],
+  &[class*=" size--"] {
+    font-size: var(--vxe-ui-link-current-font-size);
+  }
   &:not(.is--disabled) {
     cursor: pointer;
     &:hover {
@@ -101,16 +125,4 @@ $btnThemeList: (
 
 .vxe-checkbox+.vxe-link {
   vertical-align: middle;
-}
-
-.vxe-link {
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
 }

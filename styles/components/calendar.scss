@@ -1,10 +1,31 @@
 @use "sass:list";
 
+// 局部变量
+.vxe-calendar {
+  --vxe-ui-calendar-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--xlarge {
+    --vxe-ui-calendar-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-calendar-current-font-size: var(--vxe-ui-font-size-large);
+  }
+  &.size--medium {
+    --vxe-ui-calendar-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-calendar-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-calendar-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 .vxe-calendar {
   color: var(--vxe-ui-font-color);
   display: flex;
   flex-direction: column;
   flex-shrink: 0; 
+  font-size: var(--vxe-ui-calendar-current-font-size);
   width: 100%;
   height: 38em;
   border: 1px solid var(--vxe-ui-base-popup-border-color);
@@ -454,18 +475,5 @@
   & > span {
     height: 14px;
     display: block;
-  }
-}
-
-.vxe-calendar {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
   }
 }

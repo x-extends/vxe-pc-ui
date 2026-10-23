@@ -1,6 +1,12 @@
 // 局部变量
 .vxe-context-menu {
   --vxe-ui-context-menu-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--xlarge {
+    --vxe-ui-context-menu-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-context-menu-current-font-size: var(--vxe-ui-font-size-large);
+  }
   &.size--medium {
     --vxe-ui-context-menu-current-font-size: var(--vxe-ui-font-size-medium);
   }

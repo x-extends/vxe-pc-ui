@@ -1,6 +1,26 @@
 @use "sass:map";
 @use "sass:list";
 
+// 局部变量
+.vxe-rate {
+  --vxe-ui-rate-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--xlarge {
+    --vxe-ui-rate-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-rate-current-font-size: var(--vxe-ui-font-size-large);
+  }
+  &.size--medium {
+    --vxe-ui-rate-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-rate-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-rate-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 $rateThemeList: (
   (
     name: "primary",
@@ -32,6 +52,10 @@ $rateThemeList: (
   display: inline-flex;
   flex-direction: row;
   color: var(--vxe-ui-font-color);
+  &[class^="size--"],
+  &[class*=" size--"] {
+    font-size: var(--vxe-ui-rate-current-font-size);
+  }
   @for $index from 0 to list.length($rateThemeList) {
     $item: list.nth($rateThemeList, $index + 1);
     &.theme--#{map.get($item, name)} {
@@ -60,18 +84,5 @@ $rateThemeList: (
   }
   &.is--checked {
     color: var(--vxe-ui-rate-item-color);
-  }
-}
-
-.vxe-rate {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
   }
 }

@@ -22,7 +22,10 @@
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  font-size: var(--vxe-ui-badge-current-font-size);
+  &[class^="size--"],
+  &[class*=" size--"] {
+    font-size: var(--vxe-ui-badge-current-font-size);
+  }
   &.is--dot {
     &::before {
       content: "";

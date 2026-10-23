@@ -739,6 +739,12 @@ $scrollbarOffsetSize: 20px;
 
 .vxe-tabs {
   @include getTabsSizeStyle(var(--vxe-ui-font-size-default), var(--vxe-ui-tabs-header-height-default));
+  &.size--xlarge {
+    @include getTabsSizeStyle(var(--vxe-ui-font-size-xlarge), var(--vxe-ui-tabs-header-height-xlarge));
+  }
+  &.size--large {
+    @include getTabsSizeStyle(var(--vxe-ui-font-size-large), var(--vxe-ui-tabs-header-height-large));
+  }
   &.size--medium {
     @include getTabsSizeStyle(var(--vxe-ui-font-size-medium), var(--vxe-ui-tabs-header-height-medium));
   }
