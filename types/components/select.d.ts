@@ -93,8 +93,13 @@ export namespace VxeSelectPropTypes {
     $select: VxeSelectConstructor
     group: any
     option: any
-    searchValue: string
+    filterValue: string
     value: ModelValue | undefined
+    /**
+     * 请使用 filterValue
+     * @deprecated
+     */
+    searchValue: string
   }) => boolean
   export type Remote = boolean
 
@@ -110,8 +115,13 @@ export namespace VxeSelectPropTypes {
       $select: VxeSelectConstructor
       group: any
       option: any
-      searchValue: string
+      filterValue: string
       value: ModelValue | undefined
+      /**
+       * 请使用 filterValue
+       * @deprecated
+       */
+      searchValue: string
     }) => boolean
   }
 

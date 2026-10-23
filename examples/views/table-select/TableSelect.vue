@@ -1,103 +1,53 @@
 <template>
   <div>
-    <vxe-table-select v-model="val1" :columns="columnList" :grid-config="gridConfig"></vxe-table-select>
+    <vxe-table-select v-model="val1" v-bind="tableSelectOptions"></vxe-table-select>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
-import { VxeTableSelectPropTypes } from '../../../types'
+import { VxeTableSelectProps } from '../../../types'
 
 interface RowVO {
-  value: string
+  value: number
   label: string
-  nickname: string
   role: string
   sex: string
   age: number
   address: string
 }
 
-const list = [
-  { value: 'Test1', label: 'ff1', nickname: 'T1', role: 'Develop', sex: 'Man', age: 28, address: 'Shenzhen' },
-  { value: 'Test2', label: 'ff2', nickname: 'T2', role: 'Test', sex: 'Women', age: 22, address: 'Guangzhou' },
-  { value: 'Test3', label: 'ff3', nickname: 'T3', role: 'PM', sex: 'Man', age: 32, address: 'Shanghai' },
-  { value: 'Test4', label: 'ff4', nickname: 'T4', role: 'Designer', sex: 'Women', age: 23, address: 'test abc' },
-  { value: 'Test5', label: 'ff5', nickname: 'T5', role: 'Develop', sex: 'Women', age: 30, address: 'Shanghai' },
-  { value: 'Test6', label: 'ff6', nickname: 'T6', role: 'Designer', sex: 'Women', age: 21, address: 'Shenzhen' },
-  { value: 'Test7', label: 'ff7', nickname: 'T7', role: 'Test', sex: 'Man', age: 29, address: 'Shenzhen' },
-  { value: 'Test8', label: 'ff8', nickname: 'T8', role: 'Develop', sex: 'Man', age: 35, address: 'test abc' },
-  { value: 'Test9', label: 'ff9', nickname: 'T9', role: 'Develop', sex: 'Man', age: 35, address: 'Shenzhen' },
-  { value: 'Test10', label: 'ff10', nickname: 'T10', role: 'Develop', sex: 'Man', age: 35, address: 'Guangzhou' },
-  { value: 'Test11', label: 'ff11', nickname: 'T11', role: 'Develop', sex: 'Man', age: 49, address: 'Guangzhou' },
-  { value: 'Test12', label: 'ff12', nickname: 'T12', role: 'Develop', sex: 'Women', age: 45, address: 'Shanghai' },
-  { value: 'Test13', label: 'ff13', nickname: 'T13', role: 'Test', sex: 'Women', age: 35, address: 'Guangzhou' },
-  { value: 'Test14', label: 'ff14', nickname: 'T14', role: 'Test', sex: 'Man', age: 29, address: 'Shanghai' },
-  { value: 'Test15', label: 'ff15', nickname: 'T15', role: 'Develop', sex: 'Man', age: 39, address: 'Guangzhou' },
-  { value: 'Test16', label: 'ff16', nickname: 'T16', role: 'Test', sex: 'Women', age: 35, address: 'Guangzhou' },
-  { value: 'Test17', label: 'ff17', nickname: 'T17', role: 'Test', sex: 'Man', age: 39, address: 'Shanghai' },
-  { value: 'Test18', label: 'ff18', nickname: 'T18', role: 'Develop', sex: 'Man', age: 44, address: 'Guangzhou' },
-  { value: 'Test19', label: 'ff19', nickname: 'T19', role: 'Develop', sex: 'Man', age: 39, address: 'Guangzhou' },
-  { value: 'Test20', label: 'ff20', nickname: 'T20', role: 'Test', sex: 'Women', age: 35, address: 'Guangzhou' },
-  { value: 'Test21', label: 'ff21', nickname: 'T21', role: 'Test', sex: 'Man', age: 39, address: 'Shanghai' },
-  { value: 'Test22', label: 'ff22', nickname: 'T22', role: 'Develop', sex: 'Man', age: 44, address: 'Guangzhou' }
-]
-
 const val1 = ref()
 
-const columnList = ref<VxeTableSelectPropTypes.Columns>([
-  { type: 'radio', width: 70 },
-  { field: 'label', title: 'Name' },
-  { field: 'role', title: 'Role' },
-  { field: 'sex', title: 'Sex' },
-  { field: 'address', title: 'Address' }
-])
-
-// 模拟接口
-const findPageList = (pageSize: number, currentPage: number, formData: any) => {
-  console.log(`调用查询接口 pageSize=${pageSize} currentPage=${currentPage} formData=`, formData)
-  return new Promise<{
-    result: RowVO[]
-    page: {
-      total: number
-    }
-  }>(resolve => {
-    setTimeout(() => {
-      resolve({
-        result: list.slice((currentPage - 1) * pageSize, currentPage * pageSize),
-        page: {
-          total: list.length
-        }
-      })
-    }, 100)
-  })
-}
-
-const gridConfig = reactive<VxeTableSelectPropTypes.GridConfig>({
-  border: true,
-  pagerConfig: {},
-  formConfig: {
-    items: [
-      { field: 'name', title: 'Name', itemRender: { name: 'VxeInput' } },
-      {
-        itemRender: {
-          name: 'VxeButtonGroup',
-          options: [
-            { type: 'submit', content: '搜索', status: 'primary' },
-            { type: 'reset', content: '重置' }
-          ]
-        }
-      }
+const tableSelectOptions = reactive<VxeTableSelectProps<RowVO>>({
+  filterable: true,
+  filterConfig: {
+    // filterMethod ({ filterValue, row }) {
+    //   // 重写为精确匹配
+    //   return row.label === filterValue
+    // }
+  },
+  gridConfig: {
+    border: true,
+    columns: [
+      { type: 'radio', width: 70 },
+      { field: 'label', title: 'Name' },
+      { field: 'role', title: 'Role' },
+      { field: 'sex', title: 'Sex' },
+      { field: 'address', title: 'Address' }
     ]
   },
-  proxyConfig: {
-    form: true,
-    ajax: {
-      query: ({ form, page }) => {
-        // 默认接收 Promise<{ result: [], page: { total: 100 } }>
-        return findPageList(page.pageSize, page.currentPage, form)
-      }
-    }
-  }
+  options: [
+    { value: 10001, label: 'Test1', role: 'Develop', sex: 'Man', age: 28, address: 'test abc' },
+    { value: 10002, label: 'Test2', role: 'Test', sex: 'Women', age: 22, address: 'Guangzhou' },
+    { value: 10003, label: 'Test3', role: 'PM', sex: 'Man', age: 32, address: 'Shanghai' },
+    { value: 10004, label: 'Test4', role: 'Designer', sex: 'Women', age: 24, address: 'Shanghai' },
+    { value: 10005, label: 'Test5', role: 'PM', sex: 'Man', age: 32, address: 'Guangzhou' },
+    { value: 10006, label: 'Test6', role: 'Develop', sex: 'Man', age: 24, address: 'test abc' },
+    { value: 10007, label: 'Test7', role: 'Develop', sex: 'Man', age: 26, address: 'Shanghai' },
+    { value: 10008, label: 'Test8', role: 'Test', sex: 'Women', age: 25, address: 'test abc' },
+    { value: 10009, label: 'Test9', role: 'PM', sex: 'Women', age: 32, address: 'Guangzhou' },
+    { value: 100010, label: 'Test10', role: 'Develop', sex: 'Women', age: 24, address: 'Guangzhou' }
+  ]
 })
 </script>

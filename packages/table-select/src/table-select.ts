@@ -23,8 +23,10 @@ export function getRowUniqueId () {
 function createReactData (): TableSelectReactData {
   return {
     initialized: false,
+    searchValue: '',
+    searchLoading: false,
+    tableData: [],
     tableColumns: [],
-    fullOptionList: [],
     panelIndex: 0,
     panelStyle: {},
     panelPlacement: null,
@@ -39,7 +41,9 @@ function createInternalData (): TableSelectInternalData {
   return {
     // hpTimeout: undefined,
     // vpTimeout: undefined,
-    fullRowMaps: {}
+    fullData: [],
+    afterVisibleList: [],
+    fullValMaps: {}
   }
 }
 
@@ -72,6 +76,13 @@ export default defineVxeComponent({
     options: Array as PropType<VxeTableSelectPropTypes.Options>,
     optionProps: Object as PropType<VxeTableSelectPropTypes.OptionProps>,
     lazyOptions: Array as PropType<VxeTableSelectPropTypes.LazyOptions>,
+    filterable: {
+      type: Boolean as PropType<VxeTableSelectPropTypes.Filterable>,
+      default: () => getConfig().tableSelect.filterable
+    },
+    filterConfig: Object as PropType<VxeTableSelectPropTypes.FilterConfig>,
+    remote: Boolean as PropType<VxeTableSelectPropTypes.Remote>,
+    remoteConfig: Object as PropType<VxeTableSelectPropTypes.RemoteConfig>,
     /**
      * 已废弃，请使用 popupConfig.zIndex
      * @deprecated
@@ -120,6 +131,7 @@ export default defineVxeComponent({
     const refInput = ref<VxeInputConstructor>()
     const refGridWrapper = ref<HTMLDivElement>()
     const refOptionPanel = ref<HTMLDivElement>()
+    const refInpSearch = ref<VxeInputConstructor>()
     const refGrid = ref<VxeGridInstance>()
 
     const reactData = reactive(createReactData())
@@ -217,6 +229,14 @@ export default defineVxeComponent({
       })
     })
 
+    const computeRemoteOpts = computed(() => {
+      return Object.assign({}, getConfig().tableSelect.remoteConfig, props.remoteConfig)
+    })
+
+    const computeFilterOpts = computed(() => {
+      return Object.assign({}, getConfig().tableSelect.filterConfig, props.filterConfig)
+    })
+
     const computeSelectGridOpts = computed(() => {
       const gridOpts = computeGridOpts.value
       const checkboxOpts = computeCheckboxOpts.value
@@ -231,15 +251,15 @@ export default defineVxeComponent({
             Object.assign(newProxyConfig.ajax, {
               query (params: VxeGridPropTypes.ProxyAjaxQueryParams, ...args: any[]) {
                 return Promise.resolve(ajaxMethods(params, ...args)).then(rest => {
-                  let tableData = []
+                  let currData = []
                   if (pagerConfig) {
                     const resultProp = resConfigs.result
-                    tableData = (XEUtils.isFunction(resultProp) ? resultProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, resultProp || 'result')) || []
+                    currData = (XEUtils.isFunction(resultProp) ? resultProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, resultProp || 'result')) || []
                   } else {
                     const listProp = resConfigs.list
-                    tableData = (listProp ? (XEUtils.isFunction(listProp) ? listProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, listProp)) : rest) || []
+                    currData = (listProp ? (XEUtils.isFunction(listProp) ? listProp({ data: rest, $table: null as any, $grid: null, $gantt: null }) : XEUtils.get(rest, listProp)) : rest) || []
                   }
-                  cacheDataMap(tableData || [])
+                  cacheDataMap(currData || [])
                   return rest
                 })
               }
@@ -253,15 +273,14 @@ export default defineVxeComponent({
 
     const computeSelectLabel = computed(() => {
       const { modelValue, lazyOptions } = props
-      const { fullOptionList } = reactData
-      const { fullRowMaps } = internalData
+      const { fullValMaps, fullData } = internalData
       const valueField = computeValueField.value
       const labelField = computeLabelField.value
-      if (!fullOptionList) {
+      if (!fullData) {
         return ''
       }
       return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(val => {
-        const cacheItem = fullRowMaps[val]
+        const cacheItem = fullValMaps[val]
         if (cacheItem) {
           return cacheItem.item[labelField]
         }
@@ -336,7 +355,7 @@ export default defineVxeComponent({
     }
 
     const getRowsByValue = (modelValue: VxeTableSelectPropTypes.ModelValue) => {
-      const { fullRowMaps } = internalData
+      const { fullValMaps } = internalData
       const checkboxOpts = computeCheckboxOpts.value
       const rowKeyField = computeRowKeyField.value
       const valueField = computeValueField.value
@@ -345,7 +364,7 @@ export default defineVxeComponent({
       const vals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
       if (checkboxOpts.reserve) {
         vals.forEach(val => {
-          const cacheItem = fullRowMaps[val]
+          const cacheItem = fullValMaps[val]
           rows.push(cacheItem
             ? cacheItem.item
             : {
@@ -356,7 +375,7 @@ export default defineVxeComponent({
         })
       } else {
         vals.forEach(val => {
-          const cacheItem = fullRowMaps[val]
+          const cacheItem = fullValMaps[val]
           if (cacheItem) {
             rows.push(cacheItem.item)
           }
@@ -382,7 +401,12 @@ export default defineVxeComponent({
       })
     }
 
-    const loadTableColumn = (columns?: VxeTableSelectPropTypes.Columns) => {
+    const loadData = (data: any[]) => {
+      cacheDataMap(data)
+      handleData()
+    }
+
+    const loadColumn = (columns?: VxeTableSelectPropTypes.Columns) => {
       if (!columns || !columns.length) {
         return
       }
@@ -416,7 +440,7 @@ export default defineVxeComponent({
       reactData.tableColumns = tableCols
     }
 
-    const cacheDataMap = (dataList?: any[]) => {
+    const cacheDataMap = (dataList: any[]) => {
       const { options } = props
       const rowKeyField = computeRowKeyField.value
       const valueField = computeValueField.value
@@ -425,13 +449,14 @@ export default defineVxeComponent({
       const rowMaps: Record<string, {
         item: any
         index: number
+        _index: number
         items: any[]
         parent: any
         nodes: any[]
       }> = {}
       const keyMaps: Record<string, boolean> = {}
       if (treeConfig) {
-        // x
+        // 暂不支持
       } else {
         XEUtils.arrayEach(dataList || options || [], (item, index, items) => {
           let rowid = getRowid(item)
@@ -446,12 +471,51 @@ export default defineVxeComponent({
           if (rowMaps[value]) {
             errLog('vxe.error.repeatKey', [valueField, value])
           }
-          rowMaps[value] = { item, index, items, parent: null, nodes: [] }
+          rowMaps[value] = { item, index, _index: index, items, parent: null, nodes: [] }
         })
       }
-      reactData.fullOptionList = dataList || options || []
-      internalData.fullRowMaps = pagerConfig ? Object.assign({}, internalData.fullRowMaps, rowMaps) : rowMaps
+      internalData.fullData = dataList || options || []
+      internalData.fullValMaps = pagerConfig ? Object.assign({}, internalData.fullValMaps, rowMaps) : rowMaps
+      handleOptList()
       updateModel(props.modelValue)
+    }
+
+    const handleOptList = () => {
+      const { remote, modelValue, filterable } = props
+      const { searchValue } = reactData
+      const { fullData, fullValMaps } = internalData
+      const valueField = computeValueField.value
+      const labelField = computeLabelField.value
+      const filterOpts = computeFilterOpts.value
+      const frMethod = filterOpts.filterMethod
+      const searchStr = `${searchValue || ''}`.toLowerCase()
+      let avList: any[] = []
+      if (remote) {
+        avList = fullData
+      } else {
+        if (filterable && frMethod) {
+          avList = searchStr
+            ? fullData.filter(row => frMethod({
+              $tableSelect: $xeTableSelect,
+              row,
+              filterValue: searchValue,
+              value: modelValue
+            }))
+            : fullData
+        } else if (filterable) {
+          avList = searchStr ? fullData.filter(row => (`${row[labelField] || row[valueField]}`.toLowerCase().indexOf(searchStr) > -1)) : fullData
+        } else {
+          avList = fullData
+        }
+      }
+      avList.forEach((item, index) => {
+        const cacheItem = fullValMaps[item[valueField]]
+        if (cacheItem) {
+          cacheItem._index = index
+        }
+      })
+      internalData.afterVisibleList = avList
+      return nextTick()
     }
 
     const updateZindex = () => {
@@ -489,8 +553,10 @@ export default defineVxeComponent({
     }
 
     const showOptionPanel = () => {
-      const { loading } = props
+      const { loading, remote, filterable } = props
+      const { fullData } = internalData
       const isDisabled = computeIsDisabled.value
+      const remoteOpts = computeRemoteOpts.value
       if (!loading && !isDisabled) {
         if (internalData.vpTimeout) {
           clearTimeout(internalData.vpTimeout)
@@ -501,12 +567,18 @@ export default defineVxeComponent({
         if (!reactData.initialized) {
           reactData.initialized = true
         }
+        if (filterable) {
+          if (remote && remoteOpts.enabled && remoteOpts.autoLoad && !fullData.length) {
+            handleSearchEvent()
+          }
+        }
         reactData.isActivated = true
         reactData.isAniVisible = true
         internalData.vpTimeout = setTimeout(() => {
           reactData.visiblePanel = true
           updateModel(props.modelValue)
           internalData.vpTimeout = undefined
+          handleFocusSearch()
           updatePlacement()
         }, 10)
         updateZindex()
@@ -515,7 +587,14 @@ export default defineVxeComponent({
     }
 
     const hideOptionPanel = () => {
+      const { filterable } = props
+      const filterOpts = computeFilterOpts.value
       reactData.visiblePanel = false
+      if (filterable) {
+        if (filterOpts.clearOnClose) {
+          reactData.searchValue = ''
+        }
+      }
       if (internalData.vpTimeout) {
         clearTimeout(internalData.vpTimeout)
       }
@@ -527,6 +606,42 @@ export default defineVxeComponent({
         internalData.hpTimeout = undefined
       }, 350)
     }
+
+    const handleData = () => {
+      const { afterVisibleList } = internalData
+      reactData.tableData = afterVisibleList
+      return nextTick()
+    }
+
+    const modelSearchEvent = (value: string) => {
+      reactData.searchValue = value
+    }
+
+    const focusSearchEvent = () => {
+      reactData.isActivated = true
+    }
+
+    const handleSearchEvent = () => {
+      const { modelValue, remote } = props
+      const { searchValue } = reactData
+      const remoteOpts = computeRemoteOpts.value
+      const queryMethod = remoteOpts.queryMethod
+      if (remote && queryMethod && remoteOpts.enabled) {
+        reactData.searchLoading = true
+        Promise.resolve(
+          queryMethod({ $tableSelect: $xeTableSelect, searchValue, value: modelValue })
+        ).then(() => nextTick())
+          .catch(() => nextTick())
+          .finally(() => {
+            reactData.searchLoading = false
+          })
+      } else {
+        handleOptList()
+        handleData()
+      }
+    }
+
+    const triggerSearchEvent = XEUtils.debounce(handleSearchEvent, 350, { trailing: true })
 
     const changeEvent = (evnt: Event, selectValue: any, row: any) => {
       emitModel(selectValue)
@@ -594,6 +709,17 @@ export default defineVxeComponent({
       const { visiblePanel } = reactData
       if (visiblePanel) {
         updatePlacement()
+      }
+    }
+
+    const handleFocusSearch = () => {
+      if (props.filterable) {
+        nextTick(() => {
+          const inpSearch = refInpSearch.value
+          if (inpSearch) {
+            inpSearch.focus()
+          }
+        })
       }
     }
 
@@ -666,8 +792,8 @@ export default defineVxeComponent({
     Object.assign($xeTableSelect, tableSelectMethods, tableSelectPrivateMethods)
 
     const renderVN = () => {
-      const { className, options, loading } = props
-      const { initialized, isActivated, isAniVisible, visiblePanel, tableColumns } = reactData
+      const { className, loading, filterable, remote } = props
+      const { initialized, isActivated, isAniVisible, visiblePanel, tableColumns, searchValue, tableData, searchLoading } = reactData
       const vSize = computeSize.value
       const isDisabled = computeIsDisabled.value
       const selectLabel = computeSelectLabel.value
@@ -676,6 +802,7 @@ export default defineVxeComponent({
       const popupOpts = computePopupOpts.value
       const selectGridOpts = computeSelectGridOpts.value
       const rowOpts = computeRowOpts.value
+      const filterOpts = computeFilterOpts.value
       const popupWrapperStyle = computePopupWrapperStyle.value
       const { appendTo } = popupOpts
       const headerSlot = slots.header
@@ -697,6 +824,7 @@ export default defineVxeComponent({
         ref: refElem,
         class: ['vxe-table-select', className ? (XEUtils.isFunction(className) ? className({ $tableSelect: $xeTableSelect }) : className) : '', {
           [`size--${vSize}`]: vSize,
+          'is--filterable': filterable,
           'is--visible': visiblePanel,
           'is--disabled': isDisabled,
           'is--loading': loading,
@@ -742,6 +870,26 @@ export default defineVxeComponent({
                 h('div', {
                   class: 'vxe-table-select--panel-wrapper'
                 }, [
+                  filterable
+                    ? h('div', {
+                      class: 'vxe-table-select--panel-search'
+                    }, [
+                      h(VxeInputComponent, {
+                        ref: refInpSearch,
+                        class: 'vxe-table-select-search--input',
+                        modelValue: searchValue,
+                        clearable: true,
+                        disabled: false,
+                        readonly: false,
+                        placeholder: getI18n('vxe.treeSelect.search'),
+                        prefixIcon: getIcon().INPUT_SEARCH,
+                        'onUpdate:modelValue': modelSearchEvent,
+                        onFocus: focusSearchEvent,
+                        onChange: triggerSearchEvent,
+                        onSearch: triggerSearchEvent
+                      })
+                    ])
+                    : renderEmptyElement($xeTableSelect),
                   headerSlot
                     ? h('div', {
                       class: 'vxe-table-select--panel-header'
@@ -761,8 +909,9 @@ export default defineVxeComponent({
                           ...gridEvents,
                           class: 'vxe-table-select--grid',
                           ref: refGrid,
+                          loading: remote && searchLoading,
                           rowConfig: rowOpts,
-                          data: options,
+                          data: tableData,
                           columns: tableColumns.length ? tableColumns : selectGridOpts.columns,
                           height: '100%',
                           autoResize: true,
@@ -777,10 +926,16 @@ export default defineVxeComponent({
                         : renderEmptyElement($xeTableSelect)
                     ])
                   ]),
-                  footerSlot
+                  footerSlot || (filterable && searchValue && !remote && filterOpts.showResultCount)
                     ? h('div', {
                       class: 'vxe-table-select--panel-footer'
-                    }, footerSlot({}))
+                    }, footerSlot
+                      ? footerSlot({})
+                      : [
+                          h('div', {
+                            class: 'vxe-table-select--search-count'
+                          }, searchLoading ? '' : getI18n('vxe.tableSelect.filterCount', [tableData.length]))
+                        ])
                     : renderEmptyElement($xeTableSelect)
                 ])
               ]
@@ -789,20 +944,20 @@ export default defineVxeComponent({
       ])
     }
 
-    watch(() => props.options, () => {
-      cacheDataMap()
+    watch(() => props.options, (val) => {
+      loadData(val || [])
     })
 
     watch(() => props.columns, (val) => {
-      loadTableColumn(val)
+      loadColumn(val)
     })
 
     watch(() => props.modelValue, (val) => {
       updateModel(val)
     })
 
-    loadTableColumn(props.columns)
-    cacheDataMap()
+    loadColumn(props.columns)
+    loadData(props.options || [])
 
     onMounted(() => {
       const { gridConfig } = props

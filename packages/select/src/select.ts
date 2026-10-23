@@ -723,9 +723,20 @@ export default defineVxeComponent({
         avList = fullData.filter(isOptionVisible)
       } else {
         if (filterable && frMethod) {
-          avList = fullData.filter(option => isOptionVisible(option) && frMethod({ $select: $xeSelect, group: null, option, searchValue, value: modelValue }))
+          avList = searchValue
+            ? fullData.filter(option => {
+              return isOptionVisible(option) && frMethod({
+                $select: $xeSelect,
+                group: null,
+                option,
+                filterValue: searchValue,
+                searchValue: searchValue,
+                value: modelValue
+              })
+            })
+            : fullData
         } else if (filterable) {
-          avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1))
+          avList = searchStr ? fullData.filter(option => isOptionVisible(option) && (`${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1)) : fullData
         } else {
           avList = fullData.filter(isOptionVisible)
         }

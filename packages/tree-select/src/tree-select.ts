@@ -98,7 +98,7 @@ export default defineVxeComponent({
       default: () => getConfig().treeSelect.size || getConfig().size
     },
     remote: Boolean as PropType<VxeTreeSelectPropTypes.Remote>,
-    remoteConfig: Function as PropType<VxeTreeSelectPropTypes.RemoteConfig>,
+    remoteConfig: Object as PropType<VxeTreeSelectPropTypes.RemoteConfig>,
     showRadio: {
       type: Boolean as PropType<VxeTreeSelectPropTypes.ShowRadio>,
       default: () => getConfig().treeSelect.showRadio
