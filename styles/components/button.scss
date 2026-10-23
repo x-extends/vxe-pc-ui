@@ -52,8 +52,8 @@
   position: relative;
   background-color: var(--vxe-ui-layout-background-color);
   outline: 0;
-  font-size: var(--vxe-ui-button-current-font-size);
   max-width: var(--vxe-ui-button-max-width);
+  font-size: var(--vxe-ui-button-current-font-size);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -296,7 +296,6 @@
 
 .vxe-button--dropdown-icon {
   display: inline-block;
-  font-size: 12px;
   margin-left: 4px;
   @include baseMixin.createAnimationTransition(transform, .2s);
 }

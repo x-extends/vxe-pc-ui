@@ -6,6 +6,14 @@
 .vxe-cascader--panel {
   --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-cascader-current-padding: var(--vxe-ui-layout-padding-default);
+  &.size--xlarge {
+    --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-cascader-current-padding: var(--vxe-ui-layout-padding-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-cascader-current-padding: var(--vxe-ui-layout-padding-large);
+  }
   &.size--medium {
     --vxe-ui-cascader-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-cascader-current-padding: var(--vxe-ui-layout-padding-medium);

@@ -1,6 +1,12 @@
 // 局部变量
 .vxe-layout-container {
   --vxe-ui-layout-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--xlarge {
+    --vxe-ui-layout-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-layout-current-font-size: var(--vxe-ui-font-size-large);
+  }
   &.size--medium {
     --vxe-ui-layout-current-font-size: var(--vxe-ui-font-size-medium);
   }

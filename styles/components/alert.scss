@@ -1,6 +1,26 @@
 @use 'sass:map';
 @use "sass:list";
 
+// 局部变量
+.vxe-alert {
+  --vxe-ui-alert-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--xlarge {
+    --vxe-ui-alert-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-alert-current-font-size: var(--vxe-ui-font-size-large);
+  }
+  &.size--medium {
+    --vxe-ui-alert-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-alert-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-alert-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 $btnThemeList: (
   (
     name: "primary",
@@ -49,6 +69,10 @@ $btnThemeList: (
   margin-bottom: var(--vxe-ui-layout-padding-default);
   font-size: var(--vxe-ui-font-size-default);
   border-radius: var(--vxe-ui-base-border-radius);
+  &[class^="size--"],
+  &[class*=" size--"] {
+    font-size: var(--vxe-ui-alert-current-font-size);
+  }
   @for $index from 0 to list.length($btnThemeList) {
     $item: list.nth($btnThemeList, $index + 1);
     &.theme--#{map.get($item, name)} {
@@ -67,15 +91,6 @@ $btnThemeList: (
         }
       }
     }
-  }
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
   }
 }
 .vxe-alert--icon {

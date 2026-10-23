@@ -5,6 +5,14 @@
 .vxe-ico-picker--panel {
   --vxe-ui-ico-picker-current-font-size: var(--vxe-ui-font-size-default);
   --vxe-ui-ico-picker-current-height: var(--vxe-ui-input-height-default);
+  &.size--xlarge {
+    --vxe-ui-ico-picker-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-ico-picker-current-height: var(--vxe-ui-input-height-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-ico-picker-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-ico-picker-current-height: var(--vxe-ui-input-height-large);
+  }
   &.size--medium {
     --vxe-ui-ico-picker-current-font-size: var(--vxe-ui-font-size-medium);
     --vxe-ui-ico-picker-current-height: var(--vxe-ui-input-height-medium);

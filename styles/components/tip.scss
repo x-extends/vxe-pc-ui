@@ -1,6 +1,26 @@
 @use "sass:map";
 @use "sass:list";
 
+// 局部变量
+.vxe-tip {
+  --vxe-ui-tip-current-font-size: var(--vxe-ui-font-size-default);
+  &.size--xlarge {
+    --vxe-ui-tip-current-font-size: var(--vxe-ui-font-size-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-tip-current-font-size: var(--vxe-ui-font-size-large);
+  }
+  &.size--medium {
+    --vxe-ui-tip-current-font-size: var(--vxe-ui-font-size-medium);
+  }
+  &.size--small {
+    --vxe-ui-tip-current-font-size: var(--vxe-ui-font-size-small);
+  }
+  &.size--mini {
+    --vxe-ui-tip-current-font-size: var(--vxe-ui-font-size-mini);
+  }
+}
+
 $btnThemeList: (
   (
     name: "primary",
@@ -39,6 +59,7 @@ $btnThemeList: (
   display: flex;
   flex-direction: row;
   color: var(--vxe-ui-font-color);
+  font-size: var(--vxe-ui-tip-current-font-size);
   margin-bottom: var(--vxe-ui-layout-padding-default);
   padding: var(--vxe-ui-layout-padding-default) var(--vxe-ui-layout-padding-double);
   &::after {
@@ -82,17 +103,4 @@ $btnThemeList: (
   font-size: 1.1em;
   line-height: 2em;
   font-weight: 700;
-}
-
-.vxe-tip {
-  font-size: var(--vxe-ui-font-size-default);
-  &.size--medium {
-    font-size: var(--vxe-ui-font-size-medium);
-  }
-  &.size--small {
-    font-size: var(--vxe-ui-font-size-small);
-  }
-  &.size--mini {
-    font-size: var(--vxe-ui-font-size-mini);
-  }
 }
