@@ -42,6 +42,45 @@ export namespace VxeTableSelectPropTypes {
     disabled?: string
     children?: string
   }
+  export type Filterable = boolean
+  export interface FilterConfig<D = any> {
+    /**
+     * 是否显示过滤结果条数
+     */
+    showResultCount?: boolean
+    /**
+     * 是否在关闭下拉面板时自动清空过滤条件
+     */
+    clearOnClose?: boolean
+    /**
+     * 自定义过滤方法
+     */
+    filterMethod?: (params: {
+      $tableSelect: VxeTableSelectConstructor
+      row: D
+      filterValue: string
+      value: ModelValue | undefined
+    }) => boolean
+  }
+  export type Remote = boolean
+  export interface RemoteConfig {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 当列表为空时，是否默认自动调用远程查询方法
+     */
+    autoLoad?: boolean
+    /**
+     * 远程查询方法
+     */
+    queryMethod?(params: {
+      $tableSelect: VxeTableSelectConstructor
+      searchValue: string
+      value: ModelValue | undefined
+    }): Promise<void> | void
+  }
   export type Transfer = boolean
   export interface PopupConfig {
     /**
@@ -85,9 +124,13 @@ export interface VxeTableSelectProps<D = any> {
   prefixIcon?: VxeTableSelectPropTypes.PrefixIcon
   placement?: VxeTableSelectPropTypes.Placement
   columns?: VxeTableSelectPropTypes.Columns
-  options?: VxeTableSelectPropTypes.Options
+  options?: VxeTableSelectPropTypes.Options<D>
   lazyOptions?: VxeTableSelectPropTypes.LazyOptions
   optionProps?: VxeTableSelectPropTypes.OptionProps
+  filterable?: VxeTableSelectPropTypes.Filterable
+  filterConfig?: VxeTableSelectPropTypes.FilterConfig<D>
+  remote?: VxeTableSelectPropTypes.Remote
+  remoteConfig?: VxeTableSelectPropTypes.RemoteConfig
   transfer?: VxeTableSelectPropTypes.Transfer
   popupConfig?: VxeTableSelectPropTypes.PopupConfig
   gridConfig?: VxeTableSelectPropTypes.GridConfig<D>
@@ -105,8 +148,10 @@ export interface VxeTableSelectPrivateComputed extends TableSelectPrivateCompute
 
 export interface TableSelectReactData {
   initialized: boolean
+  searchValue: string
+  searchLoading: boolean
+  tableData: any[]
   tableColumns: VxeGridPropTypes.Columns
-  fullOptionList: any[]
   panelIndex: number
   panelStyle: any
   panelPlacement: any
@@ -116,9 +161,12 @@ export interface TableSelectReactData {
   isActivated: boolean
 }
 export interface TableSelectInternalData {
-  fullRowMaps: Record<string, {
+  fullData: any[]
+  afterVisibleList: any[]
+  fullValMaps: Record<string, {
     item: any
     index: number
+    _index: number
     items: any[]
     parent: any
     nodes: any[]

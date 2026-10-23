@@ -415,6 +415,10 @@ setConfig({
   switch: {},
   tabPane: {},
   tableSelect: {
+    remoteConfig: {
+      enabled: true,
+      autoLoad: true
+    },
     gridConfig: {
       showOverflow: true,
       showHeaderOverflow: true,
@@ -493,6 +497,10 @@ setConfig({
       enabled: true,
       gt: 0,
       oSize: 2
+    },
+    remoteConfig: {
+      enabled: true,
+      autoLoad: true
     },
     treeConfig: {
       maxHeight: 300,

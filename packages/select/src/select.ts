@@ -849,7 +849,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
 
-      const { remote, value, filterable } = props
+      const { remote, value: modelValue, filterable } = props
       const { searchValue } = reactData
       const { fullData, optFullValMaps } = internalData
       const labelField = $xeSelect.computeLabelField
@@ -862,9 +862,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
         avList = fullData.filter(isOptionVisible)
       } else {
         if (filterable && frMethod) {
-          avList = fullData.filter(option => isOptionVisible(option) && frMethod({ $select: $xeSelect, group: null, option, searchValue, value }))
+          avList = searchValue
+            ? fullData.filter(option => {
+              return isOptionVisible(option) && frMethod({
+                $select: $xeSelect,
+                group: null,
+                option,
+                filterValue: searchValue,
+                searchValue: searchValue,
+                value: modelValue
+              })
+            })
+            : fullData
         } else if (filterable) {
-          avList = fullData.filter(option => isOptionVisible(option) && (!searchStr || `${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1))
+          avList = searchStr ? fullData.filter(option => isOptionVisible(option) && (`${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1)) : fullData
         } else {
           avList = fullData.filter(isOptionVisible)
         }
