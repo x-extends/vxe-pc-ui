@@ -837,9 +837,17 @@ export namespace VxeTablePropTypes {
      */
     isToChildDrag?: boolean
     /**
-     * 需要 isCrossDrag，只对 tree-config 启用有效，是否允许将自己拖拽到子级行中
+     * 需要 isCrossDrag，只对 tree-config 启用有效，是否允许将自己拖拽到子级中
      */
     isSelfToChildDrag?: boolean
+    /**
+     * 需要 isToChildDrag 启用有效，只对 tree-config 和 tree-config.lazy 启用有效，是否在拖拽到未展开的懒加载树节点时，自动触发加载子级并将当前数据插入子级；如果已设置 isAutoExpandToChild 则该属性会被忽略
+     */
+    isAutoLazyLoadToChild?: boolean
+    /**
+     * 需要 isToChildDrag 启用有效，是否在拖拽成子级时自动展开目标节点
+     */
+    isAutoExpandToChild?: boolean
     /**
      * 是否允许在不同表格之间进行拖拽
      */
@@ -5409,8 +5417,9 @@ export interface TableMethods<DT = any> {
   /**
    * 重新懒加载树节点，并展开该节点
    * @param rows 指定行
+   * @param autoExpand 默认true，自动展开
    */
-  reloadTreeExpand(row: any): Promise<any>
+  reloadTreeExpand(row: any, autoExpand?: boolean): Promise<any>
   /**
    * @deprecated 已废弃，请使用 reloadTreeExpand
    */
@@ -5648,7 +5657,7 @@ export interface TablePrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  cacheRowMap(isReset: boolean): void
+  cacheRowMap(isReset: boolean, isReLoaded: boolean): void
   /**
    * 内部方法
    * @private
