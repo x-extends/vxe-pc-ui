@@ -1,15 +1,11 @@
 import type { VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
 
-interface CrossTreeDragNodeObj {
-  node: any
-}
-
 // 跨表拖拽
-export const crossTreeDragNodeGlobal: CrossTreeDragNodeObj = {
-  node: null
+export const crossTreeDragNodeGlobal = {
+  node: null as any
 }
 
 export function getCrossTreeDragNodeInfo ($xeTree: VxeTreeConstructor & VxeTreePrivateMethods) {
-  const crossTreeDragNodeInfo = ($xeTree as any).crossTreeDragNodeInfo as CrossTreeDragNodeObj
+  const crossTreeDragNodeInfo = ($xeTree as any).crossTreeDragNodeInfo as typeof crossTreeDragNodeGlobal
   return crossTreeDragNodeInfo
 }
