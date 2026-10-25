@@ -1,6 +1,5 @@
 import XEUtils from 'xe-utils'
-import { getConfig } from '@vxe-ui/core'
-import DomZIndex from 'dom-zindex'
+import { getConfig, zIndex } from '@vxe-ui/core'
 
 export function isEnableConf (conf: any): boolean {
   return conf && conf.enabled !== false
@@ -17,19 +16,19 @@ export function hasEnableConf (conf: any, opts: any): boolean {
 }
 
 export function nextZIndex () {
-  return DomZIndex.getNext()
+  return zIndex.next()
 }
 
 export function getLastZIndex () {
-  return DomZIndex.getCurrent()
+  return zIndex.getLast()
 }
 
 export function nextSubZIndex () {
-  return DomZIndex.getSubNext()
+  return zIndex.nextSub()
 }
 
 export function getSubLastZIndex () {
-  return DomZIndex.getSubCurrent()
+  return zIndex.getSubLast()
 }
 
 export function getGlobalDefaultConfig (value: any, globalValue: any) {

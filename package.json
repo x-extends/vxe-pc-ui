@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "4.20.19",
+  "version": "4.20.20",
   "description": "A vue based PC component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -27,7 +27,7 @@
   "style": "lib/style.css",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "@vxe-ui/core": "^4.4.38"
+    "@vxe-ui/core": "^4.4.41"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
@@ -48,6 +48,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^8.0.3",
+    "esbuild": "~0.28.2",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-babel": "^8.0.0",
