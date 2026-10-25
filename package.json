@@ -8,7 +8,8 @@
     "lib:pack": "vue-cli-service build --target lib --name index --dest lib_temp index.ts",
     "lib:modules": "gulp build",
     "lib:old": "npm run lib:pack && npm run lib:modules",
-    "lib": "node scripts/build-modules.js",
+    "lib:new": "node scripts/build-modules.js",
+    "lib": "npm run lib:new",
     "sync:i18n": "node ./syncI18n.js && eslint --fix --ext .js,.ts packages/language/*"
   },
   "files": [

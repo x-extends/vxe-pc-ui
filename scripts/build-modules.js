@@ -680,6 +680,7 @@ async function main () {
   const t0 = Date.now()
 
   console.log(`[build] 源码 ${SRC} | CPU ${os.cpus().length} 核`)
+  console.log(`[build] 组件 Define 包裹: ${doStripDefineWrapper ? '开启' : '关闭'}`)
   console.log(`[build] 输出 es=${OUT_ES}  lib=${OUT_LIB}  dist=${OUT_DIST}`)
   if (DO_LOCALE) {
     console.log(`[build] 语言包输出: ${localeOut}`)
