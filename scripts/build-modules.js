@@ -437,6 +437,8 @@ async function buildBundle () {
 
   await fsp.mkdir(DIST_DIR, { recursive: true })
 
+  const srcPlugins = doStripDefineWrapper ? [stripDefineVxeComponentPlugin] : []
+
   const outFile = path.join(DIST_DIR, 'all.esm.js')
   await esbuild.build({
     entryPoints: [entry],
@@ -454,7 +456,7 @@ async function buildBundle () {
     tsconfig: TSCONFIG,
     loader: { '.ts': 'ts', '.tsx': 'tsx' },
     define: DEFINE,
-    plugins: doStripDefineWrapper ? [scssStubPlugin, stripDefineVxeComponentPlugin] : []
+    plugins: [scssStubPlugin, ...srcPlugins]
   })
 
   return `${OUT_DIST}/all.esm.js`
@@ -525,6 +527,8 @@ async function buildUmdBundle () {
   const unMinPath = path.join(LIB_DIR, umdFile)
   const minPath = path.join(LIB_DIR, umdMinFile)
 
+  const srcPlugins = doStripDefineWrapper ? [stripDefineVxeComponentPlugin] : []
+
   await esbuild.build({
     entryPoints: [entry],
     outfile: unMinPath,
@@ -542,7 +546,7 @@ async function buildUmdBundle () {
     tsconfig: TSCONFIG,
     loader: { '.ts': 'ts', '.tsx': 'tsx' },
     define: DEFINE,
-    plugins: [scssStubPlugin, stripDefineVxeComponentPlugin],
+    plugins: [scssStubPlugin, ...srcPlugins],
     banner: { js: bannerJs },
     footer: { js: footerJs }
   })
@@ -567,10 +571,22 @@ async function buildLocales () {
   try { stat = await fsp.stat(LOCALE_DIR_TMPL) } catch { return null }
   if (!stat.isDirectory()) return null
 
-  const langFiles = FILES.filter(f => f.startsWith(LOCALE_DIR_TMPL) && f.endsWith('.ts'))
+  const localePrefix = LOCALE_DIR_TMPL + path.sep
+  const langFiles = FILES.filter(f => f.startsWith(localePrefix) && f.endsWith('.ts'))
   if (!langFiles.length) return null
 
   await fsp.mkdir(LOCALE_OUT_DIR, { recursive: true })
+
+  // 判断目录 locale/lang 是否存在
+  const oldLocaleOutDir = path.resolve(ROOT, 'lib/locale/lang')
+  let hasOldLocaleOutDir = false
+  try {
+    const st = await fsp.stat(path.resolve(SRC_TMPL_DIR, 'locale/lang'))
+    hasOldLocaleOutDir = st.isDirectory()
+  } catch { }
+  if (hasOldLocaleOutDir) {
+    await fsp.mkdir(oldLocaleOutDir, { recursive: true })
+  }
 
   const results = await Promise.all(langFiles.map(async file => {
     const fileName = path.basename(file, '.ts')
@@ -595,24 +611,32 @@ async function buildLocales () {
 });`
 
     const tempOut = path.join(LOCALE_OUT_DIR, `.${fileName}.tmp`)
+    try {
+      await esbuild.build({
+        entryPoints: [file],
+        outfile: tempOut,
+        packages: 'external',
+        bundle: true,
+        format: 'cjs',
+        target: 'es2018',
+        platform: 'neutral',
+        charset: 'utf8',
+        banner: { js: banner },
+        footer: { js: footer }
+      })
 
-    await esbuild.build({
-      entryPoints: [file],
-      outfile: tempOut,
-      packages: 'external',
-      bundle: true,
-      format: 'cjs',
-      target: 'es2018',
-      platform: 'neutral',
-      charset: 'utf8',
-      banner: { js: banner },
-      footer: { js: footer }
-    })
+      const code = await fsp.readFile(tempOut, 'utf8')
 
-    const code = await fsp.readFile(tempOut, 'utf8')
-    await fsp.unlink(tempOut)
+      const writes = [fsp.writeFile(path.join(LOCALE_OUT_DIR, `${fileName}.umd.js`), code)]
 
-    await fsp.writeFile(path.join(LOCALE_OUT_DIR, `${fileName}.umd.js`), code)
+      // 兼容旧版本
+      if (hasOldLocaleOutDir) {
+        writes.push(fsp.writeFile(path.join(oldLocaleOutDir, `${fileName}.umd.js`), code))
+      }
+      await Promise.all(writes)
+    } finally {
+      await fsp.unlink(tempOut).catch(() => { })
+    }
 
     return `${fileName}.umd.js`
   }))
@@ -625,6 +649,7 @@ async function buildLocales () {
 let FILES = []
 
 function esbuildTranspile (format, outdir) {
+  const srcPlugins = doStripDefineWrapper ? [stripDefineVxeComponentPlugin] : []
   return esbuild.build({
     entryPoints: FILES,
     outdir,
@@ -640,7 +665,7 @@ function esbuildTranspile (format, outdir) {
     tsconfig: TSCONFIG,
     loader: { '.ts': 'ts', '.tsx': 'tsx' },
     define: DEFINE,
-    plugins: [stripDefineVxeComponentPlugin]
+    plugins: srcPlugins
   })
 }
 
