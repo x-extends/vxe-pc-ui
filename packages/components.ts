@@ -251,6 +251,10 @@ export const saveFile = saveLocalFile
  */
 export const readFile = readLocalFile
 
+// eslint-disable-next-line import/export
+export { VxeUI }
+
+// eslint-disable-next-line import/export
 export * from '@vxe-ui/core'
 
 // 兼容老版本
