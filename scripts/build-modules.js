@@ -560,7 +560,7 @@ async function buildUmdBundle () {
   })
   await fsp.writeFile(minPath, minCode)
 
-  return `${OUT_LIB}/${umdFile} + ${umdMinFile}`
+  return `${OUT_LIB}`
 }
 
 /* ------------------------------ 语言包编译 ------------------------------ */
