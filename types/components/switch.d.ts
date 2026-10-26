@@ -56,7 +56,7 @@ export interface SwitchReactData {
 }
 
 export interface SwitchInternalData {
-  atTimeout?: number
+  atTimeout?: ReturnType<typeof setTimeout>
 }
 
 export interface SwitchMethods {

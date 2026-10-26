@@ -99,8 +99,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
           rowGap = gap[0]
           columGap = gap[1]
         } else {
-          rowGap = gap.rowGap || ''
-          columGap = gap.columGap || ''
+          rowGap = XEUtils.eqNull(gap.rowGap) ? '' : gap.rowGap
+          columGap = XEUtils.eqNull(gap.columGap) ? '' : gap.columGap
         }
       }
       if (width) {
@@ -141,7 +141,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const separatorSlot = slots.separator
       const srStys: VxeComponentStyleType = {}
       if (separatorWidth) {
-        srStys.width = toCssUnit(itemWidth)
+        srStys.width = toCssUnit(separatorWidth)
       }
       const itemStys: VxeComponentStyleType = {}
       if (itemWidth) {

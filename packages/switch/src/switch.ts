@@ -7,6 +7,20 @@ import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeSwitchPropTypes, VxeSwitchEmits, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, SwitchReactData, SwitchInternalData, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
+function createReactData (): SwitchReactData {
+  return {
+    isActivated: false,
+    hasAnimat: false,
+    offsetLeft: 0
+  }
+}
+
+function createInternalData (): SwitchInternalData {
+  return {
+    // atTimeout: undefined
+  }
+}
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSwitch',
   mixins: [
@@ -52,17 +66,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   data () {
-    const reactData: SwitchReactData = {
-      isActivated: false,
-      hasAnimat: false,
-      offsetLeft: 0
-    }
-    const internalData: SwitchInternalData = {
-    }
+    const xID = XEUtils.uniqueId()
+    const reactData = createReactData()
+
     return {
-      xID: XEUtils.uniqueId(),
-      reactData,
-      internalData
+      ...({} as {
+        internalData: SwitchInternalData
+      }),
+      xID,
+      reactData
     }
   },
   computed: {
@@ -167,7 +179,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isReadonly = $xeSwitch.computeIsReadonly
       if (!(isDisabled || isReadonly)) {
         const isChecked = $xeSwitch.computeIsChecked
-        clearTimeout(internalData.atTimeout)
+        const { atTimeout } = internalData
+        if (atTimeout) {
+          clearTimeout(atTimeout)
+        }
         const value = isChecked ? props.closeValue : props.openValue
         reactData.hasAnimat = true
         $xeSwitch.emitModel(value)
@@ -208,6 +223,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeSwitch.reactData
 
       const { openIcon, closeIcon, openActiveIcon, closeActiveIcon } = props
+      const { hasAnimat, isActivated } = reactData
       const vSize = $xeSwitch.computeSize
       const isChecked = $xeSwitch.computeIsChecked
       const onShowLabel = $xeSwitch.computeOnShowLabel
@@ -226,9 +242,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return h('div', {
         class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
           [`size--${vSize}`]: vSize,
+          'is--active': isActivated,
           'is--disabled': isDisabled,
           'is--readonly': isReadonly,
-          'is--animat': reactData.hasAnimat
+          'is--animat': hasAnimat
         }]
       }, [
         h('button', {
@@ -276,6 +293,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
         ])
       ])
     }
+  },
+  created () {
+    const $xeSwitch = this
+
+    $xeSwitch.internalData = createInternalData()
+  },
+  beforeDestroy () {
+    const $xeSwitch = this
+    const internalData = $xeSwitch.internalData
+
+    const { atTimeout } = internalData
+    if (atTimeout) {
+      clearTimeout(atTimeout)
+    }
+  },
+  destroyed () {
+    const $xeSwitch = this
+    const reactData = $xeSwitch.reactData
+    const internalData = $xeSwitch.internalData
+
+    XEUtils.assign(reactData, createReactData())
+    XEUtils.assign(internalData, createInternalData())
   },
   render (this: any, h) {
     return this.renderVN(h)
