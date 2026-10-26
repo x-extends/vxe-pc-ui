@@ -253,6 +253,9 @@ export const readFile = readLocalFile
 
 export { VxeUI }
 
+// 兼容老版本
+export * from './ui'
+
 // Components
 export * from './alert'
 export * from './anchor'
