@@ -24,7 +24,7 @@ export interface VxeTreeConstructor<D = any> extends VxeComponentBaseOptions, Vx
 export interface TreePrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeTreePrivateRef extends TreePrivateRef { }
+export interface VxeTreePrivateRef extends TreePrivateRef {}
 
 export namespace VxeTreePropTypes {
   export type Data<D = any> = D[]
@@ -73,11 +73,7 @@ export namespace VxeTreePropTypes {
     /**
      * 该方法可以通过返回值来重写默认的提示内容，可以返回 null 使用默认的提示内容，可以返回空内容去掉指定单元格的提示内容
      */
-    contentMethod?(params: {
-      $tree: VxeTreeConstructor<D>
-      node: D
-      $event: any
-    }): string | boolean | null | void
+    contentMethod?(params: { $tree: VxeTreeConstructor<D>; node: D; $event: any }): string | boolean | null | void
   }
   export interface LoadingConfig {
     /**
@@ -123,15 +119,9 @@ export namespace VxeTreePropTypes {
   export interface RadioConfig<D = any> {
     strict?: boolean
     visibleMode?: 'all' | 'first' | 'last' | '' | null
-    visibleMethod?: (params: {
-      $tree: VxeTreeConstructor
-      node: D
-     }) => boolean
+    visibleMethod?: (params: { $tree: VxeTreeConstructor; node: D }) => boolean
     checkMode?: 'all' | 'first' | 'last' | '' | null
-    checkMethod?: (params: {
-      $tree: VxeTreeConstructor
-      node: D
-     }) => boolean
+    checkMethod?: (params: { $tree: VxeTreeConstructor; node: D }) => boolean
     highlight?: boolean
     showIcon?: boolean
     trigger?: '' | 'default' | 'node'
@@ -143,15 +133,9 @@ export namespace VxeTreePropTypes {
     checkStrictly?: boolean
     highlight?: boolean
     visibleMode?: 'all' | 'first' | 'last' | '' | null
-    visibleMethod?: (params: {
-      $tree: VxeTreeConstructor
-      node: D
-     }) => boolean
+    visibleMethod?: (params: { $tree: VxeTreeConstructor; node: D }) => boolean
     checkMode?: 'all' | 'first' | 'last' | '' | null
-    checkMethod?: (params: {
-      $tree: VxeTreeConstructor
-      node: D
-    }) => boolean
+    checkMethod?: (params: { $tree: VxeTreeConstructor; node: D }) => boolean
     showIcon?: boolean
     trigger?: '' | 'default' | 'node'
     nodeStyle?: {
@@ -166,19 +150,9 @@ export namespace VxeTreePropTypes {
     trigger?: '' | 'default' | 'all' | 'parent' | 'child'
   }
   export type Lazy = boolean
-  export type VisibleMethod<D = any> = (params: {
-    $tree: VxeTreeConstructor
-    node: D
-  }) => boolean
-  export type ToggleMethod<D = any> = (params: {
-    $tree: VxeTreeConstructor
-    expanded: boolean
-    node: D
-  }) => boolean
-  export type LoadMethod<D = any> = (params: {
-    $tree: VxeTreeConstructor
-    node: D
-  }) => Promise<any[]>
+  export type VisibleMethod<D = any> = (params: { $tree: VxeTreeConstructor; node: D }) => boolean
+  export type ToggleMethod<D = any> = (params: { $tree: VxeTreeConstructor; expanded: boolean; node: D }) => boolean
+  export type LoadMethod<D = any> = (params: { $tree: VxeTreeConstructor; node: D }) => Promise<any[]>
   export type ShowIcon = boolean
   export type IconOpen = string
   export type IconClose = string
@@ -234,24 +208,15 @@ export namespace VxeTreePropTypes {
     /**
      * 是否禁用拖拽按钮
      */
-    disabledMethod?(params: {
-      $tree: VxeTreeConstructor
-      node: D
-    }): boolean
+    disabledMethod?(params: { $tree: VxeTreeConstructor; node: D }): boolean
     /**
      * 是否显示拖拽按钮
      */
-    visibleMethod?(params: {
-      $tree: VxeTreeConstructor
-      node: D
-    }): boolean
+    visibleMethod?(params: { $tree: VxeTreeConstructor; node: D }): boolean
     /**
      * 自定义提示内容
      */
-    tooltipMethod?(params: {
-      $tree: VxeTreeConstructor
-      node: D
-    }): string | number | null
+    tooltipMethod?(params: { $tree: VxeTreeConstructor; node: D }): string | number | null
     /**
      * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
      */
@@ -278,11 +243,7 @@ export namespace VxeTreePropTypes {
     /**
      * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
      */
-    visibleMethod?(params: {
-      $tree: VxeTreeConstructor
-      options: VxeContextMenuPropTypes.Options
-      node: D
-    }): boolean
+    visibleMethod?(params: { $tree: VxeTreeConstructor; options: VxeContextMenuPropTypes.Options; node: D }): boolean
   }
 
   /**
@@ -297,25 +258,15 @@ export namespace VxeTreePropTypes {
     /**
      * 过滤之前的方法
      */
-    beforeFilterMethod?(params: {
-      $tree: VxeTreeConstructor
-      filterValue: FilterValue
-    }): void
+    beforeFilterMethod?(params: { $tree: VxeTreeConstructor; filterValue: FilterValue }): void
     /**
      * 自定义过滤数据方法
      */
-    filterMethod?:(params: {
-      $tree: VxeTreeConstructor
-      node: D
-      filterValue: FilterValue
-    }) => boolean
+    filterMethod?: (params: { $tree: VxeTreeConstructor; node: D; filterValue: FilterValue }) => boolean
     /**
      * 过滤之后的方法
      */
-    afterFilterMethod?(params: {
-      $tree: VxeTreeConstructor
-      filterValue: FilterValue
-    }): void
+    afterFilterMethod?(params: { $tree: VxeTreeConstructor; filterValue: FilterValue }): void
   }
 
   export interface VirtualYConfig {
@@ -423,8 +374,8 @@ export interface VxeTreeProps<D = any> {
   visibleMethod?: VxeTreePropTypes.VisibleMethod<D>
   toggleMethod?: VxeTreePropTypes.ToggleMethod<D>
   /**
-     * 该方法用于异步加载子节点
-     */
+   * 该方法用于异步加载子节点
+   */
   loadMethod?: VxeTreePropTypes.LoadMethod<D>
   drag?: VxeTreePropTypes.Drag
   dragConfig?: VxeTreePropTypes.DragConfig
@@ -454,7 +405,7 @@ export interface TreePrivateComputed<D = any> {
   computeNodeOpts: ComputedRef<VxeTreePropTypes.NodeConfig<D>>
   computeDragOpts: ComputedRef<VxeTreePropTypes.DragConfig<D>>
 }
-export interface VxeTreePrivateComputed extends TreePrivateComputed { }
+export interface VxeTreePrivateComputed extends TreePrivateComputed {}
 
 export interface TreeReactData extends VxeUseInitVScrollbarReactData {
   parentHeight: number
@@ -700,10 +651,17 @@ export interface TreeMethods<D = any> {
   /**
    * 如果有滚动条，则滚动到对应的位置
    */
-  scrollTo(x: {
-    top?: number | null
-    left?: number | null
-  } | number | null | undefined, y?: number | null): Promise<void>
+  scrollTo(
+    x:
+      | {
+          top?: number | null
+          left?: number | null
+        }
+      | number
+      | null
+      | undefined,
+    y?: number | null
+  ): Promise<void>
   /**
    * 如果有滚动条，则滚动到指定的节点位置
    */
@@ -721,33 +679,33 @@ export interface TreeMethods<D = any> {
   /**
    * 往表格插入临时数据，从第一个节点新增一个节点或多个节点新数据
    */
-  insert(records: any): Promise<{ node: D, nodes: D[] }>
+  insert(records: any): Promise<{ node: D; nodes: D[] }>
   /**
    * 用于 transform 模式，往表格指定节点中插入临时数据
    * 如果 node 为空则从插入到顶部，如果为树结构，则插入到目标节点顶部
    * 如果 node 为 -1 则从插入到底部，如果为树结构，则插入到目标节点底部
    * 如果 node 为有效节点则插入到该节点的位置，如果为树结构，则有插入到效的目标节点该节点的位置
    */
-  insertAt(records: any, targetNodeOrNodeKey?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  insertAt(records: any, targetNodeOrNodeKey?: any | -1 | null): Promise<{ node: D; nodes: D[] }>
   /**
    * 用于 transform 模式，与 insertAt 节点为一致，区别就是会插入指定目标的到下一节点
    */
-  insertNextAt(records: any, targetNodeOrNodeKey?: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  insertNextAt(records: any, targetNodeOrNodeKey?: any | -1 | null): Promise<{ node: D; nodes: D[] }>
   /**
    * 用于树结构，往指定节点插入子级临时数据，从子级的第一行新增一行或多行新数据
    */
-  insertChild(records: any, parentNodeOrParentId: any): Promise<{ node: D, nodes: D[] }>
+  insertChild(records: any, parentNodeOrParentId: any): Promise<{ node: D; nodes: D[] }>
   /**
    * 用于树结构，往指定节点插入子级临时数据
    * 如果 targetNode 为空则从插入到顶部，如果为树结构，则插入到目标节点顶部
    * 如果 targetNode 为 -1 则从插入到底部，如果为树结构，则插入到目标节点底部
    * 如果 targetNode 为有效行则插入到该行的位置，如果为树结构，则有插入到效的目标节点该行的位置
    */
-  insertChildAt(records: any, parentNodeOrParentId: any, targetNodeOrNodeid: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  insertChildAt(records: any, parentNodeOrParentId: any, targetNodeOrNodeid: any | -1 | null): Promise<{ node: D; nodes: D[] }>
   /**
    * 与 insertChildAt 行为一致，区别就是会插入指定目标子级的到下一行
    */
-  insertChildNextAt(records: any, parentNodeOrParentId: any, targetNodeOrNodeid: any | -1 | null): Promise<{ node: D, nodes: D[] }>
+  insertChildNextAt(records: any, parentNodeOrParentId: any, targetNodeOrNodeid: any | -1 | null): Promise<{ node: D; nodes: D[] }>
   /**
    * 判断行是否为新增的临时数据
    */
@@ -755,7 +713,7 @@ export interface TreeMethods<D = any> {
   /**
    * 用于 transform 模式，删除指定节点数据，指定 node 或 [node, ...] 删除多条数据，如果为空则删除所有数据
    */
-  remove(nodes?: any | any[]): Promise<{ node: D, nodes: D[] }>
+  remove(nodes?: any | any[]): Promise<{ node: D; nodes: D[] }>
   /**
    * 用于 transform 模式，获取新增的临时数据
    */
@@ -781,7 +739,7 @@ export interface TreeMethods<D = any> {
     removeRecords: D[]
   }
 }
-export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
+export interface VxeTreeMethods<D = any> extends TreeMethods<D> {}
 
 export interface TreePrivateMethods {
   /**
@@ -833,7 +791,7 @@ export interface TreePrivateMethods {
    */
   hideCrossTreeNodeDropClearStatus(): void
 }
-export interface VxeTreePrivateMethods extends TreePrivateMethods { }
+export interface VxeTreePrivateMethods extends TreePrivateMethods {}
 
 export type VxeTreeEmits = [
   'update:modelValue',
@@ -906,9 +864,9 @@ export namespace VxeTreeDefines {
   export interface NodeClickParams<D = any> {
     node: D
   }
-  export interface NodeClickEventParams<D = any> extends TreeEventParams<D>, NodeClickParams<D> { }
+  export interface NodeClickEventParams<D = any> extends TreeEventParams<D>, NodeClickParams<D> {}
 
-  export interface NodeDblclickEventParams<D = any> extends NodeClickEventParams<D> { }
+  export interface NodeDblclickEventParams<D = any> extends NodeClickEventParams<D> {}
 
   export interface CurrentChangeEventParams<D = any> extends TreeEventParams<D> {
     node: D

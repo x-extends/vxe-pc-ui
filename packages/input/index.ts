@@ -4,7 +4,7 @@ import VxeInputConstructor from './src/input'
 import { dynamicApp } from '../dynamics'
 
 export const VxeInput = Object.assign(VxeInputConstructor, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeInputConstructor.name as string, VxeInputConstructor)
   }
 })

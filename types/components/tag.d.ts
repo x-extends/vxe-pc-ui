@@ -20,7 +20,7 @@ export interface VxeTagConstructor extends VxeComponentBaseOptions, VxeTagMethod
 export interface TagPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeTagPrivateRef extends TagPrivateRef { }
+export interface VxeTagPrivateRef extends TagPrivateRef {}
 
 export namespace VxeTagPropTypes {
   export type Border = boolean
@@ -52,9 +52,8 @@ export type VxeTagProps = {
   loading?: VxeTagPropTypes.Loading
 }
 
-export interface TagPrivateComputed {
-}
-export interface VxeTagPrivateComputed extends TagPrivateComputed { }
+export interface TagPrivateComputed {}
+export interface VxeTagPrivateComputed extends TagPrivateComputed {}
 
 export interface TagReactData {
   showTag: boolean
@@ -63,25 +62,20 @@ export interface TagReactData {
 export interface TagMethods {
   dispatchEvent(type: ValueOf<VxeTagEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeTagMethods extends TagMethods { }
+export interface VxeTagMethods extends TagMethods {}
 
-export interface TagPrivateMethods { }
-export interface VxeTagPrivateMethods extends TagPrivateMethods { }
+export interface TagPrivateMethods {}
+export interface VxeTagPrivateMethods extends TagPrivateMethods {}
 
-export type VxeTagEmits = [
-  'click',
-  'dblclick',
-  'close',
-  'update:visible'
-]
+export type VxeTagEmits = ['click', 'dblclick', 'close', 'update:visible']
 
 export namespace VxeTagDefines {
   export interface TagEventParams extends VxeComponentEventParams {
     $tag: VxeTagConstructor
   }
 
-  export interface ClickEventParams extends TagEventParams { }
-  export interface CloseEventParams extends TagEventParams { }
+  export interface ClickEventParams extends TagEventParams {}
+  export interface CloseEventParams extends TagEventParams {}
 }
 
 export type VxeTagEventProps = {

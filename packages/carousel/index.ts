@@ -4,7 +4,7 @@ import VxeCarouselComponent from './src/carousel'
 import { dynamicApp } from '../dynamics'
 
 export const VxeCarousel = Object.assign({}, VxeCarouselComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeCarouselComponent.name as string, VxeCarouselComponent)
   }
 })

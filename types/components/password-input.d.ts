@@ -20,7 +20,7 @@ export interface VxePasswordInputConstructor extends VxeComponentBaseOptions, Vx
 export interface PasswordInputPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxePasswordInputPrivateRef extends PasswordInputPrivateRef { }
+export interface VxePasswordInputPrivateRef extends PasswordInputPrivateRef {}
 
 export namespace VxePasswordInputPropTypes {
   export type Size = VxeComponentSizeType
@@ -79,9 +79,8 @@ export interface VxePasswordInputProps {
   autocomplete?: VxePasswordInputPropTypes.Autocomplete
 }
 
-export interface PasswordInputPrivateComputed {
-}
-export interface VxePasswordInputPrivateComputed extends PasswordInputPrivateComputed { }
+export interface PasswordInputPrivateComputed {}
+export interface VxePasswordInputPrivateComputed extends PasswordInputPrivateComputed {}
 
 export interface PasswordInputReactData {
   showPwd: boolean
@@ -104,24 +103,12 @@ export interface PasswordInputMethods {
    */
   select(): Promise<any>
 }
-export interface VxePasswordInputMethods extends PasswordInputMethods { }
+export interface VxePasswordInputMethods extends PasswordInputMethods {}
 
-export interface PasswordInputPrivateMethods { }
-export interface VxePasswordInputPrivateMethods extends PasswordInputPrivateMethods { }
+export interface PasswordInputPrivateMethods {}
+export interface VxePasswordInputPrivateMethods extends PasswordInputPrivateMethods {}
 
-export type VxePasswordInputEmits = [
-  'update:modelValue',
-  'input',
-  'change',
-  'click',
-  'focus',
-  'blur',
-  'clear',
-  'lazy-change',
-  'toggle-visible',
-  'prefix-click',
-  'suffix-click'
-]
+export type VxePasswordInputEmits = ['update:modelValue', 'input', 'change', 'click', 'focus', 'blur', 'clear', 'lazy-change', 'toggle-visible', 'prefix-click', 'suffix-click']
 
 export namespace VxePasswordInputDefines {
   export interface PasswordInputEventParams extends VxeComponentEventParams {

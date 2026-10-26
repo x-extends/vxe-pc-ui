@@ -20,10 +20,10 @@ declare module '@vxe-ui/core' {
       $event: Event
     }
 
-    export interface InterceptorKeydownParams extends InterceptorParams { }
-    export interface InterceptorClearFilterParams extends InterceptorParams { }
-    export interface InterceptorClearEditParams extends InterceptorParams { }
-    export interface InterceptorClearAreasParams extends InterceptorParams { }
+    export interface InterceptorKeydownParams extends InterceptorParams {}
+    export interface InterceptorClearFilterParams extends InterceptorParams {}
+    export interface InterceptorClearEditParams extends InterceptorParams {}
+    export interface InterceptorClearAreasParams extends InterceptorParams {}
 
     export interface InterceptorExportParams extends InterceptorParams {
       options: VxeTablePropTypes.ExportHandleOptions

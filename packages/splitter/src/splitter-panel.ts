@@ -1,10 +1,27 @@
 import { PropType, ref, h, reactive, watch, provide, inject, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleSplitterItem, destroySplitterItem } from './util'
 import XEUtils from 'xe-utils'
 
-import type { SplitterItemReactData, VxeSplitterPanelPropTypes, SplitterItemPrivateRef, SplitterItemInternalData, SplitterItemMethods, VxeSplitterPanelPrivateComputed, SplitterItemPrivateMethods, VxeSplitterPanelEmits, VxeSplitterPanelConstructor, ValueOf, VxeSplitterDefines, VxeSplitterPanelPrivateMethods, VxeSplitterConstructor, VxeSplitterPrivateMethods } from '../../../types'
+import type {
+  SplitterItemReactData,
+  VxeSplitterPanelPropTypes,
+  SplitterItemPrivateRef,
+  SplitterItemInternalData,
+  SplitterItemMethods,
+  VxeSplitterPanelPrivateComputed,
+  SplitterItemPrivateMethods,
+  VxeSplitterPanelEmits,
+  VxeSplitterPanelConstructor,
+  ValueOf,
+  VxeSplitterDefines,
+  VxeSplitterPanelPrivateMethods,
+  VxeSplitterConstructor,
+  VxeSplitterPrivateMethods
+} from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeSplitterPanel',
@@ -32,9 +49,8 @@ export default defineVxeComponent({
     // 已废弃
     showAction: Boolean as PropType<VxeSplitterPanelPropTypes.ShowAction>
   },
-  emits: [
-  ] as VxeSplitterPanelEmits,
-  setup (props, context) {
+  emits: [] as VxeSplitterPanelEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
@@ -63,14 +79,11 @@ export default defineVxeComponent({
       slots: slots
     })
 
-    const reactData = reactive<SplitterItemReactData>({
-    })
+    const reactData = reactive<SplitterItemReactData>({})
 
-    const internalData: SplitterItemInternalData = {
-    }
+    const internalData: SplitterItemInternalData = {}
 
-    const computeMaps: VxeSplitterPanelPrivateComputed = {
-    }
+    const computeMaps: VxeSplitterPanelPrivateComputed = {}
 
     const refMaps: SplitterItemPrivateRef = {
       refElem
@@ -95,8 +108,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const splitterPanelPrivateMethods: SplitterItemPrivateMethods = {
-    }
+    const splitterPanelPrivateMethods: SplitterItemPrivateMethods = {}
 
     Object.assign($xeSplitterItem, splitterPanelMethods, splitterPanelPrivateMethods)
 
@@ -106,37 +118,61 @@ export default defineVxeComponent({
       })
     }
 
-    watch(() => props.name, (val) => {
-      paneConfig.name = val
-    })
+    watch(
+      () => props.name,
+      (val) => {
+        paneConfig.name = val
+      }
+    )
 
-    watch(() => props.width, (val) => {
-      paneConfig.width = val
-    })
+    watch(
+      () => props.width,
+      (val) => {
+        paneConfig.width = val
+      }
+    )
 
-    watch(() => props.height, (val) => {
-      paneConfig.height = val
-    })
+    watch(
+      () => props.height,
+      (val) => {
+        paneConfig.height = val
+      }
+    )
 
-    watch(() => props.minWidth, (val) => {
-      paneConfig.minWidth = val
-    })
+    watch(
+      () => props.minWidth,
+      (val) => {
+        paneConfig.minWidth = val
+      }
+    )
 
-    watch(() => props.minHeight, (val) => {
-      paneConfig.minHeight = val
-    })
+    watch(
+      () => props.minHeight,
+      (val) => {
+        paneConfig.minHeight = val
+      }
+    )
 
-    watch(() => props.maxWidth, (val) => {
-      paneConfig.maxWidth = val
-    })
+    watch(
+      () => props.maxWidth,
+      (val) => {
+        paneConfig.maxWidth = val
+      }
+    )
 
-    watch(() => props.maxHeight, (val) => {
-      paneConfig.maxHeight = val
-    })
+    watch(
+      () => props.maxHeight,
+      (val) => {
+        paneConfig.maxHeight = val
+      }
+    )
 
-    watch(() => props.showAction, (val) => {
-      paneConfig.showAction = val
-    })
+    watch(
+      () => props.showAction,
+      (val) => {
+        paneConfig.showAction = val
+      }
+    )
 
     onMounted(() => {
       const elem = refElem.value
@@ -157,7 +193,7 @@ export default defineVxeComponent({
 
     return $xeSplitterItem
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

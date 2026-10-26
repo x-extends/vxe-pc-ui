@@ -4,7 +4,7 @@ import VxeAvatarComponent from './src/avatar'
 import { dynamicApp } from '../dynamics'
 
 export const VxeAvatar = Object.assign({}, VxeAvatarComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeAvatarComponent.name as string, VxeAvatarComponent)
   }
 })

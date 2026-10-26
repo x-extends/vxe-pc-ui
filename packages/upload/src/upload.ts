@@ -1,19 +1,38 @@
 import { ref, h, reactive, watch, computed, TransitionGroup, PropType, inject, onBeforeUnmount, onMounted, nextTick } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getI18n, getIcon, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { initTpImg, getTpImg, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { readLocalFile } from './util'
 import VxeButtonComponent from '../../button'
 
-import type { VxeUploadDefines, VxeUploadPropTypes, UploadReactData, UploadInternalData, UploadPrivateMethods, UploadMethods, VxeUploadEmits, UploadPrivateRef, VxeUploadPrivateComputed, VxeUploadConstructor, VxeUploadPrivateMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, ValueOf, VxeComponentEventParams } from '../../../types'
+import type {
+  VxeUploadDefines,
+  VxeUploadPropTypes,
+  UploadReactData,
+  UploadInternalData,
+  UploadPrivateMethods,
+  UploadMethods,
+  VxeUploadEmits,
+  UploadPrivateRef,
+  VxeUploadPrivateComputed,
+  VxeUploadConstructor,
+  VxeUploadPrivateMethods,
+  VxeFormDefines,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  ValueOf,
+  VxeComponentEventParams
+} from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { getConfig, getI18n, getIcon, useFns, createEvent, globalEvents, renderEmptyElement } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('upload')
 
-function createReactData (): UploadReactData {
+function createReactData(): UploadReactData {
   return {
     isDragUploadStatus: false,
     showMorePopup: false,
@@ -26,7 +45,7 @@ function createReactData (): UploadReactData {
   }
 }
 
-function createInternalData (): UploadInternalData {
+function createInternalData(): UploadInternalData {
   return {
     moreId: XEUtils.uniqueId('upload'),
     imagePreviewTypes: ['jpg', 'jpeg', 'png', 'gif'],
@@ -215,33 +234,17 @@ export default defineVxeComponent({
       default: () => getConfig().upload.size || getConfig().size
     }
   },
-  emits: [
-    'update:modelValue',
-    'change',
-    'add',
-    'remove',
-    'remove-fail',
-    'download',
-    'download-fail',
-    'upload-start',
-    'upload-success',
-    'upload-error',
-    'upload-end',
-    'upload-queue-start',
-    'upload-queue-end',
-    'sort-dragend',
-    'more-visible'
-  ] as VxeUploadEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'change', 'add', 'remove', 'remove-fail', 'download', 'download-fail', 'upload-start', 'upload-success', 'upload-error', 'upload-end', 'upload-queue-start', 'upload-queue-end', 'sort-dragend', 'more-visible'] as VxeUploadEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
     const refPopupElem = ref<HTMLDivElement>()
@@ -312,9 +315,13 @@ export default defineVxeComponent({
 
     const computePreviewImageOpts = computed(() => {
       const { showDownloadButton } = props
-      return Object.assign({
-        showDownloadButton
-      }, getConfig().upload.previewImageConfig, props.previewImageConfig)
+      return Object.assign(
+        {
+          showDownloadButton
+        },
+        getConfig().upload.previewImageConfig,
+        props.previewImageConfig
+      )
     })
 
     const computeOverCount = computed(() => {
@@ -446,7 +453,7 @@ export default defineVxeComponent({
       const urlProp = computeUrlProp.value
       const sizeProp = computeSizeProp.value
       const fileList = modelValue
-        ? (modelValue ? (XEUtils.isArray(modelValue) ? modelValue : [modelValue]) : []).map(item => {
+        ? (modelValue ? (XEUtils.isArray(modelValue) ? modelValue : [modelValue]) : []).map((item) => {
             if (!item || XEUtils.isString(item)) {
               const url = `${item || ''}`
               const urlObj = XEUtils.parseUrl(item)
@@ -468,11 +475,15 @@ export default defineVxeComponent({
             return item
           })
         : []
-      reactData.fileList = (formReadonly || multiple) ? fileList : (fileList.slice(0, 1))
+      reactData.fileList = formReadonly || multiple ? fileList : fileList.slice(0, 1)
     }
 
     const parseFileName = (url: string) => {
-      return decodeURIComponent(`${url || ''}`).split('/').pop() || ''
+      return (
+        decodeURIComponent(`${url || ''}`)
+          .split('/')
+          .pop() || ''
+      )
     }
 
     const parseFileType = (name: string) => {
@@ -498,7 +509,7 @@ export default defineVxeComponent({
       const nameProp = computeNameProp.value
       let restList = vals ? vals.slice(0) : []
       if (urlMode) {
-        restList = restList.map(item => {
+        restList = restList.map((item) => {
           const url = item[urlProp]
           if (url && urlArgs) {
             const urlObj = XEUtils.parseUrl(url)
@@ -511,7 +522,7 @@ export default defineVxeComponent({
           return url
         })
       }
-      const value = singleMode ? (restList[0] || null) : restList
+      const value = singleMode ? restList[0] || null : restList
       emitModel(value)
       return value
     }
@@ -551,7 +562,7 @@ export default defineVxeComponent({
       const beforeDownloadFn = props.beforeDownloadMethod || getConfig().upload.beforeDownloadMethod
       const { imagePreviewTypes } = internalData
       // 如果是预览图片
-      if (imagePreviewTypes.concat(imageTypes || []).some(type => `${type}`.toLowerCase() === `${item[typeProp]}`.toLowerCase())) {
+      if (imagePreviewTypes.concat(imageTypes || []).some((type) => `${type}`.toLowerCase() === `${item[typeProp]}`.toLowerCase())) {
         if (VxeUI.previewImage) {
           VxeUI.previewImage({
             ...previewImageOpts,
@@ -599,7 +610,7 @@ export default defineVxeComponent({
         } else if (VxeUI.previewImage) {
           VxeUI.previewImage({
             ...previewImageOpts,
-            urlList: fileList.map(item => getFileUrl(item)),
+            urlList: fileList.map((item) => getFileUrl(item)),
             activeIndex: index,
             showDownloadButton,
             beforeDownloadMethod: beforeDownloadFn
@@ -626,7 +637,7 @@ export default defineVxeComponent({
             $upload: $xeUpload,
             file,
             option: item,
-            updateProgress (percentNum) {
+            updateProgress(percentNum) {
               const { fileCacheMaps } = reactData
               const cacheItem = fileCacheMaps[getFieldKey(item)]
               if (cacheItem) {
@@ -634,45 +645,48 @@ export default defineVxeComponent({
               }
             }
           })
-        ).then(res => {
-          const { fileCacheMaps } = reactData
-          const cacheItem = fileCacheMaps[fileKey]
-          if (cacheItem) {
-            cacheItem.percent = 100
-            cacheItem.status = 'success'
-            cacheItem.response = res
-          }
-          Object.assign(item, res)
-          handleModel(reactData.fileList)
-          dispatchEvent('upload-success', { option: item, data: res }, null)
-        }).catch((res) => {
-          const { fileCacheMaps } = reactData
-          const cacheItem = fileCacheMaps[fileKey]
-          if (cacheItem) {
-            cacheItem.status = 'error'
-            cacheItem.response = res
-          }
-          if (showErrorStatus) {
+        )
+          .then((res) => {
+            const { fileCacheMaps } = reactData
+            const cacheItem = fileCacheMaps[fileKey]
+            if (cacheItem) {
+              cacheItem.percent = 100
+              cacheItem.status = 'success'
+              cacheItem.response = res
+            }
             Object.assign(item, res)
-          } else {
-            reactData.fileList = reactData.fileList.filter(obj => getFieldKey(obj) !== fileKey)
-            delete fileCacheMaps[fileKey]
-          }
-          handleModel(reactData.fileList)
-          dispatchEvent('upload-error', { option: item, data: res }, null)
-        }).finally(() => {
-          const { fileCacheMaps } = reactData
-          const cacheItem = fileCacheMaps[fileKey]
-          if (cacheItem) {
-            cacheItem.loading = false
-          }
-          const result: VxeUploadDefines.UploadResultObj = {
-            option: item,
-            status: cacheItem ? cacheItem.status : null,
-            response: cacheItem ? cacheItem.response : null
-          }
-          dispatchEvent('upload-end', { option: item, result }, null)
-        })
+            handleModel(reactData.fileList)
+            dispatchEvent('upload-success', { option: item, data: res }, null)
+          })
+          .catch((res) => {
+            const { fileCacheMaps } = reactData
+            const cacheItem = fileCacheMaps[fileKey]
+            if (cacheItem) {
+              cacheItem.status = 'error'
+              cacheItem.response = res
+            }
+            if (showErrorStatus) {
+              Object.assign(item, res)
+            } else {
+              reactData.fileList = reactData.fileList.filter((obj) => getFieldKey(obj) !== fileKey)
+              delete fileCacheMaps[fileKey]
+            }
+            handleModel(reactData.fileList)
+            dispatchEvent('upload-error', { option: item, data: res }, null)
+          })
+          .finally(() => {
+            const { fileCacheMaps } = reactData
+            const cacheItem = fileCacheMaps[fileKey]
+            if (cacheItem) {
+              cacheItem.loading = false
+            }
+            const result: VxeUploadDefines.UploadResultObj = {
+              option: item,
+              status: cacheItem ? cacheItem.status : null,
+              response: cacheItem ? cacheItem.response : null
+            }
+            dispatchEvent('upload-end', { option: item, result }, null)
+          })
       } else {
         const { fileCacheMaps } = reactData
         const cacheItem = fileCacheMaps[fileKey]
@@ -743,20 +757,32 @@ export default defineVxeComponent({
               status: 'error',
               width: null,
               slots: {
-                default () {
-                  return h('div', {
-                    class: 'vxe-upload--file-message-over-error'
-                  }, [
-                    h('div', {}, getI18n('vxe.upload.overCountExtraErr', [limitMaxCount, overNum])),
-                    h('div', {
-                      class: 'vxe-upload--file-message-over-extra'
-                    }, overExtraList.map((file, index) => {
-                      return h('div', {
-                        key: index,
-                        class: 'vxe-upload--file-message-over-extra-item'
-                      }, file.name)
-                    }))
-                  ])
+                default() {
+                  return h(
+                    'div',
+                    {
+                      class: 'vxe-upload--file-message-over-error'
+                    },
+                    [
+                      h('div', {}, getI18n('vxe.upload.overCountExtraErr', [limitMaxCount, overNum])),
+                      h(
+                        'div',
+                        {
+                          class: 'vxe-upload--file-message-over-extra'
+                        },
+                        overExtraList.map((file, index) => {
+                          return h(
+                            'div',
+                            {
+                              key: index,
+                              class: 'vxe-upload--file-message-over-extra-item'
+                            },
+                            file.name
+                          )
+                        })
+                      )
+                    ]
+                  )
                 }
               }
             })
@@ -788,7 +814,7 @@ export default defineVxeComponent({
       const uploadFileList = multiple ? fileList : []
       const newFileList: VxeUploadDefines.FileObjItem[] = []
       const uploadPromiseRests: any[] = []
-      selectFiles.forEach(file => {
+      selectFiles.forEach((file) => {
         const { name } = file
         const fileKey = getUniqueKey()
         const fileObj: VxeUploadDefines.FileObjItem = {
@@ -810,9 +836,7 @@ export default defineVxeComponent({
         const item = reactive(fileObj)
         if (!beforeSelectFn || beforeSelectFn({ $upload: $xeUpload, file })) {
           if (uploadFn && autoSubmit) {
-            uploadPromiseRests.push(
-              handleUploadResult(item, file)
-            )
+            uploadPromiseRests.push(handleUploadResult(item, file))
           }
           newFileList.push(item)
           uploadFileList.push(item)
@@ -820,13 +844,13 @@ export default defineVxeComponent({
       })
       reactData.fileList = uploadFileList
       reactData.fileCacheMaps = cacheMaps
-      uploadFileList.forEach(item => {
+      uploadFileList.forEach((item) => {
         dispatchEvent('add', { option: item }, evnt)
       })
       Promise.all(uploadPromiseRests).then(() => {
         const { fileCacheMaps } = reactData
         const restFileList = reactData.fileList
-        const uploadResults: VxeUploadDefines.UploadResultObj[] = newFileList.map(option => {
+        const uploadResults: VxeUploadDefines.UploadResultObj[] = newFileList.map((option) => {
           const fileKey = getFieldKey(option)
           const cacheItem = fileCacheMaps[fileKey]
           return {
@@ -893,7 +917,7 @@ export default defineVxeComponent({
             option: item
           })
           : true
-      ).then(status => {
+      ).then((status) => {
         if (status) {
           if (removeFn) {
             Promise.resolve(
@@ -901,9 +925,11 @@ export default defineVxeComponent({
                 $upload: $xeUpload,
                 option: item
               })
-            ).then(() => {
-              handleRemoveEvent(evnt, item, index)
-            }).catch(e => e)
+            )
+              .then(() => {
+                handleRemoveEvent(evnt, item, index)
+              })
+              .catch((e) => e)
           } else {
             handleRemoveEvent(evnt, item, index)
           }
@@ -930,7 +956,7 @@ export default defineVxeComponent({
             option: item
           })
           : true
-      ).then(status => {
+      ).then((status) => {
         if (status) {
           if (downloadFn) {
             Promise.resolve(
@@ -938,9 +964,11 @@ export default defineVxeComponent({
                 $upload: $xeUpload,
                 option: item
               })
-            ).then(() => {
-              handleDownloadEvent(evnt, item)
-            }).catch(e => e)
+            )
+              .then(() => {
+                handleDownloadEvent(evnt, item)
+              })
+              .catch((e) => e)
           } else {
             handleDownloadEvent(evnt, item)
           }
@@ -978,9 +1006,9 @@ export default defineVxeComponent({
       const isImage = computeIsImage.value
       if (isImage) {
         const pasteImgTypes = imagePreviewTypes.concat(imageTypes && imageTypes.length ? imageTypes : [])
-        files = files.filter(file => {
+        files = files.filter((file) => {
           const fileType = `${file.type.split('/')[1] || ''}`.toLowerCase()
-          if (pasteImgTypes.some(type => `${type}`.toLowerCase() === fileType)) {
+          if (pasteImgTypes.some((type) => `${type}`.toLowerCase() === fileType)) {
             return true
           }
           return false
@@ -988,9 +1016,9 @@ export default defineVxeComponent({
       } else {
         if (fileTypes && fileTypes.length) {
           const errTypes: string[] = []
-          files.forEach(file => {
+          files.forEach((file) => {
             const fileType = parseFileType(file.name)
-            if (!fileTypes.some(type => `${type}`.toLowerCase() === fileType)) {
+            if (!fileTypes.some((type) => `${type}`.toLowerCase() === fileType)) {
               errTypes.push(fileType)
             }
           })
@@ -1036,7 +1064,7 @@ export default defineVxeComponent({
 
     const handleTransferFiles = (items: DataTransferItemList) => {
       const files: File[] = []
-      XEUtils.arrayEach(items, item => {
+      XEUtils.arrayEach(items, (item) => {
         const file = item.getAsFile()
         if (file) {
           files.push(file)
@@ -1061,7 +1089,7 @@ export default defineVxeComponent({
           resize: true,
           maskClosable: true,
           slots: {
-            default () {
+            default() {
               const { showErrorStatus, dragToUpload, dragSort, dragPlaceholder } = props
               const { isActivated, isDragMove, isDragUploadStatus, dragIndex } = reactData
               const { fileList } = reactData
@@ -1075,67 +1103,96 @@ export default defineVxeComponent({
                 ons.onDrop = handleUploadDropEvent
               }
 
-              return h('div', {
-                ref: refPopupElem,
-                class: ['vxe-upload--more-popup', {
-                  'is--readonly': formReadonly,
-                  'is--disabled': isDisabled,
-                  'is--active': isActivated,
-                  'show--error': showErrorStatus,
-                  'is--drag': isDragUploadStatus
-                }],
-                ...ons
-              }, moreContSlot
-                ? getSlotVNs(moreContSlot({ options: fileList }))
-                : [
-                    isImage
-                      ? (
-                          dragSort
-                            ? h(TransitionGroup, {
+              return h(
+                'div',
+                {
+                  ref: refPopupElem,
+                  class: [
+                    'vxe-upload--more-popup',
+                    {
+                      'is--readonly': formReadonly,
+                      'is--disabled': isDisabled,
+                      'is--active': isActivated,
+                      'show--error': showErrorStatus,
+                      'is--drag': isDragUploadStatus
+                    }
+                  ],
+                  ...ons
+                },
+                moreContSlot
+                  ? getSlotVNs(moreContSlot({ options: fileList }))
+                  : [
+                      isImage
+                        ? dragSort
+                          ? h(
+                            TransitionGroup,
+                            {
                               name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
                               tag: 'div',
                               class: 'vxe-upload--image-more-list'
-                            }, {
+                            },
+                            {
                               default: () => renderImageItemList(fileList, true).concat(renderImageAction(true))
-                            })
-                            : h('div', {
+                            }
+                          )
+                          : h(
+                            'div',
+                            {
                               class: 'vxe-upload--image-more-list'
-                            }, renderImageItemList(fileList, true).concat(renderImageAction(true)))
+                            },
+                            renderImageItemList(fileList, true).concat(renderImageAction(true))
+                          )
+                        : h(
+                          'div',
+                          {
+                            class: 'vxe-upload--file-more-list'
+                          },
+                          [
+                            renderFileAction(true),
+                            dragSort
+                              ? h(
+                                TransitionGroup,
+                                {
+                                  name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                                  tag: 'div',
+                                  class: 'vxe-upload--file-list'
+                                },
+                                {
+                                  default: () => renderFileItemList(fileList, false)
+                                }
+                              )
+                              : h(
+                                'div',
+                                {
+                                  class: 'vxe-upload--file-list'
+                                },
+                                renderFileItemList(fileList, true)
+                              )
+                          ]
+                        ),
+                      dragSort
+                        ? h('div', {
+                          ref: refModalDragLineElem,
+                          class: 'vxe-upload--drag-line'
+                        })
+                        : renderEmptyElement($xeUpload),
+                      isDragUploadStatus
+                        ? h(
+                          'div',
+                          {
+                            class: 'vxe-upload--drag-placeholder'
+                          },
+                          dragPlaceholder || getI18n('vxe.upload.dragPlaceholder')
                         )
-                      : h('div', {
-                        class: 'vxe-upload--file-more-list'
-                      }, [
-                        renderFileAction(true),
-                        dragSort
-                          ? h(TransitionGroup, {
-                            name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
-                            tag: 'div',
-                            class: 'vxe-upload--file-list'
-                          }, {
-                            default: () => renderFileItemList(fileList, false)
-                          })
-                          : h('div', {
-                            class: 'vxe-upload--file-list'
-                          }, renderFileItemList(fileList, true))
-                      ]),
-                    dragSort
-                      ? h('div', {
-                        ref: refModalDragLineElem,
-                        class: 'vxe-upload--drag-line'
-                      })
-                      : renderEmptyElement($xeUpload),
-                    isDragUploadStatus
-                      ? h('div', {
-                        class: 'vxe-upload--drag-placeholder'
-                      }, dragPlaceholder || getI18n('vxe.upload.dragPlaceholder'))
-                      : renderEmptyElement($xeUpload)
-                  ])
+                        : renderEmptyElement($xeUpload)
+                    ]
+              )
             }
           },
-          onShow () {
+          onShow() {
             reactData.showMorePopup = true
           },
-          onHide ({ $event }) {
+          onHide({ $event }) {
             reactData.showMorePopup = false
             if ($event) {
               dispatchEvent('more-visible', { visible: false }, $event)
@@ -1190,7 +1247,7 @@ export default defineVxeComponent({
       }
       const dragEl = evnt.currentTarget as HTMLElement
       const parentEl = dragEl.parentElement as HTMLDivElement
-      const dragIndex = XEUtils.findIndexOf(Array.from(parentEl.children), item => dragEl === item)
+      const dragIndex = XEUtils.findIndexOf(Array.from(parentEl.children), (item) => dragEl === item)
       reactData.isDragMove = true
       reactData.dragIndex = dragIndex
       setTimeout(() => {
@@ -1208,7 +1265,7 @@ export default defineVxeComponent({
       const isImage = computeIsImage.value
       const dragEl = evnt.currentTarget as HTMLElement
       const parentEl = dragEl.parentElement as HTMLDivElement
-      const currIndex = XEUtils.findIndexOf(Array.from(parentEl.children), item => dragEl === item)
+      const currIndex = XEUtils.findIndexOf(Array.from(parentEl.children), (item) => dragEl === item)
       let dragPos: 'top' | 'bottom' | 'left' | 'right' | '' = ''
       if (isImage) {
         const offsetX = evnt.clientX - dragEl.getBoundingClientRect().x
@@ -1236,19 +1293,23 @@ export default defineVxeComponent({
       const newItem = fileList[targetIndex]
       if (oldItem && newItem) {
         fileList.splice(oldIndex, 1)
-        const ptfIndex = XEUtils.findIndexOf(fileList, item => newItem === item)
+        const ptfIndex = XEUtils.findIndexOf(fileList, (item) => newItem === item)
         const nIndex = ptfIndex + dragOffsetIndex
         fileList.splice(nIndex, 0, oldItem)
-        dispatchEvent('sort-dragend', {
-          oldItem: oldItem,
-          newItem: newItem,
-          dragPos: prevDragPos as any,
-          offsetIndex: dragOffsetIndex,
-          _index: {
-            newIndex: nIndex,
-            oldIndex: oldIndex
-          }
-        }, evnt)
+        dispatchEvent(
+          'sort-dragend',
+          {
+            oldItem: oldItem,
+            newItem: newItem,
+            dragPos: prevDragPos as any,
+            offsetIndex: dragOffsetIndex,
+            _index: {
+              newIndex: nIndex,
+              oldIndex: oldIndex
+            }
+          },
+          evnt
+        )
       }
       hideDropTip()
       reactData.dragIndex = -1
@@ -1318,7 +1379,7 @@ export default defineVxeComponent({
     const handleRemoveFile = (evnt: Event | null, urlOrItem: string | VxeUploadDefines.FileObjItem | string[] | VxeUploadDefines.FileObjItem[] | null) => {
       const { fileList } = reactData
       const urlProp = computeUrlProp.value
-      const urls = (XEUtils.isArray(urlOrItem) ? urlOrItem : [urlOrItem])
+      const urls = XEUtils.isArray(urlOrItem) ? urlOrItem : [urlOrItem]
       const rest: Promise<{
         url: string
         status: boolean
@@ -1326,10 +1387,10 @@ export default defineVxeComponent({
       urls.forEach((obj) => {
         if (obj) {
           const url = XEUtils.isString(obj) ? obj : obj[urlProp]
-          const index = XEUtils.findIndexOf(fileList, fileItem => fileItem[urlProp] === url)
+          const index = XEUtils.findIndexOf(fileList, (fileItem) => fileItem[urlProp] === url)
           if (index > -1) {
             rest.push(
-              removeFileEvent(evnt, fileList[index], index).then(status => {
+              removeFileEvent(evnt, fileList[index], index).then((status) => {
                 return { url, status }
               })
             )
@@ -1341,19 +1402,19 @@ export default defineVxeComponent({
 
     const uploadMethods: UploadMethods = {
       dispatchEvent,
-      choose () {
+      choose() {
         return handleChoose(null)
       },
-      clear () {
+      clear() {
         return handleClearFile(null)
       },
-      clearByEvent (evnt) {
+      clearByEvent(evnt) {
         return handleClearFile(evnt)
       },
-      getPendingFiles () {
+      getPendingFiles() {
         const { fileList, fileCacheMaps } = reactData
         const pendingFiles: File[] = []
-        fileList.forEach(item => {
+        fileList.forEach((item) => {
           const fileKey = getFieldKey(item)
           const cacheItem = fileCacheMaps[fileKey]
           if (cacheItem && cacheItem.status === 'pending') {
@@ -1362,11 +1423,11 @@ export default defineVxeComponent({
         })
         return pendingFiles
       },
-      submit (isFull) {
+      submit(isFull) {
         const { maxSimultaneousUploads } = props
         const msNum = XEUtils.toNumber(maxSimultaneousUploads || 1) || 1
         const { fileList, fileCacheMaps } = reactData
-        const allPendingList = fileList.filter(item => {
+        const allPendingList = fileList.filter((item) => {
           const fileKey = getFieldKey(item)
           const cacheItem = fileCacheMaps[fileKey]
           return cacheItem && (cacheItem.status === 'pending' || (isFull && cacheItem.status === 'error'))
@@ -1399,27 +1460,27 @@ export default defineVxeComponent({
           // 完成
         })
       },
-      getMoreVisible () {
+      getMoreVisible() {
         return reactData.showMorePopup
       },
-      openMore () {
+      openMore() {
         handleMoreEvent({ $event: new Event('click') })
         return nextTick()
       },
-      openMoreByEvent (evnt) {
+      openMoreByEvent(evnt) {
         handleMoreEvent({ $event: evnt })
         return nextTick()
       },
-      closeMore () {
+      closeMore() {
         if (VxeUI.modal) {
           VxeUI.modal.close(internalData.moreId)
         }
         return nextTick()
       },
-      remove (urlOrItem) {
+      remove(urlOrItem) {
         return handleRemoveFile(null, urlOrItem)
       },
-      removeByEvent (evnt, urlOrItem) {
+      removeByEvent(evnt, urlOrItem) {
         return handleRemoveFile(evnt, urlOrItem)
       }
     }
@@ -1461,101 +1522,144 @@ export default defineVxeComponent({
           isError = cacheItem.status === 'error'
           isPending = cacheItem.status === 'pending'
         }
-        return h('div', {
-          key: dragSort ? fileKey : index,
-          class: ['vxe-upload--file-item', {
-            'is--preview': showPreview,
-            'is--loading': isLoading,
-            'is--pending': isPending,
-            'is--error': isError
-          }],
-          fileid: fileKey,
-          draggable: dragSort ? true : null,
-          ...ons
-        }, optionSlot
-          ? getSlotVNs(optionSlot({ option: item, isMoreView, options: fileList }))
-          : [
-              h('div', {
-                class: 'vxe-upload--file-item-icon'
-              }, [
-                h('i', {
-                  class: getIcon()[`UPLOAD_FILE_TYPE_${`${item[typeProp]}`.toLocaleUpperCase() as 'DEFAULT'}`] || getIcon().UPLOAD_FILE_TYPE_DEFAULT
-                })
-              ]),
-              h('div', {
-                class: 'vxe-upload--file-item-name',
-                title: fileName,
-                onClick (evnt) {
-                  if (!isLoading && !isError) {
-                    handlePreviewFileEvent(evnt, item)
-                  }
-                }
-              }, nameSlot ? getSlotVNs(nameSlot({ option: item, isMoreView, options: fileList })) : fileName),
-              isLoading
-                ? h('div', {
-                  class: 'vxe-upload--file-item-loading-icon'
-                }, [
-                  h('i', {
-                    class: getIcon().UPLOAD_LOADING
-                  })
-                ])
-                : renderEmptyElement($xeUpload),
-              showProgress && isLoading && cacheItem
-                ? h('div', {
-                  class: 'vxe-upload--file-item-loading-text'
-                }, progressText ? XEUtils.toFormatString(`${XEUtils.isFunction(progressText) ? progressText({}) : progressText}`, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
-                : renderEmptyElement($xeUpload),
-              !isLoading && ((isError && showErrorStatus) || (isPending && showSubmitButton && !autoSubmit))
-                ? h('div', {
-                  class: 'vxe-upload--file-item-rebtn'
-                }, [
-                  h(VxeButtonComponent, {
-                    icon: isError ? getIcon().UPLOAD_IMAGE_RE_UPLOAD : getIcon().UPLOAD_IMAGE_UPLOAD,
-                    mode: 'text',
-                    status: 'primary',
-                    content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload'),
-                    onClick (evnt) {
-                      handleReUploadEvent(evnt, item)
+        return h(
+          'div',
+          {
+            key: dragSort ? fileKey : index,
+            class: [
+              'vxe-upload--file-item',
+              {
+                'is--preview': showPreview,
+                'is--loading': isLoading,
+                'is--pending': isPending,
+                'is--error': isError
+              }
+            ],
+            fileid: fileKey,
+            draggable: dragSort ? true : null,
+            ...ons
+          },
+          optionSlot
+            ? getSlotVNs(optionSlot({ option: item, isMoreView, options: fileList }))
+            : [
+                h(
+                  'div',
+                  {
+                    class: 'vxe-upload--file-item-icon'
+                  },
+                  [
+                    h('i', {
+                      class: getIcon()[`UPLOAD_FILE_TYPE_${`${item[typeProp]}`.toLocaleUpperCase() as 'DEFAULT'}`] || getIcon().UPLOAD_FILE_TYPE_DEFAULT
+                    })
+                  ]
+                ),
+                h(
+                  'div',
+                  {
+                    class: 'vxe-upload--file-item-name',
+                    title: fileName,
+                    onClick(evnt) {
+                      if (!isLoading && !isError) {
+                        handlePreviewFileEvent(evnt, item)
+                      }
                     }
-                  })
-                ])
-                : renderEmptyElement($xeUpload),
-              h('div', {
-                class: 'vxe-upload--file-item-btn-wrapper'
-              }, actionSlot
-                ? getSlotVNs(actionSlot({ option: item, isMoreView, options: fileList, readonly: formReadonly }))
-                : [
-                    cornerSlot
-                      ? h('div', {
-                        class: 'vxe-upload--file-item-action'
-                      }, getSlotVNs(cornerSlot({ option: item, isMoreView, options: fileList, readonly: formReadonly })))
-                      : renderEmptyElement($xeUpload),
-                    showDownloadButton && !(isLoading || isPending)
-                      ? h('div', {
-                        class: 'vxe-upload--file-item-download-btn',
-                        onClick (evnt: MouseEvent) {
-                          downloadFileEvent(evnt, item)
+                  },
+                  nameSlot ? getSlotVNs(nameSlot({ option: item, isMoreView, options: fileList })) : fileName
+                ),
+                isLoading
+                  ? h(
+                    'div',
+                    {
+                      class: 'vxe-upload--file-item-loading-icon'
+                    },
+                    [
+                      h('i', {
+                        class: getIcon().UPLOAD_LOADING
+                      })
+                    ]
+                  )
+                  : renderEmptyElement($xeUpload),
+                showProgress && isLoading && cacheItem
+                  ? h(
+                    'div',
+                    {
+                      class: 'vxe-upload--file-item-loading-text'
+                    },
+                    progressText ? XEUtils.toFormatString(`${XEUtils.isFunction(progressText) ? progressText({}) : progressText}`, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent])
+                  )
+                  : renderEmptyElement($xeUpload),
+                !isLoading && ((isError && showErrorStatus) || (isPending && showSubmitButton && !autoSubmit))
+                  ? h(
+                    'div',
+                    {
+                      class: 'vxe-upload--file-item-rebtn'
+                    },
+                    [
+                      h(VxeButtonComponent, {
+                        icon: isError ? getIcon().UPLOAD_IMAGE_RE_UPLOAD : getIcon().UPLOAD_IMAGE_UPLOAD,
+                        mode: 'text',
+                        status: 'primary',
+                        content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload'),
+                        onClick(evnt) {
+                          handleReUploadEvent(evnt, item)
                         }
-                      }, [
-                        h('i', {
-                          class: getIcon().UPLOAD_FILE_DOWNLOAD
-                        })
-                      ])
-                      : renderEmptyElement($xeUpload),
-                    showRemoveButton && !formReadonly && !isDisabled && !isLoading
-                      ? h('div', {
-                        class: 'vxe-upload--file-item-remove-btn',
-                        onClick (evnt: MouseEvent) {
-                          removeFileEvent(evnt, item, index)
-                        }
-                      }, [
-                        h('i', {
-                          class: getIcon().UPLOAD_FILE_REMOVE
-                        })
-                      ])
-                      : renderEmptyElement($xeUpload)
-                  ])
-            ])
+                      })
+                    ]
+                  )
+                  : renderEmptyElement($xeUpload),
+                h(
+                  'div',
+                  {
+                    class: 'vxe-upload--file-item-btn-wrapper'
+                  },
+                  actionSlot
+                    ? getSlotVNs(actionSlot({ option: item, isMoreView, options: fileList, readonly: formReadonly }))
+                    : [
+                        cornerSlot
+                          ? h(
+                            'div',
+                            {
+                              class: 'vxe-upload--file-item-action'
+                            },
+                            getSlotVNs(cornerSlot({ option: item, isMoreView, options: fileList, readonly: formReadonly }))
+                          )
+                          : renderEmptyElement($xeUpload),
+                        showDownloadButton && !(isLoading || isPending)
+                          ? h(
+                            'div',
+                            {
+                              class: 'vxe-upload--file-item-download-btn',
+                              onClick(evnt: MouseEvent) {
+                                downloadFileEvent(evnt, item)
+                              }
+                            },
+                            [
+                              h('i', {
+                                class: getIcon().UPLOAD_FILE_DOWNLOAD
+                              })
+                            ]
+                          )
+                          : renderEmptyElement($xeUpload),
+                        showRemoveButton && !formReadonly && !isDisabled && !isLoading
+                          ? h(
+                            'div',
+                            {
+                              class: 'vxe-upload--file-item-remove-btn',
+                              onClick(evnt: MouseEvent) {
+                                removeFileEvent(evnt, item, index)
+                              }
+                            },
+                            [
+                              h('i', {
+                                class: getIcon().UPLOAD_FILE_REMOVE
+                              })
+                            ]
+                          )
+                          : renderEmptyElement($xeUpload)
+                      ]
+                )
+              ]
+        )
       })
     }
 
@@ -1573,30 +1677,42 @@ export default defineVxeComponent({
       if (formReadonly || !showUploadButton) {
         return renderEmptyElement($xeUpload)
       }
-      return h('div', {
-        class: 'vxe-upload--file-action'
-      }, [
-        autoHiddenButton && overCount
-          ? renderEmptyElement($xeUpload)
-          : h('div', {
-            class: 'vxe-upload--file-action-btn',
-            onClick: clickEvent
-          }, defaultSlot
-            ? getSlotVNs(defaultSlot({ isMoreView, options: fileList, $upload: $xeUpload }))
-            : [
-                h(VxeButtonComponent, {
-                  class: 'vxe-upload--file-action-button',
-                  content: (isMoreView || showButtonText) ? (buttonText ? `${XEUtils.isFunction(buttonText) ? buttonText({}) : buttonText}` : getI18n('vxe.upload.fileBtnText')) : '',
-                  icon: showButtonIcon ? (buttonIcon || getIcon().UPLOAD_FILE_ADD) : '',
-                  disabled: isDisabled
-                })
-              ]),
-        showTipText && (defTipText || tipSlot)
-          ? h('div', {
-            class: 'vxe-upload--file-action-tip'
-          }, tipSlot ? getSlotVNs(tipSlot({ isMoreView, options: fileList, $upload: $xeUpload })) : `${defTipText}`)
-          : renderEmptyElement($xeUpload)
-      ])
+      return h(
+        'div',
+        {
+          class: 'vxe-upload--file-action'
+        },
+        [
+          autoHiddenButton && overCount
+            ? renderEmptyElement($xeUpload)
+            : h(
+              'div',
+              {
+                class: 'vxe-upload--file-action-btn',
+                onClick: clickEvent
+              },
+              defaultSlot
+                ? getSlotVNs(defaultSlot({ isMoreView, options: fileList, $upload: $xeUpload }))
+                : [
+                    h(VxeButtonComponent, {
+                      class: 'vxe-upload--file-action-button',
+                      content: isMoreView || showButtonText ? (buttonText ? `${XEUtils.isFunction(buttonText) ? buttonText({}) : buttonText}` : getI18n('vxe.upload.fileBtnText')) : '',
+                      icon: showButtonIcon ? buttonIcon || getIcon().UPLOAD_FILE_ADD : '',
+                      disabled: isDisabled
+                    })
+                  ]
+            ),
+          showTipText && (defTipText || tipSlot)
+            ? h(
+              'div',
+              {
+                class: 'vxe-upload--file-action-tip'
+              },
+              tipSlot ? getSlotVNs(tipSlot({ isMoreView, options: fileList, $upload: $xeUpload })) : `${defTipText}`
+            )
+            : renderEmptyElement($xeUpload)
+        ]
+      )
     }
 
     const rendeFileMode = () => {
@@ -1618,56 +1734,75 @@ export default defineVxeComponent({
         currList = fileList.slice(0, maxCount)
       }
 
-      return h('div', {
-        key: 'all',
-        class: 'vxe-upload--file-wrapper'
-      }, showList
-        ? [
-            showMoreButton && moreConfig && isHorizontal
-              ? renderEmptyElement($xeUpload)
-              : renderFileAction(true),
-            h('div', {
-              class: ['vxe-upload--file-list-wrapper', {
-                'is--horizontal': isHorizontal
-              }]
-            }, [
-              currList.length
-                ? (
-                    dragSort
-                      ? h(TransitionGroup, {
-                        name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
-                        tag: 'div',
-                        class: 'vxe-upload--file-list'
-                      }, {
-                        default: () => renderFileItemList(currList, false)
-                      })
-                      : h('div', {
-                        class: 'vxe-upload--file-list'
-                      }, renderFileItemList(currList, false))
-                  )
-                : renderEmptyElement($xeUpload),
-              showMoreButton && overMaxNum
-                ? h('div', {
-                  class: 'vxe-upload--file-over-more'
-                }, moreBtnSlot
-                  ? getSlotVNs(moreBtnSlot({ options: fileList }))
-                  : [
-                      h(VxeButtonComponent, {
-                        mode: 'text',
-                        content: moreButtonText ? (XEUtils.isFunction(moreButtonText) ? moreButtonText({ $upload: $xeUpload, options: fileList }) : XEUtils.toFormatString(moreButtonText, [fileList.length])) : getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreFileBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
-                        status: 'primary',
-                        onClick: handleMoreEvent
-                      })
-                    ])
-                : renderEmptyElement($xeUpload),
-              showMoreButton && moreConfig && isHorizontal
-                ? renderFileAction(false)
-                : renderEmptyElement($xeUpload)
-            ])
-          ]
-        : [
-            renderFileAction(false)
-          ])
+      return h(
+        'div',
+        {
+          key: 'all',
+          class: 'vxe-upload--file-wrapper'
+        },
+        showList
+          ? [
+              showMoreButton && moreConfig && isHorizontal ? renderEmptyElement($xeUpload) : renderFileAction(true),
+              h(
+                'div',
+                {
+                  class: [
+                    'vxe-upload--file-list-wrapper',
+                    {
+                      'is--horizontal': isHorizontal
+                    }
+                  ]
+                },
+                [
+                  currList.length
+                    ? dragSort
+                      ? h(
+                        TransitionGroup,
+                        {
+                          name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                          tag: 'div',
+                          class: 'vxe-upload--file-list'
+                        },
+                        {
+                          default: () => renderFileItemList(currList, false)
+                        }
+                      )
+                      : h(
+                        'div',
+                        {
+                          class: 'vxe-upload--file-list'
+                        },
+                        renderFileItemList(currList, false)
+                      )
+                    : renderEmptyElement($xeUpload),
+                  showMoreButton && overMaxNum
+                    ? h(
+                      'div',
+                      {
+                        class: 'vxe-upload--file-over-more'
+                      },
+                      moreBtnSlot
+                        ? getSlotVNs(moreBtnSlot({ options: fileList }))
+                        : [
+                            h(VxeButtonComponent, {
+                              mode: 'text',
+                              content: moreButtonText
+                                ? XEUtils.isFunction(moreButtonText)
+                                  ? moreButtonText({ $upload: $xeUpload, options: fileList })
+                                  : XEUtils.toFormatString(moreButtonText, [fileList.length])
+                                : getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreFileBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
+                              status: 'primary',
+                              onClick: handleMoreEvent
+                            })
+                          ]
+                    )
+                    : renderEmptyElement($xeUpload),
+                  showMoreButton && moreConfig && isHorizontal ? renderFileAction(false) : renderEmptyElement($xeUpload)
+                ]
+              )
+            ]
+          : [renderFileAction(false)]
+      )
     }
 
     const renderImageItemList = (currList: VxeUploadDefines.FileObjItem[], isMoreView: boolean) => {
@@ -1701,101 +1836,144 @@ export default defineVxeComponent({
           isError = cacheItem.status === 'error'
           isPending = cacheItem.status === 'pending'
         }
-        return h('div', {
-          key: dragSort ? fileKey : index,
-          class: ['vxe-upload--image-item', {
-            'is--preview': showPreview,
-            'is--circle': imageOpts.circle,
-            'is--loading': isLoading,
-            'is--pending': isPending,
-            'is--error': isError
-          }],
-          fileid: fileKey,
-          draggable: dragSort ? true : null,
-          ...ons
-        }, optionSlot
-          ? getSlotVNs(optionSlot({ option: item, isMoreView, options: fileList }))
-          : [
-              h('div', {
-                class: 'vxe-upload--image-item-box',
-                style: isMoreView ? null : imgStyle,
-                onClick (evnt) {
-                  if (!isLoading && !isError) {
-                    handlePreviewImageEvent(evnt, item, index)
-                  }
-                }
-              }, [
-                isLoading && cacheItem
-                  ? h('div', {
-                    class: 'vxe-upload--image-item-loading'
-                  }, [
-                    h('div', {
-                      class: 'vxe-upload--image-item-loading-icon'
-                    }, [
-                      h('i', {
-                        class: getIcon().UPLOAD_LOADING
-                      })
-                    ]),
-                    showProgress
-                      ? h('div', {
-                        class: 'vxe-upload--image-item-loading-text'
-                      }, progressText ? XEUtils.toFormatString(`${XEUtils.isFunction(progressText) ? progressText({}) : progressText}`, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent]))
-                      : renderEmptyElement($xeUpload)
-                  ])
-                  : renderEmptyElement($xeUpload),
-                h('div', {
-                  class: 'vxe-upload--image-item-img-wrapper',
-                  title: getI18n('vxe.upload.viewItemTitle')
-                }, [
-                  h('img', {
-                    class: 'vxe-upload--image-item-img',
-                    src: getThumbnailFileUrl(item)
-                  })
-                ]),
-                !isLoading && ((isError && showErrorStatus) || (isPending && showSubmitButton && !autoSubmit))
-                  ? h('div', {
-                    class: 'vxe-upload--image-item-rebtn'
-                  }, [
-                    h(VxeButtonComponent, {
-                      icon: isError ? getIcon().UPLOAD_IMAGE_RE_UPLOAD : getIcon().UPLOAD_IMAGE_UPLOAD,
-                      mode: 'text',
-                      status: 'primary',
-                      content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload'),
-                      onClick (evnt) {
-                        handleReUploadEvent(evnt, item)
+        return h(
+          'div',
+          {
+            key: dragSort ? fileKey : index,
+            class: [
+              'vxe-upload--image-item',
+              {
+                'is--preview': showPreview,
+                'is--circle': imageOpts.circle,
+                'is--loading': isLoading,
+                'is--pending': isPending,
+                'is--error': isError
+              }
+            ],
+            fileid: fileKey,
+            draggable: dragSort ? true : null,
+            ...ons
+          },
+          optionSlot
+            ? getSlotVNs(optionSlot({ option: item, isMoreView, options: fileList }))
+            : [
+                h(
+                  'div',
+                  {
+                    class: 'vxe-upload--image-item-box',
+                    style: isMoreView ? null : imgStyle,
+                    onClick(evnt) {
+                      if (!isLoading && !isError) {
+                        handlePreviewImageEvent(evnt, item, index)
                       }
-                    })
-                  ])
-                  : renderEmptyElement($xeUpload),
-                h('div', {
-                  class: 'vxe-upload--image-item-btn-wrapper',
-                  onClick (evnt) {
-                    evnt.stopPropagation()
-                  }
-                }, actionSlot
-                  ? getSlotVNs(actionSlot({ option: item, isMoreView, options: fileList, readonly: formReadonly }))
-                  : [
-                      cornerSlot
-                        ? h('div', {
-                          class: 'vxe-upload--file-item-action'
-                        }, getSlotVNs(cornerSlot({ option: item, isMoreView, options: fileList, readonly: formReadonly })))
-                        : renderEmptyElement($xeUpload),
-                      showRemoveButton && !formReadonly && !isDisabled && !isLoading
-                        ? h('div', {
-                          class: 'vxe-upload--image-item-remove-btn',
-                          onClick (evnt: MouseEvent) {
-                            evnt.stopPropagation()
-                            removeFileEvent(evnt, item, index)
-                          }
-                        }, [
-                          h('i', {
-                            class: getIcon().UPLOAD_IMAGE_REMOVE
+                    }
+                  },
+                  [
+                    isLoading && cacheItem
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-upload--image-item-loading'
+                        },
+                        [
+                          h(
+                            'div',
+                            {
+                              class: 'vxe-upload--image-item-loading-icon'
+                            },
+                            [
+                              h('i', {
+                                class: getIcon().UPLOAD_LOADING
+                              })
+                            ]
+                          ),
+                          showProgress
+                            ? h(
+                              'div',
+                              {
+                                class: 'vxe-upload--image-item-loading-text'
+                              },
+                              progressText ? XEUtils.toFormatString(`${XEUtils.isFunction(progressText) ? progressText({}) : progressText}`, { percent: cacheItem.percent }) : getI18n('vxe.upload.uploadProgress', [cacheItem.percent])
+                            )
+                            : renderEmptyElement($xeUpload)
+                        ]
+                      )
+                      : renderEmptyElement($xeUpload),
+                    h(
+                      'div',
+                      {
+                        class: 'vxe-upload--image-item-img-wrapper',
+                        title: getI18n('vxe.upload.viewItemTitle')
+                      },
+                      [
+                        h('img', {
+                          class: 'vxe-upload--image-item-img',
+                          src: getThumbnailFileUrl(item)
+                        })
+                      ]
+                    ),
+                    !isLoading && ((isError && showErrorStatus) || (isPending && showSubmitButton && !autoSubmit))
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-upload--image-item-rebtn'
+                        },
+                        [
+                          h(VxeButtonComponent, {
+                            icon: isError ? getIcon().UPLOAD_IMAGE_RE_UPLOAD : getIcon().UPLOAD_IMAGE_UPLOAD,
+                            mode: 'text',
+                            status: 'primary',
+                            content: isError ? getI18n('vxe.upload.reUpload') : getI18n('vxe.upload.manualUpload'),
+                            onClick(evnt) {
+                              handleReUploadEvent(evnt, item)
+                            }
                           })
-                        ])
-                        : renderEmptyElement($xeUpload)
-                    ])
-              ])
-            ])
+                        ]
+                      )
+                      : renderEmptyElement($xeUpload),
+                    h(
+                      'div',
+                      {
+                        class: 'vxe-upload--image-item-btn-wrapper',
+                        onClick(evnt) {
+                          evnt.stopPropagation()
+                        }
+                      },
+                      actionSlot
+                        ? getSlotVNs(actionSlot({ option: item, isMoreView, options: fileList, readonly: formReadonly }))
+                        : [
+                            cornerSlot
+                              ? h(
+                                'div',
+                                {
+                                  class: 'vxe-upload--file-item-action'
+                                },
+                                getSlotVNs(cornerSlot({ option: item, isMoreView, options: fileList, readonly: formReadonly }))
+                              )
+                              : renderEmptyElement($xeUpload),
+                            showRemoveButton && !formReadonly && !isDisabled && !isLoading
+                              ? h(
+                                'div',
+                                {
+                                  class: 'vxe-upload--image-item-remove-btn',
+                                  onClick(evnt: MouseEvent) {
+                                    evnt.stopPropagation()
+                                    removeFileEvent(evnt, item, index)
+                                  }
+                                },
+                                [
+                                  h('i', {
+                                    class: getIcon().UPLOAD_IMAGE_REMOVE
+                                  })
+                                ]
+                              )
+                              : renderEmptyElement($xeUpload)
+                          ]
+                    )
+                  ]
+                )
+              ]
+        )
       })
     }
 
@@ -1813,42 +1991,66 @@ export default defineVxeComponent({
       if (formReadonly || !showUploadButton || (autoHiddenButton && overCount)) {
         return renderEmptyElement($xeUpload)
       }
-      return h('div', {
-        key: 'action',
-        class: 'vxe-upload--image-action'
-      }, [
-        h('div', {
-          class: 'vxe-upload--image-action-btn',
-          onClick: clickEvent
-        }, defaultSlot
-          ? defaultSlot({ isMoreView, options: fileList, $upload: $xeUpload })
-          : [
-              h('div', {
-                class: 'vxe-upload--image-action-box',
-                style: isMoreView ? null : imgStyle
-              }, [
-                showButtonIcon
-                  ? h('div', {
-                    class: 'vxe-upload--image-action-icon'
-                  }, [
-                    h('i', {
-                      class: buttonIcon || getIcon().UPLOAD_IMAGE_ADD
-                    })
-                  ])
-                  : renderEmptyElement($xeUpload),
-                isMoreView || showButtonText
-                  ? h('div', {
-                    class: 'vxe-upload--image-action-content'
-                  }, buttonText ? `${XEUtils.isFunction(buttonText) ? buttonText({}) : buttonText}` : getI18n('vxe.upload.imgBtnText'))
-                  : renderEmptyElement($xeUpload),
-                showTipText && (defTipText || tipSlot)
-                  ? h('div', {
-                    class: 'vxe-upload--image-action-hint'
-                  }, tipSlot ? getSlotVNs(tipSlot({ isMoreView, options: fileList, $upload: $xeUpload })) : `${defTipText}`)
-                  : renderEmptyElement($xeUpload)
-              ])
-            ])
-      ])
+      return h(
+        'div',
+        {
+          key: 'action',
+          class: 'vxe-upload--image-action'
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-upload--image-action-btn',
+              onClick: clickEvent
+            },
+            defaultSlot
+              ? defaultSlot({ isMoreView, options: fileList, $upload: $xeUpload })
+              : [
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-upload--image-action-box',
+                      style: isMoreView ? null : imgStyle
+                    },
+                    [
+                      showButtonIcon
+                        ? h(
+                          'div',
+                          {
+                            class: 'vxe-upload--image-action-icon'
+                          },
+                          [
+                            h('i', {
+                              class: buttonIcon || getIcon().UPLOAD_IMAGE_ADD
+                            })
+                          ]
+                        )
+                        : renderEmptyElement($xeUpload),
+                      isMoreView || showButtonText
+                        ? h(
+                          'div',
+                          {
+                            class: 'vxe-upload--image-action-content'
+                          },
+                          buttonText ? `${XEUtils.isFunction(buttonText) ? buttonText({}) : buttonText}` : getI18n('vxe.upload.imgBtnText')
+                        )
+                        : renderEmptyElement($xeUpload),
+                      showTipText && (defTipText || tipSlot)
+                        ? h(
+                          'div',
+                          {
+                            class: 'vxe-upload--image-action-hint'
+                          },
+                          tipSlot ? getSlotVNs(tipSlot({ isMoreView, options: fileList, $upload: $xeUpload })) : `${defTipText}`
+                        )
+                        : renderEmptyElement($xeUpload)
+                    ]
+                  )
+                ]
+          )
+        ]
+      )
     }
 
     const renderImageMode = () => {
@@ -1869,63 +2071,94 @@ export default defineVxeComponent({
         currList = fileList.slice(0, maxCount)
       }
 
-      return h('div', {
-        key: 'image',
-        class: 'vxe-upload--image-wrapper'
-      }, showList
-        ? [
-            dragSort
-              ? h(TransitionGroup, {
-                name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
-                tag: 'div',
-                class: 'vxe-upload--image-list'
-              }, {
-                default: () => renderImageItemList(currList, false).concat([
-                  showMoreButton && overMaxNum
-                    ? h('div', {
-                      key: 'om',
-                      class: 'vxe-upload--image-over-more'
-                    }, moreBtnSlot
-                      ? getSlotVNs(moreBtnSlot({ options: fileList }))
-                      : [
-                          h(VxeButtonComponent, {
-                            mode: 'text',
-                            content: moreButtonText ? (XEUtils.isFunction(moreButtonText) ? moreButtonText({ $upload: $xeUpload, options: fileList }) : XEUtils.toFormatString(moreButtonText, [fileList.length])) : getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
-                            status: 'primary',
-                            onClick: handleMoreEvent
-                          })
-                        ])
-                    : renderEmptyElement($xeUpload),
-                  renderImageAction(false)
-                ])
-              })
-              : h('div', {
-                class: 'vxe-upload--image-list'
-              }, renderImageItemList(currList, false).concat([
-                showMoreButton && overMaxNum
-                  ? h('div', {
-                    class: 'vxe-upload--image-over-more'
-                  }, moreBtnSlot
-                    ? getSlotVNs(moreBtnSlot({ options: fileList }))
-                    : [
-                        h(VxeButtonComponent, {
-                          mode: 'text',
-                          content: moreButtonText ? (XEUtils.isFunction(moreButtonText) ? moreButtonText({ $upload: $xeUpload, options: fileList }) : XEUtils.toFormatString(moreButtonText, [fileList.length])) : getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
-                          status: 'primary',
-                          onClick: handleMoreEvent
-                        })
+      return h(
+        'div',
+        {
+          key: 'image',
+          class: 'vxe-upload--image-wrapper'
+        },
+        showList
+          ? [
+              dragSort
+                ? h(
+                  TransitionGroup,
+                  {
+                    name: `vxe-upload--drag-list${isDragMove ? '' : '-disabled'}`,
+                    tag: 'div',
+                    class: 'vxe-upload--image-list'
+                  },
+                  {
+                    default: () =>
+                      renderImageItemList(currList, false).concat([
+                        showMoreButton && overMaxNum
+                          ? h(
+                            'div',
+                            {
+                              key: 'om',
+                              class: 'vxe-upload--image-over-more'
+                            },
+                            moreBtnSlot
+                              ? getSlotVNs(moreBtnSlot({ options: fileList }))
+                              : [
+                                  h(VxeButtonComponent, {
+                                    mode: 'text',
+                                    content: moreButtonText
+                                      ? XEUtils.isFunction(moreButtonText)
+                                        ? moreButtonText({ $upload: $xeUpload, options: fileList })
+                                        : XEUtils.toFormatString(moreButtonText, [fileList.length])
+                                      : getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
+                                    status: 'primary',
+                                    onClick: handleMoreEvent
+                                  })
+                                ]
+                          )
+                          : renderEmptyElement($xeUpload),
+                        renderImageAction(false)
                       ])
-                  : renderEmptyElement($xeUpload),
-                renderImageAction(false)
-              ]))
-          ]
-        : [
-            h('div', {
-              class: 'vxe-upload--image-list'
-            }, [
-              renderImageAction(false)
-            ])
-          ])
+                  }
+                )
+                : h(
+                  'div',
+                  {
+                    class: 'vxe-upload--image-list'
+                  },
+                  renderImageItemList(currList, false).concat([
+                    showMoreButton && overMaxNum
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-upload--image-over-more'
+                        },
+                        moreBtnSlot
+                          ? getSlotVNs(moreBtnSlot({ options: fileList }))
+                          : [
+                              h(VxeButtonComponent, {
+                                mode: 'text',
+                                content: moreButtonText
+                                  ? XEUtils.isFunction(moreButtonText)
+                                    ? moreButtonText({ $upload: $xeUpload, options: fileList })
+                                    : XEUtils.toFormatString(moreButtonText, [fileList.length])
+                                  : getI18n(isMoreMax && isMiniMore ? 'vxe.upload.moreImgBtnText' : 'vxe.upload.moreBtnText', [fileList.length]),
+                                status: 'primary',
+                                onClick: handleMoreEvent
+                              })
+                            ]
+                      )
+                      : renderEmptyElement($xeUpload),
+                    renderImageAction(false)
+                  ])
+                )
+            ]
+          : [
+              h(
+                'div',
+                {
+                  class: 'vxe-upload--image-list'
+                },
+                [renderImageAction(false)]
+              )
+            ]
+      )
     }
 
     const renderVN = () => {
@@ -1945,41 +2178,58 @@ export default defineVxeComponent({
         ons.onDrop = handleUploadDropEvent
       }
 
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-upload', {
-          [`size--${vSize}`]: vSize,
-          'is--active': isActivated,
-          'is--readonly': formReadonly,
-          'is--disabled': isDisabled,
-          'is--paste': pasteToUpload,
-          'show--error': showErrorStatus,
-          'is--drag': isDragUploadStatus
-        }],
-        ...ons
-      }, [
-        isImage ? renderImageMode() : rendeFileMode(),
-        dragSort
-          ? h('div', {
-            ref: refDragLineElem,
-            class: 'vxe-upload--drag-line'
-          })
-          : renderEmptyElement($xeUpload),
-        isDragUploadStatus && !showMorePopup
-          ? h('div', {
-            class: 'vxe-upload--drag-placeholder'
-          }, dragPlaceholder || getI18n('vxe.upload.dragPlaceholder'))
-          : renderEmptyElement($xeUpload)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-upload',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--active': isActivated,
+              'is--readonly': formReadonly,
+              'is--disabled': isDisabled,
+              'is--paste': pasteToUpload,
+              'show--error': showErrorStatus,
+              'is--drag': isDragUploadStatus
+            }
+          ],
+          ...ons
+        },
+        [
+          isImage ? renderImageMode() : rendeFileMode(),
+          dragSort
+            ? h('div', {
+              ref: refDragLineElem,
+              class: 'vxe-upload--drag-line'
+            })
+            : renderEmptyElement($xeUpload),
+          isDragUploadStatus && !showMorePopup
+            ? h(
+              'div',
+              {
+                class: 'vxe-upload--drag-placeholder'
+              },
+              dragPlaceholder || getI18n('vxe.upload.dragPlaceholder')
+            )
+            : renderEmptyElement($xeUpload)
+        ]
+      )
     }
 
     const listFlag = ref(0)
-    watch(() => props.modelValue ? props.modelValue.length : 0, () => {
-      listFlag.value++
-    })
-    watch(() => props.modelValue, () => {
-      listFlag.value++
-    })
+    watch(
+      () => (props.modelValue ? props.modelValue.length : 0),
+      () => {
+        listFlag.value++
+      }
+    )
+    watch(
+      () => props.modelValue,
+      () => {
+        listFlag.value++
+      }
+    )
     watch(listFlag, () => {
       updateFileList()
     })
@@ -2015,7 +2265,7 @@ export default defineVxeComponent({
 
     return $xeUpload
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

@@ -1,10 +1,12 @@
 import { reactive, h, computed, PropType, watch } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, getIcon, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
 import type { VxeLoadingPropTypes, LoadingReactData, VxeLoadingPrivateComputed, LoadingMethods, LoadingPrivateMethods, VxeLoadingEmits, VxeLoadingConstructor, VxeLoadingPrivateMethods, ValueOf } from '../../../types'
+
+const { getConfig, getIcon, getI18n, createEvent, useFns, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeLoading',
@@ -32,12 +34,12 @@ export default defineVxeComponent({
       default: () => getConfig().loading.size || getConfig().size
     }
   },
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const reactData = reactive<LoadingReactData>({
       initialized: false
@@ -79,8 +81,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const loadingPrivateMethods: LoadingPrivateMethods = {
-    }
+    const loadingPrivateMethods: LoadingPrivateMethods = {}
 
     Object.assign($xeLoading, loadingMethods, loadingPrivateMethods)
 
@@ -98,47 +99,73 @@ export default defineVxeComponent({
         return renderEmptyElement($xeLoading)
       }
 
-      return h('div', {
-        class: ['vxe-loading', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--visible': modelValue
-        }]
-      }, defaultSlot
-        ? [
-            h('div', {
-              class: 'vxe-loading--wrapper'
-            }, getSlotVNs(defaultSlot({})))
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-loading',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--visible': modelValue
+            }
           ]
-        : [
-            h('div', {
-              class: 'vxe-loading--chunk'
-            }, [
-              showIcon && (iconSlot || loadingIcon)
-                ? h('div', {
-                  class: 'vxe-loading--icon'
-                }, iconSlot
-                  ? getSlotVNs(iconSlot({}))
-                  : [
-                      h('i', {
-                        class: loadingIcon
-                      })
-                    ])
-                : h('div', {
-                  class: 'vxe-loading--spinner'
-                }),
-              textSlot || loadingText
-                ? h('div', {
-                  class: 'vxe-loading--text'
-                }, textSlot ? getSlotVNs(textSlot({})) : `${loadingText}`)
-                : null
-            ])
-          ])
+        },
+        defaultSlot
+          ? [
+              h(
+                'div',
+                {
+                  class: 'vxe-loading--wrapper'
+                },
+                getSlotVNs(defaultSlot({}))
+              )
+            ]
+          : [
+              h(
+                'div',
+                {
+                  class: 'vxe-loading--chunk'
+                },
+                [
+                  showIcon && (iconSlot || loadingIcon)
+                    ? h(
+                      'div',
+                      {
+                        class: 'vxe-loading--icon'
+                      },
+                      iconSlot
+                        ? getSlotVNs(iconSlot({}))
+                        : [
+                            h('i', {
+                              class: loadingIcon
+                            })
+                          ]
+                    )
+                    : h('div', {
+                      class: 'vxe-loading--spinner'
+                    }),
+                  textSlot || loadingText
+                    ? h(
+                      'div',
+                      {
+                        class: 'vxe-loading--text'
+                      },
+                      textSlot ? getSlotVNs(textSlot({})) : `${loadingText}`
+                    )
+                    : null
+                ]
+              )
+            ]
+      )
     }
 
-    watch(() => props.modelValue, () => {
-      handleInit()
-    })
+    watch(
+      () => props.modelValue,
+      () => {
+        handleInit()
+      }
+    )
 
     handleInit()
 
@@ -146,7 +173,7 @@ export default defineVxeComponent({
 
     return $xeLoading
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

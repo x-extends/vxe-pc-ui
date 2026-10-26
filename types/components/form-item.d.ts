@@ -21,7 +21,7 @@ export interface VxeFormItemConstructor extends VxeComponentBaseOptions, VxeForm
 export interface FormItemPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeFormItemPrivateRef extends FormItemPrivateRef { }
+export interface VxeFormItemPrivateRef extends FormItemPrivateRef {}
 
 export namespace VxeFormItemPropTypes {
   export type Title = string
@@ -51,16 +51,16 @@ export namespace VxeFormItemPropTypes {
   }
   export type ClassName = string | ((params: ClassNameParams) => string)
 
-  interface ContentClassNameParams extends ClassNameParams{}
+  interface ContentClassNameParams extends ClassNameParams {}
   export type ContentClassName = string | ((params: ContentClassNameParams) => string)
 
-  interface ContentStyleParams extends ClassNameParams{}
+  interface ContentStyleParams extends ClassNameParams {}
   export type ContentStyle = VxeComponentStyleType | ((params: ContentStyleParams) => VxeComponentStyleType)
 
-  interface TitleClassNameParams extends ClassNameParams{}
+  interface TitleClassNameParams extends ClassNameParams {}
   export type TitleClassName = string | ((params: TitleClassNameParams) => string)
 
-  interface TitleStyleParams extends ClassNameParams{}
+  interface TitleStyleParams extends ClassNameParams {}
   export type TitleStyle = VxeComponentStyleType | ((params: TitleStyleParams) => VxeComponentStyleType)
 
   export type Readonly = boolean
@@ -70,24 +70,9 @@ export namespace VxeFormItemPropTypes {
 
   export type TitleOverflow = VxeFormPropTypes.TitleOverflow
 
-  export type Formatter<D = any> = string | ((params: {
-    $grid: VxeGridConstructor | null | undefined
-    $form: VxeFormConstructor<D>
-    data: D
-    item: VxeFormDefines.ItemInfo
-    field: string
-    itemValue: any
-  }) => string | number)
+  export type Formatter<D = any> = string | ((params: { $grid: VxeGridConstructor | null | undefined; $form: VxeFormConstructor<D>; data: D; item: VxeFormDefines.ItemInfo; field: string; itemValue: any }) => string | number)
 
-  export type ResetValue = string | number | any[] | object | RegExp | null | undefined | ((params: {
-    $grid: VxeGridConstructor | null | undefined
-    $form: VxeFormConstructor
-    data: any
-    item: VxeFormDefines.ItemInfo
-    field: string
-    currentField: string
-    currentValue: any
-  }) => any)
+  export type ResetValue = string | number | any[] | object | RegExp | null | undefined | ((params: { $grid: VxeGridConstructor | null | undefined; $form: VxeFormConstructor; data: any; item: VxeFormDefines.ItemInfo; field: string; currentField: string; currentValue: any }) => any)
   export type Visible = boolean
   export type VisibleMethod = (params: FormItemVisibleParams) => boolean
   export type ShowContent = boolean
@@ -289,19 +274,16 @@ export interface VxeFormItemProps<D = any> {
   params?: VxeFormItemPropTypes.Params
 }
 
-export interface FormItemPrivateComputed {
-}
-export interface VxeFormItemPrivateComputed extends FormItemPrivateComputed { }
+export interface FormItemPrivateComputed {}
+export interface VxeFormItemPrivateComputed extends FormItemPrivateComputed {}
 
-export interface FormItemReactData {
-}
+export interface FormItemReactData {}
 
-export interface FormItemMethods {
-}
-export interface VxeFormItemMethods extends FormItemMethods { }
+export interface FormItemMethods {}
+export interface VxeFormItemMethods extends FormItemMethods {}
 
-export interface FormItemPrivateMethods { }
-export interface VxeFormItemPrivateMethods extends FormItemPrivateMethods { }
+export interface FormItemPrivateMethods {}
+export interface VxeFormItemPrivateMethods extends FormItemPrivateMethods {}
 
 export type VxeFormItemEmits = []
 
@@ -360,9 +342,9 @@ export interface FormItemResetParams {
 
 export type VxeFormItemEventProps = {}
 
-export interface VxeFormItemListeners { }
+export interface VxeFormItemListeners {}
 
-export namespace VxeFormItemEvents { }
+export namespace VxeFormItemEvents {}
 
 export namespace VxeFormItemSlotTypes {
   export interface DefaultSlotParams<D = any> {

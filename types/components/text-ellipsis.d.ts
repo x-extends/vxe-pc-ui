@@ -20,7 +20,7 @@ export interface VxeTextEllipsisConstructor extends VxeComponentBaseOptions, Vxe
 export interface TextEllipsisPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeTextEllipsisPrivateRef extends TextEllipsisPrivateRef { }
+export interface VxeTextEllipsisPrivateRef extends TextEllipsisPrivateRef {}
 
 export namespace VxeTextEllipsisPropTypes {
   export type Href = null | string
@@ -58,9 +58,8 @@ export type VxeTextEllipsisProps = {
   size?: VxeTextEllipsisPropTypes.Size
 }
 
-export interface TextEllipsisPrivateComputed {
-}
-export interface VxeTextEllipsisPrivateComputed extends TextEllipsisPrivateComputed { }
+export interface TextEllipsisPrivateComputed {}
+export interface VxeTextEllipsisPrivateComputed extends TextEllipsisPrivateComputed {}
 
 export interface TextEllipsisReactData {
   resizeObserver: ResizeObserver | null
@@ -70,23 +69,20 @@ export interface TextEllipsisReactData {
 export interface TextEllipsisMethods {
   dispatchEvent(type: ValueOf<VxeTextEllipsisEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeTextEllipsisMethods extends TextEllipsisMethods { }
+export interface VxeTextEllipsisMethods extends TextEllipsisMethods {}
 
-export interface TextEllipsisPrivateMethods { }
-export interface VxeTextEllipsisPrivateMethods extends TextEllipsisPrivateMethods { }
+export interface TextEllipsisPrivateMethods {}
+export interface VxeTextEllipsisPrivateMethods extends TextEllipsisPrivateMethods {}
 
-export type VxeTextEllipsisEmits = [
-  'click'
-]
+export type VxeTextEllipsisEmits = ['click']
 
 export namespace VxeTextEllipsisDefines {
   export interface TextEllipsisEventParams extends VxeComponentEventParams {
     $textEllipsis: VxeTextEllipsisConstructor
   }
 
-  export interface ClickParams {
-  }
-  export interface ClickEventParams extends TextEllipsisEventParams, ClickParams { }
+  export interface ClickParams {}
+  export interface ClickEventParams extends TextEllipsisEventParams, ClickParams {}
 }
 
 export type VxeTextEllipsisEventProps = {
@@ -105,8 +101,7 @@ export namespace VxeTextEllipsisSlotTypes {
   export interface DefaultSlotParams {}
 }
 
-export interface VxeTextEllipsisSlots {
-}
+export interface VxeTextEllipsisSlots {}
 
 export const TextEllipsis: typeof VxeTextEllipsis
 export default VxeTextEllipsis

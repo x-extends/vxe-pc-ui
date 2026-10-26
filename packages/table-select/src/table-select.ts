@@ -1,14 +1,35 @@
 import { ref, h, PropType, computed, inject, watch, provide, nextTick, Teleport, onMounted, onUnmounted, reactive } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit, getPopupContainer } from '../../ui/src/dom'
 import { getOnName } from '../../ui/src/vn'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input/src/input'
 
-import type { TableSelectReactData, VxeTableSelectEmits, VxeInputConstructor, TableSelectInternalData, VxeTableSelectPropTypes, VxeFormDefines, VxeModalConstructor, VxeModalMethods, VxeDrawerConstructor, VxeDrawerMethods, TableSelectMethods, TableSelectPrivateMethods, ValueOf, TableSelectPrivateRef, VxeTableSelectPrivateComputed, VxeTableSelectConstructor, VxeTableSelectPrivateMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentStyleType } from '../../../types'
+import type {
+  TableSelectReactData,
+  VxeTableSelectEmits,
+  VxeInputConstructor,
+  TableSelectInternalData,
+  VxeTableSelectPropTypes,
+  VxeFormDefines,
+  VxeModalConstructor,
+  VxeModalMethods,
+  VxeDrawerConstructor,
+  VxeDrawerMethods,
+  TableSelectMethods,
+  TableSelectPrivateMethods,
+  ValueOf,
+  TableSelectPrivateRef,
+  VxeTableSelectPrivateComputed,
+  VxeTableSelectConstructor,
+  VxeTableSelectPrivateMethods,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  VxeComponentStyleType
+} from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods, VxeTablePropTypes } from '../../../types/components/table'
 import type { VxeGridInstance, VxeGridEvents, VxeGridPropTypes } from '../../../types/components/grid'
 
@@ -16,11 +37,11 @@ const { getConfig, getIcon, globalEvents, getI18n, createEvent, useFns, renderEm
 
 const { errLog } = createComponentLog('table-select')
 
-export function getRowUniqueId () {
+export function getRowUniqueId() {
   return XEUtils.uniqueId('row_')
 }
 
-function createReactData (): TableSelectReactData {
+function createReactData(): TableSelectReactData {
   return {
     initialized: false,
     searchValue: '',
@@ -37,7 +58,7 @@ function createReactData (): TableSelectReactData {
   }
 }
 
-function createInternalData (): TableSelectInternalData {
+function createInternalData(): TableSelectInternalData {
   return {
     // hpTimeout: undefined,
     // vpTimeout: undefined,
@@ -57,7 +78,7 @@ export default defineVxeComponent({
     },
     placeholder: {
       type: String as PropType<VxeTableSelectPropTypes.Placeholder>,
-      default: () => XEUtils.eqNull(getConfig().tableSelect.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().tableSelect.placeholder
+      default: () => (XEUtils.eqNull(getConfig().tableSelect.placeholder) ? getI18n('vxe.base.pleaseSelect') : getConfig().tableSelect.placeholder)
     },
     readonly: {
       type: Boolean as PropType<VxeTableSelectPropTypes.Readonly>,
@@ -112,12 +133,12 @@ export default defineVxeComponent({
     'form-collapse',
     'page-change'
   ] as VxeTableSelectEmits,
-  setup (props, context) {
+  setup(props, context) {
     const { emit, slots } = context
 
     const VxeTableGridComponent = VxeUI.getComponent('vxe-grid')
 
-    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
+    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods) | null>('$xeModal', null)
     const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
     const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
@@ -189,19 +210,28 @@ export default defineVxeComponent({
     const computeCheckboxOpts = computed(() => {
       const { multiple } = props
       const gridOpts = computeGridOpts.value
-      return Object.assign({
-        reserve: multiple,
-        showReserveStatus: multiple
-      }, getConfig().table.checkboxConfig, gridOpts.checkboxConfig)
+      return Object.assign(
+        {
+          reserve: multiple,
+          showReserveStatus: multiple
+        },
+        getConfig().table.checkboxConfig,
+        gridOpts.checkboxConfig
+      )
     })
 
     const computeRowOpts = computed<VxeTablePropTypes.RowConfig>(() => {
       const { multiple } = props
       const gridOpts = computeGridOpts.value
       const valueField = computeValueField.value
-      return Object.assign({
-        isCurrent: true
-      }, multiple ? { keyField: valueField } : {}, getConfig().table.rowConfig, gridOpts.rowConfig)
+      return Object.assign(
+        {
+          isCurrent: true
+        },
+        multiple ? { keyField: valueField } : {},
+        getConfig().table.rowConfig,
+        gridOpts.rowConfig
+      )
     })
 
     const computeRowKeyField = computed(() => {
@@ -249,8 +279,8 @@ export default defineVxeComponent({
           if (ajaxMethods) {
             const resConfigs = proxyConfig.response || proxyConfig.props || {}
             Object.assign(newProxyConfig.ajax, {
-              query (params: VxeGridPropTypes.ProxyAjaxQueryParams, ...args: any[]) {
-                return Promise.resolve(ajaxMethods(params, ...args)).then(rest => {
+              query(params: VxeGridPropTypes.ProxyAjaxQueryParams, ...args: any[]) {
+                return Promise.resolve(ajaxMethods(params, ...args)).then((rest) => {
                   let currData = []
                   if (pagerConfig) {
                     const resultProp = resConfigs.result
@@ -279,19 +309,21 @@ export default defineVxeComponent({
       if (!fullData) {
         return ''
       }
-      return (XEUtils.isArray(modelValue) ? modelValue : [modelValue]).map(val => {
-        const cacheItem = fullValMaps[val]
-        if (cacheItem) {
-          return cacheItem.item[labelField]
-        }
-        if (lazyOptions) {
-          const lazyItem = lazyOptions.find(item => item[valueField] === val)
-          if (lazyItem) {
-            return lazyItem[labelField]
+      return (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+        .map((val) => {
+          const cacheItem = fullValMaps[val]
+          if (cacheItem) {
+            return cacheItem.item[labelField]
           }
-        }
-        return val
-      }).join(', ')
+          if (lazyOptions) {
+            const lazyItem = lazyOptions.find((item) => item[valueField] === val)
+            if (lazyItem) {
+              return lazyItem[labelField]
+            }
+          }
+          return val
+        })
+        .join(', ')
     })
 
     const computePopupWrapperStyle = computed(() => {
@@ -307,8 +339,7 @@ export default defineVxeComponent({
       return stys
     })
 
-    const computeMaps: VxeTableSelectPrivateComputed = {
-    }
+    const computeMaps: VxeTableSelectPrivateComputed = {}
 
     const $xeTableSelect = {
       xID,
@@ -320,14 +351,9 @@ export default defineVxeComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeTableSelectConstructor & VxeTableSelectPrivateMethods
 
-    const gridEventKeys: ValueOf<VxeTableSelectEmits>[] = [
-      'form-submit',
-      'form-reset',
-      'form-collapse',
-      'page-change'
-    ]
+    const gridEventKeys: ValueOf<VxeTableSelectEmits>[] = ['form-submit', 'form-reset', 'form-collapse', 'page-change']
     const gridEvents: Record<string, any> = {}
-    gridEventKeys.forEach(name => {
+    gridEventKeys.forEach((name) => {
       gridEvents[getOnName(XEUtils.camelCase(name))] = (params: any) => {
         dispatchEvent(name, params, params.$event)
       }
@@ -345,8 +371,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const tableSelectPrivateMethods: TableSelectPrivateMethods = {
-    }
+    const tableSelectPrivateMethods: TableSelectPrivateMethods = {}
 
     const getRowid = (option: any) => {
       const rowKeyField = computeRowKeyField.value
@@ -361,20 +386,22 @@ export default defineVxeComponent({
       const valueField = computeValueField.value
       const labelField = computeLabelField.value
       const rows: any[] = []
-      const vals = XEUtils.eqNull(modelValue) ? [] : (XEUtils.isArray(modelValue) ? modelValue : [modelValue])
+      const vals = XEUtils.eqNull(modelValue) ? [] : XEUtils.isArray(modelValue) ? modelValue : [modelValue]
       if (checkboxOpts.reserve) {
-        vals.forEach(val => {
+        vals.forEach((val) => {
           const cacheItem = fullValMaps[val]
-          rows.push(cacheItem
-            ? cacheItem.item
-            : {
-                [rowKeyField]: val,
-                [valueField]: val,
-                [labelField]: val
-              })
+          rows.push(
+            cacheItem
+              ? cacheItem.item
+              : {
+                  [rowKeyField]: val,
+                  [valueField]: val,
+                  [labelField]: val
+                }
+          )
         })
       } else {
-        vals.forEach(val => {
+        vals.forEach((val) => {
           const cacheItem = fullValMaps[val]
           if (cacheItem) {
             rows.push(cacheItem.item)
@@ -414,7 +441,7 @@ export default defineVxeComponent({
       const tableCols: VxeTableSelectPropTypes.Columns = []
       let hasRadioCol = false
       let hasCheckboxCol = false
-      columns.forEach(column => {
+      columns.forEach((column) => {
         if (!hasRadioCol && column.type === 'radio') {
           hasRadioCol = true
         } else if (!hasCheckboxCol && column.type === 'checkbox') {
@@ -446,14 +473,17 @@ export default defineVxeComponent({
       const valueField = computeValueField.value
       const gridOpts = computeGridOpts.value
       const { treeConfig, pagerConfig } = gridOpts
-      const rowMaps: Record<string, {
-        item: any
-        index: number
-        _index: number
-        items: any[]
-        parent: any
-        nodes: any[]
-      }> = {}
+      const rowMaps: Record<
+        string,
+        {
+          item: any
+          index: number
+          _index: number
+          items: any[]
+          parent: any
+          nodes: any[]
+        }
+      > = {}
       const keyMaps: Record<string, boolean> = {}
       if (treeConfig) {
         // 暂不支持
@@ -495,15 +525,17 @@ export default defineVxeComponent({
       } else {
         if (filterable && frMethod) {
           avList = searchStr
-            ? fullData.filter(row => frMethod({
-              $tableSelect: $xeTableSelect,
-              row,
-              filterValue: searchValue,
-              value: modelValue
-            }))
+            ? fullData.filter((row) =>
+              frMethod({
+                $tableSelect: $xeTableSelect,
+                row,
+                filterValue: searchValue,
+                value: modelValue
+              })
+            )
             : fullData
         } else if (filterable) {
-          avList = searchStr ? fullData.filter(row => (`${row[labelField] || row[valueField]}`.toLowerCase().indexOf(searchStr) > -1)) : fullData
+          avList = searchStr ? fullData.filter((row) => `${row[labelField] || row[valueField]}`.toLowerCase().indexOf(searchStr) > -1) : fullData
         } else {
           avList = fullData
         }
@@ -628,9 +660,8 @@ export default defineVxeComponent({
       const queryMethod = remoteOpts.queryMethod
       if (remote && queryMethod && remoteOpts.enabled) {
         reactData.searchLoading = true
-        Promise.resolve(
-          queryMethod({ $tableSelect: $xeTableSelect, searchValue, value: modelValue })
-        ).then(() => nextTick())
+        Promise.resolve(queryMethod({ $tableSelect: $xeTableSelect, searchValue, value: modelValue }))
+          .then(() => nextTick())
           .catch(() => nextTick())
           .finally(() => {
             reactData.searchLoading = false
@@ -778,7 +809,7 @@ export default defineVxeComponent({
         if (checkboxOpts.reserve) {
           checkboxRecords.push(...$grid.getCheckboxReserveRecords())
         }
-        const value = checkboxRecords.map(row => {
+        const value = checkboxRecords.map((row) => {
           return row[valueField]
         })
         changeEvent($event, value, row)
@@ -811,150 +842,223 @@ export default defineVxeComponent({
       const ppClassName = popupOpts.className
 
       if (formReadonly) {
-        return h('div', {
-          ref: refElem,
-          class: ['vxe-table-select--readonly', className]
-        }, [
-          h('span', {
-            class: 'vxe-table-select-label'
-          }, selectLabel)
-        ])
+        return h(
+          'div',
+          {
+            ref: refElem,
+            class: ['vxe-table-select--readonly', className]
+          },
+          [
+            h(
+              'span',
+              {
+                class: 'vxe-table-select-label'
+              },
+              selectLabel
+            )
+          ]
+        )
       }
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-table-select', className ? (XEUtils.isFunction(className) ? className({ $tableSelect: $xeTableSelect }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          'is--filterable': filterable,
-          'is--visible': visiblePanel,
-          'is--disabled': isDisabled,
-          'is--loading': loading,
-          'is--active': isActivated
-        }]
-      }, [
-        h(VxeInputComponent, {
-          ref: refInput,
-          clearable: props.clearable,
-          placeholder: loading ? getI18n('vxe.select.loadingText') : props.placeholder,
-          editable: false,
-          disabled: isDisabled,
-          type: 'text',
-          prefixIcon: props.prefixIcon,
-          suffixIcon: loading ? getIcon().TABLE_SELECT_LOADED : (visiblePanel ? getIcon().TABLE_SELECT_OPEN : getIcon().TABLE_SELECT_CLOSE),
-          modelValue: loading ? '' : selectLabel,
-          onClear: clearEvent,
-          onClick: clickEvent,
-          onFocus: focusEvent,
-          onBlur: blurEvent,
-          onSuffixClick: togglePanelEvent
-        }, prefixSlot
-          ? {
-              prefix: () => prefixSlot({})
-            }
-          : {}),
-        h(Teleport, {
-          to: getPopupContainer(appendTo),
-          disabled: btnTransfer ? !initialized : true
-        }, [
-          h('div', {
-            ref: refOptionPanel,
-            class: ['vxe-table--ignore-clear vxe-table-select--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $tableSelect: $xeTableSelect }) : ppClassName) : '', {
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-table-select',
+            className ? (XEUtils.isFunction(className) ? className({ $tableSelect: $xeTableSelect }) : className) : '',
+            {
               [`size--${vSize}`]: vSize,
-              'is--transfer': btnTransfer,
-              'ani--leave': !loading && isAniVisible,
-              'ani--enter': !loading && visiblePanel
-            }],
-            placement: reactData.panelPlacement,
-            style: reactData.panelStyle
-          }, initialized
-            ? [
-                h('div', {
-                  class: 'vxe-table-select--panel-wrapper'
-                }, [
-                  filterable
-                    ? h('div', {
-                      class: 'vxe-table-select--panel-search'
-                    }, [
-                      h(VxeInputComponent, {
-                        ref: refInpSearch,
-                        class: 'vxe-table-select-search--input',
-                        modelValue: searchValue,
-                        clearable: true,
-                        disabled: false,
-                        readonly: false,
-                        placeholder: getI18n('vxe.treeSelect.search'),
-                        prefixIcon: getIcon().INPUT_SEARCH,
-                        'onUpdate:modelValue': modelSearchEvent,
-                        onFocus: focusSearchEvent,
-                        onChange: triggerSearchEvent,
-                        onSearch: triggerSearchEvent
-                      })
-                    ])
-                    : renderEmptyElement($xeTableSelect),
-                  headerSlot
-                    ? h('div', {
-                      class: 'vxe-table-select--panel-header'
-                    }, headerSlot({}))
-                    : renderEmptyElement($xeTableSelect),
-                  h('div', {
-                    class: 'vxe-table-select--panel-body'
-                  }, [
-                    h('div', {
-                      ref: refGridWrapper,
-                      class: 'vxe-table-select-grid--wrapper',
-                      style: popupWrapperStyle
-                    }, [
-                      VxeTableGridComponent
-                        ? h(VxeTableGridComponent, {
-                          ...selectGridOpts,
-                          ...gridEvents,
-                          class: 'vxe-table-select--grid',
-                          ref: refGrid,
-                          loading: remote && searchLoading,
-                          rowConfig: rowOpts,
-                          data: tableData,
-                          columns: tableColumns.length ? tableColumns : selectGridOpts.columns,
-                          height: '100%',
-                          autoResize: true,
-                          onRadioChange: radioChangeEvent,
-                          onCheckboxChange: checkboxChangeEvent,
-                          onCheckboxAll: checkboxAllEvent
-                        }, Object.assign({}, slots, {
-                          header: undefined,
-                          footer: undefined,
-                          prefixSlot: undefined
-                        }))
-                        : renderEmptyElement($xeTableSelect)
-                    ])
-                  ]),
-                  footerSlot || (filterable && searchValue && !remote && filterOpts.showResultCount)
-                    ? h('div', {
-                      class: 'vxe-table-select--panel-footer'
-                    }, footerSlot
-                      ? footerSlot({})
-                      : [
-                          h('div', {
-                            class: 'vxe-table-select--search-count'
-                          }, searchLoading ? '' : getI18n('vxe.tableSelect.filterCount', [tableData.length]))
-                        ])
-                    : renderEmptyElement($xeTableSelect)
-                ])
-              ]
-            : [])
-        ])
-      ])
+              'is--filterable': filterable,
+              'is--visible': visiblePanel,
+              'is--disabled': isDisabled,
+              'is--loading': loading,
+              'is--active': isActivated
+            }
+          ]
+        },
+        [
+          h(
+            VxeInputComponent,
+            {
+              ref: refInput,
+              clearable: props.clearable,
+              placeholder: loading ? getI18n('vxe.select.loadingText') : props.placeholder,
+              editable: false,
+              disabled: isDisabled,
+              type: 'text',
+              prefixIcon: props.prefixIcon,
+              suffixIcon: loading ? getIcon().TABLE_SELECT_LOADED : visiblePanel ? getIcon().TABLE_SELECT_OPEN : getIcon().TABLE_SELECT_CLOSE,
+              modelValue: loading ? '' : selectLabel,
+              onClear: clearEvent,
+              onClick: clickEvent,
+              onFocus: focusEvent,
+              onBlur: blurEvent,
+              onSuffixClick: togglePanelEvent
+            },
+            prefixSlot
+              ? {
+                  prefix: () => prefixSlot({})
+                }
+              : {}
+          ),
+          h(
+            Teleport,
+            {
+              to: getPopupContainer(appendTo),
+              disabled: btnTransfer ? !initialized : true
+            },
+            [
+              h(
+                'div',
+                {
+                  ref: refOptionPanel,
+                  class: [
+                    'vxe-table--ignore-clear vxe-table-select--panel',
+                    ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $tableSelect: $xeTableSelect }) : ppClassName) : '',
+                    {
+                      [`size--${vSize}`]: vSize,
+                      'is--transfer': btnTransfer,
+                      'ani--leave': !loading && isAniVisible,
+                      'ani--enter': !loading && visiblePanel
+                    }
+                  ],
+                  placement: reactData.panelPlacement,
+                  style: reactData.panelStyle
+                },
+                initialized
+                  ? [
+                      h(
+                        'div',
+                        {
+                          class: 'vxe-table-select--panel-wrapper'
+                        },
+                        [
+                          filterable
+                            ? h(
+                              'div',
+                              {
+                                class: 'vxe-table-select--panel-search'
+                              },
+                              [
+                                h(VxeInputComponent, {
+                                  ref: refInpSearch,
+                                  class: 'vxe-table-select-search--input',
+                                  modelValue: searchValue,
+                                  clearable: true,
+                                  disabled: false,
+                                  readonly: false,
+                                  placeholder: getI18n('vxe.treeSelect.search'),
+                                  prefixIcon: getIcon().INPUT_SEARCH,
+                                  'onUpdate:modelValue': modelSearchEvent,
+                                  onFocus: focusSearchEvent,
+                                  onChange: triggerSearchEvent,
+                                  onSearch: triggerSearchEvent
+                                })
+                              ]
+                            )
+                            : renderEmptyElement($xeTableSelect),
+                          headerSlot
+                            ? h(
+                              'div',
+                              {
+                                class: 'vxe-table-select--panel-header'
+                              },
+                              headerSlot({})
+                            )
+                            : renderEmptyElement($xeTableSelect),
+                          h(
+                            'div',
+                            {
+                              class: 'vxe-table-select--panel-body'
+                            },
+                            [
+                              h(
+                                'div',
+                                {
+                                  ref: refGridWrapper,
+                                  class: 'vxe-table-select-grid--wrapper',
+                                  style: popupWrapperStyle
+                                },
+                                [
+                                  VxeTableGridComponent
+                                    ? h(
+                                      VxeTableGridComponent,
+                                      {
+                                        ...selectGridOpts,
+                                        ...gridEvents,
+                                        class: 'vxe-table-select--grid',
+                                        ref: refGrid,
+                                        loading: remote && searchLoading,
+                                        rowConfig: rowOpts,
+                                        data: tableData,
+                                        columns: tableColumns.length ? tableColumns : selectGridOpts.columns,
+                                        height: '100%',
+                                        autoResize: true,
+                                        onRadioChange: radioChangeEvent,
+                                        onCheckboxChange: checkboxChangeEvent,
+                                        onCheckboxAll: checkboxAllEvent
+                                      },
+                                      Object.assign({}, slots, {
+                                        header: undefined,
+                                        footer: undefined,
+                                        prefixSlot: undefined
+                                      })
+                                    )
+                                    : renderEmptyElement($xeTableSelect)
+                                ]
+                              )
+                            ]
+                          ),
+                          footerSlot || (filterable && searchValue && !remote && filterOpts.showResultCount)
+                            ? h(
+                              'div',
+                              {
+                                class: 'vxe-table-select--panel-footer'
+                              },
+                              footerSlot
+                                ? footerSlot({})
+                                : [
+                                    h(
+                                      'div',
+                                      {
+                                        class: 'vxe-table-select--search-count'
+                                      },
+                                      searchLoading ? '' : getI18n('vxe.tableSelect.filterCount', [tableData.length])
+                                    )
+                                  ]
+                            )
+                            : renderEmptyElement($xeTableSelect)
+                        ]
+                      )
+                    ]
+                  : []
+              )
+            ]
+          )
+        ]
+      )
     }
 
-    watch(() => props.options, (val) => {
-      loadData(val || [])
-    })
+    watch(
+      () => props.options,
+      (val) => {
+        loadData(val || [])
+      }
+    )
 
-    watch(() => props.columns, (val) => {
-      loadColumn(val)
-    })
+    watch(
+      () => props.columns,
+      (val) => {
+        loadColumn(val)
+      }
+    )
 
-    watch(() => props.modelValue, (val) => {
-      updateModel(val)
-    })
+    watch(
+      () => props.modelValue,
+      (val) => {
+        updateModel(val)
+      }
+    )
 
     loadColumn(props.columns)
     loadData(props.options || [])
@@ -993,7 +1097,7 @@ export default defineVxeComponent({
 
     return $xeTableSelect
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

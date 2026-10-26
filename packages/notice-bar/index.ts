@@ -4,7 +4,7 @@ import VxeNoticeBarComponent from './src/notice-bar'
 import { dynamicApp } from '../dynamics'
 
 export const VxeNoticeBar = Object.assign({}, VxeNoticeBarComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeNoticeBarComponent.name as string, VxeNoticeBarComponent)
   }
 })

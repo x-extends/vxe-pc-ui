@@ -1,17 +1,33 @@
 import { h, provide, PropType, inject, computed, reactive, watch, onMounted, nextTick, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import VxeRadioComponent from '../../radio'
 import VxeRadioButtonComponent from '../../radio-button'
 
-import type { VxeRadioGroupPropTypes, RadioGroupInternalData, VxeRadioGroupConstructor, RadioGroupReactData, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupPrivateComputed, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
+import type {
+  VxeRadioGroupPropTypes,
+  RadioGroupInternalData,
+  VxeRadioGroupConstructor,
+  RadioGroupReactData,
+  VxeRadioGroupEmits,
+  VxeRadioGroupPrivateMethods,
+  RadioGroupPrivateMethods,
+  RadioGroupPrivateComputed,
+  RadioGroupMethods,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  VxeFormDefines,
+  ValueOf
+} from '../../../types'
 
-function createReactData (): RadioGroupReactData {
+const { getConfig, createEvent, useFns } = VxeUI
+
+function createReactData(): RadioGroupReactData {
   return {}
 }
 
-function createInternalData (): RadioGroupInternalData {
+function createInternalData(): RadioGroupInternalData {
   return {
     // isLoaded: false
   }
@@ -46,20 +62,16 @@ export default defineVxeComponent({
     },
     defaultConfig: Object as PropType<VxeRadioGroupPropTypes.DefaultConfig>
   },
-  emits: [
-    'update:modelValue',
-    'change',
-    'default-change'
-  ] as VxeRadioGroupEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'change', 'default-change'] as VxeRadioGroupEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const reactData = reactive(createReactData())
 
@@ -153,7 +165,7 @@ export default defineVxeComponent({
     }
 
     const radioGroupPrivateMethods: RadioGroupPrivateMethods = {
-      handleChecked (params, evnt) {
+      handleChecked(params, evnt) {
         const { checkedValue, checkedLabel } = params
         const value = checkedValue
         emitModel(value)
@@ -201,15 +213,22 @@ export default defineVxeComponent({
       const titleField = computeTitleField.value
       const btnComp = type === 'button' ? VxeRadioButtonComponent : VxeRadioComponent
 
-      return h('div', {
-        class: ['vxe-radio-group', `type--${type === 'button' ? type : ''}`, {
-          [`theme--${status}`]: status,
-          [`size--${vSize}`]: vSize
-        }]
-      }, defaultSlot
-        ? defaultSlot({})
-        : (options
-            ? options.map(item => {
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-radio-group',
+            `type--${type === 'button' ? type : ''}`,
+            {
+              [`theme--${status}`]: status,
+              [`size--${vSize}`]: vSize
+            }
+          ]
+        },
+        defaultSlot
+          ? defaultSlot({})
+          : options
+            ? options.map((item) => {
               return h(btnComp, {
                 key: item[valueField],
                 checkedValue: item[valueField],
@@ -219,12 +238,16 @@ export default defineVxeComponent({
                 disabled: item[disabledField]
               })
             })
-            : []))
+            : []
+      )
     }
 
-    watch(() => props.options, (val) => {
-      loadData(val || [])
-    })
+    watch(
+      () => props.options,
+      (val) => {
+        loadData(val || [])
+      }
+    )
 
     onMounted(() => {
       nextTick(() => {
@@ -246,7 +269,7 @@ export default defineVxeComponent({
 
     return $xeRadioGroup
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

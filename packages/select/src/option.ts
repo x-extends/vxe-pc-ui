@@ -20,7 +20,7 @@ export default defineVxeComponent({
     disabled: Boolean as PropType<VxeOptionPropTypes.Disabled>
   },
   emits: [] as VxeOptionEmits,
-  setup (props, { slots }) {
+  setup(props, { slots }) {
     const elem = ref() as Ref<HTMLDivElement>
     const $xeSelect = inject('$xeSelect', {} as VxeSelectConstructor)
     const $xeOptgroup = inject<XEOptionProvide | null>('$xeOptgroup', null)

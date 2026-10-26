@@ -21,7 +21,7 @@ export interface VxeContextMenuConstructor extends VxeComponentBaseOptions, VxeC
 export interface ContextMenuPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeContextMenuPrivateRef extends ContextMenuPrivateRef { }
+export interface VxeContextMenuPrivateRef extends ContextMenuPrivateRef {}
 
 export namespace VxeContextMenuPropTypes {
   export type ModelValue = boolean
@@ -51,9 +51,8 @@ export type VxeContextMenuProps = {
   transfer?: VxeContextMenuPropTypes.Transfer
 }
 
-export interface ContextMenuPrivateComputed {
-}
-export interface VxeContextMenuPrivateComputed extends ContextMenuPrivateComputed { }
+export interface ContextMenuPrivateComputed {}
+export interface VxeContextMenuPrivateComputed extends ContextMenuPrivateComputed {}
 
 export interface ContextMenuInternalData {
   leaveTime?: any
@@ -76,18 +75,12 @@ export interface ContextMenuMethods {
   open(): Promise<void>
   close(): Promise<void>
 }
-export interface VxeContextMenuMethods extends ContextMenuMethods { }
+export interface VxeContextMenuMethods extends ContextMenuMethods {}
 
-export interface ContextMenuPrivateMethods { }
-export interface VxeContextMenuPrivateMethods extends ContextMenuPrivateMethods { }
+export interface ContextMenuPrivateMethods {}
+export interface VxeContextMenuPrivateMethods extends ContextMenuPrivateMethods {}
 
-export type VxeContextMenuEmits = [
-  'update:modelValue',
-  'option-click',
-  'change',
-  'show',
-  'hide'
-]
+export type VxeContextMenuEmits = ['update:modelValue', 'option-click', 'change', 'show', 'hide']
 
 export namespace VxeContextMenuDefines {
   export type ContextMenuOpenOptions = Pick<VxeContextMenuProps, 'options' | 'x' | 'y' | 'className' | 'size' | 'zIndex'> & {

@@ -1,2 +1,1 @@
-export interface ListDesignHandleExport {
-}
+export interface ListDesignHandleExport {}

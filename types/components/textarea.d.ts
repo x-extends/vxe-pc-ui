@@ -21,7 +21,7 @@ export interface TextareaPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
   refTextarea: Ref<HTMLTextAreaElement>
 }
-export interface VxeTextareaPrivateRef extends TextareaPrivateRef { }
+export interface VxeTextareaPrivateRef extends TextareaPrivateRef {}
 
 export namespace VxeTextareaPropTypes {
   export type Size = VxeComponentSizeType
@@ -41,12 +41,10 @@ export namespace VxeTextareaPropTypes {
   export type Rows = string | number | null
   export type Cols = string | number | null
   export type ShowWordCount = boolean
-  export type CountMethod = (params: {
-    value: string
-  }) => number
+  export type CountMethod = (params: { value: string }) => number
   /**
    * 已废弃，被 AutoSize 替换
-     * @deprecated
+   * @deprecated
    */
   export type Autosize = {
     /**
@@ -151,9 +149,8 @@ export type VxeTextareaProps = {
   maxlength?: VxeTextareaPropTypes.Maxlength
 }
 
-export interface TextareaPrivateComputed {
-}
-export interface VxeTextareaPrivateComputed extends TextareaPrivateComputed { }
+export interface TextareaPrivateComputed {}
+export interface VxeTextareaPrivateComputed extends TextareaPrivateComputed {}
 
 export interface TextareaReactData {
   inputValue: any
@@ -170,23 +167,12 @@ export interface TextareaMethods {
    */
   blur(): Promise<any>
 }
-export interface VxeTextareaMethods extends TextareaMethods { }
+export interface VxeTextareaMethods extends TextareaMethods {}
 
-export interface TextareaPrivateMethods { }
-export interface VxeTextareaPrivateMethods extends TextareaPrivateMethods { }
+export interface TextareaPrivateMethods {}
+export interface VxeTextareaPrivateMethods extends TextareaPrivateMethods {}
 
-export type VxeTextareaEmits = [
-  'update:modelValue',
-  'input',
-  'keydown',
-  'keyup',
-  'click',
-  'change',
-  'focus',
-  'blur',
-  'clear',
-  'lazy-change'
-]
+export type VxeTextareaEmits = ['update:modelValue', 'input', 'keydown', 'keyup', 'click', 'change', 'focus', 'blur', 'clear', 'lazy-change']
 
 export namespace VxeTextareaDefines {
   export interface TextareaEventParams extends VxeComponentEventParams {
@@ -196,10 +182,10 @@ export namespace VxeTextareaDefines {
   export interface InputParams {
     value: string
   }
-  export interface InputEventParams extends TextareaEventParams, InputParams { }
+  export interface InputEventParams extends TextareaEventParams, InputParams {}
 
   export interface ChangeParams extends InputParams {}
-  export interface ChangeEventParams extends TextareaEventParams, ChangeParams { }
+  export interface ChangeEventParams extends TextareaEventParams, ChangeParams {}
 
   export interface KeyupParams extends InputParams {}
   export interface KeyupEventParams extends TextareaEventParams, KeyupParams {
@@ -217,12 +203,12 @@ export namespace VxeTextareaDefines {
   }
 
   export interface FocusParams extends InputParams {}
-  export interface FocusEventParams extends TextareaEventParams, FocusParams { }
+  export interface FocusEventParams extends TextareaEventParams, FocusParams {}
 
   export interface BlurParams extends InputParams {}
-  export interface BlurEventParams extends TextareaEventParams, BlurParams { }
+  export interface BlurEventParams extends TextareaEventParams, BlurParams {}
 
-  export interface LazyChangeEventParams extends TextareaEventParams { }
+  export interface LazyChangeEventParams extends TextareaEventParams {}
 }
 
 export type VxeTextareaEventProps = {

@@ -1,7 +1,6 @@
-
 import type { VxeListDefines } from '../../../types'
 
-export function getItemCacheObj (item: any): VxeListDefines.RowCacheItem {
+export function getItemCacheObj(item: any): VxeListDefines.RowCacheItem {
   return {
     item,
     index: -1,

@@ -1,9 +1,11 @@
 import { ref, h, reactive, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { TourReactData, VxeTourPropTypes, TourPrivateRef, VxeTourEmits, VxeTourPrivateComputed, TourMethods, TourPrivateMethods, VxeTourConstructor, VxeTourPrivateMethods, ValueOf } from '../../../types'
+
+const { getConfig, createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeTour',
@@ -13,9 +15,8 @@ export default defineVxeComponent({
       default: () => getConfig().tour.size || getConfig().size
     }
   },
-  emits: [
-  ] as VxeTourEmits,
-  setup (props, context) {
+  emits: [] as VxeTourEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -28,8 +29,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxeTourPrivateComputed = {
-    }
+    const computeMaps: VxeTourPrivateComputed = {}
 
     const $xeTour = {
       xID,
@@ -49,8 +49,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const tagPrivateMethods: TourPrivateMethods = {
-    }
+    const tagPrivateMethods: TourPrivateMethods = {}
 
     Object.assign($xeTour, tagMethods, tagPrivateMethods)
 
@@ -65,7 +64,7 @@ export default defineVxeComponent({
 
     return $xeTour
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

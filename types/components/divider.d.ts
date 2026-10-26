@@ -19,7 +19,7 @@ export interface VxeDividerConstructor extends VxeComponentBaseOptions, VxeDivid
 export interface DividerPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeDividerPrivateRef extends DividerPrivateRef { }
+export interface VxeDividerPrivateRef extends DividerPrivateRef {}
 
 export namespace VxeDividerPropTypes {
   export type Size = VxeComponentSizeType
@@ -35,19 +35,16 @@ export interface VxeDividerProps {
   titleAlign?: VxeDividerPropTypes.TitleAlign
 }
 
-export interface DividerPrivateComputed {
-}
-export interface VxeDividerPrivateComputed extends DividerPrivateComputed { }
+export interface DividerPrivateComputed {}
+export interface VxeDividerPrivateComputed extends DividerPrivateComputed {}
 
-export interface DividerReactData {
-}
+export interface DividerReactData {}
 
-export interface DividerMethods {
-}
-export interface VxeDividerMethods extends DividerMethods { }
+export interface DividerMethods {}
+export interface VxeDividerMethods extends DividerMethods {}
 
-export interface DividerPrivateMethods { }
-export interface VxeDividerPrivateMethods extends DividerPrivateMethods { }
+export interface DividerPrivateMethods {}
+export interface VxeDividerPrivateMethods extends DividerPrivateMethods {}
 
 export type VxeDividerEmits = []
 
@@ -59,9 +56,9 @@ export namespace VxeDividerDefines {
 
 export type VxeDividerEventProps = {}
 
-export interface VxeDividerListeners { }
+export interface VxeDividerListeners {}
 
-export namespace VxeDividerEvents { }
+export namespace VxeDividerEvents {}
 
 export namespace VxeDividerSlotTypes {
   export interface DefaultSlotParams {}

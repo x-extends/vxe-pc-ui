@@ -1,5 +1,6 @@
 import { App } from 'vue'
-import { VxeUI } from './ui'
+import { VxeUI } from '@vxe-ui/core'
+import './ui'
 
 import zhCN from './language/zh-CN'
 
@@ -202,10 +203,10 @@ const components = [
   VxeWatermark
 ]
 
-export function install (app: App, options?: VxeGlobalConfig) {
+export function install(app: App, options?: VxeGlobalConfig) {
   setConfig(options)
 
-  components.forEach(component => app.use(component))
+  components.forEach((component) => app.use(component))
 }
 
 // 默认中文
@@ -250,7 +251,7 @@ export const saveFile = saveLocalFile
  */
 export const readFile = readLocalFile
 
-export * from './ui'
+export { VxeUI }
 
 // Components
 export * from './alert'

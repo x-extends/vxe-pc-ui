@@ -10,12 +10,12 @@ VxeUI.uiVersion = version
 
 VxeUI.dynamicApp = dynamicApp
 
-export function config (options?: VxeGlobalConfig) {
+export function config(options?: VxeGlobalConfig) {
   warnLog('vxe.error.delFunc', ['config', 'setConfig'])
   return setConfig(options)
 }
 
-export function setup (options?: VxeGlobalConfig) {
+export function setup(options?: VxeGlobalConfig) {
   warnLog('vxe.error.delFunc', ['setup', 'setConfig'])
   return setConfig(options)
 }
@@ -190,7 +190,51 @@ setConfig({
   formView: {},
   icon: {},
   iconPicker: {
-    icons: ['home', 'company', 'comment', 'setting', 'send', 'envelope', 'envelope-open', 'bell', 'search', 'print', 'pc', 'goods', 'chart-line', 'edit', 'delete', 'save', 'folder', 'microphone', 'flag', 'link', 'location', 'sunny', 'rmb', 'usd', 'user', 'add-user', 'add-users', 'star', 'unlock', 'time', 'text', 'feedback', 'calendar', 'association-form', 'cloud-download', 'cloud-upload', 'file', 'subtable', 'chart-bar-x', 'chart-bar-y', 'chart-line', 'chart-pie', 'chart-radar'],
+    icons: [
+      'home',
+      'company',
+      'comment',
+      'setting',
+      'send',
+      'envelope',
+      'envelope-open',
+      'bell',
+      'search',
+      'print',
+      'pc',
+      'goods',
+      'chart-line',
+      'edit',
+      'delete',
+      'save',
+      'folder',
+      'microphone',
+      'flag',
+      'link',
+      'location',
+      'sunny',
+      'rmb',
+      'usd',
+      'user',
+      'add-user',
+      'add-users',
+      'star',
+      'unlock',
+      'time',
+      'text',
+      'feedback',
+      'calendar',
+      'association-form',
+      'cloud-download',
+      'cloud-upload',
+      'file',
+      'subtable',
+      'chart-bar-x',
+      'chart-bar-y',
+      'chart-line',
+      'chart-pie',
+      'chart-radar'
+    ],
     popupConfig: {
       // chunkSize: 4
     }
@@ -789,5 +833,4 @@ setIcon({
   LIST_DRAG_DISABLED: iconPrefix + 'no-drop'
 })
 
-export * from '@vxe-ui/core'
 export default VxeUI

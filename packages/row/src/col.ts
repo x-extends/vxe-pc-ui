@@ -1,11 +1,13 @@
 import { ref, h, reactive, computed, PropType, inject, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { createComponentLog } from '../../ui/src/log'
 
 import type { ColReactData, VxeColPropTypes, ColPrivateRef, VxeColEmits, ColMethods, ColPrivateMethods, VxeColPrivateComputed, VxeColConstructor, VxeColPrivateMethods, ValueOf, VxeRowConstructor, VxeRowPrivateMethods } from '../../../types'
+
+const { getConfig, createEvent, useFns } = VxeUI
 
 const { errLog } = createComponentLog('col')
 
@@ -23,17 +25,16 @@ export default defineVxeComponent({
     }
   },
   emits: [],
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    useSize(props)
+    useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<ColReactData>({
-    })
+    const reactData = reactive<ColReactData>({})
 
     const refMaps: ColPrivateRef = {
       refElem
@@ -89,8 +90,7 @@ export default defineVxeComponent({
       return style
     })
 
-    const computeMaps: VxeColPrivateComputed = {
-    }
+    const computeMaps: VxeColPrivateComputed = {}
 
     const $xeCol = {
       xID,
@@ -110,8 +110,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const colPrivateMethods: ColPrivateMethods = {
-    }
+    const colPrivateMethods: ColPrivateMethods = {}
 
     Object.assign($xeCol, colMethods, colPrivateMethods)
 
@@ -119,20 +118,33 @@ export default defineVxeComponent({
       const { span, fill, align, width, ellipsis } = props
       const colStyle = computeColStyle.value
       const defaultSlot = slots.default
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-col', span ? `span${span}` : '', align ? `align--${align}` : '', {
-          'is--span': !!span,
-          'is--width': !!width,
-          'is--fill': fill,
-          'is--ellipsis': ellipsis
-        }],
-        style: colStyle
-      }, [
-        h('div', {
-          class: 'vxe-col--inner'
-        }, defaultSlot ? defaultSlot({}) : [])
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-col',
+            span ? `span${span}` : '',
+            align ? `align--${align}` : '',
+            {
+              'is--span': !!span,
+              'is--width': !!width,
+              'is--fill': fill,
+              'is--ellipsis': ellipsis
+            }
+          ],
+          style: colStyle
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-col--inner'
+            },
+            defaultSlot ? defaultSlot({}) : []
+          )
+        ]
+      )
     }
 
     onMounted(() => {
@@ -153,7 +165,7 @@ export default defineVxeComponent({
 
     return $xeCol
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

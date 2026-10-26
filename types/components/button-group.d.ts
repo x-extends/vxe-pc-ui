@@ -21,7 +21,7 @@ export interface VxeButtonGroupConstructor extends VxeComponentBaseOptions, VxeB
 export interface ButtonGroupPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeButtonGroupPrivateRef extends ButtonGroupPrivateRef { }
+export interface VxeButtonGroupPrivateRef extends ButtonGroupPrivateRef {}
 
 export namespace VxeButtonGroupPropTypes {
   export type Size = VxeComponentSizeType
@@ -54,29 +54,27 @@ export type VxeButtonGroupProps = {
   className?: VxeButtonGroupPropTypes.ClassName
 }
 
-export interface ButtonGroupPrivateComputed {
-}
-export interface VxeButtonGroupPrivateComputed extends ButtonGroupPrivateComputed { }
+export interface ButtonGroupPrivateComputed {}
+export interface VxeButtonGroupPrivateComputed extends ButtonGroupPrivateComputed {}
 
-export interface ButtonGroupReactData {
-}
+export interface ButtonGroupReactData {}
 
 export interface ButtonGroupMethods {
   dispatchEvent(type: ValueOf<VxeButtonGroupEmits>, params: any, evnt: Event): void
 }
-export interface VxeButtonGroupMethods extends ButtonGroupMethods { }
+export interface VxeButtonGroupMethods extends ButtonGroupMethods {}
 
 export interface ButtonGroupPrivateMethods {
-  handleClick(params: {
-    name: VxeButtonPropTypes.Name | undefined
-  }, evnt: Event): void
+  handleClick(
+    params: {
+      name: VxeButtonPropTypes.Name | undefined
+    },
+    evnt: Event
+  ): void
 }
-export interface VxeButtonGroupPrivateMethods extends ButtonGroupPrivateMethods { }
+export interface VxeButtonGroupPrivateMethods extends ButtonGroupPrivateMethods {}
 
-export type VxeButtonGroupEmits = [
-  'click',
-  'contextmenu'
-]
+export type VxeButtonGroupEmits = ['click', 'contextmenu']
 
 export namespace VxeButtonGroupDefines {
   export interface ButtonGroupEventParams extends VxeComponentEventParams {

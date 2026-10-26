@@ -20,7 +20,7 @@ export interface VxePulldownConstructor extends VxeComponentBaseOptions, VxePull
 export interface PulldownPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxePulldownPrivateRef extends PulldownPrivateRef { }
+export interface VxePulldownPrivateRef extends PulldownPrivateRef {}
 
 export namespace VxePulldownPropTypes {
   export type ModelValue = boolean
@@ -121,9 +121,8 @@ export interface VxePulldownProps {
   transfer?: VxePulldownPropTypes.Transfer
 }
 
-export interface PulldownPrivateComputed {
-}
-export interface VxePulldownPrivateComputed extends PulldownPrivateComputed { }
+export interface PulldownPrivateComputed {}
+export interface VxePulldownPrivateComputed extends PulldownPrivateComputed {}
 
 export interface PulldownReactData {
   initialized: boolean
@@ -161,19 +160,12 @@ export interface PulldownMethods {
    */
   hidePanel(): Promise<void>
 }
-export interface VxePulldownMethods extends PulldownMethods { }
+export interface VxePulldownMethods extends PulldownMethods {}
 
-export interface PulldownPrivateMethods { }
-export interface VxePulldownPrivateMethods extends PulldownPrivateMethods { }
+export interface PulldownPrivateMethods {}
+export interface VxePulldownPrivateMethods extends PulldownPrivateMethods {}
 
-export type VxePulldownEmits = [
-  'update:modelValue',
-  'click',
-  'option-click',
-  'show-panel',
-  'hide-panel',
-  'visible-change'
-]
+export type VxePulldownEmits = ['update:modelValue', 'click', 'option-click', 'show-panel', 'hide-panel', 'visible-change']
 
 export namespace VxePulldownDefines {
   export interface PulldownEventParams extends VxeComponentEventParams {

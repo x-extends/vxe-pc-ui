@@ -1,10 +1,12 @@
 import { ref, h, computed, PropType, reactive } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { AvatarReactData, VxeAvatarEmits, AvatarMethods, VxeAvatarPropTypes, VxeComponentStyleType, AvatarPrivateMethods, ValueOf, AvatarPrivateRef, VxeAvatarPrivateComputed, VxeAvatarConstructor, VxeAvatarPrivateMethods } from '../../../types'
+
+const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeAvatar',
@@ -29,19 +31,17 @@ export default defineVxeComponent({
       default: () => getConfig().avatar.size || getConfig().size
     }
   },
-  emits: [
-  ] as VxeAvatarEmits,
-  setup (props, context) {
+  emits: [] as VxeAvatarEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<AvatarReactData>({
-    })
+    const reactData = reactive<AvatarReactData>({})
 
     const refMaps: AvatarPrivateRef = {
       refElem
@@ -64,8 +64,7 @@ export default defineVxeComponent({
       return count ? XEUtils.toNumber(count) : 0
     })
 
-    const computeMaps: VxeAvatarPrivateComputed = {
-    }
+    const computeMaps: VxeAvatarPrivateComputed = {}
 
     const $xeAvatar = {
       xID,
@@ -85,26 +84,33 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const avatarPrivateMethods: AvatarPrivateMethods = {
-    }
+    const avatarPrivateMethods: AvatarPrivateMethods = {}
 
     Object.assign($xeAvatar, avatarMethods, avatarPrivateMethods)
 
     const renderContent = () => {
       const { icon, content, src } = props
       if (icon) {
-        return h('span', {
-          class: 'vxe-avatar--icon'
-        }, [
-          h('i', {
-            class: icon
-          })
-        ])
+        return h(
+          'span',
+          {
+            class: 'vxe-avatar--icon'
+          },
+          [
+            h('i', {
+              class: icon
+            })
+          ]
+        )
       }
       if (content) {
-        return h('span', {
-          class: 'vxe-avatar--content'
-        }, `${content}`)
+        return h(
+          'span',
+          {
+            class: 'vxe-avatar--content'
+          },
+          `${content}`
+        )
       }
       if (src) {
         return h('img', {
@@ -120,30 +126,41 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const countNum = computeCountNum.value
       const avatarStyle = computeAvatarStyle.value
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-avatar', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--circle': circle,
-          'is--dot': dot
-        }],
-        style: avatarStyle
-      }, [
-        renderContent(),
-        countNum
-          ? h('span', {
-            class: 'vxe-avatar--count'
-          }, countNum > 99 ? '99+' : `${countNum}`)
-          : renderEmptyElement($xeAvatar)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-avatar',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--circle': circle,
+              'is--dot': dot
+            }
+          ],
+          style: avatarStyle
+        },
+        [
+          renderContent(),
+          countNum
+            ? h(
+              'span',
+              {
+                class: 'vxe-avatar--count'
+              },
+              countNum > 99 ? '99+' : `${countNum}`
+            )
+            : renderEmptyElement($xeAvatar)
+        ]
+      )
     }
 
     $xeAvatar.renderVN = renderVN
 
     return $xeAvatar
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

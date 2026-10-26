@@ -1,12 +1,14 @@
 import { ref, h, reactive, provide, PropType, watch, nextTick, onMounted, computed, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, getIcon, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit } from '../../ui/src/dom'
 import VxeLoadingComponent from '../../loading'
 import XEUtils from 'xe-utils'
 
 import type { CarouselReactData, CarouselPrivateRef, VxeCarouselPropTypes, CarouselInternalData, CarouselMethods, CarouselPrivateMethods, VxeCarouselEmits, VxeCarouselDefines, VxeCarouselPrivateComputed, VxeCarouselConstructor, ValueOf, VxeCarouselPrivateMethods } from '../../../types'
+
+const { getConfig, getIcon, createEvent, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeCarousel',
@@ -43,11 +45,8 @@ export default defineVxeComponent({
       default: () => getConfig().carousel.showIndicators
     }
   },
-  emits: [
-    'update:modelValue',
-    'change'
-  ] as VxeCarouselEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'change'] as VxeCarouselEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
@@ -75,7 +74,10 @@ export default defineVxeComponent({
       const { vertical, options } = props
       const { activeName, itemWidth, itemHeight, staticItems } = reactData
       const list = (staticItems && staticItems.length ? staticItems : options) || []
-      const activeIndex = Math.max(0, XEUtils.findIndexOf(list, item => item.name === activeName))
+      const activeIndex = Math.max(
+        0,
+        XEUtils.findIndexOf(list, (item) => item.name === activeName)
+      )
       const stys: Record<string, any> = {}
       if (vertical) {
         stys.transform = `translateY(-${activeIndex * itemHeight}px)`
@@ -86,8 +88,7 @@ export default defineVxeComponent({
       return stys
     })
 
-    const computeMaps: VxeCarouselPrivateComputed = {
-    }
+    const computeMaps: VxeCarouselPrivateComputed = {}
 
     const $xeCarousel = {
       xID,
@@ -144,7 +145,10 @@ export default defineVxeComponent({
       const { options, loop } = props
       const { activeName, staticItems } = reactData
       const list = (staticItems && staticItems.length ? staticItems : options) || []
-      const index = Math.max(0, XEUtils.findIndexOf(list, item => item.name === activeName))
+      const index = Math.max(
+        0,
+        XEUtils.findIndexOf(list, (item) => item.name === activeName)
+      )
       if (index > -1) {
         let item: VxeCarouselDefines.ItemConfig | VxeCarouselPropTypes.Option | null = null
         if (isNext) {
@@ -177,13 +181,13 @@ export default defineVxeComponent({
 
     const carouselMethods: CarouselMethods = {
       dispatchEvent,
-      prev () {
+      prev() {
         if (handlePrevNext(false)) {
           handleAutoPlay()
         }
         return nextTick()
       },
-      next () {
+      next() {
         if (handlePrevNext(true)) {
           handleAutoPlay()
         }
@@ -220,11 +224,14 @@ export default defineVxeComponent({
       stopAutoPlay()
       if (autoPlay) {
         internalData.stopFlag = false
-        internalData.apTimeout = setTimeout(() => {
-          if (!stopFlag) {
-            handlePrevNext(true)
-          }
-        }, XEUtils.toNumber(interval) || 300)
+        internalData.apTimeout = setTimeout(
+          () => {
+            if (!stopFlag) {
+              handlePrevNext(true)
+            }
+          },
+          XEUtils.toNumber(interval) || 300
+        )
       }
     }
 
@@ -236,8 +243,7 @@ export default defineVxeComponent({
       handleAutoPlay()
     }
 
-    const carouselPrivateMethods: CarouselPrivateMethods = {
-    }
+    const carouselPrivateMethods: CarouselPrivateMethods = {}
 
     const callSlot = (slotFunc: any, params: any) => {
       if (slotFunc) {
@@ -258,49 +264,67 @@ export default defineVxeComponent({
       const { activeName } = reactData
       const listStyle = computeListStyle.value
 
-      return h('div', {
-        class: 'vxe-carousel--list',
-        style: listStyle
-      }, list.map(item => {
-        const { name, url, slots } = item
-        const defaultSlot = slots ? slots.default : null
-        return h('div', {
-          key: `${name}`,
-          class: ['vxe-carousel--item-inner', {
-            'is--active': activeName === name
-          }],
-          style: height
-            ? {
-                height: toCssUnit(height)
-              }
-            : null
-        }, defaultSlot
-          ? callSlot(defaultSlot, {})
-          : [
-              h('img', {
-                class: 'vxe-carousel--item-img',
-                src: url
-              })
-            ])
-      }))
+      return h(
+        'div',
+        {
+          class: 'vxe-carousel--list',
+          style: listStyle
+        },
+        list.map((item) => {
+          const { name, url, slots } = item
+          const defaultSlot = slots ? slots.default : null
+          return h(
+            'div',
+            {
+              key: `${name}`,
+              class: [
+                'vxe-carousel--item-inner',
+                {
+                  'is--active': activeName === name
+                }
+              ],
+              style: height
+                ? {
+                    height: toCssUnit(height)
+                  }
+                : null
+            },
+            defaultSlot
+              ? callSlot(defaultSlot, {})
+              : [
+                  h('img', {
+                    class: 'vxe-carousel--item-img',
+                    src: url
+                  })
+                ]
+          )
+        })
+      )
     }
 
     const renderIndicators = (list: VxeCarouselDefines.ItemConfig[] | VxeCarouselPropTypes.Options) => {
       const { activeName } = reactData
-      return h('div', {
-        class: 'vxe-carousel--indicators'
-      }, list.map((item) => {
-        const { name } = item
-        return h('div', {
-          key: `${name}`,
-          class: ['vxe-carousel--indicators-item', {
-            'is--active': activeName === name
-          }],
-          onClick (evnt) {
-            clickItemEvent(evnt, item)
-          }
+      return h(
+        'div',
+        {
+          class: 'vxe-carousel--indicators'
+        },
+        list.map((item) => {
+          const { name } = item
+          return h('div', {
+            key: `${name}`,
+            class: [
+              'vxe-carousel--indicators-item',
+              {
+                'is--active': activeName === name
+              }
+            ],
+            onClick(evnt) {
+              clickItemEvent(evnt, item)
+            }
+          })
         })
-      }))
+      )
     }
 
     const renderVN = () => {
@@ -309,87 +333,124 @@ export default defineVxeComponent({
       const defaultSlot = slots.default
       const list = (staticItems && staticItems.length ? staticItems : options) || []
 
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-carousel', `is--${vertical ? 'vertical' : 'horizontal'}`],
-        style: width
-          ? {
-              width: toCssUnit(width)
-            }
-          : null,
-        onMouseenter: mouseenterEvent,
-        onMouseleave: mouseleaveEvent
-      }, [
-        h('div', {
-          class: 'vxe-carousel--slots'
-        }, defaultSlot ? defaultSlot({}) : []),
-        h('div', {
-          ref: refWrapperElem,
-          class: 'vxe-carousel--item-wrapper',
-          style: height
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: ['vxe-carousel', `is--${vertical ? 'vertical' : 'horizontal'}`],
+          style: width
             ? {
-                height: toCssUnit(height)
+                width: toCssUnit(width)
               }
-            : null
-        }, [
-          renderItemWrapper(list)
-        ]),
-        showIndicators ? renderIndicators(list) : renderEmptyElement($xeCarousel),
-        h('div', {
-          class: 'vxe-carousel--btn-wrapper'
-        }, [
-          h('div', {
-            class: 'vxe-carousel--previous-btn',
-            onClick: prevEvent
-          }, [
-            h('i', {
-              class: vertical ? getIcon().CAROUSEL_VERTICAL_PREVIOUS : getIcon().CAROUSEL_HORIZONTAL_PREVIOUS
-            })
-          ]),
-          h('div', {
-            class: 'vxe-carousel--next-btn',
-            onClick: nextEvent
-          }, [
-            h('i', {
-              class: vertical ? getIcon().CAROUSEL_VERTICAL_NEXT : getIcon().CAROUSEL_HORIZONTAL_NEXT
-            })
-          ])
-        ]),
-        /**
-         * 加载中
-         */
-        h(VxeLoadingComponent, {
-          class: 'vxe-carousel--loading',
-          modelValue: loading
-        })
-      ])
+            : null,
+          onMouseenter: mouseenterEvent,
+          onMouseleave: mouseleaveEvent
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-carousel--slots'
+            },
+            defaultSlot ? defaultSlot({}) : []
+          ),
+          h(
+            'div',
+            {
+              ref: refWrapperElem,
+              class: 'vxe-carousel--item-wrapper',
+              style: height
+                ? {
+                    height: toCssUnit(height)
+                  }
+                : null
+            },
+            [renderItemWrapper(list)]
+          ),
+          showIndicators ? renderIndicators(list) : renderEmptyElement($xeCarousel),
+          h(
+            'div',
+            {
+              class: 'vxe-carousel--btn-wrapper'
+            },
+            [
+              h(
+                'div',
+                {
+                  class: 'vxe-carousel--previous-btn',
+                  onClick: prevEvent
+                },
+                [
+                  h('i', {
+                    class: vertical ? getIcon().CAROUSEL_VERTICAL_PREVIOUS : getIcon().CAROUSEL_HORIZONTAL_PREVIOUS
+                  })
+                ]
+              ),
+              h(
+                'div',
+                {
+                  class: 'vxe-carousel--next-btn',
+                  onClick: nextEvent
+                },
+                [
+                  h('i', {
+                    class: vertical ? getIcon().CAROUSEL_VERTICAL_NEXT : getIcon().CAROUSEL_HORIZONTAL_NEXT
+                  })
+                ]
+              )
+            ]
+          ),
+          /**
+           * 加载中
+           */
+          h(VxeLoadingComponent, {
+            class: 'vxe-carousel--loading',
+            modelValue: loading
+          })
+        ]
+      )
     }
 
     const optsFlag = ref(0)
-    watch(() => props.options ? props.options.length : -1, () => {
-      optsFlag.value++
-    })
-    watch(() => props.options, () => {
-      optsFlag.value++
-    })
+    watch(
+      () => (props.options ? props.options.length : -1),
+      () => {
+        optsFlag.value++
+      }
+    )
+    watch(
+      () => props.options,
+      () => {
+        optsFlag.value++
+      }
+    )
     watch(optsFlag, () => {
       initDefaultActive(props.options)
     })
 
     const stFlag = ref(0)
-    watch(() => reactData.staticItems ? reactData.staticItems.length : -1, () => {
-      stFlag.value++
-    })
-    watch(() => reactData.staticItems, () => {
-      stFlag.value++
-    })
+    watch(
+      () => (reactData.staticItems ? reactData.staticItems.length : -1),
+      () => {
+        stFlag.value++
+      }
+    )
+    watch(
+      () => reactData.staticItems,
+      () => {
+        stFlag.value++
+      }
+    )
     watch(stFlag, () => {
       initDefaultActive(reactData.staticItems)
     })
 
-    watch(() => props.autoPlay, () => {
-      handleAutoPlay()
-    })
+    watch(
+      () => props.autoPlay,
+      () => {
+        handleAutoPlay()
+      }
+    )
 
     initDefaultActive(reactData.staticItems.length ? reactData.staticItems : props.options)
 
@@ -408,7 +469,7 @@ export default defineVxeComponent({
 
     return $xeCarousel
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

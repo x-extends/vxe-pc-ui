@@ -28,7 +28,7 @@ export interface VxeSplitPaneConstructor extends VxeComponentBaseOptions, VxeSpl
 export interface SplitItemPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeSplitPanePrivateRef extends SplitItemPrivateRef { }
+export interface VxeSplitPanePrivateRef extends SplitItemPrivateRef {}
 /**
  * @deprecated
  */
@@ -65,32 +65,28 @@ export interface VxeSplitPaneProps {
   showAction?: VxeSplitPanePropTypes.ShowAction
 }
 
-export interface SplitItemPrivateComputed {
-}
-export interface VxeSplitPanePrivateComputed extends SplitItemPrivateComputed { }
+export interface SplitItemPrivateComputed {}
+export interface VxeSplitPanePrivateComputed extends SplitItemPrivateComputed {}
 /**
  * @deprecated
  */
-export interface SplitItemReactData {
-}
+export interface SplitItemReactData {}
 /**
  * @deprecated
  */
-export interface SplitItemInternalData {
-}
+export interface SplitItemInternalData {}
 
 export interface SplitItemMethods {
   dispatchEvent(type: ValueOf<VxeSplitPaneEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeSplitPaneMethods extends SplitItemMethods { }
+export interface VxeSplitPaneMethods extends SplitItemMethods {}
 
-export interface SplitItemPrivateMethods { }
-export interface VxeSplitPanePrivateMethods extends SplitItemPrivateMethods { }
+export interface SplitItemPrivateMethods {}
+export interface VxeSplitPanePrivateMethods extends SplitItemPrivateMethods {}
 /**
  * @deprecated
  */
-export type VxeSplitPaneEmits = [
-]
+export type VxeSplitPaneEmits = []
 /**
  * @deprecated
  */
@@ -100,18 +96,15 @@ export namespace VxeSplitPaneDefines {
   }
 }
 
-export type VxeSplitPaneEventProps = {
-}
+export type VxeSplitPaneEventProps = {}
 /**
  * @deprecated
  */
-export interface VxeSplitPaneListeners {
-}
+export interface VxeSplitPaneListeners {}
 /**
  * @deprecated
  */
-export namespace VxeSplitPaneEvents {
-}
+export namespace VxeSplitPaneEvents {}
 
 export namespace VxeSplitPaneSlotTypes {
   export interface DefaultSlotParams {

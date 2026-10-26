@@ -4,7 +4,7 @@ import { VxeFormDesignDefines } from '../components/form-design'
 import { VxeTableDefines } from '../components/table'
 
 export interface FormDesignHandleExport {
-  useFormView <F = VxeFormDesignDefines.DefaultSettingFormDataObjVO> (props: {
+  useFormView<F = VxeFormDesignDefines.DefaultSettingFormDataObjVO>(props: {
     renderOpts: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewParams
     renderParams: VxeGlobalRendererHandles.RenderFormDesignSettingFormViewParams<F>
   }): VxeGlobalRendererHandles.RenderFormDesignSettingFormViewParams<F>
@@ -18,10 +18,7 @@ export interface FormDesignHandleExport {
     isEditMode: ComputedRef<boolean>
     isViewMode: ComputedRef<boolean>
   }
-  useWidgetName(props: {
-    renderOpts: any
-    renderParams: any
-  }): {
+  useWidgetName(props: { renderOpts: any; renderParams: any }): {
     computeKebabCaseName: ComputedRef<string>
   }
   useSubtableView<D = any, P = Record<string, any>>(props: {
@@ -38,12 +35,15 @@ export interface FormDesignHandleExport {
    * 已废弃
    * @deprecated
    */
-  useWidgetPropDataSource(props: {
-    renderOpts: any
-    renderParams: any
-  }, renderConfig?: {
-    isSubOption?: boolean
-  }): {
+  useWidgetPropDataSource(
+    props: {
+      renderOpts: any
+      renderParams: any
+    },
+    renderConfig?: {
+      isSubOption?: boolean
+    }
+  ): {
     renderDataSourceFormItem(): VNode
     renderDataSourceFormItemContent(): VNode[]
   }

@@ -22,7 +22,7 @@ export interface VxeButtonConstructor extends VxeComponentBaseOptions, VxeButton
 export interface ButtonPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeButtonPrivateRef extends ButtonPrivateRef { }
+export interface VxeButtonPrivateRef extends ButtonPrivateRef {}
 
 export namespace VxeButtonPropTypes {
   export type Size = VxeComponentSizeType
@@ -207,9 +207,8 @@ export interface VxeButtonProps {
   popupConfig?: VxeButtonPropTypes.PopupConfig
 }
 
-export interface ButtonPrivateComputed {
-}
-export interface VxeButtonPrivateComputed extends ButtonPrivateComputed { }
+export interface ButtonPrivateComputed {}
+export interface VxeButtonPrivateComputed extends ButtonPrivateComputed {}
 
 export interface ButtonReactData {
   initialized: boolean
@@ -239,19 +238,12 @@ export interface ButtonMethods {
    */
   blur(): Promise<any>
 }
-export interface VxeButtonMethods extends ButtonMethods { }
+export interface VxeButtonMethods extends ButtonMethods {}
 
-export interface ButtonPrivateMethods { }
-export interface VxeButtonPrivateMethods extends ButtonPrivateMethods { }
+export interface ButtonPrivateMethods {}
+export interface VxeButtonPrivateMethods extends ButtonPrivateMethods {}
 
-export type VxeButtonEmits = [
-  'click',
-  'mouseenter',
-  'mouseleave',
-  'dropdown-click',
-  'dropdownClick',
-  'contextmenu'
-]
+export type VxeButtonEmits = ['click', 'mouseenter', 'mouseleave', 'dropdown-click', 'dropdownClick', 'contextmenu']
 
 export namespace VxeButtonDefines {
   export interface ButtonEventParams extends VxeComponentEventParams {
@@ -260,22 +252,22 @@ export namespace VxeButtonDefines {
 
   export type DownButtonOption = Pick<VxeButtonProps, 'type' | 'mode' | 'className' | 'name' | 'routerLink' | 'permissionCode' | 'title' | 'content' | 'status' | 'icon' | 'round' | 'circle' | 'disabled' | 'loading' | 'align'>
 
-  export interface ClickParams { }
+  export interface ClickParams {}
   export interface ClickEventParams extends ButtonEventParams, ClickParams {
     $event: MouseEvent
   }
 
-  export interface MouseenterParams { }
-  export interface MouseenterEventParams extends ButtonEventParams, MouseenterParams { }
+  export interface MouseenterParams {}
+  export interface MouseenterEventParams extends ButtonEventParams, MouseenterParams {}
 
-  export interface MouseleaveParams { }
-  export interface MouseleaveEventParams extends ButtonEventParams, MouseleaveParams { }
+  export interface MouseleaveParams {}
+  export interface MouseleaveEventParams extends ButtonEventParams, MouseleaveParams {}
 
   export interface DropdownClickParams {
     name: VxeButtonPropTypes.Name
     option: VxeButtonDefines.DownButtonOption | null
   }
-  export interface DropdownClickEventParams extends ButtonEventParams, DropdownClickParams { }
+  export interface DropdownClickEventParams extends ButtonEventParams, DropdownClickParams {}
 
   export interface ContextmenuEventParams extends ButtonEventParams {
     $event: MouseEvent

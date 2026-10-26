@@ -1,10 +1,12 @@
 import { ref, h, reactive, PropType, watch, inject, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleTabItem, destroyTabItem } from './util'
 
 import type { VxeTabPanePropTypes, TabPaneReactData, TabPaneMethods, TabPanePrivateMethods, VxeTabPaneEmits, ValueOf, TabPanePrivateRef, VxeTabPanePrivateComputed, VxeTabPaneConstructor, VxeTabPanePrivateMethods, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeTabPane',
@@ -18,7 +20,7 @@ export default defineVxeComponent({
     permissionCode: [String, Number] as PropType<VxeTabPanePropTypes.PermissionCode>
   },
   emits: [] as VxeTabPaneEmits,
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -27,8 +29,7 @@ export default defineVxeComponent({
 
     const $xeTabs = inject<(VxeTabsConstructor & VxeTabsPrivateMethods) | null>('$xeTabs', null)
 
-    const reactData = reactive<TabPaneReactData>({
-    })
+    const reactData = reactive<TabPaneReactData>({})
 
     const tabConfig = reactive<VxeTabPaneDefines.TabConfig>({
       id: xID,
@@ -46,8 +47,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxeTabPanePrivateComputed = {
-    }
+    const computeMaps: VxeTabPanePrivateComputed = {}
 
     const $xeTabPane = {
       xID,
@@ -67,26 +67,37 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const tabPanePrivateMethods: TabPanePrivateMethods = {
-    }
+    const tabPanePrivateMethods: TabPanePrivateMethods = {}
 
     Object.assign($xeTabPane, tabPaneMethods, tabPanePrivateMethods)
 
-    watch(() => props.title, (val) => {
-      tabConfig.title = val
-    })
+    watch(
+      () => props.title,
+      (val) => {
+        tabConfig.title = val
+      }
+    )
 
-    watch(() => props.name, (val) => {
-      tabConfig.name = val
-    })
+    watch(
+      () => props.name,
+      (val) => {
+        tabConfig.name = val
+      }
+    )
 
-    watch(() => props.icon, (val) => {
-      tabConfig.icon = val
-    })
+    watch(
+      () => props.icon,
+      (val) => {
+        tabConfig.icon = val
+      }
+    )
 
-    watch(() => props.permissionCode, (val) => {
-      tabConfig.permissionCode = val
-    })
+    watch(
+      () => props.permissionCode,
+      (val) => {
+        tabConfig.permissionCode = val
+      }
+    )
 
     onMounted(() => {
       const elem = refElem.value
@@ -102,16 +113,20 @@ export default defineVxeComponent({
     })
 
     const renderVN = () => {
-      return h('div', {
-        ref: refElem
-      }, [])
+      return h(
+        'div',
+        {
+          ref: refElem
+        },
+        []
+      )
     }
 
     $xeTabPane.renderVN = renderVN
 
     return $xeTabPane
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

@@ -4,7 +4,7 @@ import VxeButtonGroupComponent from '../button/src/button-group'
 import { dynamicApp } from '../dynamics'
 
 export const VxeButtonGroup = Object.assign({}, VxeButtonGroupComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeButtonGroupComponent.name as string, VxeButtonGroupComponent)
   }
 })

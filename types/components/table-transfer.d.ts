@@ -21,7 +21,7 @@ export interface VxeTableTransferConstructor extends VxeComponentBaseOptions, Vx
 export interface TableTransferPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeTableTransferPrivateRef extends TableTransferPrivateRef { }
+export interface VxeTableTransferPrivateRef extends TableTransferPrivateRef {}
 
 export namespace VxeTableTransferPropTypes {
   export type Size = VxeComponentSizeType
@@ -42,21 +42,17 @@ export interface VxeTableTransferProps {
   options?: VxeTableTransferPropTypes.Options
 }
 
-export interface TableTransferPrivateComputed {
-}
-export interface VxeTableTransferPrivateComputed extends TableTransferPrivateComputed { }
+export interface TableTransferPrivateComputed {}
+export interface VxeTableTransferPrivateComputed extends TableTransferPrivateComputed {}
 
-export interface TableTransferReactData {
-}
-export interface TableTransferInternalData {
-}
+export interface TableTransferReactData {}
+export interface TableTransferInternalData {}
 
-export interface TableTransferMethods {
-}
-export interface VxeTableTransferMethods extends TableTransferMethods { }
+export interface TableTransferMethods {}
+export interface VxeTableTransferMethods extends TableTransferMethods {}
 
-export interface TableTransferPrivateMethods { }
-export interface VxeTableTransferPrivateMethods extends TableTransferPrivateMethods { }
+export interface TableTransferPrivateMethods {}
+export interface VxeTableTransferPrivateMethods extends TableTransferPrivateMethods {}
 
 export type VxeTableTransferEmits = []
 
@@ -68,9 +64,9 @@ export namespace VxeTableTransferDefines {
 
 export type VxeTableTransferEventProps = {}
 
-export interface VxeTableTransferListeners { }
+export interface VxeTableTransferListeners {}
 
-export namespace VxeTableTransferEvents { }
+export namespace VxeTableTransferEvents {}
 
 export namespace VxeTableTransferSlotTypes {
   export interface DefaultSlotParams {}

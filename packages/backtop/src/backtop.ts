@@ -1,7 +1,7 @@
 import { ref, h, reactive, PropType, watch, onMounted, nextTick, computed, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { createComponentLog } from '../../ui/src/log'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { toCssUnit } from '../../ui/src/dom'
@@ -9,15 +9,17 @@ import VxeButtonComponent from '../../button'
 
 import type { BacktopInternalData, BacktopReactData, VxeBacktopPropTypes, BacktopPrivateRef, VxeBacktopEmits, VxeComponentStyleType, VxeBacktopPrivateComputed, BacktopMethods, BacktopPrivateMethods, VxeBacktopConstructor, VxeBacktopPrivateMethods, ValueOf } from '../../../types'
 
+const { getConfig, getIcon, createEvent, useFns, renderEmptyElement } = VxeUI
+
 const { errLog } = createComponentLog('backtop')
 
-function createInternalData (): BacktopInternalData {
+function createInternalData(): BacktopInternalData {
   return {
     targetEl: null
   }
 }
 
-function createReactData (): BacktopReactData {
+function createReactData(): BacktopReactData {
   return {
     showBtn: false,
     backtopZindex: 0
@@ -89,17 +91,15 @@ export default defineVxeComponent({
       default: () => getConfig().backtop.position
     }
   },
-  emits: [
-    'click'
-  ] as VxeBacktopEmits,
-  setup (props, context) {
+  emits: ['click'] as VxeBacktopEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const internalData = createInternalData()
     const reactData = reactive(createReactData())
@@ -124,8 +124,7 @@ export default defineVxeComponent({
       return stys
     })
 
-    const computeMaps: VxeBacktopPrivateComputed = {
-    }
+    const computeMaps: VxeBacktopPrivateComputed = {}
 
     const $xeBacktop = {
       xID,
@@ -231,8 +230,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const tagPrivateMethods: BacktopPrivateMethods = {
-    }
+    const tagPrivateMethods: BacktopPrivateMethods = {}
 
     Object.assign($xeBacktop, tagMethods, tagPrivateMethods)
 
@@ -244,50 +242,76 @@ export default defineVxeComponent({
       const defaultSlot = slots.default
       const topSlot = slots.top
       const bottomSlot = slots.bottom
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-backtop', position === 'fixed' ? ('is--' + position) : 'is--absolute', {
-          [`size--${vSize}`]: vSize,
-          'is--visible': showBtn
-        }],
-        style: wrapperStyle
-      }, [
-        showTop && topSlot
-          ? h('div', {
-            class: 'vxe-backtop--top-wrapper'
-          }, topSlot({}))
-          : renderEmptyElement($xeBacktop),
-        h('div', {
-          class: 'vxe-backtop--content-wrapper',
-          onClick: clickEvent
-        }, [
-          defaultSlot
-            ? defaultSlot({})
-            : [
-                h(VxeButtonComponent, {
-                  circle,
-                  status,
-                  shadow,
-                  icon: showIcon ? (icon || getIcon().BACKTOP_TOP) : '',
-                  content: showContent ? content : ''
-                })
-              ]
-        ]),
-        showBottom && bottomSlot
-          ? h('div', {
-            class: 'vxe-backtop--bottom-wrapper'
-          }, bottomSlot({}))
-          : renderEmptyElement($xeBacktop)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-backtop',
+            position === 'fixed' ? 'is--' + position : 'is--absolute',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--visible': showBtn
+            }
+          ],
+          style: wrapperStyle
+        },
+        [
+          showTop && topSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-backtop--top-wrapper'
+              },
+              topSlot({})
+            )
+            : renderEmptyElement($xeBacktop),
+          h(
+            'div',
+            {
+              class: 'vxe-backtop--content-wrapper',
+              onClick: clickEvent
+            },
+            [
+              defaultSlot
+                ? defaultSlot({})
+                : [
+                    h(VxeButtonComponent, {
+                      circle,
+                      status,
+                      shadow,
+                      icon: showIcon ? icon || getIcon().BACKTOP_TOP : '',
+                      content: showContent ? content : ''
+                    })
+                  ]
+            ]
+          ),
+          showBottom && bottomSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-backtop--bottom-wrapper'
+              },
+              bottomSlot({})
+            )
+            : renderEmptyElement($xeBacktop)
+        ]
+      )
     }
 
-    watch(() => props.position, () => {
-      updateZIndex()
-    })
+    watch(
+      () => props.position,
+      () => {
+        updateZIndex()
+      }
+    )
 
-    watch(() => props.target, () => {
-      handleTargetElement()
-    })
+    watch(
+      () => props.target,
+      () => {
+        handleTargetElement()
+      }
+    )
 
     onMounted(() => {
       const { showTop } = props
@@ -307,7 +331,7 @@ export default defineVxeComponent({
 
     return $xeBacktop
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

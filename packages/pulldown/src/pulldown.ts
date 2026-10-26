@@ -1,12 +1,30 @@
 import { h, Teleport, ref, Ref, onUnmounted, reactive, inject, computed, nextTick, PropType, watch } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 
-import type { VxePulldownConstructor, VxePulldownPropTypes, PulldownInternalData, VxePulldownEmits, PulldownReactData, ValueOf, PulldownMethods, PulldownPrivateRef, VxePulldownMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods } from '../../../types'
+import type {
+  VxePulldownConstructor,
+  VxePulldownPropTypes,
+  PulldownInternalData,
+  VxePulldownEmits,
+  PulldownReactData,
+  ValueOf,
+  PulldownMethods,
+  PulldownPrivateRef,
+  VxePulldownMethods,
+  VxeDrawerConstructor,
+  VxeDrawerMethods,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  VxeModalConstructor,
+  VxeModalMethods
+} from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { getConfig, globalEvents, createEvent, useFns, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxePulldown',
@@ -52,15 +70,8 @@ export default defineVxeComponent({
       default: null
     }
   },
-  emits: [
-    'update:modelValue',
-    'click',
-    'option-click',
-    'show-panel',
-    'hide-panel',
-    'visible-change'
-  ] as VxePulldownEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'click', 'option-click', 'show-panel', 'hide-panel', 'visible-change'] as VxePulldownEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const $xeModal = inject<(VxeModalConstructor & VxeModalMethods) | null>('$xeModal', null)
@@ -70,7 +81,7 @@ export default defineVxeComponent({
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const reactData = reactive<PulldownReactData>({
       initialized: false,
@@ -175,7 +186,7 @@ export default defineVxeComponent({
       if (!reactData.initialized) {
         reactData.initialized = true
       }
-      return new Promise<void>(resolve => {
+      return new Promise<void>((resolve) => {
         if (!props.disabled) {
           if (internalData.hpTimeout) {
             clearTimeout(internalData.hpTimeout)
@@ -207,7 +218,7 @@ export default defineVxeComponent({
       reactData.visiblePanel = false
       dispatchEvent('visible-change', { visible: false }, null)
       emit('update:modelValue', false)
-      return new Promise<void>(resolve => {
+      return new Promise<void>((resolve) => {
         if (reactData.isAniVisible) {
           internalData.hpTimeout = setTimeout(() => {
             reactData.isAniVisible = false
@@ -323,18 +334,25 @@ export default defineVxeComponent({
 
     const renderDefaultPanel = (options?: VxePulldownPropTypes.Options) => {
       const optionSlot = slots.option
-      return h('div', {
-        class: 'vxe-pulldown--panel-list'
-      }, options
-        ? options.map(item => {
-          return h('div', {
-            class: 'vxe-pulldown--panel-item',
-            onClick (evnt: Event) {
-              handleOptionEvent(evnt, item)
-            }
-          }, optionSlot ? optionSlot({ $pulldown: $xePulldown, option: item }) : `${item.label || ''}`)
-        })
-        : []
+      return h(
+        'div',
+        {
+          class: 'vxe-pulldown--panel-list'
+        },
+        options
+          ? options.map((item) => {
+            return h(
+              'div',
+              {
+                class: 'vxe-pulldown--panel-item',
+                onClick(evnt: Event) {
+                  handleOptionEvent(evnt, item)
+                }
+              },
+              optionSlot ? optionSlot({ $pulldown: $xePulldown, option: item }) : `${item.label || ''}`
+            )
+          })
+          : []
       )
     }
 
@@ -350,73 +368,115 @@ export default defineVxeComponent({
       const dropdownSlot = slots.dropdown
       const ppClassName = popupOpts.className || props.popupClassName
 
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-pulldown', className ? (XEUtils.isFunction(className) ? className({ $pulldown: $xePulldown }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          'is--visible': visiblePanel,
-          'is--disabled': disabled,
-          'is--active': isActivated
-        }]
-      }, [
-        h('div', {
-          ref: refPulldownContent,
-          class: 'vxe-pulldown--content',
-          onClick: clickTargetEvent
-        }, defaultSlot ? defaultSlot({ options, $pulldown: $xePulldown }) : []),
-        h(Teleport, {
-          to: 'body',
-          disabled: btnTransfer ? !initialized : true
-        }, [
-          h('div', {
-            ref: refPulldownPanel,
-            class: ['vxe-table--ignore-clear vxe-pulldown--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $pulldown: $xePulldown }) : ppClassName) : '', {
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-pulldown',
+            className ? (XEUtils.isFunction(className) ? className({ $pulldown: $xePulldown }) : className) : '',
+            {
               [`size--${vSize}`]: vSize,
-              'is--transfer': btnTransfer,
-              'ani--leave': isAniVisible,
-              'ani--enter': visiblePanel
-            }],
-            placement: panelPlacement,
-            style: panelStyle
-          }, [
-            h('div', {
-              class: ['vxe-pulldown--panel-wrapper', {
-                'is--shadow': showPopupShadow
-              }]
-            }, initialized && (destroyOnClose ? (visiblePanel || isAniVisible) : true)
-              ? [
-                  headerSlot
-                    ? h('div', {
-                      class: 'vxe-pulldown--panel-header'
-                    }, headerSlot({ options, $pulldown: $xePulldown }))
-                    : renderEmptyElement($xePulldown),
-                  h('div', {
-                    class: 'vxe-pulldown--panel-body'
-                  }, dropdownSlot
-                    ? dropdownSlot({ options, $pulldown: $xePulldown })
-                    : [
-                        renderDefaultPanel(options)
-                      ]),
-                  footerSlot
-                    ? h('div', {
-                      class: 'vxe-pulldown--panel-footer'
-                    }, footerSlot({ options, $pulldown: $xePulldown }))
-                    : renderEmptyElement($xePulldown)
+              'is--visible': visiblePanel,
+              'is--disabled': disabled,
+              'is--active': isActivated
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              ref: refPulldownContent,
+              class: 'vxe-pulldown--content',
+              onClick: clickTargetEvent
+            },
+            defaultSlot ? defaultSlot({ options, $pulldown: $xePulldown }) : []
+          ),
+          h(
+            Teleport,
+            {
+              to: 'body',
+              disabled: btnTransfer ? !initialized : true
+            },
+            [
+              h(
+                'div',
+                {
+                  ref: refPulldownPanel,
+                  class: [
+                    'vxe-table--ignore-clear vxe-pulldown--panel',
+                    ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $pulldown: $xePulldown }) : ppClassName) : '',
+                    {
+                      [`size--${vSize}`]: vSize,
+                      'is--transfer': btnTransfer,
+                      'ani--leave': isAniVisible,
+                      'ani--enter': visiblePanel
+                    }
+                  ],
+                  placement: panelPlacement,
+                  style: panelStyle
+                },
+                [
+                  h(
+                    'div',
+                    {
+                      class: [
+                        'vxe-pulldown--panel-wrapper',
+                        {
+                          'is--shadow': showPopupShadow
+                        }
+                      ]
+                    },
+                    initialized && (destroyOnClose ? visiblePanel || isAniVisible : true)
+                      ? [
+                          headerSlot
+                            ? h(
+                              'div',
+                              {
+                                class: 'vxe-pulldown--panel-header'
+                              },
+                              headerSlot({ options, $pulldown: $xePulldown })
+                            )
+                            : renderEmptyElement($xePulldown),
+                          h(
+                            'div',
+                            {
+                              class: 'vxe-pulldown--panel-body'
+                            },
+                            dropdownSlot ? dropdownSlot({ options, $pulldown: $xePulldown }) : [renderDefaultPanel(options)]
+                          ),
+                          footerSlot
+                            ? h(
+                              'div',
+                              {
+                                class: 'vxe-pulldown--panel-footer'
+                              },
+                              footerSlot({ options, $pulldown: $xePulldown })
+                            )
+                            : renderEmptyElement($xePulldown)
+                        ]
+                      : []
+                  )
                 ]
-              : [])
-          ])
-        ])
-      ])
+              )
+            ]
+          )
+        ]
+      )
     }
 
-    watch(() => props.modelValue, (value) => {
-      reactData.isActivated = !!value
-      if (value) {
-        showPanel()
-      } else {
-        hideOptionPanel()
+    watch(
+      () => props.modelValue,
+      (value) => {
+        reactData.isActivated = !!value
+        if (value) {
+          showPanel()
+        } else {
+          hideOptionPanel()
+        }
       }
-    })
+    )
 
     nextTick(() => {
       if (props.modelValue) {
@@ -439,7 +499,7 @@ export default defineVxeComponent({
 
     return $xePulldown
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

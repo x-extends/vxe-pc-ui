@@ -1,10 +1,12 @@
 import { ref, h, reactive, provide, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeBreadcrumbItemComponent from './breadcrumb-item'
 
 import type { VxeBreadcrumbPropTypes, VxeBreadcrumbEmits, BreadcrumbReactData, BreadcrumbPrivateRef, VxeBreadcrumbPrivateComputed, VxeBreadcrumbConstructor, BreadcrumbPrivateMethods, VxeBreadcrumbPrivateMethods, BreadcrumbMethods } from '../../../types'
+
+const { getConfig, createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeBreadcrumb',
@@ -15,25 +17,21 @@ export default defineVxeComponent({
     },
     options: Array as PropType<VxeBreadcrumbPropTypes.Options>
   },
-  emits: [
-    'click'
-  ] as VxeBreadcrumbEmits,
-  setup (props, context) {
+  emits: ['click'] as VxeBreadcrumbEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<BreadcrumbReactData>({
-    })
+    const reactData = reactive<BreadcrumbReactData>({})
 
     const refMaps: BreadcrumbPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxeBreadcrumbPrivateComputed = {
-    }
+    const computeMaps: VxeBreadcrumbPrivateComputed = {}
 
     const $xeBreadcrumb = {
       xID,
@@ -46,13 +44,13 @@ export default defineVxeComponent({
     } as unknown as VxeBreadcrumbConstructor & VxeBreadcrumbPrivateMethods
 
     const breadcrumbMethods: BreadcrumbMethods = {
-      dispatchEvent (type, params, evnt) {
+      dispatchEvent(type, params, evnt) {
         emit(type, createEvent(evnt, { $breadcrumb: $xeBreadcrumb }, params))
       }
     }
 
     const breadcrumbPrivateMethods: BreadcrumbPrivateMethods = {
-      handleClickLink (evnt, option) {
+      handleClickLink(evnt, option) {
         breadcrumbMethods.dispatchEvent('click', { option }, evnt)
       }
     }
@@ -62,7 +60,7 @@ export default defineVxeComponent({
     const renderItems = () => {
       const { options } = props
       if (options && options.length) {
-        return options.map(item => {
+        return options.map((item) => {
           return h(VxeBreadcrumbItemComponent, {
             title: item.title,
             routerLink: item.routerLink
@@ -74,10 +72,14 @@ export default defineVxeComponent({
 
     const renderVN = () => {
       const defaultSlot = slots.default
-      return h('div', {
-        ref: refElem,
-        class: 'vxe-breadcrumb'
-      }, defaultSlot ? defaultSlot({}) : renderItems())
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: 'vxe-breadcrumb'
+        },
+        defaultSlot ? defaultSlot({}) : renderItems()
+      )
     }
 
     provide('$xeBreadcrumb', $xeBreadcrumb)
@@ -86,7 +88,7 @@ export default defineVxeComponent({
 
     return $xeBreadcrumb
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

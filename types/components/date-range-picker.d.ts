@@ -24,7 +24,7 @@ export interface DateRangePickerPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
   refInput: Ref<HTMLInputElement>
 }
-export interface VxeDateRangePickerPrivateRef extends DateRangePickerPrivateRef { }
+export interface VxeDateRangePickerPrivateRef extends DateRangePickerPrivateRef {}
 
 export namespace VxeDateRangePickerPropTypes {
   export type Size = VxeComponentSizeType
@@ -201,9 +201,8 @@ export interface VxeDateRangePickerProps {
   showConfirmButton?: VxeDateRangePickerPropTypes.ShowConfirmButton
 }
 
-export interface DateRangePickerPrivateComputed {
-}
-export interface VxeDateRangePickerPrivateComputed extends DateRangePickerPrivateComputed { }
+export interface DateRangePickerPrivateComputed {}
+export interface VxeDateRangePickerPrivateComputed extends DateRangePickerPrivateComputed {}
 
 export interface DateRangePickerReactData {
   initialized: boolean
@@ -256,31 +255,12 @@ export interface DateRangePickerMethods {
   hidePanel(): Promise<any>
   updatePlacement(): Promise<any>
 }
-export interface VxeDateRangePickerMethods extends DateRangePickerMethods { }
+export interface VxeDateRangePickerMethods extends DateRangePickerMethods {}
 
-export interface DateRangePickerPrivateMethods { }
-export interface VxeDateRangePickerPrivateMethods extends DateRangePickerPrivateMethods { }
+export interface DateRangePickerPrivateMethods {}
+export interface VxeDateRangePickerPrivateMethods extends DateRangePickerPrivateMethods {}
 
-export type VxeDateRangePickerEmits = [
-  'update:modelValue',
-  'update:startValue',
-  'update:endValue',
-  'input',
-  'change',
-  'keydown',
-  'keyup',
-  'click',
-  'focus',
-  'blur',
-  'clear',
-  'confirm',
-  'prefix-click',
-  'suffix-click',
-  'date-prev',
-  'date-today',
-  'date-next',
-  'shortcut-click'
-]
+export type VxeDateRangePickerEmits = ['update:modelValue', 'update:startValue', 'update:endValue', 'input', 'change', 'keydown', 'keyup', 'click', 'focus', 'blur', 'clear', 'confirm', 'prefix-click', 'suffix-click', 'date-prev', 'date-today', 'date-next', 'shortcut-click']
 
 export namespace VxeDateRangePickerDefines {
   export interface DateRangePickerEventParams extends VxeComponentEventParams {
@@ -301,12 +281,12 @@ export namespace VxeDateRangePickerDefines {
     startValue: string
     endValue: string
   }
-  export interface InputEventParams extends DateRangePickerEventParams, DateRangePickerParams { }
+  export interface InputEventParams extends DateRangePickerEventParams, DateRangePickerParams {}
 
   export interface ChangeParams extends DateRangePickerParams {
     isFinish: boolean
   }
-  export interface ChangeEventParams extends DateRangePickerEventParams, ChangeParams { }
+  export interface ChangeEventParams extends DateRangePickerEventParams, ChangeParams {}
 
   export interface ClearEventParams extends DateRangePickerEventParams {}
   export interface ConfirmEventParams extends DateRangePickerEventParams {}

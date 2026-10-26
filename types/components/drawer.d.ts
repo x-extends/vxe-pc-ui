@@ -21,7 +21,7 @@ export interface VxeDrawerConstructor extends VxeComponentBaseOptions, VxeDrawer
 export interface DrawerPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeDrawerPrivateRef extends DrawerPrivateRef { }
+export interface VxeDrawerPrivateRef extends DrawerPrivateRef {}
 
 /**
  * 窗口类型
@@ -147,9 +147,8 @@ export interface VxeDrawerProps {
   scrollbarConfig?: VxeDrawerPropTypes.ScrollbarConfig
 }
 
-export interface DrawerPrivateComputed {
-}
-export interface VxeDrawerPrivateComputed extends DrawerPrivateComputed { }
+export interface DrawerPrivateComputed {}
+export interface VxeDrawerPrivateComputed extends DrawerPrivateComputed {}
 
 export interface DrawerReactData {
   initialized: boolean
@@ -174,21 +173,12 @@ export interface DrawerMethods {
    */
   getBox(): HTMLElement
 }
-export interface VxeDrawerMethods extends DrawerMethods { }
+export interface VxeDrawerMethods extends DrawerMethods {}
 
-export interface DrawerPrivateMethods { }
-export interface VxeDrawerPrivateMethods extends DrawerPrivateMethods { }
+export interface DrawerPrivateMethods {}
+export interface VxeDrawerPrivateMethods extends DrawerPrivateMethods {}
 
-export type VxeDrawerEmits = [
-  'update:modelValue',
-  'show',
-  'hide',
-  'before-hide',
-  'close',
-  'confirm',
-  'cancel',
-  'resize'
-]
+export type VxeDrawerEmits = ['update:modelValue', 'show', 'hide', 'before-hide', 'close', 'confirm', 'cancel', 'resize']
 
 /**
  * 全局窗口控制器
@@ -224,28 +214,28 @@ export namespace VxeDrawerDefines {
     type: DrawerEventTypes
   }
 
-  interface DrawerBaseParams extends DrawerVisibleParams { }
+  interface DrawerBaseParams extends DrawerVisibleParams {}
 
-  export interface ShowParams extends DrawerBaseParams { }
-  export interface ShowEventParams extends DrawerEventParams, ShowParams { }
+  export interface ShowParams extends DrawerBaseParams {}
+  export interface ShowEventParams extends DrawerEventParams, ShowParams {}
 
-  export interface HideParams extends DrawerBaseParams { }
-  export interface HideEventParams extends DrawerEventParams, HideParams { }
+  export interface HideParams extends DrawerBaseParams {}
+  export interface HideEventParams extends DrawerEventParams, HideParams {}
 
-  export interface BeforeHideParams extends DrawerBaseParams { }
-  export interface BeforeHideEventParams extends DrawerEventParams, BeforeHideParams { }
+  export interface BeforeHideParams extends DrawerBaseParams {}
+  export interface BeforeHideEventParams extends DrawerEventParams, BeforeHideParams {}
 
-  export interface ConfirmParams extends DrawerBaseParams { }
-  export interface ConfirmEventParams extends DrawerEventParams, ConfirmParams { }
+  export interface ConfirmParams extends DrawerBaseParams {}
+  export interface ConfirmEventParams extends DrawerEventParams, ConfirmParams {}
 
-  export interface CancelParams extends DrawerBaseParams { }
-  export interface CancelEventParams extends DrawerEventParams, CancelParams { }
+  export interface CancelParams extends DrawerBaseParams {}
+  export interface CancelEventParams extends DrawerEventParams, CancelParams {}
 
-  export interface CloseParams extends DrawerBaseParams { }
-  export interface CloseEventParams extends DrawerEventParams, CloseParams { }
+  export interface CloseParams extends DrawerBaseParams {}
+  export interface CloseEventParams extends DrawerEventParams, CloseParams {}
 
-  export interface ResizeParams extends DrawerBaseParams { }
-  export interface ResizeEventParams extends DrawerEventParams, ResizeParams { }
+  export interface ResizeParams extends DrawerBaseParams {}
+  export interface ResizeEventParams extends DrawerEventParams, ResizeParams {}
 }
 
 export type VxeDrawerEventProps = {
@@ -282,19 +272,18 @@ export namespace VxeDrawerEvents {
 }
 
 export namespace VxeDrawerSlotTypes {
-
   export interface DefaultSlotParams {
     $drawer: VxeDrawerConstructor
   }
-  export interface LeftSlotParams extends DefaultSlotParams { }
-  export interface RightSlotParams extends DefaultSlotParams { }
-  export interface AsideSlotParams extends DefaultSlotParams { }
-  export interface HeaderSlotParams extends DefaultSlotParams { }
-  export interface TitleSlotParams extends DefaultSlotParams { }
-  export interface CornerSlotParams extends DefaultSlotParams { }
-  export interface FooterSlotParams extends DefaultSlotParams { }
-  export interface LeftfootSlotParams extends DefaultSlotParams { }
-  export interface RightfootSlotParams extends DefaultSlotParams { }
+  export interface LeftSlotParams extends DefaultSlotParams {}
+  export interface RightSlotParams extends DefaultSlotParams {}
+  export interface AsideSlotParams extends DefaultSlotParams {}
+  export interface HeaderSlotParams extends DefaultSlotParams {}
+  export interface TitleSlotParams extends DefaultSlotParams {}
+  export interface CornerSlotParams extends DefaultSlotParams {}
+  export interface FooterSlotParams extends DefaultSlotParams {}
+  export interface LeftfootSlotParams extends DefaultSlotParams {}
+  export interface RightfootSlotParams extends DefaultSlotParams {}
 }
 
 export interface VxeDrawerSlots {

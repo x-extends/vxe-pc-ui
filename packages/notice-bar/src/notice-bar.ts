@@ -1,10 +1,12 @@
 import { ref, h, reactive, PropType, computed, onMounted, watch, onBeforeUnmount, inject } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, useSize, createEvent, globalEvents, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { VxeNoticeBarPropTypes, NoticeBarReactData, NoticeBarPrivateRef, NoticeBarMethods, NoticeBarPrivateMethods, VxeNoticeBarEmits, VxeNoticeBarPrivateComputed, VxeNoticeBarConstructor, VxeNoticeBarPrivateMethods, ValueOf, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
+
+const { getConfig, useFns, createEvent, globalEvents, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeNoticeBar',
@@ -28,18 +30,15 @@ export default defineVxeComponent({
       default: () => getConfig().noticeBar.size || getConfig().size
     }
   },
-  emits: [
-    'start',
-    'end'
-  ] as VxeNoticeBarEmits,
-  setup (props, context) {
+  emits: ['start', 'end'] as VxeNoticeBarEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const $xeTabs = inject<(VxeTabsConstructor & VxeTabsPrivateMethods) | null>('$xeTabs', null)
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
     const refContentElem = ref<HTMLDivElement>()
@@ -62,8 +61,7 @@ export default defineVxeComponent({
       return $xeTabs ? $xeTabs.reactData.resizeFlag : null
     })
 
-    const computeMaps: VxeNoticeBarPrivateComputed = {
-    }
+    const computeMaps: VxeNoticeBarPrivateComputed = {}
 
     const $xeNoticeBar = {
       xID,
@@ -83,8 +81,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const noticeBarPrivateMethods: NoticeBarPrivateMethods = {
-    }
+    const noticeBarPrivateMethods: NoticeBarPrivateMethods = {}
 
     const updateAnimationStyle = () => {
       const { speed } = props
@@ -121,41 +118,70 @@ export default defineVxeComponent({
       const prefixSlot = slots.prefix
       const suffixSlot = slots.suffix
 
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-notice-bar', `is--${vertical ? 'vertical' : 'horizontal'}`, `dir--${direction || 'left'}`, {
-          [`size--${vSize}`]: vSize,
-          'is--loop': loop
-        }]
-      }, [
-        prefixSlot
-          ? h('div', {
-            class: 'vxe-notice-bar--prefix'
-          }, prefixSlot({}))
-          : renderEmptyElement($xeNoticeBar),
-        h('div', {
-          class: 'vxe-notice-bar--content'
-        }, [
-          h('div', {
-            ref: refContentElem,
-            class: 'vxe-notice-bar--inner'
-          }, [
-            h('div', {
-              class: ['vxe-notice-bar--wrapper', `is--${animationStatus ? 'progress' : 'end'}`],
-              style: {
-                animationDuration: duration ? toCssUnit(duration, 's') : `${animationDuration}s`
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-notice-bar',
+            `is--${vertical ? 'vertical' : 'horizontal'}`,
+            `dir--${direction || 'left'}`,
+            {
+              [`size--${vSize}`]: vSize,
+              'is--loop': loop
+            }
+          ]
+        },
+        [
+          prefixSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-notice-bar--prefix'
               },
-              onAnimationstart: animationStartEvent,
-              onAnimationend: animationEndEvent
-            }, defaultSlot ? defaultSlot({}) : noticeText)
-          ])
-        ]),
-        suffixSlot
-          ? h('div', {
-            class: 'vxe-notice-bar--suffix'
-          }, suffixSlot({}))
-          : renderEmptyElement($xeNoticeBar)
-      ])
+              prefixSlot({})
+            )
+            : renderEmptyElement($xeNoticeBar),
+          h(
+            'div',
+            {
+              class: 'vxe-notice-bar--content'
+            },
+            [
+              h(
+                'div',
+                {
+                  ref: refContentElem,
+                  class: 'vxe-notice-bar--inner'
+                },
+                [
+                  h(
+                    'div',
+                    {
+                      class: ['vxe-notice-bar--wrapper', `is--${animationStatus ? 'progress' : 'end'}`],
+                      style: {
+                        animationDuration: duration ? toCssUnit(duration, 's') : `${animationDuration}s`
+                      },
+                      onAnimationstart: animationStartEvent,
+                      onAnimationend: animationEndEvent
+                    },
+                    defaultSlot ? defaultSlot({}) : noticeText
+                  )
+                ]
+              )
+            ]
+          ),
+          suffixSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-notice-bar--suffix'
+              },
+              suffixSlot({})
+            )
+            : renderEmptyElement($xeNoticeBar)
+        ]
+      )
     }
 
     watch(computeTabsResizeFlag, () => {
@@ -175,7 +201,7 @@ export default defineVxeComponent({
 
     return $xeNoticeBar
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

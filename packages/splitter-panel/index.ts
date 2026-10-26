@@ -4,7 +4,7 @@ import VxeSplitterPanelComponent from '../splitter/src/splitter-panel'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSplitterPanel = Object.assign({}, VxeSplitterPanelComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeSplitterPanelComponent.name as string, VxeSplitterPanelComponent)
   }
 })

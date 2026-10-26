@@ -1,9 +1,11 @@
 import { ref, h, reactive, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
 import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, LayoutFooterPrivateMethods, LayoutFooterMethods, VxeLayoutFooterEmits, LayoutFooterPrivateRef, VxeLayoutFooterPrivateComputed, VxeLayoutFooterConstructor, ValueOf, VxeLayoutFooterPrivateMethods } from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeLayoutFooter',
@@ -12,22 +14,20 @@ export default defineVxeComponent({
     align: String as PropType<VxeLayoutFooterPropTypes.Align>
   },
   emits: [] as VxeLayoutFooterEmits,
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<LayoutFooterReactData>({
-    })
+    const reactData = reactive<LayoutFooterReactData>({})
 
     const refMaps: LayoutFooterPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxeLayoutFooterPrivateComputed = {
-    }
+    const computeMaps: VxeLayoutFooterPrivateComputed = {}
 
     const $xeLayoutFooter = {
       xID,
@@ -47,8 +47,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const layoutFooterPrivateMethods: LayoutFooterPrivateMethods = {
-    }
+    const layoutFooterPrivateMethods: LayoutFooterPrivateMethods = {}
 
     Object.assign($xeLayoutFooter, layoutFooterMethods, layoutFooterPrivateMethods)
 
@@ -56,19 +55,27 @@ export default defineVxeComponent({
       const { fixed, align } = props
       const defaultSlot = slots.default
 
-      return h('footer', {
-        ref: refElem,
-        class: ['vxe-layout-footer', align ? `align--${align}` : '', {
-          'is--fixed': fixed
-        }]
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'footer',
+        {
+          ref: refElem,
+          class: [
+            'vxe-layout-footer',
+            align ? `align--${align}` : '',
+            {
+              'is--fixed': fixed
+            }
+          ]
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
 
     $xeLayoutFooter.renderVN = renderVN
 
     return $xeLayoutFooter
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

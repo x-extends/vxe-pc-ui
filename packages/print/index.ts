@@ -5,7 +5,7 @@ import { dynamicApp } from '../dynamics'
 import { printHtml } from './src/util'
 
 export const VxePrint = Object.assign({}, VxePrintComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxePrintComponent.name as string, VxePrintComponent)
   }
 })

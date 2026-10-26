@@ -1,10 +1,12 @@
 import { ref, h, reactive, PropType, resolveComponent } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, usePermission, useSize, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeLinkPropTypes, LinkReactData, LinkPrivateRef, LinkMethods, LinkPrivateMethods, VxeLinkEmits, VxeLinkPrivateComputed, VxeLinkConstructor, VxeLinkPrivateMethods, ValueOf } from '../../../types'
+
+const { getConfig, useFns, createEvent, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeLink',
@@ -30,29 +32,25 @@ export default defineVxeComponent({
       default: () => getConfig().link.size || getConfig().size
     }
   },
-  emits: [
-    'click'
-  ] as VxeLinkEmits,
-  setup (props, context) {
+  emits: ['click'] as VxeLinkEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
-    const { computePermissionInfo } = usePermission(props)
+    const { computePermissionInfo } = useFns.usePermission(props)
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<LinkReactData>({
-    })
+    const reactData = reactive<LinkReactData>({})
 
     const refMaps: LinkPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxeLinkPrivateComputed = {
-    }
+    const computeMaps: VxeLinkPrivateComputed = {}
 
     const $xeLink = {
       xID,
@@ -72,8 +70,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const linkPrivateMethods: LinkPrivateMethods = {
-    }
+    const linkPrivateMethods: LinkPrivateMethods = {}
 
     const clickEvent = (evnt: MouseEvent) => {
       const { disabled } = props
@@ -91,20 +88,28 @@ export default defineVxeComponent({
       const textContent = XEUtils.toValueString(content)
       return [
         iconSlot || icon
-          ? h('span', {
-            class: 'vxe-link--icon'
-          }, iconSlot
-            ? getSlotVNs(iconSlot({}))
-            : [
-                h('i', {
-                  class: icon
-                })
-              ])
+          ? h(
+            'span',
+            {
+              class: 'vxe-link--icon'
+            },
+            iconSlot
+              ? getSlotVNs(iconSlot({}))
+              : [
+                  h('i', {
+                    class: icon
+                  })
+                ]
+          )
           : renderEmptyElement($xeLink),
         defaultSlot || textContent
-          ? h('span', {
-            class: 'vxe-link--content'
-          }, defaultSlot ? defaultSlot({}) : textContent)
+          ? h(
+            'span',
+            {
+              class: 'vxe-link--content'
+            },
+            defaultSlot ? defaultSlot({}) : textContent
+          )
           : renderEmptyElement($xeLink)
       ]
     }
@@ -119,43 +124,57 @@ export default defineVxeComponent({
       }
 
       if (routerLink && !disabled) {
-        return h(resolveComponent('router-link'), {
-          class: ['vxe-link', {
-            [`size--${vSize}`]: vSize,
-            [`theme--${status}`]: status,
-            'is--disabled': disabled,
-            'is--underline': underline
-          }],
-          title,
-          target,
-          to: disabled ? null : routerLink,
-          onClick: clickEvent
-        }, {
-          default () {
-            return renderContent()
+        return h(
+          resolveComponent('router-link'),
+          {
+            class: [
+              'vxe-link',
+              {
+                [`size--${vSize}`]: vSize,
+                [`theme--${status}`]: status,
+                'is--disabled': disabled,
+                'is--underline': underline
+              }
+            ],
+            title,
+            target,
+            to: disabled ? null : routerLink,
+            onClick: clickEvent
+          },
+          {
+            default() {
+              return renderContent()
+            }
           }
-        })
+        )
       }
-      return h('a', {
-        ref: refElem,
-        class: ['vxe-link', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--disabled': disabled,
-          'is--underline': underline
-        }],
-        href: disabled ? null : href,
-        target,
-        title,
-        onClick: clickEvent
-      }, renderContent())
+      return h(
+        'a',
+        {
+          ref: refElem,
+          class: [
+            'vxe-link',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--disabled': disabled,
+              'is--underline': underline
+            }
+          ],
+          href: disabled ? null : href,
+          target,
+          title,
+          onClick: clickEvent
+        },
+        renderContent()
+      )
     }
 
     $xeLink.renderVN = renderVN
 
     return $xeLink
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

@@ -21,7 +21,7 @@ export interface VxeLayoutAsideConstructor extends VxeComponentBaseOptions, VxeL
 export interface LayoutAsidePrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeLayoutAsidePrivateRef extends LayoutAsidePrivateRef { }
+export interface VxeLayoutAsidePrivateRef extends LayoutAsidePrivateRef {}
 
 export namespace VxeLayoutAsidePropTypes {
   export type Width = string | number
@@ -92,10 +92,10 @@ export interface LayoutAsideReactData {}
 export interface LayoutAsideMethods {
   dispatchEvent(type: ValueOf<VxeLayoutAsideEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeLayoutAsideMethods extends LayoutAsideMethods { }
+export interface VxeLayoutAsideMethods extends LayoutAsideMethods {}
 
-export interface LayoutAsidePrivateMethods { }
-export interface VxeLayoutAsidePrivateMethods extends LayoutAsidePrivateMethods { }
+export interface LayoutAsidePrivateMethods {}
+export interface VxeLayoutAsidePrivateMethods extends LayoutAsidePrivateMethods {}
 
 export type VxeLayoutAsideEmits = []
 
@@ -107,9 +107,9 @@ export namespace VxeLayoutAsideDefines {
 
 export type VxeLayoutAsideEventProps = {}
 
-export interface VxeLayoutAsideListeners { }
+export interface VxeLayoutAsideListeners {}
 
-export namespace VxeLayoutAsideEvents { }
+export namespace VxeLayoutAsideEvents {}
 
 export namespace VxeLayoutAsideSlotTypes {
   export interface DefaultSlotParams {}

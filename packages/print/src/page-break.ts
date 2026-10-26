@@ -1,16 +1,31 @@
 import { ref, h, reactive, inject, onMounted, onUnmounted, createCommentVNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assemblePageBreak, destroyPageBreak } from './util'
 
-import type { PrintPageBreakReactData, PrintPageBreakPrivateRef, ValueOf, PrintPageBreakPrivateMethods, PrintPageBreakMethods, VxePrintPageBreakEmits, VxePrintDefines, VxePrintPageBreakPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, VxePrintPageBreakConstructor, VxePrintPageBreakPrivateMethods } from '../../../types'
+import type {
+  PrintPageBreakReactData,
+  PrintPageBreakPrivateRef,
+  ValueOf,
+  PrintPageBreakPrivateMethods,
+  PrintPageBreakMethods,
+  VxePrintPageBreakEmits,
+  VxePrintDefines,
+  VxePrintPageBreakPrivateComputed,
+  VxePrintConstructor,
+  VxePrintPrivateMethods,
+  VxePrintPageBreakConstructor,
+  VxePrintPageBreakPrivateMethods
+} from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxePrintPageBreak',
   props: {},
   emits: [] as VxePrintPageBreakEmits,
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -18,15 +33,13 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<PrintPageBreakReactData>({
-    })
+    const reactData = reactive<PrintPageBreakReactData>({})
 
     const refMaps: PrintPageBreakPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxePrintPageBreakPrivateComputed = {
-    }
+    const computeMaps: VxePrintPageBreakPrivateComputed = {}
 
     const pageBreakConfig = reactive<VxePrintDefines.PageBreakConfig>({
       id: xID,
@@ -51,8 +64,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const printPageBreakPrivateMethods: PrintPageBreakPrivateMethods = {
-    }
+    const printPageBreakPrivateMethods: PrintPageBreakPrivateMethods = {}
 
     Object.assign($xePrintPageBreak, printPageBreakMethods, printPageBreakPrivateMethods)
 
@@ -86,7 +98,7 @@ export default defineVxeComponent({
 
     return $xePrintPageBreak
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

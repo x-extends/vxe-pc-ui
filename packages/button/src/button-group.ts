@@ -1,10 +1,12 @@
 import { h, reactive, provide, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, createEvent, useSize, usePermission, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeButtonComponent from './button'
 
 import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, ButtonGroupReactData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, ButtonGroupMethods, ButtonPrivateComputed, ValueOf, ButtonGroupPrivateMethods } from '../../../types'
+
+const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeButtonGroup',
@@ -24,17 +26,13 @@ export default defineVxeComponent({
       default: () => getConfig().buttonGroup.size || getConfig().size
     }
   },
-  emits: [
-    'click',
-    'contextmenu'
-  ] as VxeButtonGroupEmits,
-  setup (props, context) {
+  emits: ['click', 'contextmenu'] as VxeButtonGroupEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const reactData = reactive<ButtonGroupReactData>({
-    })
+    const reactData = reactive<ButtonGroupReactData>({})
 
     const computeMaps: ButtonPrivateComputed = {}
 
@@ -47,9 +45,9 @@ export default defineVxeComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods
 
-    useSize(props)
+    useFns.useSize(props)
 
-    const { computePermissionInfo } = usePermission(props)
+    const { computePermissionInfo } = useFns.usePermission(props)
 
     const dispatchEvent = (type: ValueOf<VxeButtonGroupEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $buttonGroup: $xeButtonGroup }, params))
@@ -60,10 +58,10 @@ export default defineVxeComponent({
     }
 
     const buttonGroupPrivateMethods: ButtonGroupPrivateMethods = {
-      handleClick (params, evnt) {
+      handleClick(params, evnt) {
         const { options } = props
         const { name } = params
-        const option = options ? options.find(item => item.name === name) : null
+        const option = options ? options.find((item) => item.name === name) : null
         buttonGroupMethods.dispatchEvent('click', { ...params, option }, evnt)
       }
     }
@@ -81,21 +79,29 @@ export default defineVxeComponent({
       if (!permissionInfo.visible) {
         return renderEmptyElement($xeButtonGroup)
       }
-      return h('div', {
-        class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '', {
-          'is--vertical': vertical
-        }],
-        onContextmenu: contextmenuEvent
-      }, defaultSlot
-        ? defaultSlot({})
-        : (options
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-button-group',
+            className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '',
+            {
+              'is--vertical': vertical
+            }
+          ],
+          onContextmenu: contextmenuEvent
+        },
+        defaultSlot
+          ? defaultSlot({})
+          : options
             ? options.map((item, index) => {
               return h(VxeButtonComponent, {
                 key: index,
                 ...item
               })
             })
-            : []))
+            : []
+      )
     }
 
     $xeButtonGroup.renderVN = renderVN
@@ -104,7 +110,7 @@ export default defineVxeComponent({
 
     return $xeButtonGroup
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

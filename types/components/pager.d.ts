@@ -21,12 +21,14 @@ export interface VxePagerConstructor extends VxeComponentBaseOptions, VxePagerMe
 export interface PagerPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxePagerPrivateRef extends PagerPrivateRef { }
+export interface VxePagerPrivateRef extends PagerPrivateRef {}
 
-export type PageSizeItemType = number | {
-  label?: number | string
-  value?: number | string
-}
+export type PageSizeItemType =
+  | number
+  | {
+      label?: number | string
+      value?: number | string
+    }
 
 export namespace VxePagerPropTypes {
   export type Size = VxeComponentSizeType
@@ -43,9 +45,7 @@ export namespace VxePagerPropTypes {
   export type Perfect = boolean
   export type AutoHidden = boolean
   export type Transfer = boolean
-  export type ClassName = string | ((params: {
-    $pager: VxePagerConstructor
-  }) => string)
+  export type ClassName = string | ((params: { $pager: VxePagerConstructor }) => string)
   export type PageSizePlacement = VxeSelectPropTypes.Placement
   export type IconPrevPage = string
   export type IconJumpPrev = string
@@ -121,9 +121,8 @@ export interface VxePagerProps {
   iconEndPage?: VxePagerPropTypes.IconEndPage
 }
 
-export interface PagerPrivateComputed {
-}
-export interface VxePagerPrivateComputed extends PagerPrivateComputed { }
+export interface PagerPrivateComputed {}
+export interface VxePagerPrivateComputed extends PagerPrivateComputed {}
 
 export interface PagerReactData {
   inpCurrPage: string | number
@@ -178,7 +177,7 @@ export interface PagerMethods {
    */
   jumpPage(currentPage: number | string | null | undefined): Promise<any>
 }
-export interface VxePagerMethods extends PagerMethods { }
+export interface VxePagerMethods extends PagerMethods {}
 
 export interface PagerPrivateMethods {
   handlePrevPage(evnt: Event): void
@@ -186,13 +185,9 @@ export interface PagerPrivateMethods {
   handlePrevJump(evnt: Event): void
   handleNextJump(evnt: Event): void
 }
-export interface VxePagerPrivateMethods extends PagerPrivateMethods { }
+export interface VxePagerPrivateMethods extends PagerPrivateMethods {}
 
-export type VxePagerEmits = [
-  'update:pageSize',
-  'update:currentPage',
-  'page-change'
-]
+export type VxePagerEmits = ['update:pageSize', 'update:currentPage', 'page-change']
 
 export namespace VxePagerDefines {
   export interface PagerEventParams extends VxeComponentEventParams {
@@ -204,7 +199,7 @@ export namespace VxePagerDefines {
     pageSize: number
     currentPage: number
   }
-  export interface PageChangeEventParams extends PagerEventParams, PageChangeParams { }
+  export interface PageChangeEventParams extends PagerEventParams, PageChangeParams {}
 }
 
 export type VxePagerEventProps = {

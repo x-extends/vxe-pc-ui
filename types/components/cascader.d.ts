@@ -21,7 +21,7 @@ export interface VxeCascaderConstructor extends VxeComponentBaseOptions, VxeCasc
 export interface CascaderPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeCascaderPrivateRef extends CascaderPrivateRef { }
+export interface VxeCascaderPrivateRef extends CascaderPrivateRef {}
 
 export namespace VxeCascaderPropTypes {
   export type Size = VxeComponentSizeType
@@ -53,25 +53,15 @@ export namespace VxeCascaderPropTypes {
     /**
      * 过滤之前的方法
      */
-    beforeFilterMethod?(params: {
-      $cascader: VxeCascaderConstructor
-      filterValue: FilterValue
-    }): void
+    beforeFilterMethod?(params: { $cascader: VxeCascaderConstructor; filterValue: FilterValue }): void
     /**
      * 自定义过滤数据方法
      */
-    filterMethod?:(params: {
-      $cascader: VxeCascaderConstructor
-      node: D
-      filterValue: FilterValue
-    }) => boolean
+    filterMethod?: (params: { $cascader: VxeCascaderConstructor; node: D; filterValue: FilterValue }) => boolean
     /**
      * 过滤之后的方法
      */
-    afterFilterMethod?(params: {
-      $cascader: VxeCascaderConstructor
-      filterValue: FilterValue
-    }): void
+    afterFilterMethod?(params: { $cascader: VxeCascaderConstructor; filterValue: FilterValue }): void
   }
   export type ShowFullLabel = boolean
   export type Separator = string
@@ -95,30 +85,18 @@ export namespace VxeCascaderPropTypes {
   export interface RadioConfig<D = any> {
     strict?: boolean
     visibleMode?: 'all' | 'first' | 'last' | '' | null
-    visibleMethod?: (params: {
-      $cascader: VxeCascaderConstructor
-      node: D
-    }) => boolean
+    visibleMethod?: (params: { $cascader: VxeCascaderConstructor; node: D }) => boolean
     checkMode?: 'all' | 'first' | 'last' | '' | null
-    checkMethod?: (params: {
-      $cascader: VxeCascaderConstructor
-      node: D
-    }) => boolean
+    checkMethod?: (params: { $cascader: VxeCascaderConstructor; node: D }) => boolean
     trigger?: '' | 'default' | 'node'
   }
   export type ShowCheckbox = boolean
   export interface CheckboxConfig<D = any> {
     checkStrictly?: boolean
     visibleMode?: 'all' | 'first' | 'last' | '' | null
-    visibleMethod?: (params: {
-      $cascader: VxeCascaderConstructor
-      node: D
-    }) => boolean
+    visibleMethod?: (params: { $cascader: VxeCascaderConstructor; node: D }) => boolean
     checkMode?: 'all' | 'first' | 'last' | '' | null
-    checkMethod?: (params: {
-      $cascader: VxeCascaderConstructor
-      node: D
-    }) => boolean
+    checkMethod?: (params: { $cascader: VxeCascaderConstructor; node: D }) => boolean
     trigger?: '' | 'default' | 'node'
   }
   export interface RemoteConfig {
@@ -133,11 +111,7 @@ export namespace VxeCascaderPropTypes {
     /**
      * 远程查询方法
      */
-    queryMethod?(params: {
-      $cascader: VxeCascaderConstructor
-      searchValue: string
-      value: ModelValue | undefined
-    }): Promise<void> | void
+    queryMethod?(params: { $cascader: VxeCascaderConstructor; searchValue: string; value: ModelValue | undefined }): Promise<void> | void
   }
 
   export interface PopupConfig {
@@ -175,15 +149,8 @@ export namespace VxeCascaderPropTypes {
     iconOpen?: string
     iconClose?: string
     iconLoaded?: string
-    toggleMethod?(params: {
-      $cascader: VxeCascaderConstructor
-      expanded: boolean
-      node: D
-    }): boolean
-    loadMethod?(params: {
-      $cascader: VxeCascaderConstructor
-      node: D
-    }): Promise<any[]>
+    toggleMethod?(params: { $cascader: VxeCascaderConstructor; expanded: boolean; node: D }): boolean
+    loadMethod?(params: { $cascader: VxeCascaderConstructor; node: D }): Promise<any[]>
   }
 }
 
@@ -221,9 +188,8 @@ export interface VxeCascaderProps<D = any> {
   treeConfig?: VxeCascaderPropTypes.TreeConfig<D>
 }
 
-export interface CascaderPrivateComputed {
-}
-export interface VxeCascaderPrivateComputed extends CascaderPrivateComputed { }
+export interface CascaderPrivateComputed {}
+export interface VxeCascaderPrivateComputed extends CascaderPrivateComputed {}
 
 export interface CascaderReactData {
   initialized: boolean
@@ -267,7 +233,7 @@ export interface CascaderInternalData {
 export interface CascaderMethods {
   dispatchEvent(type: ValueOf<VxeCascaderEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCascaderMethods extends CascaderMethods { }
+export interface VxeCascaderMethods extends CascaderMethods {}
 
 export interface CascaderPrivateMethods {
   /**
@@ -279,25 +245,9 @@ export interface CascaderPrivateMethods {
    */
   isCheckedByCheckboxNodeId(nodeKey: string | number | null): boolean
 }
-export interface VxeCascaderPrivateMethods extends CascaderPrivateMethods { }
+export interface VxeCascaderPrivateMethods extends CascaderPrivateMethods {}
 
-export type VxeCascaderEmits = [
-  'update:modelValue',
-  'change',
-  'all-change',
-  'clear',
-  'blur',
-  'focus',
-  'click',
-  'node-click',
-  'node-expand',
-  'current-change',
-  'radio-change',
-  'checkbox-change',
-  'load-success',
-  'load-error',
-  'visible-change'
-]
+export type VxeCascaderEmits = ['update:modelValue', 'change', 'all-change', 'clear', 'blur', 'focus', 'click', 'node-click', 'node-expand', 'current-change', 'radio-change', 'checkbox-change', 'load-success', 'load-error', 'visible-change']
 
 export namespace VxeCascaderDefines {
   export interface NodeCacheItem {
@@ -328,9 +278,9 @@ export namespace VxeCascaderDefines {
     value: any
   }
 
-  export interface FocusEventParams extends CascaderEventParams { }
-  export interface BlurEventParams extends CascaderEventParams { }
-  export interface ClickEventParams extends CascaderEventParams { }
+  export interface FocusEventParams extends CascaderEventParams {}
+  export interface BlurEventParams extends CascaderEventParams {}
+  export interface ClickEventParams extends CascaderEventParams {}
 
   export interface VisibleChangeEventParams extends CascaderEventParams {
     visible: boolean

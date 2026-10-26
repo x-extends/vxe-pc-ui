@@ -20,7 +20,7 @@ export interface VxeLinkConstructor extends VxeComponentBaseOptions, VxeLinkMeth
 export interface LinkPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeLinkPrivateRef extends LinkPrivateRef { }
+export interface VxeLinkPrivateRef extends LinkPrivateRef {}
 
 export namespace VxeLinkPropTypes {
   export type Href = null | string
@@ -59,31 +59,27 @@ export interface VxeLinkProps {
   size?: VxeLinkPropTypes.Size
 }
 
-export interface LinkPrivateComputed {
-}
-export interface VxeLinkPrivateComputed extends LinkPrivateComputed { }
+export interface LinkPrivateComputed {}
+export interface VxeLinkPrivateComputed extends LinkPrivateComputed {}
 
-export interface LinkReactData {
-}
+export interface LinkReactData {}
 
 export interface LinkMethods {
   dispatchEvent(type: ValueOf<VxeLinkEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeLinkMethods extends LinkMethods { }
+export interface VxeLinkMethods extends LinkMethods {}
 
-export interface LinkPrivateMethods { }
-export interface VxeLinkPrivateMethods extends LinkPrivateMethods { }
+export interface LinkPrivateMethods {}
+export interface VxeLinkPrivateMethods extends LinkPrivateMethods {}
 
-export type VxeLinkEmits = [
-  'click'
-]
+export type VxeLinkEmits = ['click']
 
 export namespace VxeLinkDefines {
   export interface LinkEventParams extends VxeComponentEventParams {
     $link: VxeLinkConstructor
   }
 
-  export interface ClickEventParams extends LinkEventParams { }
+  export interface ClickEventParams extends LinkEventParams {}
 }
 
 export type VxeLinkEventProps = {

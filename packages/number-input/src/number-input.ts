@@ -1,14 +1,30 @@
 import { h, ref, Ref, computed, reactive, inject, nextTick, watch, onMounted, onBeforeUnmount, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils, { CommafyOptions } from 'xe-utils'
-import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getFuncText, eqEmptyValue, isEnableConf, getText } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import { hasClass, getEventTargetNode, hasControlKey, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
 
-import type { VxeNumberInputConstructor, NumberInputInternalData, VxeNumberInputEmits, VxeNumberInputPrivateComputed, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeComponentStyleType } from '../../../types'
+import type {
+  VxeNumberInputConstructor,
+  NumberInputInternalData,
+  VxeNumberInputEmits,
+  VxeNumberInputPrivateComputed,
+  NumberInputReactData,
+  NumberInputMethods,
+  VxeNumberInputPropTypes,
+  InputPrivateRef,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  VxeFormDefines,
+  ValueOf,
+  VxeComponentStyleType
+} from '../../../types'
+
+const { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useFns, renderEmptyElement } = VxeUI
 
 const { errLog } = createComponentLog('number-input')
 
@@ -154,14 +170,14 @@ export default defineVxeComponent({
     'next-number'
   ] as VxeNumberInputEmits,
 
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const reactData = reactive<NumberInputReactData>({
       isFocus: false,
@@ -245,7 +261,7 @@ export default defineVxeComponent({
       if (type === 'integer') {
         return XEUtils.toInteger(step) || 1
       } else if (decimalsType) {
-        return XEUtils.toNumber(step) || (1 / Math.pow(10, digitsValue))
+        return XEUtils.toNumber(step) || 1 / Math.pow(10, digitsValue)
       }
       return XEUtils.toNumber(step) || 1
     })
@@ -278,7 +294,7 @@ export default defineVxeComponent({
       // 数值最大长度默认限制 16 位，包含小数
       const maxDefLen = 16
       if (!eqEmptyValue(min) && !eqEmptyValue(max)) {
-        return `${max}`.length + (type === 'integer' ? 0 : (digitsValue + 1)) + (XEUtils.toNumber(min) >= 0 ? 0 : 1)
+        return `${max}`.length + (type === 'integer' ? 0 : digitsValue + 1) + (XEUtils.toNumber(min) >= 0 ? 0 : 1)
       }
       if (maxLength || maxlength) {
         return XEUtils.toNumber(maxLength || maxlength)
@@ -351,7 +367,7 @@ export default defineVxeComponent({
 
     const computeInpClassNamevalue = computed(() => {
       const { inputClassName } = props
-      return 'vxe-number-input--input' + (inputClassName ? (' ' + inputClassName) : '')
+      return 'vxe-number-input--input' + (inputClassName ? ' ' + inputClassName : '')
     })
 
     const computeCurrStyle = computed(() => {
@@ -582,7 +598,7 @@ export default defineVxeComponent({
           handleChange(inpNumVal, `${inpValue || ''}`, { type: 'check' })
           return
         }
-        if (inputValue || (min || max)) {
+        if (inputValue || min || max) {
           let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
           if (!validMinNum(inpNumVal)) {
             inpNumVal = min as number
@@ -644,7 +660,7 @@ export default defineVxeComponent({
       } else {
         restNum = newValue
       }
-      emitInputEvent(getNumberValue(restNum), evnt as (Event & { type: 'input' }))
+      emitInputEvent(getNumberValue(restNum), evnt as Event & { type: 'input' })
     }
 
     const numberPlusEvent = (evnt: Event) => {
@@ -699,22 +715,31 @@ export default defineVxeComponent({
           const tooltipOpts = computeTooltipOpts.value
           const { contentMethod } = tooltipOpts
           const inputElem = refInputTarget.value
-          const content = getText(contentMethod
-            ? contentMethod({
-              $numberInput: $xeNumberInput,
-              type,
-              inputValue: inputElem.value,
-              value: inputValue || '',
-              label: numLabel
-            })
-            : numLabel)
+          const content = getText(
+            contentMethod
+              ? contentMethod({
+                $numberInput: $xeNumberInput,
+                type,
+                inputValue: inputElem.value,
+                value: inputValue || '',
+                label: numLabel
+              })
+              : numLabel
+          )
           if (content) {
-            VxeUI.tooltip.open(inputElem, Object.assign({}, {
-              ...tooltipOpts,
-              content
-            }, {
-              contentMethod: undefined
-            }))
+            VxeUI.tooltip.open(
+              inputElem,
+              Object.assign(
+                {},
+                {
+                  ...tooltipOpts,
+                  content
+                },
+                {
+                  contentMethod: undefined
+                }
+              )
+            )
           } else {
             VxeUI.tooltip.close()
           }
@@ -745,13 +770,7 @@ export default defineVxeComponent({
       const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
       const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
       if (!isControlKey && !isShiftKey && !isAltKey) {
-        if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) ||
-          (!negative && key === '-') ||
-          (type === 'integer' && key === '.') ||
-          ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) ||
-          (keyCode >= 186 && keyCode <= 188) ||
-          keyCode >= 191
-        ) {
+        if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || (!negative && key === '-') || (type === 'integer' && key === '.') || ((!exponential || keyCode !== 69) && keyCode >= 65 && keyCode <= 90) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191) {
           evnt.preventDefault()
         }
       }
@@ -923,7 +942,7 @@ export default defineVxeComponent({
 
     const numberInputMethods: NumberInputMethods = {
       dispatchEvent,
-      focus () {
+      focus() {
         const inputReadonly = computeInputReadonly.value
         if (!inputReadonly) {
           const inputElem = refInputTarget.value
@@ -932,13 +951,13 @@ export default defineVxeComponent({
         }
         return nextTick()
       },
-      blur () {
+      blur() {
         const inputElem = refInputTarget.value
         inputElem.blur()
         reactData.isActivated = false
         return nextTick()
       },
-      select () {
+      select() {
         const inputElem = refInputTarget.value
         inputElem.select()
         reactData.isActivated = false
@@ -955,27 +974,39 @@ export default defineVxeComponent({
       const preIcon = prefixIcon || prefixOpts.icon
       const sufContent = prefixOpts.content
       return prefixSlot || preIcon || sufContent
-        ? h('div', {
-          class: 'vxe-number-input--prefix',
-          onClick: clickPrefixEvent
-        }, [
-          h('div', {
-            class: 'vxe-number-input--prefix-icon'
-          }, prefixSlot
-            ? getSlotVNs(prefixSlot({}))
-            : [
-                preIcon
-                  ? h('i', {
-                    class: preIcon
-                  })
-                  : renderEmptyElement($xeNumberInput),
-                sufContent
-                  ? h('span', {
-                    class: 'vxe-prefix-input--suffix-text'
-                  }, `${sufContent}`)
-                  : renderEmptyElement($xeNumberInput)
-              ])
-        ])
+        ? h(
+          'div',
+          {
+            class: 'vxe-number-input--prefix',
+            onClick: clickPrefixEvent
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-number-input--prefix-icon'
+              },
+              prefixSlot
+                ? getSlotVNs(prefixSlot({}))
+                : [
+                    preIcon
+                      ? h('i', {
+                        class: preIcon
+                      })
+                      : renderEmptyElement($xeNumberInput),
+                    sufContent
+                      ? h(
+                        'span',
+                        {
+                          class: 'vxe-prefix-input--suffix-text'
+                        },
+                            `${sufContent}`
+                      )
+                      : renderEmptyElement($xeNumberInput)
+                  ]
+            )
+          ]
+        )
         : renderEmptyElement($xeNumberInput)
     }
 
@@ -988,41 +1019,60 @@ export default defineVxeComponent({
       const isClearable = computeIsClearable.value
       const sufIcon = suffixIcon || suffixOpts.icon
       const sufContent = suffixOpts.content
-      return h('div', {
-        class: ['vxe-number-input--suffix', {
-          'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }]
-      }, [
-        isClearable
-          ? h('div', {
-            class: 'vxe-number-input--clear-icon',
-            onClick: clearValueEvent
-          }, [
-            h('i', {
-              class: getIcon().INPUT_CLEAR
-            })
-          ])
-          : renderEmptyElement($xeNumberInput),
-        suffixSlot || sufIcon || sufContent
-          ? h('div', {
-            class: 'vxe-number-input--suffix-icon',
-            onClick: clickSuffixEvent
-          }, suffixSlot
-            ? getSlotVNs(suffixSlot({}))
-            : [
-                sufIcon
-                  ? h('i', {
-                    class: sufIcon
-                  })
-                  : renderEmptyElement($xeNumberInput),
-                sufContent
-                  ? h('span', {
-                    class: 'vxe-number-input--suffix-text'
-                  }, `${sufContent}`)
-                  : renderEmptyElement($xeNumberInput)
-              ])
-          : renderEmptyElement($xeNumberInput)
-      ])
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-number-input--suffix',
+            {
+              'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+            }
+          ]
+        },
+        [
+          isClearable
+            ? h(
+              'div',
+              {
+                class: 'vxe-number-input--clear-icon',
+                onClick: clearValueEvent
+              },
+              [
+                h('i', {
+                  class: getIcon().INPUT_CLEAR
+                })
+              ]
+            )
+            : renderEmptyElement($xeNumberInput),
+          suffixSlot || sufIcon || sufContent
+            ? h(
+              'div',
+              {
+                class: 'vxe-number-input--suffix-icon',
+                onClick: clickSuffixEvent
+              },
+              suffixSlot
+                ? getSlotVNs(suffixSlot({}))
+                : [
+                    sufIcon
+                      ? h('i', {
+                        class: sufIcon
+                      })
+                      : renderEmptyElement($xeNumberInput),
+                    sufContent
+                      ? h(
+                        'span',
+                        {
+                          class: 'vxe-number-input--suffix-text'
+                        },
+                            `${sufContent}`
+                      )
+                      : renderEmptyElement($xeNumberInput)
+                  ]
+            )
+            : renderEmptyElement($xeNumberInput)
+        ]
+      )
     }
 
     const renderInput = () => {
@@ -1034,96 +1084,123 @@ export default defineVxeComponent({
       const inpMaxLength = computeInpMaxLength.value
       const inpPlaceholder = computeInpPlaceholder.value
       const inpClassName = computeInpClassNamevalue.value
-      return h('div', {
-        key: 'ni',
-        class: 'vxe-number-input--input-wrapper'
-      }, [
-        renderPrefixIcon(),
-        h('div', {
-          class: 'vxe-number-input--input-inner'
-        }, [
-          h('input', {
-            ref: refInputTarget,
-            class: inpClassName,
-            name,
-            type: 'text',
-            value: !isFocus && type === 'amount' ? numLabel : inputValue,
-            placeholder: inpPlaceholder,
-            maxlength: inpMaxLength,
-            readonly: inputReadonly,
-            disabled: isDisabled,
-            autocomplete: autoComplete || autocomplete,
-            onKeydown: keydownEvent,
-            onKeyup: keyupEvent,
-            onClick: clickEvent,
-            onInput: inputEvent,
-            onChange: changeEvent,
-            onFocus: focusEvent,
-            onBlur: blurEvent
-          }),
-          renderFloat()
-        ]),
-        renderSuffixIcon()
-      ])
+      return h(
+        'div',
+        {
+          key: 'ni',
+          class: 'vxe-number-input--input-wrapper'
+        },
+        [
+          renderPrefixIcon(),
+          h(
+            'div',
+            {
+              class: 'vxe-number-input--input-inner'
+            },
+            [
+              h('input', {
+                ref: refInputTarget,
+                class: inpClassName,
+                name,
+                type: 'text',
+                value: !isFocus && type === 'amount' ? numLabel : inputValue,
+                placeholder: inpPlaceholder,
+                maxlength: inpMaxLength,
+                readonly: inputReadonly,
+                disabled: isDisabled,
+                autocomplete: autoComplete || autocomplete,
+                onKeydown: keydownEvent,
+                onKeyup: keyupEvent,
+                onClick: clickEvent,
+                onInput: inputEvent,
+                onChange: changeEvent,
+                onFocus: focusEvent,
+                onBlur: blurEvent
+              }),
+              renderFloat()
+            ]
+          ),
+          renderSuffixIcon()
+        ]
+      )
     }
 
     const renderMinusBtn = () => {
       const { minusIcon } = props
       const isDisabledSubtractNumber = computeIsDisabledSubtractNumber.value
-      return h('button', {
-        key: 'prev',
-        class: ['vxe-number-input--minus-btn is--minus', {
-          'is--disabled': isDisabledSubtractNumber
-        }],
-        type: 'button',
-        onClick: numberClickEvent,
-        onMousedown: numberMousedownEvent,
-        onMouseup: numberStopAll,
-        onMouseleave: numberStopAll
-      }, [
-        h('i', {
-          class: minusIcon || getIcon().NUMBER_INPUT_MINUS_NUM
-        })
-      ])
+      return h(
+        'button',
+        {
+          key: 'prev',
+          class: [
+            'vxe-number-input--minus-btn is--minus',
+            {
+              'is--disabled': isDisabledSubtractNumber
+            }
+          ],
+          type: 'button',
+          onClick: numberClickEvent,
+          onMousedown: numberMousedownEvent,
+          onMouseup: numberStopAll,
+          onMouseleave: numberStopAll
+        },
+        [
+          h('i', {
+            class: minusIcon || getIcon().NUMBER_INPUT_MINUS_NUM
+          })
+        ]
+      )
     }
 
     const renderPlusBtn = () => {
       const { plusIcon } = props
       const isDisabledAddNumber = computeIsDisabledAddNumber.value
-      return h('button', {
-        key: 'next',
-        class: ['vxe-number-input--plus-btn is--plus', {
-          'is--disabled': isDisabledAddNumber
-        }],
-        type: 'button',
-        onClick: numberClickEvent,
-        onMousedown: numberMousedownEvent,
-        onMouseup: numberStopAll,
-        onMouseleave: numberStopAll
-      }, [
-        h('i', {
-          class: plusIcon || getIcon().NUMBER_INPUT_PLUS_NUM
-        })
-      ])
+      return h(
+        'button',
+        {
+          key: 'next',
+          class: [
+            'vxe-number-input--plus-btn is--plus',
+            {
+              'is--disabled': isDisabledAddNumber
+            }
+          ],
+          type: 'button',
+          onClick: numberClickEvent,
+          onMousedown: numberMousedownEvent,
+          onMouseup: numberStopAll,
+          onMouseleave: numberStopAll
+        },
+        [
+          h('i', {
+            class: plusIcon || getIcon().NUMBER_INPUT_PLUS_NUM
+          })
+        ]
+      )
     }
 
     const renderSideControl = () => {
-      return h('div', {
-        key: 'cplr',
-        class: 'vxe-number-input--side-control'
-      }, [
-        renderPlusBtn(),
-        renderMinusBtn()
-      ])
+      return h(
+        'div',
+        {
+          key: 'cplr',
+          class: 'vxe-number-input--side-control'
+        },
+        [renderPlusBtn(), renderMinusBtn()]
+      )
     }
 
     const renderFloat = () => {
       const { floatContent } = props
       const floatSlot = slots.float
       if (floatContent || floatSlot) {
-        return h('span', {
-          class: 'vxe-number-input--float-wrapper'
-        }, floatSlot ? floatSlot({}) : getText(floatContent))
+        return h(
+          'span',
+          {
+            class: 'vxe-number-input--float-wrapper'
+          },
+          floatSlot ? floatSlot({}) : getText(floatContent)
+        )
       }
       return renderEmptyElement($xeNumberInput)
     }
@@ -1140,68 +1217,71 @@ export default defineVxeComponent({
       const prefixSlot = slots.prefix
       const suffixSlot = slots.suffix
       if (formReadonly) {
-        return h('div', {
-          ref: refElem,
-          class: ['vxe-number-input--readonly', `type--${type}`, className]
-        }, numLabel)
+        return h(
+          'div',
+          {
+            ref: refElem,
+            class: ['vxe-number-input--readonly', `type--${type}`, className]
+          },
+          numLabel
+        )
       }
       const currStyle = computeCurrStyle.value
       const inputReadonly = computeInputReadonly.value
       const isClearable = computeIsClearable.value
       const isControls = isEnableConf(controlOpts) && (controls === false ? controls : showButton)
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-number-input', `type--${type}`, isControls ? (`ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}`) : '', floatContent ? (`fla--${floatAlign || 'center'}`) : '', className, {
-          [`size--${vSize}`]: vSize,
-          [`is--${align}`]: align,
-          'is--controls': isControls && !inputReadonly,
-          'is--prefix': !!prefixSlot || prefixIcon,
-          'is--suffix': !!suffixSlot || suffixIcon,
-          'is--disabled': isDisabled,
-          'is--active': isActivated,
-          'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }],
-        style: currStyle,
-        spellcheck: false,
-        onMouseenter: mouseenterEvent,
-        onMouseleave: mouseleaveEvent
-      }, isControls
-        ? (layout === 'right'
-            ? [
-                renderInput(),
-                renderSideControl()
-              ]
-            : (layout === 'left'
-                ? [
-                    renderSideControl(),
-                    renderInput()
-                  ]
-                : [
-                    renderMinusBtn(),
-                    renderInput(),
-                    renderPlusBtn()
-                  ]))
-        : [
-            renderInput()
-          ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-number-input',
+            `type--${type}`,
+            isControls ? `ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}` : '',
+            floatContent ? `fla--${floatAlign || 'center'}` : '',
+            className,
+            {
+              [`size--${vSize}`]: vSize,
+              [`is--${align}`]: align,
+              'is--controls': isControls && !inputReadonly,
+              'is--prefix': !!prefixSlot || prefixIcon,
+              'is--suffix': !!suffixSlot || suffixIcon,
+              'is--disabled': isDisabled,
+              'is--active': isActivated,
+              'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+            }
+          ],
+          style: currStyle,
+          spellcheck: false,
+          onMouseenter: mouseenterEvent,
+          onMouseleave: mouseleaveEvent
+        },
+        isControls ? (layout === 'right' ? [renderInput(), renderSideControl()] : layout === 'left' ? [renderSideControl(), renderInput()] : [renderMinusBtn(), renderInput(), renderPlusBtn()]) : [renderInput()]
+      )
     }
 
     $xeNumberInput.renderVN = renderVN
 
-    watch(() => props.modelValue, (val) => {
-      if (!internalData.isUM) {
-        updateModel(val)
+    watch(
+      () => props.modelValue,
+      (val) => {
+        if (!internalData.isUM) {
+          updateModel(val)
+        }
+        internalData.isUM = false
       }
-      internalData.isUM = false
-    })
+    )
 
-    watch(() => props.type, () => {
-      // 切换类型是重置内置变量
-      Object.assign(reactData, {
-        inputValue: props.modelValue
-      })
-      initValue()
-    })
+    watch(
+      () => props.type,
+      () => {
+        // 切换类型是重置内置变量
+        Object.assign(reactData, {
+          inputValue: props.modelValue
+        })
+        initValue()
+      }
+    )
 
     onMounted(() => {
       if (props.showTooltip) {
@@ -1236,7 +1316,7 @@ export default defineVxeComponent({
 
     return $xeNumberInput
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

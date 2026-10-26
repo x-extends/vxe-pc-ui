@@ -20,7 +20,7 @@ export interface VxeRateConstructor extends VxeComponentBaseOptions, VxeRateMeth
 export interface RatePrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeRatePrivateRef extends RatePrivateRef { }
+export interface VxeRatePrivateRef extends RatePrivateRef {}
 
 export namespace VxeRatePropTypes {
   export type Size = VxeComponentSizeType
@@ -38,25 +38,20 @@ export interface VxeRateProps {
   status?: VxeRatePropTypes.Status
 }
 
-export interface RatePrivateComputed {
-}
-export interface VxeRatePrivateComputed extends RatePrivateComputed { }
+export interface RatePrivateComputed {}
+export interface VxeRatePrivateComputed extends RatePrivateComputed {}
 
 export interface RateReactData {
   activeValue: VxeRatePropTypes.ModelValue | null
 }
 
-export interface RateMethods {
-}
-export interface VxeRateMethods extends RateMethods { }
+export interface RateMethods {}
+export interface VxeRateMethods extends RateMethods {}
 
-export interface RatePrivateMethods { }
-export interface VxeRatePrivateMethods extends RatePrivateMethods { }
+export interface RatePrivateMethods {}
+export interface VxeRatePrivateMethods extends RatePrivateMethods {}
 
-export type VxeRateEmits = [
-  'update:modelValue',
-  'change'
-]
+export type VxeRateEmits = ['update:modelValue', 'change']
 
 export namespace VxeRateDefines {
   export interface RateEventParams extends VxeComponentEventParams {

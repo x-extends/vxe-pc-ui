@@ -22,7 +22,7 @@ export interface VxeAnchorLinkConstructor extends VxeComponentBaseOptions, VxeAn
 export interface AnchorLinkPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeAnchorLinkPrivateRef extends AnchorLinkPrivateRef { }
+export interface VxeAnchorLinkPrivateRef extends AnchorLinkPrivateRef {}
 
 export namespace VxeAnchorLinkPropTypes {
   export type Content = string | number
@@ -38,19 +38,16 @@ export type VxeAnchorLinkProps = {
   children?: VxeAnchorLinkProps[]
 }
 
-export interface AnchorLinkPrivateComputed {
-}
-export interface VxeAnchorLinkPrivateComputed extends AnchorLinkPrivateComputed { }
+export interface AnchorLinkPrivateComputed {}
+export interface VxeAnchorLinkPrivateComputed extends AnchorLinkPrivateComputed {}
 
-export interface AnchorLinkReactData {
-}
+export interface AnchorLinkReactData {}
 
-export interface AnchorLinkMethods {
-}
-export interface VxeAnchorLinkMethods extends AnchorLinkMethods { }
+export interface AnchorLinkMethods {}
+export interface VxeAnchorLinkMethods extends AnchorLinkMethods {}
 
-export interface AnchorLinkPrivateMethods { }
-export interface VxeAnchorLinkPrivateMethods extends AnchorLinkPrivateMethods { }
+export interface AnchorLinkPrivateMethods {}
+export interface VxeAnchorLinkPrivateMethods extends AnchorLinkPrivateMethods {}
 
 export type VxeAnchorLinkEmits = []
 
@@ -68,9 +65,9 @@ export namespace VxeAnchorLinkDefines {
 
 export type VxeAnchorLinkEventProps = {}
 
-export interface VxeAnchorLinkListeners { }
+export interface VxeAnchorLinkListeners {}
 
-export namespace VxeAnchorLinkEvents { }
+export namespace VxeAnchorLinkEvents {}
 
 export namespace VxeAnchorLinkSlotTypes {
   export interface DefaultSlotParams {}

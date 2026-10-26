@@ -20,7 +20,7 @@ export interface VxeSegmentedConstructor extends VxeComponentBaseOptions, VxeSeg
 export interface SegmentedPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeSegmentedPrivateRef extends SegmentedPrivateRef { }
+export interface VxeSegmentedPrivateRef extends SegmentedPrivateRef {}
 
 export namespace VxeSegmentedPropTypes {
   export type ModelValue = undefined | null | string | number
@@ -58,9 +58,8 @@ export interface VxeSegmentedProps {
   optionConfig?: VxeSegmentedPropTypes.OptionConfig
 }
 
-export interface SegmentedPrivateComputed {
-}
-export interface VxeSegmentedPrivateComputed extends SegmentedPrivateComputed { }
+export interface SegmentedPrivateComputed {}
+export interface VxeSegmentedPrivateComputed extends SegmentedPrivateComputed {}
 
 export interface SegmentedReactData {
   groupName: string
@@ -74,15 +73,12 @@ export interface SegmentedReactData {
 export interface SegmentedMethods {
   dispatchEvent(type: ValueOf<VxeSegmentedEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeSegmentedMethods extends SegmentedMethods { }
+export interface VxeSegmentedMethods extends SegmentedMethods {}
 
-export interface SegmentedPrivateMethods { }
-export interface VxeSegmentedPrivateMethods extends SegmentedPrivateMethods { }
+export interface SegmentedPrivateMethods {}
+export interface VxeSegmentedPrivateMethods extends SegmentedPrivateMethods {}
 
-export type VxeSegmentedEmits = [
-  'update:modelValue',
-  'change'
-]
+export type VxeSegmentedEmits = ['update:modelValue', 'change']
 
 export namespace VxeSegmentedDefines {
   export interface SegmentedEventParams extends VxeComponentEventParams {

@@ -20,7 +20,7 @@ export interface VxeNoticeBarConstructor extends VxeComponentBaseOptions, VxeNot
 export interface NoticeBarPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeNoticeBarPrivateRef extends NoticeBarPrivateRef { }
+export interface VxeNoticeBarPrivateRef extends NoticeBarPrivateRef {}
 
 export namespace VxeNoticeBarPropTypes {
   export type Size = VxeComponentSizeType
@@ -42,9 +42,8 @@ export type VxeNoticeBarProps = {
   vertical?: VxeNoticeBarPropTypes.Vertical
 }
 
-export interface NoticeBarPrivateComputed {
-}
-export interface VxeNoticeBarPrivateComputed extends NoticeBarPrivateComputed { }
+export interface NoticeBarPrivateComputed {}
+export interface VxeNoticeBarPrivateComputed extends NoticeBarPrivateComputed {}
 
 export interface NoticeBarReactData {
   animationStatus: boolean
@@ -54,15 +53,12 @@ export interface NoticeBarReactData {
 export interface NoticeBarMethods {
   dispatchEvent(type: ValueOf<VxeNoticeBarEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeNoticeBarMethods extends NoticeBarMethods { }
+export interface VxeNoticeBarMethods extends NoticeBarMethods {}
 
-export interface NoticeBarPrivateMethods { }
-export interface VxeNoticeBarPrivateMethods extends NoticeBarPrivateMethods { }
+export interface NoticeBarPrivateMethods {}
+export interface VxeNoticeBarPrivateMethods extends NoticeBarPrivateMethods {}
 
-export type VxeNoticeBarEmits = [
-  'start',
-  'end'
-]
+export type VxeNoticeBarEmits = ['start', 'end']
 
 export namespace VxeNoticeBarDefines {
   export interface NoticeBarEventParams extends VxeComponentEventParams {

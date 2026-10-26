@@ -22,7 +22,7 @@ export interface VxeIconPickerConstructor extends VxeComponentBaseOptions, VxeIc
 export interface IconPickerPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeIconPickerPrivateRef extends IconPickerPrivateRef { }
+export interface VxeIconPickerPrivateRef extends IconPickerPrivateRef {}
 
 export namespace VxeIconPickerPropTypes {
   export type ModelValue = string | null
@@ -34,7 +34,7 @@ export namespace VxeIconPickerPropTypes {
    * 已废弃，请使用 PopupConfig.className
    * @deprecated
    */
-  export type PopupClassName = string | ((params: {$iconPicker: VxeIconPickerConstructor }) => string)
+  export type PopupClassName = string | ((params: { $iconPicker: VxeIconPickerConstructor }) => string)
   export type Readonly = boolean
   export type Disabled = boolean
   export type Option = {
@@ -47,12 +47,7 @@ export namespace VxeIconPickerPropTypes {
   export type ShowIconTitle = boolean
   export type Filterable = boolean
   export interface FilterConfig {
-    filterMethod?:(params: {
-      $iconPicker: VxeIconPickerConstructor
-      option: VxeIconPickerDefines.IconItemObj
-      searchValue: string
-      value: ModelValue | undefined
-    }) => boolean
+    filterMethod?: (params: { $iconPicker: VxeIconPickerConstructor; option: VxeIconPickerDefines.IconItemObj; searchValue: string; value: ModelValue | undefined }) => boolean
   }
   export type Placement = 'top' | 'bottom' | '' | null
   export interface PopupConfig {
@@ -141,9 +136,8 @@ export type VxeIconPickerProps = {
   scrollbarConfig?: VxeIconPickerPropTypes.ScrollbarConfig
 }
 
-export interface IconPickerPrivateComputed {
-}
-export interface VxeIconPickerPrivateComputed extends IconPickerPrivateComputed { }
+export interface IconPickerPrivateComputed {}
+export interface VxeIconPickerPrivateComputed extends IconPickerPrivateComputed {}
 
 export interface IconPickerReactData {
   initialized: boolean
@@ -190,17 +184,12 @@ export interface IconPickerMethods {
    */
   blur(): Promise<any>
 }
-export interface VxeIconPickerMethods extends IconPickerMethods { }
+export interface VxeIconPickerMethods extends IconPickerMethods {}
 
-export interface IconPickerPrivateMethods { }
-export interface VxeIconPickerPrivateMethods extends IconPickerPrivateMethods { }
+export interface IconPickerPrivateMethods {}
+export interface VxeIconPickerPrivateMethods extends IconPickerPrivateMethods {}
 
-export type VxeIconPickerEmits = [
-  'update:modelValue',
-  'change',
-  'clear',
-  'click'
-]
+export type VxeIconPickerEmits = ['update:modelValue', 'change', 'clear', 'click']
 
 export namespace VxeIconPickerDefines {
   export interface IconPickerEventParams extends VxeComponentEventParams {

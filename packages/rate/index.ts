@@ -4,7 +4,7 @@ import VxeRateComponent from './src/rate'
 import { dynamicApp } from '../dynamics'
 
 export const VxeRate = Object.assign({}, VxeRateComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeRateComponent.name as string, VxeRateComponent)
   }
 })

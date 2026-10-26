@@ -6,23 +6,26 @@ import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 import type { VxeLoadingProps } from '../../types'
 
 export const VxeLoading = Object.assign({}, VxeLoadingComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeLoadingComponent.name as string, VxeLoadingComponent)
   }
 })
 
 export const LoadingController = {
-  open (options?: VxeLoadingProps) {
+  open(options?: VxeLoadingProps) {
     const opts = Object.assign({}, options)
-    dynamicStore.globalLoading = Object.assign({
-      modelValue: true,
-      text: opts.text,
-      icon: opts.icon
-    }, { key: 'gl' })
+    dynamicStore.globalLoading = Object.assign(
+      {
+        modelValue: true,
+        text: opts.text,
+        icon: opts.icon
+      },
+      { key: 'gl' }
+    )
     checkDynamic()
     return Promise.resolve()
   },
-  close () {
+  close() {
     dynamicStore.globalLoading = null
     return Promise.resolve()
   }

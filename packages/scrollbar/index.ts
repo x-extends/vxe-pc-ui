@@ -4,7 +4,7 @@ import VxeScrollbarComponent from './src/scrollbar'
 import { dynamicApp } from '../dynamics'
 
 export const VxeScrollbar = Object.assign({}, VxeScrollbarComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeScrollbarComponent.name as string, VxeScrollbarComponent)
   }
 })

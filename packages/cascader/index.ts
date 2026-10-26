@@ -4,7 +4,7 @@ import VxeCascaderComponent from './src/cascader'
 import { dynamicApp } from '../dynamics'
 
 export const VxeCascader = Object.assign({}, VxeCascaderComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeCascaderComponent.name as string, VxeCascaderComponent)
   }
 })

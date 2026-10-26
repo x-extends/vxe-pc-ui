@@ -32,7 +32,7 @@ export interface TableFilterMethods<D = any> {
    * 手动弹出筛选
    * @param fieldOrColumn
    */
-  openFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo):Promise<void>
+  openFilter(fieldOrColumn: VxeColumnPropTypes.Field | VxeTableDefines.ColumnInfo): Promise<void>
   /**
    * 用于 filters，修改筛选列表，update 是否同时更新数据，如果不传，则可以手动调用 updateData() 更新数据；如果需要同时触发对应的事件，请使用 setFilterByEvent
    */
@@ -111,23 +111,23 @@ export interface TableFilterPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleFilterChangeRadioOption (evnt: Event, checked: boolean, item: any): void
+  handleFilterChangeRadioOption(evnt: Event, checked: boolean, item: any): void
   /**
    * @private
    */
-  handleFilterChangeMultipleOption (evnt: Event, checked: boolean, item: any): void
+  handleFilterChangeMultipleOption(evnt: Event, checked: boolean, item: any): void
   /**
    * @private
    */
-  handleFilterChangeOption (evnt: Event, checked: boolean, item: any): void
+  handleFilterChangeOption(evnt: Event, checked: boolean, item: any): void
   /**
    * @private
    */
-  handleFilterConfirmFilter (evnt: Event | null, column: VxeTableDefines.ColumnInfo | null): void
+  handleFilterConfirmFilter(evnt: Event | null, column: VxeTableDefines.ColumnInfo | null): void
   /**
    * @private
    */
-  handleFilterResetFilter (evnt: Event | null, column: VxeTableDefines.ColumnInfo | null): void
+  handleFilterResetFilter(evnt: Event | null, column: VxeTableDefines.ColumnInfo | null): void
   /**
    * @private
    */
@@ -135,10 +135,10 @@ export interface TableFilterPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableFilterMethods<D> { }
+  export interface VxeGridMethods<D = any> extends TableFilterMethods<D> {}
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableFilterMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableFilterPrivateMethods<D> { }
+  export interface VxeTableMethods<D = any> extends TableFilterMethods<D> {}
+  export interface VxeTablePrivateMethods<D = any> extends TableFilterPrivateMethods<D> {}
 }

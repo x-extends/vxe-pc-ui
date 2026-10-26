@@ -1,10 +1,26 @@
 import { ref, h, reactive, PropType, inject, watch, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleCarouselItem, destroyCarouselItem } from './util'
 import XEUtils from 'xe-utils'
 
-import type { VxeCarouselItemPropTypes, CarouselItemReactData, CarouselItemPrivateRef, CarouselItemMethods, CarouselItemPrivateMethods, ValueOf, VxeCarouselItemEmits, VxeCarouselDefines, VxeCarouselItemPrivateComputed, VxeCarouselItemConstructor, VxeCarouselItemPrivateMethods, VxeCarouselConstructor, VxeCarouselPrivateMethods } from '../../../types'
+import type {
+  VxeCarouselItemPropTypes,
+  CarouselItemReactData,
+  CarouselItemPrivateRef,
+  CarouselItemMethods,
+  CarouselItemPrivateMethods,
+  ValueOf,
+  VxeCarouselItemEmits,
+  VxeCarouselDefines,
+  VxeCarouselItemPrivateComputed,
+  VxeCarouselItemConstructor,
+  VxeCarouselItemPrivateMethods,
+  VxeCarouselConstructor,
+  VxeCarouselPrivateMethods
+} from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeCarouselItem',
@@ -13,9 +29,8 @@ export default defineVxeComponent({
     className: String as PropType<VxeCarouselItemPropTypes.ClassName>,
     url: String as PropType<VxeCarouselItemPropTypes.Url>
   },
-  emits: [
-  ] as VxeCarouselItemEmits,
-  setup (props, context) {
+  emits: [] as VxeCarouselItemEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const $xeCarousel = inject<(VxeCarouselConstructor & VxeCarouselPrivateMethods) | null>('$xeCarousel', null)
@@ -24,8 +39,7 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<CarouselItemReactData>({
-    })
+    const reactData = reactive<CarouselItemReactData>({})
 
     const itemConfig = reactive<VxeCarouselDefines.ItemConfig>({
       id: xID,
@@ -39,8 +53,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxeCarouselItemPrivateComputed = {
-    }
+    const computeMaps: VxeCarouselItemPrivateComputed = {}
 
     const $xeCarouselItem = {
       xID,
@@ -60,8 +73,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const carouselItemPrivateMethods: CarouselItemPrivateMethods = {
-    }
+    const carouselItemPrivateMethods: CarouselItemPrivateMethods = {}
 
     Object.assign($xeCarouselItem, carouselItemMethods, carouselItemPrivateMethods)
 
@@ -71,13 +83,19 @@ export default defineVxeComponent({
       })
     }
 
-    watch(() => props.name, (val) => {
-      itemConfig.name = val
-    })
+    watch(
+      () => props.name,
+      (val) => {
+        itemConfig.name = val
+      }
+    )
 
-    watch(() => props.url, (val) => {
-      itemConfig.url = val
-    })
+    watch(
+      () => props.url,
+      (val) => {
+        itemConfig.url = val
+      }
+    )
 
     onMounted(() => {
       const elem = refElem.value
@@ -96,7 +114,7 @@ export default defineVxeComponent({
 
     return $xeCarouselItem
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

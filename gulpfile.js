@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 const gulp = require('gulp')
 const XEUtils = require('xe-utils')
 const del = require('del')

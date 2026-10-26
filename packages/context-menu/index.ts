@@ -6,12 +6,12 @@ import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 import type { VxeContextMenuDefines } from '../../types'
 
 export const VxeContextMenu = Object.assign({}, VxeContextMenuComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeContextMenuComponent.name as string, VxeContextMenuComponent)
   }
 })
 
-function openMenu (opts: VxeContextMenuDefines.ContextMenuOpenOptions, x: number, y :number) {
+function openMenu(opts: VxeContextMenuDefines.ContextMenuOpenOptions, x: number, y: number) {
   dynamicStore.globalContextMenu = {
     modelValue: true,
     options: opts.options,
@@ -29,11 +29,11 @@ function openMenu (opts: VxeContextMenuDefines.ContextMenuOpenOptions, x: number
 }
 
 export const ContextMenuController = {
-  open (options: VxeContextMenuDefines.ContextMenuOpenOptions) {
+  open(options: VxeContextMenuDefines.ContextMenuOpenOptions) {
     const opts = Object.assign({ x: 0, y: 0 }, options)
     openMenu(opts, opts.x, opts.y)
   },
-  openByEvent (evnt: MouseEvent, options: VxeContextMenuDefines.ContextMenuEventOpenOptions) {
+  openByEvent(evnt: MouseEvent, options: VxeContextMenuDefines.ContextMenuEventOpenOptions) {
     evnt.preventDefault()
     evnt.stopPropagation()
     const opts = Object.assign({}, options)
@@ -41,7 +41,7 @@ export const ContextMenuController = {
     const y = evnt.clientY + 1
     openMenu(opts, x, y)
   },
-  close () {
+  close() {
     dynamicStore.globalContextMenu = null
   }
 }

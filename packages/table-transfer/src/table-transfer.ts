@@ -1,18 +1,30 @@
 import { ref, h, reactive, PropType, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
-import type { TableTransferReactData, TableTransferInternalData, VxeTableTransferEmits, VxeTableTransferPropTypes, TableTransferMethods, TableTransferPrivateMethods, ValueOf, TableTransferPrivateRef, VxeTableTransferPrivateComputed, VxeTableTransferConstructor, VxeTableTransferPrivateMethods } from '../../../types'
+import type {
+  TableTransferReactData,
+  TableTransferInternalData,
+  VxeTableTransferEmits,
+  VxeTableTransferPropTypes,
+  TableTransferMethods,
+  TableTransferPrivateMethods,
+  ValueOf,
+  TableTransferPrivateRef,
+  VxeTableTransferPrivateComputed,
+  VxeTableTransferConstructor,
+  VxeTableTransferPrivateMethods
+} from '../../../types'
 
-function createReactData (): TableTransferReactData {
-  return {
-  }
+const { getConfig, createEvent } = VxeUI
+
+function createReactData(): TableTransferReactData {
+  return {}
 }
 
-function createInternalData (): TableTransferInternalData {
-  return {
-  }
+function createInternalData(): TableTransferInternalData {
+  return {}
 }
 
 export default defineVxeComponent({
@@ -25,9 +37,8 @@ export default defineVxeComponent({
       default: () => getConfig().tableTransfer.size || getConfig().size
     }
   },
-  emits: [
-  ] as VxeTableTransferEmits,
-  setup (props, context) {
+  emits: [] as VxeTableTransferEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -42,8 +53,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxeTableTransferPrivateComputed = {
-    }
+    const computeMaps: VxeTableTransferPrivateComputed = {}
 
     const $xeTableTransfer = {
       xID,
@@ -64,16 +74,19 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const tableTransferPrivateMethods: TableTransferPrivateMethods = {
-    }
+    const tableTransferPrivateMethods: TableTransferPrivateMethods = {}
 
     Object.assign($xeTableTransfer, tableTransferMethods, tableTransferPrivateMethods)
 
     const renderVN = () => {
-      return h('div', {
-        ref: refElem,
-        class: 'vxe-table-transfer'
-      }, [])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: 'vxe-table-transfer'
+        },
+        []
+      )
     }
 
     onBeforeUnmount(() => {
@@ -85,7 +98,7 @@ export default defineVxeComponent({
 
     return $xeTableTransfer
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

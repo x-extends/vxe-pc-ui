@@ -5,6 +5,6 @@ export const crossListDragRowInfo = reactive({
   row: null as any
 })
 
-export function getCrossListDragRowInfo () {
+export function getCrossListDragRowInfo() {
   return crossListDragRowInfo
 }

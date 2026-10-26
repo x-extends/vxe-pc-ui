@@ -21,7 +21,7 @@ export interface VxeCheckboxButtonConstructor extends VxeComponentBaseOptions, V
 export interface CheckboxButtonPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeCheckboxButtonPrivateRef extends CheckboxButtonPrivateRef { }
+export interface VxeCheckboxButtonPrivateRef extends CheckboxButtonPrivateRef {}
 
 export namespace VxeCheckboxButtonPropTypes {
   export type Size = VxeCheckboxPropTypes.Size
@@ -33,7 +33,7 @@ export namespace VxeCheckboxButtonPropTypes {
   export type Label = VxeCheckboxPropTypes.Label
   export type Title = VxeCheckboxPropTypes.Title
   export type CheckedValue = VxeCheckboxPropTypes.CheckedValue
-   export type UncheckedValue = VxeCheckboxPropTypes.UncheckedValue
+  export type UncheckedValue = VxeCheckboxPropTypes.UncheckedValue
   export type Content = VxeCheckboxPropTypes.Content
   export type Icon = string
   export type Disabled = VxeCheckboxPropTypes.Disabled
@@ -55,25 +55,20 @@ export interface VxeCheckboxButtonProps {
   disabled?: VxeCheckboxButtonPropTypes.Disabled
 }
 
-export interface CheckboxButtonPrivateComputed {
-}
-export interface VxeCheckboxButtonPrivateComputed extends CheckboxButtonPrivateComputed { }
+export interface CheckboxButtonPrivateComputed {}
+export interface VxeCheckboxButtonPrivateComputed extends CheckboxButtonPrivateComputed {}
 
-export interface CheckboxButtonReactData {
-}
+export interface CheckboxButtonReactData {}
 
 export interface CheckboxButtonMethods {
   dispatchEvent(type: ValueOf<VxeCheckboxButtonEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCheckboxButtonMethods extends CheckboxButtonMethods { }
+export interface VxeCheckboxButtonMethods extends CheckboxButtonMethods {}
 
-export interface CheckboxButtonPrivateMethods { }
-export interface VxeCheckboxButtonPrivateMethods extends CheckboxButtonPrivateMethods { }
+export interface CheckboxButtonPrivateMethods {}
+export interface VxeCheckboxButtonPrivateMethods extends CheckboxButtonPrivateMethods {}
 
-export type VxeCheckboxButtonEmits = [
-  'update:modelValue',
-  'change'
-]
+export type VxeCheckboxButtonEmits = ['update:modelValue', 'change']
 
 export namespace VxeCheckboxButtonDefines {
   interface CheckboxButtonEventParams extends VxeComponentEventParams {
@@ -84,7 +79,7 @@ export namespace VxeCheckboxButtonDefines {
     value: any
     label: any
   }
-  export interface ChangeEventParams extends CheckboxButtonEventParams, ChangeParams { }
+  export interface ChangeEventParams extends CheckboxButtonEventParams, ChangeParams {}
 }
 
 export type VxeCheckboxButtonEventProps = {

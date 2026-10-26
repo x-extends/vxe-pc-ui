@@ -20,7 +20,7 @@ export interface VxeResultConstructor extends VxeComponentBaseOptions, VxeResult
 export interface ResultPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeResultPrivateRef extends ResultPrivateRef { }
+export interface VxeResultPrivateRef extends ResultPrivateRef {}
 
 export namespace VxeResultPropTypes {
   export type ImageUrl = string
@@ -42,19 +42,16 @@ export interface VxeResultProps {
   content?: VxeResultPropTypes.Content
 }
 
-export interface ResultPrivateComputed {
-}
-export interface VxeResultPrivateComputed extends ResultPrivateComputed { }
+export interface ResultPrivateComputed {}
+export interface VxeResultPrivateComputed extends ResultPrivateComputed {}
 
-export interface ResultReactData {
-}
+export interface ResultReactData {}
 
-export interface ResultMethods {
-}
-export interface VxeResultMethods extends ResultMethods { }
+export interface ResultMethods {}
+export interface VxeResultMethods extends ResultMethods {}
 
-export interface ResultPrivateMethods { }
-export interface VxeResultPrivateMethods extends ResultPrivateMethods { }
+export interface ResultPrivateMethods {}
+export interface VxeResultPrivateMethods extends ResultPrivateMethods {}
 
 export type VxeResultEmits = []
 
@@ -66,9 +63,9 @@ export namespace VxeResultDefines {
 
 export type VxeResultEventProps = {}
 
-export interface VxeResultListeners { }
+export interface VxeResultListeners {}
 
-export namespace VxeResultEvents { }
+export namespace VxeResultEvents {}
 
 export namespace VxeResultSlotTypes {
   export interface DefaultSlotParams {}

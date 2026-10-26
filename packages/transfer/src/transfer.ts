@@ -1,18 +1,18 @@
 import { ref, h, reactive, PropType, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { TransferReactData, TransferInternalData, VxeTransferEmits, VxeTransferPropTypes, TransferMethods, TransferPrivateMethods, ValueOf, TransferPrivateRef, VxeTransferPrivateComputed, VxeTransferConstructor, VxeTransferPrivateMethods } from '../../../types'
 
-function createReactData (): TransferReactData {
-  return {
-  }
+const { getConfig, createEvent, renderEmptyElement } = VxeUI
+
+function createReactData(): TransferReactData {
+  return {}
 }
 
-function createInternalData (): TransferInternalData {
-  return {
-  }
+function createInternalData(): TransferInternalData {
+  return {}
 }
 
 export default defineVxeComponent({
@@ -25,9 +25,8 @@ export default defineVxeComponent({
       default: () => getConfig().transfer.size || getConfig().size
     }
   },
-  emits: [
-  ] as VxeTransferEmits,
-  setup (props, context) {
+  emits: [] as VxeTransferEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
@@ -42,8 +41,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxeTransferPrivateComputed = {
-    }
+    const computeMaps: VxeTransferPrivateComputed = {}
 
     const $xeTransfer = {
       xID,
@@ -64,42 +62,57 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const transferPrivateMethods: TransferPrivateMethods = {
-    }
+    const transferPrivateMethods: TransferPrivateMethods = {}
 
     Object.assign($xeTransfer, transferMethods, transferPrivateMethods)
 
     const renderVN = () => {
       const headerSlot = slots.header
       const footerSlot = slots.footer
-      return h('div', {
-        ref: refElem,
-        class: 'vxe-transfer'
-      }, [
-        headerSlot
-          ? h('div', {
-            class: 'vxe-transfer--header'
-          }, headerSlot({ $transfer: $xeTransfer }))
-          : renderEmptyElement($xeTransfer),
-        h('div', {
-          class: 'vxe-transfer--body'
-        }, [
-          h('div', {
-            class: 'vxe-transfer--left-wrapper'
-          }),
-          h('div', {
-            class: 'vxe-transfer--buttons-wrapper'
-          }),
-          h('div', {
-            class: 'vxe-transfer--right-wrapper'
-          })
-        ]),
-        footerSlot
-          ? h('div', {
-            class: 'vxe-transfer--footer'
-          }, footerSlot({ $transfer: $xeTransfer }))
-          : renderEmptyElement($xeTransfer)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: 'vxe-transfer'
+        },
+        [
+          headerSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-transfer--header'
+              },
+              headerSlot({ $transfer: $xeTransfer })
+            )
+            : renderEmptyElement($xeTransfer),
+          h(
+            'div',
+            {
+              class: 'vxe-transfer--body'
+            },
+            [
+              h('div', {
+                class: 'vxe-transfer--left-wrapper'
+              }),
+              h('div', {
+                class: 'vxe-transfer--buttons-wrapper'
+              }),
+              h('div', {
+                class: 'vxe-transfer--right-wrapper'
+              })
+            ]
+          ),
+          footerSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-transfer--footer'
+              },
+              footerSlot({ $transfer: $xeTransfer })
+            )
+            : renderEmptyElement($xeTransfer)
+        ]
+      )
     }
 
     onBeforeUnmount(() => {
@@ -111,7 +124,7 @@ export default defineVxeComponent({
 
     return $xeTransfer
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

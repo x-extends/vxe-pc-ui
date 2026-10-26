@@ -20,7 +20,7 @@ export interface VxeTabPaneConstructor extends VxeComponentBaseOptions, VxeTabPa
 export interface TabPanePrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeTabPanePrivateRef extends TabPanePrivateRef { }
+export interface VxeTabPanePrivateRef extends TabPanePrivateRef {}
 
 export namespace VxeTabPanePropTypes {
   export type Title = string | number
@@ -55,19 +55,16 @@ export type VxeTabPaneProps = {
   }
 }
 
-export interface TabPanePrivateComputed {
-}
-export interface VxeTabPanePrivateComputed extends TabPanePrivateComputed { }
+export interface TabPanePrivateComputed {}
+export interface VxeTabPanePrivateComputed extends TabPanePrivateComputed {}
 
-export interface TabPaneReactData {
-}
+export interface TabPaneReactData {}
 
-export interface TabPaneMethods {
-}
-export interface VxeTabPaneMethods extends TabPaneMethods { }
+export interface TabPaneMethods {}
+export interface VxeTabPaneMethods extends TabPaneMethods {}
 
-export interface TabPanePrivateMethods { }
-export interface VxeTabPanePrivateMethods extends TabPanePrivateMethods { }
+export interface TabPanePrivateMethods {}
+export interface VxeTabPanePrivateMethods extends TabPanePrivateMethods {}
 
 export type VxeTabPaneEmits = []
 
@@ -83,9 +80,9 @@ export namespace VxeTabPaneDefines {
 
 export type VxeTabPaneEventProps = {}
 
-export interface VxeTabPaneListeners { }
+export interface VxeTabPaneListeners {}
 
-export namespace VxeTabPaneEvents { }
+export namespace VxeTabPaneEvents {}
 
 export namespace VxeTabPaneSlotTypes {
   export interface DefaultSlotParams {

@@ -13,7 +13,7 @@ interface DynamicStoreData {
   drawers: VxeDrawerDefines.DrawerOptions[]
   globalLoading: VxeLoadingProps | null
   globalWatermark: VxeWatermarkProps | null
-  globalContextMenu:|(VxeContextMenuProps & VxeContextMenuDefines.ContextMenuOpenOptions) | null
+  globalContextMenu: (VxeContextMenuProps & VxeContextMenuDefines.ContextMenuOpenOptions) | null
   globalTooltip: VxeTooltipProps | null
   isTipInit: boolean
 }
@@ -32,7 +32,7 @@ export const dynamicStore = reactive<DynamicStoreData>({
  * 动态组件
  */
 const VxeDynamics = defineVxeComponent({
-  setup () {
+  setup() {
     const VxeUIModalComponent = VxeUI.getComponent('vxe-modal')
     const VxeUIDrawerComponent = VxeUI.getComponent('vxe-drawer')
     const VxeUILoadingComponent = VxeUI.getComponent('vxe-loading')
@@ -47,31 +47,36 @@ const VxeDynamics = defineVxeComponent({
       if (globalContextMenu) {
         const events = globalContextMenu.events || {}
         const { optionClick, show, hide } = events
-        cmOpts = Object.assign({}, globalContextMenu, {
-          key: 'cm',
-          onShow (params: VxeContextMenuDefines.ShowEventParams) {
-            if (show) {
-              show(params)
+        cmOpts = Object.assign(
+          {},
+          globalContextMenu,
+          {
+            key: 'cm',
+            onShow(params: VxeContextMenuDefines.ShowEventParams) {
+              if (show) {
+                show(params)
+              }
+            },
+            onHide(params: VxeContextMenuDefines.HideEventParams) {
+              if (hide) {
+                hide(params)
+              }
+              dynamicStore.globalContextMenu = null
+            },
+            onOptionClick(params: VxeContextMenuDefines.OptionClickEventParams) {
+              if (optionClick) {
+                optionClick(params)
+              }
             }
           },
-          onHide (params: VxeContextMenuDefines.HideEventParams) {
-            if (hide) {
-              hide(params)
-            }
-            dynamicStore.globalContextMenu = null
-          },
-          onOptionClick (params: VxeContextMenuDefines.OptionClickEventParams) {
-            if (optionClick) {
-              optionClick(params)
-            }
-          }
-        }, { events: undefined })
+          { events: undefined }
+        )
       }
 
       let tpOpts = globalTooltip || {}
       if (globalTooltip) {
         tpOpts = Object.assign({}, globalTooltip, {
-          'onUpdate:modelValue' (value: boolean) {
+          'onUpdate:modelValue'(value: boolean) {
             globalTooltip.modelValue = value
           }
         })
@@ -79,27 +84,29 @@ const VxeDynamics = defineVxeComponent({
 
       return [
         modals.length
-          ? h('div', {
-            key: 'ml',
-            class: 'vxe-dynamics--modal'
-          }, modals.map((item) => h(VxeUIModalComponent, item)))
+          ? h(
+            'div',
+            {
+              key: 'ml',
+              class: 'vxe-dynamics--modal'
+            },
+            modals.map((item) => h(VxeUIModalComponent, item))
+          )
           : createCommentVNode(),
         drawers.length
-          ? h('div', {
-            key: 'dr',
-            class: 'vxe-dynamics--drawer'
-          }, drawers.map((item) => h(VxeUIDrawerComponent, item)))
+          ? h(
+            'div',
+            {
+              key: 'dr',
+              class: 'vxe-dynamics--drawer'
+            },
+            drawers.map((item) => h(VxeUIDrawerComponent, item))
+          )
           : createCommentVNode(),
-        globalWatermark
-          ? h(VxeUIWatermarkComponent, globalWatermark)
-          : createCommentVNode(),
-        globalLoading
-          ? h(VxeUILoadingComponent, globalLoading)
-          : createCommentVNode(),
+        globalWatermark ? h(VxeUIWatermarkComponent, globalWatermark) : createCommentVNode(),
+        globalLoading ? h(VxeUILoadingComponent, globalLoading) : createCommentVNode(),
         globalContextMenu ? h(VxeUIContextMenuComponent, cmOpts) : createCommentVNode(),
-        dynamicStore.isTipInit
-          ? h(VxeUITooltipComponent, { ref: refTooltip, ...tpOpts })
-          : createCommentVNode()
+        dynamicStore.isTipInit ? h(VxeUITooltipComponent, { ref: refTooltip, ...tpOpts }) : createCommentVNode()
       ]
     }
   }
@@ -107,7 +114,7 @@ const VxeDynamics = defineVxeComponent({
 
 export const dynamicApp = createApp(VxeDynamics)
 
-export function checkDynamic () {
+export function checkDynamic() {
   if (!dynamicContainerElem) {
     dynamicContainerElem = document.createElement('div')
     dynamicContainerElem.className = 'vxe-dynamics'

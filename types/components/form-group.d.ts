@@ -19,10 +19,9 @@ export interface VxeFormGroupConstructor extends VxeComponentBaseOptions, VxeFor
 export interface FormGroupPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeFormGroupPrivateRef extends FormGroupPrivateRef { }
+export interface VxeFormGroupPrivateRef extends FormGroupPrivateRef {}
 
-export namespace VxeFormGroupPropTypes {
-}
+export namespace VxeFormGroupPropTypes {}
 
 export type VxeFormGroupProps = {
   /**
@@ -35,19 +34,16 @@ export type VxeFormGroupProps = {
   className?: VxeFormItemPropTypes.ClassName
 }
 
-export interface FormGroupPrivateComputed {
-}
-export interface VxeFormGroupPrivateComputed extends FormGroupPrivateComputed { }
+export interface FormGroupPrivateComputed {}
+export interface VxeFormGroupPrivateComputed extends FormGroupPrivateComputed {}
 
-export interface FormGroupReactData {
-}
+export interface FormGroupReactData {}
 
-export interface FormGroupMethods {
-}
-export interface VxeFormGroupMethods extends FormGroupMethods { }
+export interface FormGroupMethods {}
+export interface VxeFormGroupMethods extends FormGroupMethods {}
 
-export interface FormGroupPrivateMethods { }
-export interface VxeFormGroupPrivateMethods extends FormGroupPrivateMethods { }
+export interface FormGroupPrivateMethods {}
+export interface VxeFormGroupPrivateMethods extends FormGroupPrivateMethods {}
 
 export type VxeFormGroupEmits = []
 
@@ -59,9 +55,9 @@ export namespace VxeFormGroupDefines {
 
 export type VxeFormGroupEventProps = {}
 
-export interface VxeFormGroupListeners { }
+export interface VxeFormGroupListeners {}
 
-export namespace VxeFormGroupEvents { }
+export namespace VxeFormGroupEvents {}
 
 export namespace VxeFormGroupSlotTypes {
   export interface DefaultSlotParams {

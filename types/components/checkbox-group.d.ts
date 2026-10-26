@@ -21,7 +21,7 @@ export interface VxeCheckboxGroupConstructor extends VxeComponentBaseOptions, Vx
 export interface CheckboxGroupPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeCheckboxGroupPrivateRef extends CheckboxGroupPrivateRef { }
+export interface VxeCheckboxGroupPrivateRef extends CheckboxGroupPrivateRef {}
 
 export namespace VxeCheckboxGroupPropTypes {
   export type Size = VxeComponentSizeType
@@ -78,10 +78,9 @@ export interface CheckboxGroupPrivateComputed {
   computeIsDisabled: ComputedRef<boolean | undefined>
   computeIsReadonly: ComputedRef<boolean | undefined>
 }
-export interface VxeCheckboxGroupPrivateComputed extends CheckboxGroupPrivateComputed { }
+export interface VxeCheckboxGroupPrivateComputed extends CheckboxGroupPrivateComputed {}
 
-export interface CheckboxGroupReactData {
-}
+export interface CheckboxGroupReactData {}
 export interface CheckboxGroupInternalData {
   isLoaded?: boolean
 }
@@ -89,22 +88,21 @@ export interface CheckboxGroupInternalData {
 export interface CheckboxGroupMethods {
   dispatchEvent(type: ValueOf<VxeCheckboxGroupEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCheckboxGroupMethods extends CheckboxGroupMethods { }
+export interface VxeCheckboxGroupMethods extends CheckboxGroupMethods {}
 
 export interface CheckboxGroupPrivateMethods {
-  handleChecked(params: {
-    checked: boolean
-    value: VxeCheckboxPropTypes.ModelValue
-    label: VxeCheckboxPropTypes.ModelValue
-  }, evnt: Event): void
+  handleChecked(
+    params: {
+      checked: boolean
+      value: VxeCheckboxPropTypes.ModelValue
+      label: VxeCheckboxPropTypes.ModelValue
+    },
+    evnt: Event
+  ): void
 }
-export interface VxeCheckboxGroupPrivateMethods extends CheckboxGroupPrivateMethods { }
+export interface VxeCheckboxGroupPrivateMethods extends CheckboxGroupPrivateMethods {}
 
-export type VxeCheckboxGroupEmits = [
-  'update:modelValue',
-  'change',
-  'default-change'
-]
+export type VxeCheckboxGroupEmits = ['update:modelValue', 'change', 'default-change']
 
 export namespace VxeCheckboxGroupDefines {
   export interface CheckboxGroupEventParams extends VxeComponentEventParams {
@@ -115,7 +113,7 @@ export namespace VxeCheckboxGroupDefines {
     value: any[]
     checklist: any[]
   }
-  export interface ChangeEventParams extends CheckboxGroupEventParams, ChangeParams { }
+  export interface ChangeEventParams extends CheckboxGroupEventParams, ChangeParams {}
 
   export interface DefaultChangeEventParams {
     value: any[]
@@ -138,7 +136,7 @@ export namespace VxeCheckboxGroupEvents {
   export type UpdateModelValue = (modelValue: VxeCheckboxGroupPropTypes.ModelValue) => void
   export type Change = (params: VxeCheckboxGroupDefines.ChangeEventParams) => void
   export type DefaultChange = (params: VxeCheckboxGroupDefines.DefaultChangeEventParams) => void
- }
+}
 
 export namespace VxeCheckboxGroupSlotTypes {
   export interface DefaultSlotParams {

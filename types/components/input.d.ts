@@ -21,7 +21,7 @@ export interface InputPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
   refInput: Ref<HTMLInputElement>
 }
-export interface VxeInputPrivateRef extends InputPrivateRef { }
+export interface VxeInputPrivateRef extends InputPrivateRef {}
 
 export namespace VxeInputPropTypes {
   export type Size = VxeComponentSizeType
@@ -44,9 +44,7 @@ export namespace VxeInputPropTypes {
   export type MaxLength = string | number | null
   export type Multiple = boolean
   export type ShowWordCount = boolean
-  export type CountMethod = (params: {
-    value: string
-  }) => number
+  export type CountMethod = (params: { value: string }) => number
   export type AutoComplete = string
   export type AutoFocus = boolean
   export type Align = VxeComponentAlignType
@@ -185,9 +183,8 @@ export interface VxeInputProps {
   maxlength?: VxeInputPropTypes.Maxlength
 }
 
-export interface InputPrivateComputed {
-}
-export interface VxeInputPrivateComputed extends InputPrivateComputed { }
+export interface InputPrivateComputed {}
+export interface VxeInputPrivateComputed extends InputPrivateComputed {}
 
 export interface InputReactData {
   initialized: boolean
@@ -239,33 +236,12 @@ export interface InputMethods {
   hidePanel(): Promise<any>
   updatePlacement(): Promise<any>
 }
-export interface VxeInputMethods extends InputMethods { }
+export interface VxeInputMethods extends InputMethods {}
 
-export interface InputPrivateMethods { }
-export interface VxeInputPrivateMethods extends InputPrivateMethods { }
+export interface InputPrivateMethods {}
+export interface VxeInputPrivateMethods extends InputPrivateMethods {}
 
-export type VxeInputEmits = [
-  'update:modelValue',
-  'input',
-  'change',
-  'keydown',
-  'keyup',
-  'wheel',
-  'click',
-  'focus',
-  'blur',
-  'clear',
-  'lazy-change',
-  'search-click',
-  'toggle-visible',
-  'prev-number',
-  'next-number',
-  'prefix-click',
-  'suffix-click',
-  'date-prev',
-  'date-today',
-  'date-next'
-]
+export type VxeInputEmits = ['update:modelValue', 'input', 'change', 'keydown', 'keyup', 'wheel', 'click', 'focus', 'blur', 'clear', 'lazy-change', 'search-click', 'toggle-visible', 'prev-number', 'next-number', 'prefix-click', 'suffix-click', 'date-prev', 'date-today', 'date-next']
 
 export namespace VxeInputDefines {
   interface DateFestivalItem {
@@ -319,57 +295,57 @@ export namespace VxeInputDefines {
   export interface InputParams {
     value: string
   }
-  export interface InputEventParams extends InputKeyboardEventParams, InputParams { }
+  export interface InputEventParams extends InputKeyboardEventParams, InputParams {}
 
   export interface ChangeParams extends InputParams {}
-  export interface ChangeEventParams extends InputKeyboardEventParams, ChangeParams { }
+  export interface ChangeEventParams extends InputKeyboardEventParams, ChangeParams {}
 
   export interface KeyupParams extends InputParams {}
-  export interface KeyupEventParams extends InputKeyboardEventParams, KeyupParams { }
+  export interface KeyupEventParams extends InputKeyboardEventParams, KeyupParams {}
 
   export interface KeydownParams extends InputParams {}
-  export interface KeydownEventParams extends InputKeyboardEventParams, KeydownParams { }
+  export interface KeydownEventParams extends InputKeyboardEventParams, KeydownParams {}
 
   export interface ClickParams extends InputParams {}
-  export interface ClickEventParams extends InputKeyboardEventParams, ClickParams { }
+  export interface ClickEventParams extends InputKeyboardEventParams, ClickParams {}
 
   export interface FocusParams extends InputParams {}
-  export interface FocusEventParams extends InputKeyboardEventParams, FocusParams { }
+  export interface FocusEventParams extends InputKeyboardEventParams, FocusParams {}
 
   export interface BlurParams extends InputParams {}
-  export interface BlurEventParams extends InputKeyboardEventParams, BlurParams { }
+  export interface BlurEventParams extends InputKeyboardEventParams, BlurParams {}
 
   export interface ClearParams extends InputParams {}
-  export interface ClearEventParams extends InputKeyboardEventParams, ClearParams { }
+  export interface ClearEventParams extends InputKeyboardEventParams, ClearParams {}
 
-  export interface LazyChangeEventParams extends InputKeyboardEventParams { }
+  export interface LazyChangeEventParams extends InputKeyboardEventParams {}
 
   export interface SearchClickParams extends InputParams {}
-  export interface SearchClickEventParams extends InputKeyboardEventParams, SearchClickParams { }
+  export interface SearchClickEventParams extends InputKeyboardEventParams, SearchClickParams {}
 
   export interface ToggleVisibleParams extends InputParams {}
-  export interface ToggleVisibleEventParams extends InputKeyboardEventParams, ToggleVisibleParams { }
+  export interface ToggleVisibleEventParams extends InputKeyboardEventParams, ToggleVisibleParams {}
 
   export interface PrevNumberParams extends InputParams {}
-  export interface PrevNumberEventParams extends InputKeyboardEventParams, PrevNumberParams { }
+  export interface PrevNumberEventParams extends InputKeyboardEventParams, PrevNumberParams {}
 
   export interface NextNumberParams extends InputParams {}
-  export interface NextNumberEventParams extends InputKeyboardEventParams, NextNumberParams { }
+  export interface NextNumberEventParams extends InputKeyboardEventParams, NextNumberParams {}
 
   export interface PrefixClickParams extends InputParams {}
-  export interface PrefixClickEventParams extends InputKeyboardEventParams, PrefixClickParams { }
+  export interface PrefixClickEventParams extends InputKeyboardEventParams, PrefixClickParams {}
 
   export interface SuffixClickParams extends InputParams {}
-  export interface SuffixClickEventParams extends InputKeyboardEventParams, SuffixClickParams { }
+  export interface SuffixClickEventParams extends InputKeyboardEventParams, SuffixClickParams {}
 
   export interface DatePrevParams extends InputParams {}
-  export interface DatePrevEventParams extends InputKeyboardEventParams, DatePrevParams { }
+  export interface DatePrevEventParams extends InputKeyboardEventParams, DatePrevParams {}
 
   export interface DateTodayParams extends InputParams {}
-  export interface DateTodayEventParams extends InputKeyboardEventParams, DateTodayParams { }
+  export interface DateTodayEventParams extends InputKeyboardEventParams, DateTodayParams {}
 
   export interface DateNextParams extends InputParams {}
-  export interface DateNextEventParams extends InputKeyboardEventParams, DateNextParams { }
+  export interface DateNextEventParams extends InputKeyboardEventParams, DateNextParams {}
 }
 
 export type VxeInputEventProps = {

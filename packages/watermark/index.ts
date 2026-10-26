@@ -6,7 +6,7 @@ import { checkDynamic, dynamicStore, dynamicApp } from '../dynamics'
 import type { VxeWatermarkProps } from '../../types'
 
 export const VxeWatermark = Object.assign({}, VxeWatermarkComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeWatermarkComponent.name as string, VxeWatermarkComponent)
   }
 })
@@ -15,14 +15,14 @@ dynamicApp.use(VxeWatermark)
 VxeUI.component(VxeWatermarkComponent)
 
 export const WatermarkController = {
-  load (options: VxeWatermarkProps) {
+  load(options: VxeWatermarkProps) {
     checkDynamic()
     dynamicStore.globalWatermark = Object.assign({}, options, {
       key: 'gw'
     })
     return Promise.resolve()
   },
-  clear () {
+  clear() {
     dynamicStore.globalWatermark = null
     return Promise.resolve()
   }

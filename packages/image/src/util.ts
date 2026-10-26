@@ -7,9 +7,12 @@ import type { VxeImageDefines, VxeImagePreviewDefines } from '../../../types'
 
 export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) => {
   if (VxeUI.modal) {
-    const opts = Object.assign({
-      escClosable: true
-    }, options)
+    const opts = Object.assign(
+      {
+        escClosable: true
+      },
+      options
+    )
     const { urlList, activeIndex, zIndex } = opts
     const { rotate, change } = opts.events || {}
     const modalId = XEUtils.uniqueId('image-preview')
@@ -25,7 +28,7 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
       zIndex,
       className: 'vxe-image-preview-popup-wrapper',
       slots: {
-        default () {
+        default() {
           return h(VxeImagePreviewComponent, {
             modelValue: activeIndex,
             urlList,
@@ -37,15 +40,15 @@ export const openPreviewImage: VxeImageDefines.PreviewImageFunction = (options) 
             showDownloadButton: opts.showDownloadButton,
             beforeDownloadMethod: opts.beforeDownloadMethod,
             downloadMethod: opts.downloadMethod,
-            onClose () {
+            onClose() {
               VxeUI.modal.close(modalId)
             },
-            onChange (eventParams: VxeImagePreviewDefines.ChangeEventParams) {
+            onChange(eventParams: VxeImagePreviewDefines.ChangeEventParams) {
               if (change) {
                 change.call(this, eventParams)
               }
             },
-            onRotate (eventParams: VxeImagePreviewDefines.RotateEventParams) {
+            onRotate(eventParams: VxeImagePreviewDefines.RotateEventParams) {
               if (rotate) {
                 rotate.call(this, eventParams)
               }

@@ -1,10 +1,12 @@
 import { ref, h, reactive, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, useSize, usePermission, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeTipPropTypes, TipReactData, VxeTipEmits, TipMethods, TipPrivateMethods, TipPrivateRef, VxeTipPrivateComputed, VxeTipConstructor, VxeTipPrivateMethods, ValueOf } from '../../../types'
+
+const { getConfig, useFns, createEvent, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeTip',
@@ -28,28 +30,25 @@ export default defineVxeComponent({
       default: () => getConfig().tip.size || getConfig().size
     }
   },
-  emits: [
-  ] as VxeTipEmits,
-  setup (props, context) {
+  emits: [] as VxeTipEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
-    const { computePermissionInfo } = usePermission(props)
+    const { computePermissionInfo } = useFns.usePermission(props)
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<TipReactData>({
-    })
+    const reactData = reactive<TipReactData>({})
 
     const refMaps: TipPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxeTipPrivateComputed = {
-    }
+    const computeMaps: VxeTipPrivateComputed = {}
 
     const $xeTip = {
       xID,
@@ -69,8 +68,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const tipPrivateMethods: TipPrivateMethods = {
-    }
+    const tipPrivateMethods: TipPrivateMethods = {}
 
     Object.assign($xeTip, tipMethods, tipPrivateMethods)
 
@@ -85,45 +83,68 @@ export default defineVxeComponent({
       if (!permissionInfo.visible) {
         return renderEmptyElement($xeTip)
       }
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-tip', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'has--title': !!(titleSlot || title)
-        }]
-      }, [
-        iconSlot || icon
-          ? h('div', {
-            class: 'vxe-tip--icon'
-          }, iconSlot
-            ? getSlotVNs(iconSlot({}))
-            : [
-                h('i', {
-                  class: icon
-                })
-              ])
-          : renderEmptyElement($xeTip),
-        h('div', {
-          class: 'vxe-tip--body'
-        }, [
-          titleSlot || title
-            ? h('div', {
-              class: 'vxe-tip--title'
-            }, titleSlot ? getSlotVNs(titleSlot({})) : XEUtils.toValueString(title))
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-tip',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'has--title': !!(titleSlot || title)
+            }
+          ]
+        },
+        [
+          iconSlot || icon
+            ? h(
+              'div',
+              {
+                class: 'vxe-tip--icon'
+              },
+              iconSlot
+                ? getSlotVNs(iconSlot({}))
+                : [
+                    h('i', {
+                      class: icon
+                    })
+                  ]
+            )
             : renderEmptyElement($xeTip),
-          h('div', {
-            class: 'vxe-tip--content'
-          }, defaultSlot ? getSlotVNs(defaultSlot({})) : XEUtils.toValueString(content))
-        ])
-      ])
+          h(
+            'div',
+            {
+              class: 'vxe-tip--body'
+            },
+            [
+              titleSlot || title
+                ? h(
+                  'div',
+                  {
+                    class: 'vxe-tip--title'
+                  },
+                  titleSlot ? getSlotVNs(titleSlot({})) : XEUtils.toValueString(title)
+                )
+                : renderEmptyElement($xeTip),
+              h(
+                'div',
+                {
+                  class: 'vxe-tip--content'
+                },
+                defaultSlot ? getSlotVNs(defaultSlot({})) : XEUtils.toValueString(content)
+              )
+            ]
+          )
+        ]
+      )
     }
 
     $xeTip.renderVN = renderVN
 
     return $xeTip
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

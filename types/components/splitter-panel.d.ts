@@ -20,7 +20,7 @@ export interface VxeSplitterPanelConstructor extends VxeComponentBaseOptions, Vx
 export interface SplitterItemPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeSplitterPanelPrivateRef extends SplitterItemPrivateRef { }
+export interface VxeSplitterPanelPrivateRef extends SplitterItemPrivateRef {}
 
 export namespace VxeSplitterPanelPropTypes {
   export type Name = string | number
@@ -78,26 +78,22 @@ export interface VxeSplitterPanelProps {
   showAction?: VxeSplitterPanelPropTypes.ShowAction
 }
 
-export interface SplitterItemPrivateComputed {
-}
-export interface VxeSplitterPanelPrivateComputed extends SplitterItemPrivateComputed { }
+export interface SplitterItemPrivateComputed {}
+export interface VxeSplitterPanelPrivateComputed extends SplitterItemPrivateComputed {}
 
-export interface SplitterItemReactData {
-}
+export interface SplitterItemReactData {}
 
-export interface SplitterItemInternalData {
-}
+export interface SplitterItemInternalData {}
 
 export interface SplitterItemMethods {
   dispatchEvent(type: ValueOf<VxeSplitterPanelEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeSplitterPanelMethods extends SplitterItemMethods { }
+export interface VxeSplitterPanelMethods extends SplitterItemMethods {}
 
-export interface SplitterItemPrivateMethods { }
-export interface VxeSplitterPanelPrivateMethods extends SplitterItemPrivateMethods { }
+export interface SplitterItemPrivateMethods {}
+export interface VxeSplitterPanelPrivateMethods extends SplitterItemPrivateMethods {}
 
-export type VxeSplitterPanelEmits = [
-]
+export type VxeSplitterPanelEmits = []
 
 export namespace VxeSplitterPanelDefines {
   export interface SplitterItemEventParams extends VxeComponentEventParams {
@@ -105,14 +101,11 @@ export namespace VxeSplitterPanelDefines {
   }
 }
 
-export type VxeSplitterPanelEventProps = {
-}
+export type VxeSplitterPanelEventProps = {}
 
-export interface VxeSplitterPanelListeners {
-}
+export interface VxeSplitterPanelListeners {}
 
-export namespace VxeSplitterPanelEvents {
-}
+export namespace VxeSplitterPanelEvents {}
 
 export namespace VxeSplitterPanelSlotTypes {
   export interface DefaultSlotParams {

@@ -22,7 +22,7 @@ export interface VxeFormViewConstructor extends VxeComponentBaseOptions, VxeForm
 export interface FormViewPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeFormViewPrivateRef extends FormViewPrivateRef { }
+export interface VxeFormViewPrivateRef extends FormViewPrivateRef {}
 
 export namespace VxeFormViewPropTypes {
   export type ModelValue = VxeFormPropTypes.Data
@@ -51,10 +51,10 @@ export type VxeFormViewProps = {
 export interface FormViewPrivateComputed {
   computeSize: ComputedRef<VxeFormViewPropTypes.Size>
 }
-export interface VxeFormViewPrivateComputed extends FormViewPrivateComputed { }
+export interface VxeFormViewPrivateComputed extends FormViewPrivateComputed {}
 
 export interface FormViewReactData {
-  formConfig: VxeFormProps,
+  formConfig: VxeFormProps
   formRules: VxeFormPropTypes.Rules
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
 }
@@ -64,15 +64,15 @@ export interface FormViewMethods {
   /**
    * 清除所有配置
    */
-  clearConfig (): Promise<any>
+  clearConfig(): Promise<any>
   /**
    * 加载配置
    */
-  loadConfig (config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
+  loadConfig(config: VxeFormDesignDefines.FormDesignConfig): Promise<any>
   /**
    * 解析配置
    */
-  parseConfig (config: VxeFormDesignDefines.FormDesignConfig): {
+  parseConfig(config: VxeFormDesignDefines.FormDesignConfig): {
     formConfig: VxeFormProps
     formRules: VxeFormPropTypes.Rules
     formData: VxeFormPropTypes.Data
@@ -81,11 +81,11 @@ export interface FormViewMethods {
   /**
    * 加载表单配置
    */
-  loadFormConfig (formConfig: VxeFormProps): Promise<any>
+  loadFormConfig(formConfig: VxeFormProps): Promise<any>
   /**
    * 加载控件配置
    */
-  loadWidgetData (widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
+  loadWidgetData(widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
   /**
    * 更新控件状态
    */
@@ -123,16 +123,12 @@ export interface FormViewMethods {
    */
   updateItemStatus(widget: VxeFormDesignDefines.WidgetObjItem, value: any): Promise<any>
 }
-export interface VxeFormViewMethods extends FormViewMethods { }
+export interface VxeFormViewMethods extends FormViewMethods {}
 
-export interface FormViewPrivateMethods { }
-export interface VxeFormViewPrivateMethods extends FormViewPrivateMethods { }
+export interface FormViewPrivateMethods {}
+export interface VxeFormViewPrivateMethods extends FormViewPrivateMethods {}
 
-export type VxeFormViewEmits = [
-  'update:modelValue',
-  'submit',
-  'reset'
-]
+export type VxeFormViewEmits = ['update:modelValue', 'submit', 'reset']
 
 export namespace VxeFormViewDefines {
   export interface FormViewEventParams extends VxeComponentEventParams {
@@ -147,7 +143,7 @@ export namespace VxeFormViewDefines {
   export interface SubmitParams<D = any> {
     data: D
   }
-  export interface SubmitEventParams<D = any> extends FormViewEventParams, SubmitParams<D> { }
+  export interface SubmitEventParams<D = any> extends FormViewEventParams, SubmitParams<D> {}
 
   export interface ResetEventParams<D = any> extends FormViewEventParams {
     data: D
@@ -162,7 +158,7 @@ export interface VxeFormViewEventProps<D = any> {
 export interface VxeFormViewListeners<D = any> {
   submit?: VxeFormViewEvents.Submit<D>
   reset?: VxeFormViewEvents.Reset<D>
- }
+}
 
 export namespace VxeFormViewEvents {
   export type Submit<D = any> = (params: VxeFormViewDefines.SubmitEventParams<D>) => void

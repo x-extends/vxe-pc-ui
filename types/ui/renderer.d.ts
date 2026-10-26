@@ -357,8 +357,8 @@ declare module '@vxe-ui/core' {
     /**
      * @deprecated
      */
-    export interface RenderHeaderOptions extends RenderTableHeaderOptions { }
-    export interface RenderTableHeaderOptions extends VxeGlobalRendererHandles.RenderOptions { }
+    export interface RenderHeaderOptions extends RenderTableHeaderOptions {}
+    export interface RenderTableHeaderOptions extends VxeGlobalRendererHandles.RenderOptions {}
 
     /**
      * @deprecated
@@ -384,13 +384,13 @@ declare module '@vxe-ui/core' {
     /**
      * @deprecated
      */
-    export interface RenderFooterOptions extends RenderTableFooterOptions { }
-    export interface RenderTableFooterOptions extends VxeGlobalRendererHandles.RenderOptions { }
+    export interface RenderFooterOptions extends RenderTableFooterOptions {}
+    export interface RenderTableFooterOptions extends VxeGlobalRendererHandles.RenderOptions {}
 
     /**
      * @deprecated
      */
-    export interface RenderFooterParams<D = any> extends RenderTableFooterParams<D>{}
+    export interface RenderFooterParams<D = any> extends RenderTableFooterParams<D> {}
     export interface RenderTableFooterParams<D = any> {
       $table: VxeTableConstructor<D>
       column: VxeTableDefines.ColumnInfo
@@ -473,7 +473,7 @@ declare module '@vxe-ui/core' {
      * @deprecated
      */
     export interface RenderExpandOptions extends RenderTableExpandOptions {}
-    export interface RenderTableExpandOptions extends VxeColumnPropTypes.ContentRender { }
+    export interface RenderTableExpandOptions extends VxeColumnPropTypes.ContentRender {}
 
     /**
      * @deprecated
@@ -492,34 +492,34 @@ declare module '@vxe-ui/core' {
     }
 
     /**
-   * 渲染选项
-   */
-  export interface RenderOptions {
-    /**
-     * 渲染器名称
+     * 渲染选项
      */
-    name?: string
-    /**
-     * 目标组件渲染的参数
-     */
-    props?: { [key: string]: any }
-    /**
-     * 目标组件渲染的属性
-     */
-    attrs?: { [key: string]: any }
-    /**
-     * 目标组件渲染的事件
-     */
-    events?: { [key: string]: (...args: any[]) => any }
-    /**
-     * 多目标渲染
-     */
-    children?: any[]
-    /**
-     * 渲染类型
-     */
-    cellType?: VxeColumnPropTypes.CellType
-  }
+    export interface RenderOptions {
+      /**
+       * 渲染器名称
+       */
+      name?: string
+      /**
+       * 目标组件渲染的参数
+       */
+      props?: { [key: string]: any }
+      /**
+       * 目标组件渲染的属性
+       */
+      attrs?: { [key: string]: any }
+      /**
+       * 目标组件渲染的事件
+       */
+      events?: { [key: string]: (...args: any[]) => any }
+      /**
+       * 多目标渲染
+       */
+      children?: any[]
+      /**
+       * 渲染类型
+       */
+      cellType?: VxeColumnPropTypes.CellType
+    }
 
     /**
      * 选项参数
@@ -564,15 +564,14 @@ declare module '@vxe-ui/core' {
   }
 
   export namespace VxeGlobalRendererHandles {
-
-    export interface RenderButtonOptions extends VxeToolbarPropTypes.ButtonRender { }
+    export interface RenderButtonOptions extends VxeToolbarPropTypes.ButtonRender {}
     export interface RenderButtonParams<D = any> {
       $grid: VxeGridConstructor<D> | null | undefined
       $table: VxeTableConstructor<D>
       button: VxeToolbarPropTypes.ButtonConfig
     }
 
-    export interface RenderToolOptions extends VxeToolbarPropTypes.ToolRender { }
+    export interface RenderToolOptions extends VxeToolbarPropTypes.ToolRender {}
     export interface RenderToolParams<D = any> {
       $grid: VxeGridConstructor<D> | null | undefined
       $table: VxeTableConstructor<D>
@@ -833,17 +832,11 @@ declare module '@vxe-ui/core' {
       /**
        * 自定义控件字段名
        */
-      field?: string | ((params: {
-        name: string
-        $formDesign: null | VxeFormDesignConstructor
-      }) => string)
+      field?: string | ((params: { name: string; $formDesign: null | VxeFormDesignConstructor }) => string)
       /**
        * 控件名称
        */
-      title?: string | number | ((params: {
-        name: string
-        $formDesign: null | VxeFormDesignConstructor
-      }) => string)
+      title?: string | number | ((params: { name: string; $formDesign: null | VxeFormDesignConstructor }) => string)
       /**
        * 是否唯一
        */
@@ -863,16 +856,11 @@ declare module '@vxe-ui/core' {
       /**
        * 自定义分组名称
        */
-      customGroup?: string | number | ((params: {
-        name: string
-        $formDesign: null | VxeFormDesignConstructor
-      }) => string)
+      customGroup?: string | number | ((params: { name: string; $formDesign: null | VxeFormDesignConstructor }) => string)
       /**
        * 控件图标
        */
-      icon?: string | ((params: {
-        widget: VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj
-      }) => VxeComponentSlotType | VxeComponentSlotType[])
+      icon?: string | ((params: { widget: VxeGlobalRendererHandles.CreateFormDesignWidgetConfigObj }) => VxeComponentSlotType | VxeComponentSlotType[])
       /**
        * 控件参数
        */
@@ -974,8 +962,8 @@ declare module '@vxe-ui/core' {
      */
     createListDesignSettingFormConfig?(params: VxeGlobalRendererHandles.CreateListDesignSettingFormConfigParams): Record<string, any>
 
-    createListDesignSettingActionButtonConfig?:(params: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigParams) => VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult
-    listDesignSettingActionButtonMethod?:(params: VxeGlobalRendererHandles.ListDesignSettingActionButtonMethodParams) => void
+    createListDesignSettingActionButtonConfig?: (params: VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigParams) => VxeGlobalRendererHandles.CreateListDesignSettingActionButtonConfigResult
+    listDesignSettingActionButtonMethod?: (params: VxeGlobalRendererHandles.ListDesignSettingActionButtonMethodParams) => void
     renderListDesignSettingActionButtonFormView?(renderOpts: VxeGlobalRendererHandles.RenderListDesignSettingActionButtonFormViewOptions, renderParams: VxeGlobalRendererHandles.RenderListDesignSettingActionButtonFormViewParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
   export namespace VxeGlobalRendererHandles {
@@ -1014,13 +1002,12 @@ declare module '@vxe-ui/core' {
     renderButtonSuffix?(renderOpts: VxeGlobalRendererHandles.RenderButtonSuffixOptions, renderParams: VxeGlobalRendererHandles.RenderButtonSuffixParams): VxeComponentSlotType | VxeComponentSlotType[]
   }
   export namespace VxeGlobalRendererHandles {
-
-    export interface RenderButtonPrefixOptions extends VxeButtonPropTypes.PrefixRender { }
+    export interface RenderButtonPrefixOptions extends VxeButtonPropTypes.PrefixRender {}
     export interface RenderButtonPrefixParams {
       $button: VxeButtonConstructor
     }
 
-    export interface RenderButtonSuffixOptions extends VxeButtonPropTypes.SuffixRender { }
+    export interface RenderButtonSuffixOptions extends VxeButtonPropTypes.SuffixRender {}
     export interface RenderButtonSuffixParams {
       $button: VxeButtonConstructor
     }
@@ -1037,8 +1024,7 @@ declare module '@vxe-ui/core' {
   }
 
   export namespace VxeGlobalRendererHandles {
-
-    export interface RenderIconPickerOptionIconOptions extends VxeIconPickerDefines.OptionIconRender { }
+    export interface RenderIconPickerOptionIconOptions extends VxeIconPickerDefines.OptionIconRender {}
     export interface RenderIconPickerOptionIconParams {
       $iconPicker: VxeIconPickerConstructor
       option: VxeIconPickerDefines.IconItemObj

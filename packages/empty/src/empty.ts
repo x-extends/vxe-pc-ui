@@ -1,9 +1,11 @@
 import { ref, h, reactive, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, getIcon, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { EmptyReactData, VxeEmptyEmits, VxeEmptyPropTypes, EmptyMethods, EmptyPrivateMethods, ValueOf, EmptyPrivateRef, VxeEmptyPrivateComputed, VxeEmptyConstructor, VxeEmptyPrivateMethods } from '../../../types'
+
+const { getConfig, getI18n, getIcon, createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeEmpty',
@@ -17,24 +19,21 @@ export default defineVxeComponent({
     },
     content: [String, Number] as PropType<VxeEmptyPropTypes.Content>
   },
-  emits: [
-  ] as VxeEmptyEmits,
-  setup (props, context) {
+  emits: [] as VxeEmptyEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<EmptyReactData>({
-    })
+    const reactData = reactive<EmptyReactData>({})
 
     const refMaps: EmptyPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxeEmptyPrivateComputed = {
-    }
+    const computeMaps: VxeEmptyPrivateComputed = {}
 
     const $xeEmpty = {
       xID,
@@ -54,50 +53,72 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const emptyPrivateMethods: EmptyPrivateMethods = {
-    }
+    const emptyPrivateMethods: EmptyPrivateMethods = {}
 
     Object.assign($xeEmpty, emptyMethods, emptyPrivateMethods)
 
     const renderVN = () => {
       const { imageUrl, imageStyle, icon, status, content } = props
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-empty', {
-          [`theme--${status}`]: status
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-empty--inner'
-        }, [
-          imageUrl
-            ? h('div', {
-              class: 'vxe-empty--img-wrapper'
-            }, [
-              h('img', {
-                src: imageUrl,
-                style: imageStyle
-              })
-            ])
-            : h('div', {
-              class: 'vxe-empty--icon-wrapper'
-            }, [
-              h('i', {
-                class: icon || getIcon().EMPTY_DEFAULT
-              })
-            ]),
-          h('div', {
-            class: 'vxe-empty--content-wrapper'
-          }, `${content || getI18n('vxe.empty.defText')}`)
-        ])
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-empty',
+            {
+              [`theme--${status}`]: status
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-empty--inner'
+            },
+            [
+              imageUrl
+                ? h(
+                  'div',
+                  {
+                    class: 'vxe-empty--img-wrapper'
+                  },
+                  [
+                    h('img', {
+                      src: imageUrl,
+                      style: imageStyle
+                    })
+                  ]
+                )
+                : h(
+                  'div',
+                  {
+                    class: 'vxe-empty--icon-wrapper'
+                  },
+                  [
+                    h('i', {
+                      class: icon || getIcon().EMPTY_DEFAULT
+                    })
+                  ]
+                ),
+              h(
+                'div',
+                {
+                  class: 'vxe-empty--content-wrapper'
+                },
+                `${content || getI18n('vxe.empty.defText')}`
+              )
+            ]
+          )
+        ]
+      )
     }
 
     $xeEmpty.renderVN = renderVN
 
     return $xeEmpty
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

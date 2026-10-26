@@ -29,7 +29,7 @@ export interface VxeSplitConstructor extends VxeComponentBaseOptions, VxeSplitMe
 export interface SplitPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeSplitPrivateRef extends SplitPrivateRef { }
+export interface VxeSplitPrivateRef extends SplitPrivateRef {}
 /**
  * @deprecated
  */
@@ -152,7 +152,7 @@ export interface SplitPrivateComputed {
   computeBarOpts: ComputedRef<VxeSplitPropTypes.BarConfig>
   computeActionOpts: ComputedRef<VxeSplitPropTypes.ActionConfig>
 }
-export interface VxeSplitPrivateComputed extends SplitPrivateComputed { }
+export interface VxeSplitPrivateComputed extends SplitPrivateComputed {}
 /**
  * @deprecated
  */
@@ -191,21 +191,14 @@ export interface SplitMethods {
    */
   reloadItem(list: VxeSplitPaneProps[]): Promise<void>
 }
-export interface VxeSplitMethods extends SplitMethods { }
+export interface VxeSplitMethods extends SplitMethods {}
 
-export interface SplitPrivateMethods { }
-export interface VxeSplitPrivateMethods extends SplitPrivateMethods { }
+export interface SplitPrivateMethods {}
+export interface VxeSplitPrivateMethods extends SplitPrivateMethods {}
 /**
  * @deprecated
  */
-export type VxeSplitEmits = [
-  'action-dblclick',
-  'action-click',
-  'toggle-expand',
-  'resize-start',
-  'resize-drag',
-  'resize-end'
-]
+export type VxeSplitEmits = ['action-dblclick', 'action-click', 'toggle-expand', 'resize-start', 'resize-drag', 'resize-end']
 /**
  * @deprecated
  */
@@ -288,8 +281,7 @@ export namespace VxeSplitEvents {
  * @deprecated
  */
 export namespace VxeSplitSlotTypes {
-  export interface DefaultSlotParams {
-  }
+  export interface DefaultSlotParams {}
 }
 /**
  * @deprecated
@@ -298,10 +290,7 @@ export interface VxeSplitSlots {
   /**
    * 自定义插槽模板
    */
-  [key: string]: ((params: {
-    name: VxeSplitPanePropTypes.Name
-    isExpand: boolean
-  }) => any) | undefined
+  [key: string]: ((params: { name: VxeSplitPanePropTypes.Name; isExpand: boolean }) => any) | undefined
 
   default?: (params: VxeSplitSlotTypes.DefaultSlotParams) => any
 }

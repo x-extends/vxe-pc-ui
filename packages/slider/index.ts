@@ -4,7 +4,7 @@ import VxeSliderComponent from './src/slider'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSlider = Object.assign({}, VxeSliderComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeSliderComponent.name as string, VxeSliderComponent)
   }
 })

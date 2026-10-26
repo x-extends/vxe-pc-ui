@@ -4,7 +4,7 @@ import VxeSpaceComponent from './src/space'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSpace = Object.assign({}, VxeSpaceComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeSpaceComponent.name as string, VxeSpaceComponent)
   }
 })

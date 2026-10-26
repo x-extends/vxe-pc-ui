@@ -2,7 +2,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeAnchorLinkDefines, VxeAnchorConstructor, VxeAnchorPrivateMethods, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods } from '../../../types'
 
-export function assembleAnchorLink ($xeAnchor: VxeAnchorConstructor & VxeAnchorPrivateMethods, elem: HTMLElement, linkConfig: VxeAnchorLinkDefines.LinkConfig, $xeParentAnchorLink: (VxeAnchorLinkConstructor & VxeAnchorLinkPrivateMethods) | null) {
+export function assembleAnchorLink($xeAnchor: VxeAnchorConstructor & VxeAnchorPrivateMethods, elem: HTMLElement, linkConfig: VxeAnchorLinkDefines.LinkConfig, $xeParentAnchorLink: (VxeAnchorLinkConstructor & VxeAnchorLinkPrivateMethods) | null) {
   const staticLinks = $xeAnchor.reactData.staticLinks
   const parentElem = elem.parentNode
   const parentLinkConfig = $xeParentAnchorLink ? $xeParentAnchorLink.linkConfig : null
@@ -13,9 +13,9 @@ export function assembleAnchorLink ($xeAnchor: VxeAnchorConstructor & VxeAnchorP
   }
 }
 
-export function destroyAnchorLink ($xeAnchor: VxeAnchorConstructor & VxeAnchorPrivateMethods, linkConfig: VxeAnchorLinkDefines.LinkConfig) {
+export function destroyAnchorLink($xeAnchor: VxeAnchorConstructor & VxeAnchorPrivateMethods, linkConfig: VxeAnchorLinkDefines.LinkConfig) {
   const staticLinks = $xeAnchor.reactData.staticLinks
-  const matchObj = XEUtils.findTree(staticLinks, item => item.id === linkConfig.id, { children: 'children' })
+  const matchObj = XEUtils.findTree(staticLinks, (item) => item.id === linkConfig.id, { children: 'children' })
   if (matchObj) {
     matchObj.items.splice(matchObj.index, 1)
   }

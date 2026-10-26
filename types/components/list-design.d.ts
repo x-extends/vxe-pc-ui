@@ -23,7 +23,7 @@ export interface VxeListDesignConstructor extends VxeComponentBaseOptions, VxeLi
 export interface ListDesignPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeListDesignPrivateRef extends ListDesignPrivateRef { }
+export interface VxeListDesignPrivateRef extends ListDesignPrivateRef {}
 
 export namespace VxeListDesignPropTypes {
   export type Size = VxeComponentSizeType
@@ -54,7 +54,7 @@ export interface VxeListDesignProps {
 export interface ListDesignPrivateComputed {
   computeSize: ComputedRef<VxeListDesignPropTypes.Size>
 }
-export interface VxeListDesignPrivateComputed extends ListDesignPrivateComputed { }
+export interface VxeListDesignPrivateComputed extends ListDesignPrivateComputed {}
 
 export interface ListDesignReactData<D = VxeListDesignDefines.DefaultSettingFormDataObjVO> {
   formData: D
@@ -92,11 +92,11 @@ export interface ListDesignMethods {
   /**
    * 获取所有配置
    */
-  getConfig (): VxeListDesignDefines.ListDesignConfig
+  getConfig(): VxeListDesignDefines.ListDesignConfig
   /**
    * 清除所有配置
    */
-  clearConfig (): Promise<any>
+  clearConfig(): Promise<any>
   /**
    * 加载配置
    */
@@ -106,13 +106,12 @@ export interface ListDesignMethods {
    */
   reloadConfig(config: Partial<VxeListDesignDefines.ListDesignConfig>): Promise<any>
 }
-export interface VxeListDesignMethods extends ListDesignMethods { }
+export interface VxeListDesignMethods extends ListDesignMethods {}
 
-export interface ListDesignPrivateMethods { }
-export interface VxeListDesignPrivateMethods extends ListDesignPrivateMethods { }
+export interface ListDesignPrivateMethods {}
+export interface VxeListDesignPrivateMethods extends ListDesignPrivateMethods {}
 
-export type VxeListDesignEmits = [
-]
+export type VxeListDesignEmits = []
 
 export namespace VxeListDesignDefines {
   export interface ListDesignEventParams extends VxeComponentEventParams {
@@ -173,9 +172,9 @@ export namespace VxeListDesignDefines {
 
 export type VxeListDesignEventProps = {}
 
-export interface VxeListDesignListeners { }
+export interface VxeListDesignListeners {}
 
-export namespace VxeListDesignEvents { }
+export namespace VxeListDesignEvents {}
 
 export namespace VxeListDesignSlotTypes {
   export interface DefaultSlotParams {}

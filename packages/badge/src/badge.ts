@@ -1,9 +1,11 @@
 import { ref, h, computed, reactive, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { BadgeReactData, VxeBadgeEmits, VxeBadgePropTypes, BadgeMethods, BadgePrivateMethods, ValueOf, BadgePrivateRef, VxeBadgePrivateComputed, VxeBadgeConstructor, VxeBadgePrivateMethods } from '../../../types'
+
+const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeBadge',
@@ -21,19 +23,17 @@ export default defineVxeComponent({
       default: () => getConfig().badge.size || getConfig().size
     }
   },
-  emits: [
-  ] as VxeBadgeEmits,
-  setup (props, context) {
+  emits: [] as VxeBadgeEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
-    const reactData = reactive<BadgeReactData>({
-    })
+    const reactData = reactive<BadgeReactData>({})
 
     const refMaps: BadgePrivateRef = {
       refElem
@@ -57,8 +57,7 @@ export default defineVxeComponent({
       return ''
     })
 
-    const computeMaps: VxeBadgePrivateComputed = {
-    }
+    const computeMaps: VxeBadgePrivateComputed = {}
 
     const $xeBadge = {
       xID,
@@ -78,8 +77,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const badgePrivateMethods: BadgePrivateMethods = {
-    }
+    const badgePrivateMethods: BadgePrivateMethods = {}
 
     Object.assign($xeBadge, badgeMethods, badgePrivateMethods)
 
@@ -88,31 +86,46 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const label = computeLabel.value
       const defaultSlot = slots.default
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-badge', {
-          [`size--${vSize}`]: vSize,
-          'is--dot': dot
-        }]
-      }, [
-        defaultSlot || content
-          ? h('div', {
-            class: 'vxe-badge--content'
-          }, defaultSlot ? defaultSlot({}) : `${content || ''}`)
-          : [],
-        label
-          ? h('span', {
-            class: 'vxe-badge--label'
-          }, label)
-          : renderEmptyElement($xeBadge)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-badge',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--dot': dot
+            }
+          ]
+        },
+        [
+          defaultSlot || content
+            ? h(
+              'div',
+              {
+                class: 'vxe-badge--content'
+              },
+              defaultSlot ? defaultSlot({}) : `${content || ''}`
+            )
+            : [],
+          label
+            ? h(
+              'span',
+              {
+                class: 'vxe-badge--label'
+              },
+              label
+            )
+            : renderEmptyElement($xeBadge)
+        ]
+      )
     }
 
     $xeBadge.renderVN = renderVN
 
     return $xeBadge
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

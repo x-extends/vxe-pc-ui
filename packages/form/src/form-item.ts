@@ -1,12 +1,14 @@
 import { h, onUnmounted, inject, ref, provide, onMounted, PropType, reactive } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
-import { renderer, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { isEnableConf } from '../../ui/src/utils'
 import { renderTitle, renderItemContent, renderItemErrorIcon, getItemClass, getItemContentClass } from './render'
 import XEUtils from 'xe-utils'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods } from '../../../types'
+
+const { renderer, renderEmptyElement } = VxeUI
 
 export const formItemProps = {
   title: String as PropType<VxeFormItemPropTypes.Title>,
@@ -91,7 +93,7 @@ export const formItemProps = {
 export default defineVxeComponent({
   name: 'VxeFormItem',
   props: formItemProps,
-  setup (props, { slots }) {
+  setup(props, { slots }) {
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
@@ -110,30 +112,35 @@ export default defineVxeComponent({
       const { data, readonly, disabled } = formProps
       const { visible, field, itemRender, contentStyle, showContent } = item
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-      const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
-      const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
+      const itemStyle = compConf ? compConf.formItemStyle || compConf.itemStyle : null
+      const itemContentStyle = compConf ? compConf.formItemContentStyle || compConf.itemContentStyle : null
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
       if (visible === false) {
         return renderEmptyElement($xeFormItem)
       }
-      return h('div', {
-        ref: refElem,
-        key: item.id,
-        itemid: item.id,
-        class: getItemClass($xeForm, item),
-        style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : itemStyle
-      }, [
-        renderTitle($xeForm, item),
-        showContent === false
-          ? renderEmptyElement($xeFormItem)
-          : h('div', {
-            class: getItemContentClass($xeForm, item),
-            style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
-          }, [
-            renderItemContent($xeForm, item),
-            renderItemErrorIcon($xeForm, item)
-          ])
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          key: item.id,
+          itemid: item.id,
+          class: getItemClass($xeForm, item),
+          style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : itemStyle
+        },
+        [
+          renderTitle($xeForm, item),
+          showContent === false
+            ? renderEmptyElement($xeFormItem)
+            : h(
+              'div',
+              {
+                class: getItemContentClass($xeForm, item),
+                style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
+              },
+              [renderItemContent($xeForm, item), renderItemErrorIcon($xeForm, item)]
+            )
+        ]
+      )
     }
     const renderVN = () => {
       const customLayout = $xeForm ? $xeForm.props.customLayout : false
@@ -168,7 +175,7 @@ export default defineVxeComponent({
 
     return $xeFormItem
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

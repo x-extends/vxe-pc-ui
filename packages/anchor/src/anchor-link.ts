@@ -1,10 +1,12 @@
 import { ref, h, computed, reactive, PropType, inject, onMounted, onUnmounted, provide, watch } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleAnchorLink, destroyAnchorLink } from './util'
 
 import type { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, VxeAnchorLinkEmits, AnchorLinkReactData, AnchorLinkPrivateRef, VxeAnchorLinkPrivateComputed, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods } from '../../../types'
+
+const { renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeAnchorLink',
@@ -14,7 +16,7 @@ export default defineVxeComponent({
     href: String as PropType<VxeAnchorLinkPropTypes.Href>
   },
   emits: [] as VxeAnchorLinkEmits,
-  setup (props, context) {
+  setup(props, context) {
     const { slots } = context
 
     const $xeAnchor = inject<(VxeAnchorConstructor & VxeAnchorPrivateMethods) | null>('$xeAnchor', null)
@@ -24,8 +26,7 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<AnchorLinkReactData>({
-    })
+    const reactData = reactive<AnchorLinkReactData>({})
 
     const linkConfig = reactive<VxeAnchorLinkDefines.LinkConfig>({
       id: xID,
@@ -45,8 +46,7 @@ export default defineVxeComponent({
       return null
     })
 
-    const computeMaps: VxeAnchorLinkPrivateComputed = {
-    }
+    const computeMaps: VxeAnchorLinkPrivateComputed = {}
 
     const $xeAnchorLink = {
       xID,
@@ -66,9 +66,12 @@ export default defineVxeComponent({
       }
     }
 
-    watch(() => props.href, (val) => {
-      linkConfig.href = val
-    })
+    watch(
+      () => props.href,
+      (val) => {
+        linkConfig.href = val
+      }
+    )
 
     onMounted(() => {
       const elem = refElem.value
@@ -89,24 +92,39 @@ export default defineVxeComponent({
       const subSlot = slots.sub
       const isActive = computeIsActive.value
 
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-anchor-link', {
-          'is--active': isActive
-        }]
-      }, [
-        h('a', {
-          class: 'vxe-anchor-link--item',
-          href,
-          title,
-          onClick: clickEvent
-        }, defaultSlot ? defaultSlot({}) : (XEUtils.toValueString(content))),
-        subSlot
-          ? h('div', {
-            class: 'vxe-anchor-link--sub-items'
-          }, subSlot({}))
-          : renderEmptyElement($xeAnchorLink)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-anchor-link',
+            {
+              'is--active': isActive
+            }
+          ]
+        },
+        [
+          h(
+            'a',
+            {
+              class: 'vxe-anchor-link--item',
+              href,
+              title,
+              onClick: clickEvent
+            },
+            defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content)
+          ),
+          subSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-anchor-link--sub-items'
+              },
+              subSlot({})
+            )
+            : renderEmptyElement($xeAnchorLink)
+        ]
+      )
     }
 
     provide('$xeAnchorLink', $xeAnchorLink)
@@ -115,7 +133,7 @@ export default defineVxeComponent({
 
     return $xeAnchorLink
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

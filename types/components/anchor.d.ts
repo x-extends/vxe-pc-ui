@@ -21,14 +21,12 @@ export interface VxeAnchorConstructor extends VxeComponentBaseOptions, VxeAnchor
 export interface AnchorPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeAnchorPrivateRef extends AnchorPrivateRef { }
+export interface VxeAnchorPrivateRef extends AnchorPrivateRef {}
 
 export namespace VxeAnchorPropTypes {
   export type ModelValue = string | null
   export type Options = VxeAnchorLinkProps[]
-  export type Container = string | HTMLElement | ((params: {
-    $anchor: VxeAnchorConstructor
-  }) => HTMLElement)
+  export type Container = string | HTMLElement | ((params: { $anchor: VxeAnchorConstructor }) => HTMLElement)
   export type ShowMarker = boolean
 }
 
@@ -39,9 +37,8 @@ export type VxeAnchorProps = {
   showMarker?: VxeAnchorPropTypes.ShowMarker
 }
 
-export interface AnchorPrivateComputed {
-}
-export interface VxeAnchorPrivateComputed extends AnchorPrivateComputed { }
+export interface AnchorPrivateComputed {}
+export interface VxeAnchorPrivateComputed extends AnchorPrivateComputed {}
 
 export interface AnchorReactData {
   activeHref: VxeAnchorPropTypes.ModelValue | undefined
@@ -52,18 +49,14 @@ export interface AnchorReactData {
 export interface AnchorMethods {
   dispatchEvent(type: ValueOf<VxeAnchorEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeAnchorMethods extends AnchorMethods { }
+export interface VxeAnchorMethods extends AnchorMethods {}
 
 export interface AnchorPrivateMethods {
   handleClickLink(evnt: KeyboardEvent, href?: VxeAnchorLinkPropTypes.Href): void
 }
-export interface VxeAnchorPrivateMethods extends AnchorPrivateMethods { }
+export interface VxeAnchorPrivateMethods extends AnchorPrivateMethods {}
 
-export type VxeAnchorEmits = [
-  'update:modelValue',
-  'change',
-  'click'
-]
+export type VxeAnchorEmits = ['update:modelValue', 'change', 'click']
 
 export namespace VxeAnchorDefines {
   export interface AnchorEventParams extends VxeComponentEventParams {

@@ -21,7 +21,7 @@ export interface VxeOptgroupConstructor extends VxeComponentBaseOptions, VxeOptg
 export interface OptgroupPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeOptgroupPrivateRef extends OptgroupPrivateRef { }
+export interface VxeOptgroupPrivateRef extends OptgroupPrivateRef {}
 
 export namespace VxeOptgroupPropTypes {
   export type Value = VxeOptionPropTypes.Value
@@ -48,19 +48,16 @@ export interface VxeOptgroupProps {
   disabled?: VxeOptgroupPropTypes.Disabled
 }
 
-export interface OptgroupPrivateComputed {
-}
-export interface VxeOptgroupPrivateComputed extends OptgroupPrivateComputed { }
+export interface OptgroupPrivateComputed {}
+export interface VxeOptgroupPrivateComputed extends OptgroupPrivateComputed {}
 
-export interface OptgroupReactData {
-}
+export interface OptgroupReactData {}
 
-export interface OptgroupMethods {
-}
-export interface VxeOptgroupMethods extends OptgroupMethods { }
+export interface OptgroupMethods {}
+export interface VxeOptgroupMethods extends OptgroupMethods {}
 
-export interface OptgroupPrivateMethods { }
-export interface VxeOptgroupPrivateMethods extends OptgroupPrivateMethods { }
+export interface OptgroupPrivateMethods {}
+export interface VxeOptgroupPrivateMethods extends OptgroupPrivateMethods {}
 
 export type VxeOptgroupEmits = []
 
@@ -72,9 +69,9 @@ export namespace VxeOptgroupDefines {
 
 export type VxeOptgroupEventProps = {}
 
-export interface VxeOptgroupListeners { }
+export interface VxeOptgroupListeners {}
 
-export namespace VxeOptgroupEvents { }
+export namespace VxeOptgroupEvents {}
 
 export namespace VxeOptgroupSlotTypes {
   export interface DefaultSlotParams {}

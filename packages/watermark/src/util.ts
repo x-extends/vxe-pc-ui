@@ -13,12 +13,15 @@ interface ContentMarkOptions {
 let canvasEl: HTMLCanvasElement | null = null
 let fontEl: HTMLSpanElement | null = null
 
-const fontCacheMaps: Record<string, {
-  width: number
-  height: number
-}> = {}
+const fontCacheMaps: Record<
+  string,
+  {
+    width: number
+    height: number
+  }
+> = {}
 
-function getMarkCanvas () {
+function getMarkCanvas() {
   if (!canvasEl) {
     canvasEl = document.createElement('canvas')
     canvasEl.style.position = 'absolute'
@@ -28,7 +31,7 @@ function getMarkCanvas () {
   return canvasEl
 }
 
-function removeMarkElement (elem: Element | null) {
+function removeMarkElement(elem: Element | null) {
   if (elem) {
     const parentEl = elem.parentNode
     if (parentEl) {
@@ -37,7 +40,7 @@ function removeMarkElement (elem: Element | null) {
   }
 }
 
-function calcFontWH (text: string, fontSize: number) {
+function calcFontWH(text: string, fontSize: number) {
   const fKey = `${fontSize}_${text}`
   if (!fontCacheMaps[fKey]) {
     if (!fontEl) {
@@ -58,10 +61,10 @@ function calcFontWH (text: string, fontSize: number) {
   return fontCacheMaps[fKey]
 }
 
-function calcContentWH (contList: VxeWatermarkDefines.ContentObj[]) {
+function calcContentWH(contList: VxeWatermarkDefines.ContentObj[]) {
   let contentWidth = 0
   let contentHeight = 0
-  contList.forEach(item => {
+  contList.forEach((item) => {
     contentWidth = Math.max(item.width, contentWidth)
     contentHeight = Math.max(item.height, contentHeight)
   })
@@ -71,15 +74,15 @@ function calcContentWH (contList: VxeWatermarkDefines.ContentObj[]) {
   }
 }
 
-function getFontConf (item: VxeWatermarkDefines.ContentObj | VxeWatermarkDefines.ContentConf, key: keyof VxeWatermarkPropTypes.Font, opts: ContentMarkOptions) {
+function getFontConf(item: VxeWatermarkDefines.ContentObj | VxeWatermarkDefines.ContentConf, key: keyof VxeWatermarkPropTypes.Font, opts: ContentMarkOptions) {
   return (item.font ? item.font[key] : '') || (opts.font ? opts.font[key] : '')
 }
 
-function createMarkFont (contConf: VxeWatermarkDefines.ContentConf, defaultFontSize: number | string, opts: ContentMarkOptions) {
+function createMarkFont(contConf: VxeWatermarkDefines.ContentConf, defaultFontSize: number | string, opts: ContentMarkOptions) {
   const { offset } = opts
   const text = XEUtils.toValueString(contConf.textContent)
   const fontSize = XEUtils.toNumber(getFontConf(contConf, 'fontSize', opts) || defaultFontSize) || 14
-  const [offsetX = 0, offsetY = 0] = offset ? ((XEUtils.isArray(offset) ? offset : [offset, offset])) : []
+  const [offsetX = 0, offsetY = 0] = offset ? (XEUtils.isArray(offset) ? offset : [offset, offset]) : []
   const { width, height } = calcFontWH(text, fontSize)
   return {
     text,
@@ -90,34 +93,37 @@ function createMarkFont (contConf: VxeWatermarkDefines.ContentConf, defaultFontS
   }
 }
 
-function drayFont (ctx: CanvasRenderingContext2D, item: VxeWatermarkDefines.ContentObj, opts: ContentMarkOptions) {
+function drayFont(ctx: CanvasRenderingContext2D, item: VxeWatermarkDefines.ContentObj, opts: ContentMarkOptions) {
   const fontWeight = getFontConf(item, 'fontWeight', opts)
   ctx.fillStyle = `${getFontConf(item, 'color', opts) || 'rgba(0, 0, 0, 0.15)'}`
-  ctx.font = [
-    getFontConf(item, 'fontStyle', opts) || 'normal',
-    fontWeight === 'bold' || fontWeight === 'bolder' ? 'bold' : '',
-    toCssUnit(item.fontSize),
-    getFontConf(item, 'fontFamily', opts) || 'sans-serif'
-  ].join(' ')
+  ctx.font = [getFontConf(item, 'fontStyle', opts) || 'normal', fontWeight === 'bold' || fontWeight === 'bolder' ? 'bold' : '', toCssUnit(item.fontSize), getFontConf(item, 'fontFamily', opts) || 'sans-serif'].join(' ')
 }
 
-export function getContentUrl (content: VxeWatermarkPropTypes.Content, defaultFontSize: number | string, options: ContentMarkOptions) {
+export function getContentUrl(content: VxeWatermarkPropTypes.Content, defaultFontSize: number | string, options: ContentMarkOptions) {
   const opts = Object.assign({}, options)
   const { rotate } = opts
   const deg = XEUtils.toNumber(rotate)
 
-  const contList: VxeWatermarkDefines.ContentObj[] = (XEUtils.isArray(content) ? content : [content]).map(item => {
+  const contList: VxeWatermarkDefines.ContentObj[] = (XEUtils.isArray(content) ? content : [content]).map((item) => {
     if (item) {
       if ((item as any).textContent) {
         return createMarkFont(item as VxeWatermarkDefines.ContentConf, defaultFontSize, opts)
       }
-      return createMarkFont({
-        textContent: `${item}`
-      }, defaultFontSize, opts)
+      return createMarkFont(
+        {
+          textContent: `${item}`
+        },
+        defaultFontSize,
+        opts
+      )
     }
-    return createMarkFont({
-      textContent: ''
-    }, defaultFontSize, opts)
+    return createMarkFont(
+      {
+        textContent: ''
+      },
+      defaultFontSize,
+      opts
+    )
   })
   removeMarkElement(fontEl)
 
@@ -129,23 +135,23 @@ export function getContentUrl (content: VxeWatermarkPropTypes.Content, defaultFo
     const ctx = canvasEl.getContext('2d')
     if (ctx && contList.length) {
       const { gap } = opts
-      const gapList = gap ? ((XEUtils.isArray(gap) ? gap : [gap, gap])) : []
+      const gapList = gap ? (XEUtils.isArray(gap) ? gap : [gap, gap]) : []
       const gapX = XEUtils.toNumber(gapList[0])
       const gapY = XEUtils.toNumber(gapList[1])
 
       const { contentWidth } = calcContentWH(contList)
-      const canvasWidth = contentWidth * 2 + gapX * 2 + (gapX / 2)
+      const canvasWidth = contentWidth * 2 + gapX * 2 + gapX / 2
       const canvasHeight = contentWidth * 2 + gapY
 
       canvasEl.width = canvasWidth
       canvasEl.height = canvasHeight
 
-      const drayX = (gapX / 2)
-      const drayY = contentWidth + (gapY / 2)
+      const drayX = gapX / 2
+      const drayY = contentWidth + gapY / 2
 
       ctx.save()
       ctx.translate(drayX, drayY)
-      ctx.rotate(deg * Math.PI / 180)
+      ctx.rotate((deg * Math.PI) / 180)
       ctx.translate(-drayX, -drayY)
 
       let txtOffsetY = 0

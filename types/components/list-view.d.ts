@@ -26,7 +26,7 @@ export interface ListViewPrivateRef<D = any> {
   refElem: Ref<HTMLDivElement | undefined>
   refGrid: Ref<VxeGridInstance<D> | undefined>
 }
-export interface VxeListViewPrivateRef<D = any> extends ListViewPrivateRef<D> { }
+export interface VxeListViewPrivateRef<D = any> extends ListViewPrivateRef<D> {}
 
 export namespace VxeListViewPropTypes {
   export type Config = null | VxeListDesignDefines.ListDesignConfig
@@ -56,7 +56,7 @@ export interface VxeListViewProps<D = any> {
 export interface ListViewPrivateComputed {
   computeSize: ComputedRef<VxeListViewPropTypes.Size>
 }
-export interface VxeListViewPrivateComputed extends ListViewPrivateComputed { }
+export interface VxeListViewPrivateComputed extends ListViewPrivateComputed {}
 
 export interface ListViewReactData<D = VxeListDesignDefines.DefaultSettingFormDataObjVO> {
   formConfig: D
@@ -103,16 +103,12 @@ export interface ListViewMethods<D = any> {
    */
   commitProxy(code: string, ...args: any[]): Promise<any>
 }
-export interface VxeListViewMethods<D = any> extends ListViewMethods<D> { }
+export interface VxeListViewMethods<D = any> extends ListViewMethods<D> {}
 
-export interface ListViewPrivateMethods { }
-export interface VxeListViewPrivateMethods extends ListViewPrivateMethods { }
+export interface ListViewPrivateMethods {}
+export interface VxeListViewPrivateMethods extends ListViewPrivateMethods {}
 
-export type VxeListViewEmits = [
-  'cell-action',
-  'update:formData',
-  'update:actionButtons'
-]
+export type VxeListViewEmits = ['cell-action', 'update:formData', 'update:actionButtons']
 
 export namespace VxeListViewDefines {
   export interface ListViewEventParams extends VxeComponentEventParams {
@@ -186,9 +182,7 @@ export namespace VxeListViewSlotTypes {
 }
 
 export interface VxeListViewSlots<D = any> {
-  [key: string]: ((params: {
-    [key: string]: any
-  }) => any) | undefined
+  [key: string]: ((params: { [key: string]: any }) => any) | undefined
 
   default?: (params: VxeListViewSlotTypes.DefaultSlotParams) => any
   grid?: (params: VxeListViewSlotTypes.GridSlotParams) => any

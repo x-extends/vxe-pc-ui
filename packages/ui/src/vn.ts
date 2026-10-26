@@ -3,11 +3,11 @@ import { VxeComponentSlotType } from '@vxe-ui/core'
 
 import type { VxeGlobalRendererHandles } from '../../../types'
 
-export function getOnName (type: string) {
+export function getOnName(type: string) {
   return 'on' + type.substring(0, 1).toLocaleUpperCase() + type.substring(1)
 }
 
-export function getModelEvent (renderOpts: VxeGlobalRendererHandles.RenderOptions) {
+export function getModelEvent(renderOpts: VxeGlobalRendererHandles.RenderOptions) {
   switch (renderOpts.name) {
     case 'input':
     case 'textarea':
@@ -18,20 +18,20 @@ export function getModelEvent (renderOpts: VxeGlobalRendererHandles.RenderOption
   return 'update:modelValue'
 }
 
-export function getChangeEvent (renderOpts: VxeGlobalRendererHandles.RenderOptions) {
+export function getChangeEvent(renderOpts: VxeGlobalRendererHandles.RenderOptions) {
   switch (renderOpts.name) {
     case 'input':
     case 'textarea':
     case 'VxeInput':
     case 'VxeTextarea':
-    case '$input':// 已废弃
-    case '$textarea':// 已废弃
+    case '$input': // 已废弃
+    case '$textarea': // 已废弃
       return 'input'
   }
   return 'change'
 }
 
-export function getSlotVNs (vns: VxeComponentSlotType | VxeComponentSlotType[] | undefined) {
+export function getSlotVNs(vns: VxeComponentSlotType | VxeComponentSlotType[] | undefined) {
   if (XEUtils.isArray(vns)) {
     return vns
   }

@@ -1,6 +1,6 @@
 import type { VxeTreeConstructor, VxeTreeDefines } from '../../../types'
 
-function countTreeExpand ($xeTree: VxeTreeConstructor, prevNode: any) {
+function countTreeExpand($xeTree: VxeTreeConstructor, prevNode: any) {
   let count = 1
   if (!prevNode) {
     return count
@@ -23,7 +23,7 @@ function countTreeExpand ($xeTree: VxeTreeConstructor, prevNode: any) {
   return count
 }
 
-export function calcTreeLine ($xeTree: VxeTreeConstructor, node: any, prevNode: any) {
+export function calcTreeLine($xeTree: VxeTreeConstructor, node: any, prevNode: any) {
   const internalData = $xeTree.internalData
   const { scrollYStore } = internalData
   const { rowHeight } = scrollYStore
@@ -34,7 +34,7 @@ export function calcTreeLine ($xeTree: VxeTreeConstructor, node: any, prevNode: 
   return (rowHeight || 28) * expandSize - (prevNode ? 1 : 12)
 }
 
-export function getItemCacheObj (item: any): VxeTreeDefines.NodeCacheItem {
+export function getItemCacheObj(item: any): VxeTreeDefines.NodeCacheItem {
   return {
     item,
     index: -1,

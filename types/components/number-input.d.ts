@@ -21,7 +21,7 @@ export interface VxeNumberInputConstructor extends VxeComponentBaseOptions, VxeN
 export interface NumberInputPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeNumberInputPrivateRef extends NumberInputPrivateRef { }
+export interface VxeNumberInputPrivateRef extends NumberInputPrivateRef {}
 
 export namespace VxeNumberInputPropTypes {
   export type Size = VxeComponentSizeType
@@ -100,13 +100,7 @@ export namespace VxeNumberInputPropTypes {
 
   export type ShowTooltip = boolean
   export interface TooltipConfig extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
-    contentMethod?: (params: {
-      $numberInput: VxeNumberInputConstructor
-      type: VxeNumberInputPropTypes.Type
-      value: VxeNumberInputPropTypes.ModelValue
-      label: string
-      inputValue: string
-    }) => string | number | null | undefined
+    contentMethod?: (params: { $numberInput: VxeNumberInputConstructor; type: VxeNumberInputPropTypes.Type; value: VxeNumberInputPropTypes.ModelValue; label: string; inputValue: string }) => string | number | null | undefined
   }
 
   export type ShowCurrency = boolean
@@ -252,7 +246,7 @@ export interface VxeNumberInputProps {
 export interface NumberInputPrivateComputed {
   computeControlOpts: ComputedRef<VxeNumberInputPropTypes.ControlConfig>
 }
-export interface VxeNumberInputPrivateComputed extends NumberInputPrivateComputed { }
+export interface VxeNumberInputPrivateComputed extends NumberInputPrivateComputed {}
 
 export interface NumberInputReactData {
   isFocus: boolean
@@ -282,10 +276,10 @@ export interface NumberInputMethods {
    */
   select(): Promise<any>
 }
-export interface VxeNumberInputMethods extends NumberInputMethods { }
+export interface VxeNumberInputMethods extends NumberInputMethods {}
 
-export interface NumberInputPrivateMethods { }
-export interface VxeNumberInputPrivateMethods extends NumberInputPrivateMethods { }
+export interface NumberInputPrivateMethods {}
+export interface VxeNumberInputPrivateMethods extends NumberInputPrivateMethods {}
 
 export type VxeNumberInputEmits = [
   'update:modelValue',
@@ -306,7 +300,7 @@ export type VxeNumberInputEmits = [
 
   // 已废弃
   'prev-number',
-  'next-number',
+  'next-number'
 ]
 
 export namespace VxeNumberInputDefines {
@@ -317,13 +311,13 @@ export namespace VxeNumberInputDefines {
   export interface NumberInputParams {
     value: number
   }
-  export interface InputEventParams extends NumberInputEventParams, NumberInputParams { }
+  export interface InputEventParams extends NumberInputEventParams, NumberInputParams {}
 
   export interface ChangeParams extends NumberInputParams {}
-  export interface ChangeEventParams extends NumberInputEventParams, ChangeParams { }
+  export interface ChangeEventParams extends NumberInputEventParams, ChangeParams {}
 
-  export interface PlusNumberEventParams extends NumberInputEventParams, NumberInputParams { }
-  export interface MinusNumberEventParams extends NumberInputEventParams, NumberInputParams { }
+  export interface PlusNumberEventParams extends NumberInputEventParams, NumberInputParams {}
+  export interface MinusNumberEventParams extends NumberInputEventParams, NumberInputParams {}
 }
 
 export type VxeNumberInputEventProps = {

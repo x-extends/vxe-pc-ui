@@ -19,7 +19,7 @@ export default defineVxeComponent({
     disabled: Boolean as PropType<VxeOptgroupPropTypes.Disabled>
   },
   emits: [] as VxeOptgroupEmits,
-  setup (props, { slots }) {
+  setup(props, { slots }) {
     const elem = ref() as Ref<HTMLDivElement>
     const $xeSelect = inject('$xeSelect', {} as VxeSelectConstructor)
     const optionConfig = createOption($xeSelect, props)
@@ -41,9 +41,13 @@ export default defineVxeComponent({
 
     return () => {
       const defaultSlot = slots.default
-      return h('div', {
-        ref: elem
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'div',
+        {
+          ref: elem
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
   }
 })

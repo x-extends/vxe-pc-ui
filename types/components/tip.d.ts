@@ -20,7 +20,7 @@ export interface VxeTipConstructor extends VxeComponentBaseOptions, VxeTipMethod
 export interface TipPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeTipPrivateRef extends TipPrivateRef { }
+export interface VxeTipPrivateRef extends TipPrivateRef {}
 
 export namespace VxeTipPropTypes {
   export type Title = string | number
@@ -40,20 +40,18 @@ export interface VxeTipProps {
   permissionCode?: VxeTipPropTypes.PermissionCode
 }
 
-export interface TipPrivateComputed {
-}
-export interface VxeTipPrivateComputed extends TipPrivateComputed { }
+export interface TipPrivateComputed {}
+export interface VxeTipPrivateComputed extends TipPrivateComputed {}
 
-export interface TipReactData {
-}
+export interface TipReactData {}
 
 export interface TipMethods {
   dispatchEvent(type: ValueOf<VxeTipEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeTipMethods extends TipMethods { }
+export interface VxeTipMethods extends TipMethods {}
 
-export interface TipPrivateMethods { }
-export interface VxeTipPrivateMethods extends TipPrivateMethods { }
+export interface TipPrivateMethods {}
+export interface VxeTipPrivateMethods extends TipPrivateMethods {}
 
 export type VxeTipEmits = []
 
@@ -65,9 +63,9 @@ export namespace VxeTipDefines {
 
 export type VxeTipEventProps = {}
 
-export interface VxeTipListeners { }
+export interface VxeTipListeners {}
 
-export namespace VxeTipEvents { }
+export namespace VxeTipEvents {}
 
 export namespace VxeTipSlotTypes {
   export interface DefaultSlotParams {}

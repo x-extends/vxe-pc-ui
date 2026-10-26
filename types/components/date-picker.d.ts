@@ -24,7 +24,7 @@ export interface DatePickerPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
   refInput: Ref<HTMLInputElement>
 }
-export interface VxeDatePickerPrivateRef extends DatePickerPrivateRef { }
+export interface VxeDatePickerPrivateRef extends DatePickerPrivateRef {}
 
 export namespace VxeDatePickerPropTypes {
   export type Size = VxeComponentSizeType
@@ -59,12 +59,7 @@ export namespace VxeDatePickerPropTypes {
   export type LabelFormat = string
   export type ValueFormat = string
   export type TimeFormat = string
-  export type ParseInputMethod = (params: {
-    $datePicker: VxeDatePickerConstructor
-    inputValue: string
-    type: VxeDatePanelPropTypes.Type
-    valueFormat: string
-  }) => Date | null | undefined | void
+  export type ParseInputMethod = (params: { $datePicker: VxeDatePickerConstructor; inputValue: string; type: VxeDatePanelPropTypes.Type; valueFormat: string }) => Date | null | undefined | void
   export type Editable = boolean
   export type FestivalMethod = VxeDatePanelPropTypes.FestivalMethod
   export type DisabledMethod = VxeDatePanelPropTypes.DisabledMethod
@@ -225,9 +220,8 @@ export interface VxeDatePickerProps {
   showConfirmButton?: VxeDatePickerPropTypes.ShowConfirmButton
 }
 
-export interface DatePickerPrivateComputed {
-}
-export interface VxeDatePickerPrivateComputed extends DatePickerPrivateComputed { }
+export interface DatePickerPrivateComputed {}
+export interface VxeDatePickerPrivateComputed extends DatePickerPrivateComputed {}
 
 export interface DatePickerReactData {
   initialized: boolean
@@ -281,29 +275,12 @@ export interface DatePickerMethods {
   hidePanel(): Promise<any>
   updatePlacement(): Promise<any>
 }
-export interface VxeDatePickerMethods extends DatePickerMethods { }
+export interface VxeDatePickerMethods extends DatePickerMethods {}
 
-export interface DatePickerPrivateMethods { }
-export interface VxeDatePickerPrivateMethods extends DatePickerPrivateMethods { }
+export interface DatePickerPrivateMethods {}
+export interface VxeDatePickerPrivateMethods extends DatePickerPrivateMethods {}
 
-export type VxeDatePickerEmits = [
-  'update:modelValue',
-  'input',
-  'change',
-  'keydown',
-  'keyup',
-  'click',
-  'focus',
-  'blur',
-  'clear',
-  'confirm',
-  'prefix-click',
-  'suffix-click',
-  'date-prev',
-  'date-today',
-  'date-next',
-  'shortcut-click'
-]
+export type VxeDatePickerEmits = ['update:modelValue', 'input', 'change', 'keydown', 'keyup', 'click', 'focus', 'blur', 'clear', 'confirm', 'prefix-click', 'suffix-click', 'date-prev', 'date-today', 'date-next', 'shortcut-click']
 
 export namespace VxeDatePickerDefines {
   export interface DatePickerEventParams extends VxeComponentEventParams {
@@ -322,10 +299,10 @@ export namespace VxeDatePickerDefines {
   export interface DatePickerParams {
     value: string
   }
-  export interface InputEventParams extends DatePickerEventParams, DatePickerParams { }
+  export interface InputEventParams extends DatePickerEventParams, DatePickerParams {}
 
   export interface ChangeParams extends DatePickerParams {}
-  export interface ChangeEventParams extends DatePickerEventParams, ChangeParams { }
+  export interface ChangeEventParams extends DatePickerEventParams, ChangeParams {}
 
   export interface ClearEventParams extends DatePickerEventParams {}
   export interface ConfirmEventParams extends DatePickerEventParams {}

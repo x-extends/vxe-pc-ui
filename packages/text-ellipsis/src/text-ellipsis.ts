@@ -1,9 +1,11 @@
 import { ref, h, PropType, watch, computed, reactive, resolveComponent, onMounted, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, usePermission, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { TextEllipsisReactData, VxeTextEllipsisEmits, VxeTextEllipsisPropTypes, TextEllipsisMethods, TextEllipsisPrivateMethods, ValueOf, TextEllipsisPrivateRef, VxeTextEllipsisPrivateComputed, VxeTextEllipsisConstructor, VxeTextEllipsisPrivateMethods } from '../../../types'
+
+const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeTextEllipsis',
@@ -30,17 +32,15 @@ export default defineVxeComponent({
       default: () => getConfig().textEllipsis.size || getConfig().size
     }
   },
-  emits: [
-    'click'
-  ] as VxeTextEllipsisEmits,
-  setup (props, context) {
+  emits: ['click'] as VxeTextEllipsisEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
-    const { computePermissionInfo } = usePermission(props)
+    const { computePermissionInfo } = useFns.usePermission(props)
 
     const refElem = ref<HTMLDivElement>()
     const realityElem = ref<HTMLDivElement>()
@@ -80,8 +80,7 @@ export default defineVxeComponent({
       return textContent
     })
 
-    const computeMaps: VxeTextEllipsisPrivateComputed = {
-    }
+    const computeMaps: VxeTextEllipsisPrivateComputed = {}
 
     const $xeTextEllipsis = {
       xID,
@@ -106,7 +105,7 @@ export default defineVxeComponent({
           fontSize = Math.max(10, XEUtils.toNumber(getComputedStyle(ryEl).fontSize))
         } catch (e) {}
         const textContent = computeTextContent.value
-        let currIndex = Math.floor((targetWidth) / fontSize)
+        let currIndex = Math.floor(targetWidth / fontSize)
         let currStr = textContent.slice(0, currIndex)
         ryEl.textContent = currStr
         reactData.visibleLen = currStr.length
@@ -170,9 +169,15 @@ export default defineVxeComponent({
         const el = refElem.value
         if (el && textLineClamp > 1) {
           if (window.ResizeObserver) {
-            const observerObj = new window.ResizeObserver(XEUtils.throttle(() => {
-              updateStyle()
-            }, 300, { leading: true, trailing: true }))
+            const observerObj = new window.ResizeObserver(
+              XEUtils.throttle(
+                () => {
+                  updateStyle()
+                },
+                300,
+                { leading: true, trailing: true }
+              )
+            )
             observerObj.observe(el)
             reactData.resizeObserver = observerObj
           }
@@ -180,8 +185,7 @@ export default defineVxeComponent({
       }
     }
 
-    const textEllipsisPrivateMethods: TextEllipsisPrivateMethods = {
-    }
+    const textEllipsisPrivateMethods: TextEllipsisPrivateMethods = {}
 
     Object.assign($xeTextEllipsis, textEllipsisMethods, textEllipsisPrivateMethods)
 
@@ -189,28 +193,40 @@ export default defineVxeComponent({
       const { routerLink, href, target, title } = props
       const visibleContent = computeVisibleContent.value
       if (routerLink) {
-        return h(resolveComponent('router-link'), {
-          class: 'vxe-text-ellipsis--link',
-          title,
-          target,
-          to: routerLink
-        }, {
-          default () {
-            return renderContent()
+        return h(
+          resolveComponent('router-link'),
+          {
+            class: 'vxe-text-ellipsis--link',
+            title,
+            target,
+            to: routerLink
+          },
+          {
+            default() {
+              return renderContent()
+            }
           }
-        })
+        )
       }
       if (href) {
-        return h('a', {
-          class: 'vxe-text-ellipsis--link',
-          href,
-          target,
-          title
-        }, visibleContent)
+        return h(
+          'a',
+          {
+            class: 'vxe-text-ellipsis--link',
+            href,
+            target,
+            title
+          },
+          visibleContent
+        )
       }
-      return h('span', {
-        class: 'vxe-text-ellipsis--content'
-      }, visibleContent)
+      return h(
+        'span',
+        {
+          class: 'vxe-text-ellipsis--content'
+        },
+        visibleContent
+      )
     }
 
     const renderVN = () => {
@@ -223,33 +239,47 @@ export default defineVxeComponent({
         return renderEmptyElement($xeTextEllipsis)
       }
 
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-text-ellipsis', textLineClamp > 1 ? 'is--multi' : 'is--single', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--underline': underline,
-          'is--loading': loading
-        }],
-        title,
-        onClick: clickEvent
-      }, [
-        h('span', {
-          ref: realityElem,
-          class: 'vxe-text-ellipsis--reality'
-        }),
-        renderContent()
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-text-ellipsis',
+            textLineClamp > 1 ? 'is--multi' : 'is--single',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--underline': underline,
+              'is--loading': loading
+            }
+          ],
+          title,
+          onClick: clickEvent
+        },
+        [
+          h('span', {
+            ref: realityElem,
+            class: 'vxe-text-ellipsis--reality'
+          }),
+          renderContent()
+        ]
+      )
     }
 
-    watch(() => props.content, () => {
-      updateStyle()
-    })
+    watch(
+      () => props.content,
+      () => {
+        updateStyle()
+      }
+    )
 
-    watch(() => props.lineClamp, () => {
-      initObserver()
-      updateStyle()
-    })
+    watch(
+      () => props.lineClamp,
+      () => {
+        initObserver()
+        updateStyle()
+      }
+    )
 
     onMounted(() => {
       initObserver()
@@ -276,7 +306,7 @@ export default defineVxeComponent({
 
     return $xeTextEllipsis
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

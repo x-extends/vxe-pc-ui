@@ -5,7 +5,7 @@ import { dynamicApp } from '../dynamics'
 import { saveLocalFile, readLocalFile } from './src/util'
 
 export const VxeUpload = Object.assign({}, VxeUploadComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeUploadComponent.name as string, VxeUploadComponent)
   }
 })

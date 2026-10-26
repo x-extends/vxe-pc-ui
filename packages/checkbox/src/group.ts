@@ -1,17 +1,33 @@
 import { h, provide, PropType, computed, inject, reactive, onUnmounted, watch, onMounted, nextTick } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import VxeCheckboxComponent from '../../checkbox'
 import VxeCheckboxButtonComponent from '../../checkbox-button'
 
-import type { VxeCheckboxGroupConstructor, CheckboxGroupInternalData, VxeCheckboxGroupEmits, ValueOf, CheckboxGroupReactData, VxeCheckboxGroupPrivateMethods, CheckboxGroupPrivateMethods, CheckboxGroupPrivateComputed, CheckboxGroupMethods, VxeCheckboxGroupPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+import type {
+  VxeCheckboxGroupConstructor,
+  CheckboxGroupInternalData,
+  VxeCheckboxGroupEmits,
+  ValueOf,
+  CheckboxGroupReactData,
+  VxeCheckboxGroupPrivateMethods,
+  CheckboxGroupPrivateMethods,
+  CheckboxGroupPrivateComputed,
+  CheckboxGroupMethods,
+  VxeCheckboxGroupPropTypes,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  VxeFormDefines
+} from '../../../types'
 
-function createReactData (): CheckboxGroupReactData {
+const { getConfig, createEvent, useFns } = VxeUI
+
+function createReactData(): CheckboxGroupReactData {
   return {}
 }
 
-function createInternalData (): CheckboxGroupInternalData {
+function createInternalData(): CheckboxGroupInternalData {
   return {
     // isLoaded: false
   }
@@ -46,14 +62,10 @@ export default defineVxeComponent({
     },
     defaultConfig: Object as PropType<VxeCheckboxGroupPropTypes.DefaultConfig>
   },
-  emits: [
-    'update:modelValue',
-    'change',
-    'default-change'
-  ] as VxeCheckboxGroupEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'change', 'default-change'] as VxeCheckboxGroupEmits,
+  setup(props, context) {
     const { slots, emit } = context
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
@@ -140,7 +152,7 @@ export default defineVxeComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods
 
-    useSize(props)
+    useFns.useSize(props)
 
     const dispatchEvent = (type: ValueOf<VxeCheckboxGroupEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $checkboxGroup: $xeCheckboxGroup }, params))
@@ -160,7 +172,7 @@ export default defineVxeComponent({
     }
 
     const checkboxGroupPrivateMethods: CheckboxGroupPrivateMethods = {
-      handleChecked (params, evnt) {
+      handleChecked(params, evnt) {
         const { checked, label } = params
         const checklist = props.modelValue || []
         const checkIndex = checklist.indexOf(label)
@@ -172,7 +184,7 @@ export default defineVxeComponent({
           checklist.splice(checkIndex, 1)
         }
         emitModel(checklist)
-        $xeCheckboxGroup.dispatchEvent('change', Object.assign({ }, params, { checklist, value: checklist }), evnt)
+        $xeCheckboxGroup.dispatchEvent('change', Object.assign({}, params, { checklist, value: checklist }), evnt)
         // 自动更新校验状态
         if ($xeForm && formItemInfo) {
           $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, checklist)
@@ -189,7 +201,7 @@ export default defineVxeComponent({
         if (datas.length > 0 && XEUtils.eqNull(props.modelValue)) {
           if (selectMode === 'all') {
             nextTick(() => {
-              emitDefaultValue(datas.map(item => item[valueField]))
+              emitDefaultValue(datas.map((item) => item[valueField]))
             })
           } else if (selectMode === 'first' || selectMode === 'last') {
             const selectItem = XEUtils[selectMode](datas)
@@ -220,16 +232,23 @@ export default defineVxeComponent({
       const isReadonly = computeIsReadonly.value
       const isDisabled = computeIsDisabled.value
       const btnComp = type === 'button' ? VxeCheckboxButtonComponent : VxeCheckboxComponent
-      return h('div', {
-        class: ['vxe-checkbox-group', `type--${type === 'button' ? type : ''}`, {
-          [`theme--${status}`]: status,
-          'is--readonly': isReadonly,
-          'is--disabled': isDisabled
-        }]
-      }, defaultSlot
-        ? defaultSlot({})
-        : (options
-            ? options.map(item => {
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-checkbox-group',
+            `type--${type === 'button' ? type : ''}`,
+            {
+              [`theme--${status}`]: status,
+              'is--readonly': isReadonly,
+              'is--disabled': isDisabled
+            }
+          ]
+        },
+        defaultSlot
+          ? defaultSlot({})
+          : options
+            ? options.map((item) => {
               return h(btnComp, {
                 key: item[valueField],
                 checkedValue: item[valueField],
@@ -239,12 +258,16 @@ export default defineVxeComponent({
                 disabled: item[disabledField]
               })
             })
-            : []))
+            : []
+      )
     }
 
-    watch(() => props.options, (val) => {
-      loadData(val || [])
-    })
+    watch(
+      () => props.options,
+      (val) => {
+        loadData(val || [])
+      }
+    )
 
     onMounted(() => {
       nextTick(() => {

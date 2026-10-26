@@ -1,11 +1,13 @@
 import { ref, h, reactive, provide, PropType, computed, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeRowPropTypes, RowReactData, RowPrivateRef, VxeRowEmits, RowMethods, RowPrivateMethods, VxeRowPrivateComputed, VxeRowConstructor, VxeRowPrivateMethods, ValueOf } from '../../../types'
+
+const { getConfig, createEvent, useFns } = VxeUI
 
 const { warnLog } = createComponentLog('row')
 
@@ -27,20 +29,17 @@ export default defineVxeComponent({
       default: () => getConfig().row.size || getConfig().size
     }
   },
-  emits: [
-    'click'
-  ] as VxeRowEmits,
-  setup (props, context) {
+  emits: ['click'] as VxeRowEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    useSize(props)
+    useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<RowReactData>({
-    })
+    const reactData = reactive<RowReactData>({})
 
     const refMaps: RowPrivateRef = {
       refElem
@@ -74,8 +73,7 @@ export default defineVxeComponent({
       return style
     })
 
-    const computeMaps: VxeRowPrivateComputed = {
-    }
+    const computeMaps: VxeRowPrivateComputed = {}
 
     const $xeRow = {
       xID,
@@ -99,8 +97,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const rowPrivateMethods: RowPrivateMethods = {
-    }
+    const rowPrivateMethods: RowPrivateMethods = {}
 
     Object.assign($xeRow, rowMethods, rowPrivateMethods)
 
@@ -108,15 +105,23 @@ export default defineVxeComponent({
       const { gridLayout, vertical, wrap } = props
       const rowStyle = computeRowStyle.value
       const defaultSlot = slots.default
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-row', gridLayout ? 'grid--layout' : 'def--layout', {
-          'is--vertical': vertical,
-          'is--wrap': wrap
-        }],
-        style: rowStyle,
-        onClick: clickEvent
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-row',
+            gridLayout ? 'grid--layout' : 'def--layout',
+            {
+              'is--vertical': vertical,
+              'is--wrap': wrap
+            }
+          ],
+          style: rowStyle,
+          onClick: clickEvent
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
 
     onMounted(() => {
@@ -132,7 +137,7 @@ export default defineVxeComponent({
 
     return $xeRow
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

@@ -4,7 +4,7 @@ import VxeSegmentedComponent from './src/segmented'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSegmented = Object.assign({}, VxeSegmentedComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeSegmentedComponent.name as string, VxeSegmentedComponent)
   }
 })

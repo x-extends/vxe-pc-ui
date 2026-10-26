@@ -4,7 +4,7 @@ import VxeRowComponent from './src/row'
 import { dynamicApp } from '../dynamics'
 
 export const VxeRow = Object.assign({}, VxeRowComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeRowComponent.name as string, VxeRowComponent)
   }
 })

@@ -4,7 +4,7 @@ import VxeBacktopComponent from './src/backtop'
 import { dynamicApp } from '../dynamics'
 
 export const VxeBacktop = Object.assign({}, VxeBacktopComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeBacktopComponent.name as string, VxeBacktopComponent)
   }
 })

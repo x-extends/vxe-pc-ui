@@ -22,13 +22,16 @@ export interface VxeImageConstructor extends VxeComponentBaseOptions, VxeImageMe
 export interface ImagePrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeImagePrivateRef extends ImagePrivateRef { }
+export interface VxeImagePrivateRef extends ImagePrivateRef {}
 
 export namespace VxeImagePropTypes {
-  export type Src = string | string[] | {
-    url?: string
-    alt?: string | number
-  }[]
+  export type Src =
+    | string
+    | string[]
+    | {
+        url?: string
+        alt?: string | number
+      }[]
   export type Alt = number | string
   export type Loading = '' | 'lazy'
   export type Title = number | string
@@ -47,10 +50,7 @@ export namespace VxeImagePropTypes {
   export type Draggable = boolean | string | null
   export type ZIndex = number
   export type Size = VxeComponentSizeType
-  export type GetThumbnailUrlMethod = ((params: {
-    $image: VxeImageConstructor
-    url: string
-  }) => string)
+  export type GetThumbnailUrlMethod = (params: { $image: VxeImageConstructor; url: string }) => string
 }
 
 export interface VxeImageProps {
@@ -76,33 +76,24 @@ export interface VxeImageProps {
   getThumbnailUrlMethod?: VxeImagePropTypes.GetThumbnailUrlMethod
 }
 
-export interface ImagePrivateComputed {
-}
-export interface VxeImagePrivateComputed extends ImagePrivateComputed { }
+export interface ImagePrivateComputed {}
+export interface VxeImagePrivateComputed extends ImagePrivateComputed {}
 
-export interface ImageReactData {
-}
+export interface ImageReactData {}
 export interface ImageInternalData {
- dgTime?: number
- mdTime?: number
+  dgTime?: number
+  mdTime?: number
 }
 
 export interface ImageMethods {
   dispatchEvent(type: ValueOf<VxeImageEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeImageMethods extends ImageMethods { }
+export interface VxeImageMethods extends ImageMethods {}
 
 export interface ImagePrivateMethods {}
-export interface VxeImagePrivateMethods extends ImagePrivateMethods { }
+export interface VxeImagePrivateMethods extends ImagePrivateMethods {}
 
-export type VxeImageEmits = [
-  'click',
-  'change',
-  'rotate',
-  'dragstart',
-  'drag',
-  'dragend'
-]
+export type VxeImageEmits = ['click', 'change', 'rotate', 'dragstart', 'drag', 'dragend']
 
 export namespace VxeImageDefines {
   export interface ImageEventParams extends VxeComponentEventParams {
@@ -127,11 +118,13 @@ export namespace VxeImageDefines {
   export interface DragEventParams extends ImageEventParams {}
   export interface DragendEventParams extends ImageEventParams {}
 
-  export type PreviewImageFunction = (options: VxeImagePreviewProps & {
-    activeIndex?: VxeImagePreviewPropTypes.ModelValue
-    escClosable?: boolean
-    events?: VxeImagePreviewListeners
-  }) => Promise<any>
+  export type PreviewImageFunction = (
+    options: VxeImagePreviewProps & {
+      activeIndex?: VxeImagePreviewPropTypes.ModelValue
+      escClosable?: boolean
+      events?: VxeImagePreviewListeners
+    }
+  ) => Promise<any>
 }
 
 export type VxeImageEventProps = {

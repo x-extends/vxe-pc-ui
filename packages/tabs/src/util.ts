@@ -2,7 +2,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeTabsConstructor, VxeTabsPrivateMethods, VxeTabPaneDefines } from '../../../types'
 
-export function assembleTabItem ($xeTabs: VxeTabsConstructor & VxeTabsPrivateMethods, elem: HTMLElement, tabConfig: VxeTabPaneDefines.TabConfig) {
+export function assembleTabItem($xeTabs: VxeTabsConstructor & VxeTabsPrivateMethods, elem: HTMLElement, tabConfig: VxeTabPaneDefines.TabConfig) {
   const staticTabs = $xeTabs.reactData.staticTabs
   const parentElem = elem.parentNode
   if (parentElem) {
@@ -11,9 +11,9 @@ export function assembleTabItem ($xeTabs: VxeTabsConstructor & VxeTabsPrivateMet
   }
 }
 
-export function destroyTabItem ($xeTabs: VxeTabsConstructor & VxeTabsPrivateMethods, tabConfig: VxeTabPaneDefines.TabConfig) {
+export function destroyTabItem($xeTabs: VxeTabsConstructor & VxeTabsPrivateMethods, tabConfig: VxeTabPaneDefines.TabConfig) {
   const staticTabs = $xeTabs.reactData.staticTabs
-  const matchObj = XEUtils.findTree(staticTabs, item => item.id === tabConfig.id, { children: 'children' })
+  const matchObj = XEUtils.findTree(staticTabs, (item) => item.id === tabConfig.id, { children: 'children' })
   if (matchObj) {
     matchObj.items.splice(matchObj.index, 1)
   }

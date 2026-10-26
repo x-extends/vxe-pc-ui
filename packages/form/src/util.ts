@@ -1,38 +1,40 @@
 import { watch } from 'vue'
-import { renderer } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { ItemInfo } from './itemInfo'
 import { isEnableConf } from '../../ui/src/utils'
 
 import type { VxeFormConstructor, VxeFormDefines } from '../../../types'
 
+const { renderer } = VxeUI
+
 export interface XEFormItemProvide {
-  formItem: ItemInfo;
+  formItem: ItemInfo
 }
 
-export function isFormItem (item: any): item is ItemInfo {
+export function isFormItem(item: any): item is ItemInfo {
   return item instanceof ItemInfo
 }
 
-export function createItem ($xeForm: VxeFormConstructor, _vm: any) {
+export function createItem($xeForm: VxeFormConstructor, _vm: any) {
   return isFormItem(_vm) ? _vm : new ItemInfo($xeForm, _vm)
 }
 
-export function handleFieldOrItem ($xeForm: VxeFormConstructor, fieldOrItem: string | VxeFormDefines.ItemInfo | null | undefined) {
+export function handleFieldOrItem($xeForm: VxeFormConstructor, fieldOrItem: string | VxeFormDefines.ItemInfo | null | undefined) {
   if (fieldOrItem) {
     return XEUtils.isString(fieldOrItem) ? $xeForm.getItemByField(fieldOrItem) : fieldOrItem
   }
   return null
 }
 
-export function isHiddenItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
+export function isHiddenItem($xeForm: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
   const { reactData } = $xeForm
   const { collapseAll } = reactData
   const { folding, visible } = formItem
   return visible === false || (folding && collapseAll)
 }
 
-export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
+export function isActiveItem($xeForm: VxeFormConstructor, formItem: VxeFormDefines.ItemInfo) {
   const $xeGrid = $xeForm.xeGrid
 
   let { visibleMethod, itemRender, visible, field } = formItem
@@ -40,7 +42,7 @@ export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefi
     return visible
   }
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-  const fiVisibleMethod = compConf ? (compConf.formItemVisibleMethod || compConf.itemVisibleMethod) : null
+  const fiVisibleMethod = compConf ? compConf.formItemVisibleMethod || compConf.itemVisibleMethod : null
   if (!visibleMethod && fiVisibleMethod) {
     visibleMethod = fiVisibleMethod
   }
@@ -52,21 +54,24 @@ export function isActiveItem ($xeForm: VxeFormConstructor, formItem: VxeFormDefi
   return visibleMethod({ data, field, property: field, item: formItem, $form: $xeForm, $grid: $xeGrid })
 }
 
-export function watchItem (props: any, formItem: ItemInfo) {
-  Object.keys(props).forEach(name => {
-    watch(() => props[name], (value: any) => {
-      formItem.update(name, value)
-    })
+export function watchItem(props: any, formItem: ItemInfo) {
+  Object.keys(props).forEach((name) => {
+    watch(
+      () => props[name],
+      (value: any) => {
+        formItem.update(name, value)
+      }
+    )
   })
 }
 
-export function assembleItem ($xeForm: VxeFormConstructor, el: HTMLDivElement | undefined, formItem: ItemInfo, formGroup: XEFormItemProvide | null) {
+export function assembleItem($xeForm: VxeFormConstructor, el: HTMLDivElement | undefined, formItem: ItemInfo, formGroup: XEFormItemProvide | null) {
   const { reactData } = $xeForm
   const formProps = $xeForm.props
   const { customLayout } = formProps
   const { staticItems } = reactData
   if (customLayout) {
-    if (!staticItems.some(item => item.id === formItem.id)) {
+    if (!staticItems.some((item) => item.id === formItem.id)) {
       staticItems.push(formItem)
     }
   } else {
@@ -82,10 +87,10 @@ export function assembleItem ($xeForm: VxeFormConstructor, el: HTMLDivElement | 
   }
 }
 
-export function destroyItem ($xeForm: VxeFormConstructor, formItem: ItemInfo) {
+export function destroyItem($xeForm: VxeFormConstructor, formItem: ItemInfo) {
   const { reactData } = $xeForm
   const { staticItems } = reactData
-  const index = XEUtils.findIndexOf(staticItems, item => item.id === formItem.id)
+  const index = XEUtils.findIndexOf(staticItems, (item) => item.id === formItem.id)
   if (index > -1) {
     staticItems.splice(index, 1)
   }

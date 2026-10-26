@@ -1,11 +1,13 @@
 import { h, ref, Ref, computed, nextTick, watch, PropType, reactive, inject, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getFuncText } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeTextareaPropTypes, TextareaReactData, TextareaMethods, VxeTextareaConstructor, VxeTextareaEmits, TextareaPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
+
+const { getConfig, getIcon, getI18n, createEvent, useFns, renderEmptyElement } = VxeUI
 
 const { warnLog } = createComponentLog('textarea')
 
@@ -85,26 +87,15 @@ export default defineVxeComponent({
     // 已废弃
     maxlength: [String, Number] as PropType<VxeTextareaPropTypes.Maxlength>
   },
-  emits: [
-    'update:modelValue',
-    'input',
-    'keydown',
-    'keyup',
-    'click',
-    'change',
-    'focus',
-    'blur',
-    'clear',
-    'lazy-change'
-  ] as VxeTextareaEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'input', 'keydown', 'keyup', 'click', 'change', 'focus', 'blur', 'clear', 'lazy-change'] as VxeTextareaEmits,
+  setup(props, context) {
     const { emit } = context
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const reactData = reactive<TextareaReactData>({
       inputValue: props.modelValue
@@ -202,7 +193,7 @@ export default defineVxeComponent({
       const domValue = computeDomValue.value
       const taElem = refTextarea.value
       if (taElem) {
-        taElem.value = XEUtils.eqNull(domValue) ? '' : ('' + domValue)
+        taElem.value = XEUtils.eqNull(domValue) ? '' : '' + domValue
       }
     }
 
@@ -260,7 +251,7 @@ export default defineVxeComponent({
           } else if (textRows > maxRows) {
             vaildRows = maxRows
           }
-          textElem.style.height = `${(vaildRows * lineHeight) + intervalHeight}px`
+          textElem.style.height = `${vaildRows * lineHeight + intervalHeight}px`
         })
       }
     }
@@ -334,12 +325,12 @@ export default defineVxeComponent({
 
     const textareaMethods: TextareaMethods = {
       dispatchEvent,
-      focus () {
+      focus() {
         const textElem = refTextarea.value
         textElem.focus()
         return nextTick()
       },
-      blur () {
+      blur() {
         const textElem = refTextarea.value
         textElem.blur()
         return nextTick()
@@ -360,83 +351,117 @@ export default defineVxeComponent({
       const inpPlaceholder = computeInpPlaceholder.value
       const inpMaxLength = computeInpMaxLength.value
       if (formReadonly) {
-        return h('div', {
-          ref: refElem,
-          class: ['vxe-textarea--readonly', className]
-        }, [
-          h('div', {
-            ref: refContent,
-            class: 'vxe-textarea--content'
-          }, inputValue)
-        ])
+        return h(
+          'div',
+          {
+            ref: refElem,
+            class: ['vxe-textarea--readonly', className]
+          },
+          [
+            h(
+              'div',
+              {
+                ref: refContent,
+                class: 'vxe-textarea--content'
+              },
+              inputValue
+            )
+          ]
+        )
       }
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-textarea', className, {
-          [`size--${vSize}`]: vSize,
-          'is--autosize': autosize || autoSize,
-          'is--count': showWordCount,
-          'is--disabled': isDisabled,
-          'is-clear': clearable,
-          'is--rows': !XEUtils.eqNull(rows),
-          'is--cols': !XEUtils.eqNull(cols),
-          'show--clear': clearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }],
-        spellcheck: false
-      }, [
-        h('textarea', {
-          ref: refTextarea,
-          class: 'vxe-textarea--inner' + (inputClassName ? (' ' + inputClassName) : ''),
-          name: props.name,
-          placeholder: inpPlaceholder,
-          maxlength: inpMaxLength,
-          readonly: inputReadonly,
-          disabled: isDisabled,
-          rows,
-          cols,
-          style: resize
-            ? {
-                resize
-              }
-            : null,
-          onInput: inputEvent,
-          onChange: changeEvent,
-          onKeydown: triggerEvent,
-          onKeyup: triggerEvent,
-          onClick: triggerEvent,
-          onFocus: triggerEvent,
-          onBlur: blurEvent
-        }),
-        clearable || showWordCount
-          ? h('div', {
-            class: 'vxe-textarea--suffix'
-          }, [
-            clearable
-              ? h('div', {
-                class: 'vxe-textarea--clear-icon',
-                onClick: clearValueEvent
-              }, [
-                h('i', {
-                  class: getIcon().TEXTAREA_CLEAR
-                })
-              ])
-              : renderEmptyElement($xeTextarea),
-            showWordCount
-              ? h('span', {
-                class: ['vxe-textarea--count', {
-                  'is--error': isCountError
-                }]
-              }, countMethod ? `${countMethod({ value: inputValue })}` : `${inputCount}${inpMaxLength ? `/${inpMaxLength}` : ''}`)
-              : renderEmptyElement($xeTextarea)
-          ])
-          : renderEmptyElement($xeTextarea)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-textarea',
+            className,
+            {
+              [`size--${vSize}`]: vSize,
+              'is--autosize': autosize || autoSize,
+              'is--count': showWordCount,
+              'is--disabled': isDisabled,
+              'is-clear': clearable,
+              'is--rows': !XEUtils.eqNull(rows),
+              'is--cols': !XEUtils.eqNull(cols),
+              'show--clear': clearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+            }
+          ],
+          spellcheck: false
+        },
+        [
+          h('textarea', {
+            ref: refTextarea,
+            class: ['vxe-textarea--inner', inputClassName || ''],
+            name: props.name,
+            placeholder: inpPlaceholder,
+            maxlength: inpMaxLength,
+            readonly: inputReadonly,
+            disabled: isDisabled,
+            rows,
+            cols,
+            style: resize
+              ? {
+                  resize
+                }
+              : null,
+            onInput: inputEvent,
+            onChange: changeEvent,
+            onKeydown: triggerEvent,
+            onKeyup: triggerEvent,
+            onClick: triggerEvent,
+            onFocus: triggerEvent,
+            onBlur: blurEvent
+          }),
+          clearable || showWordCount
+            ? h(
+              'div',
+              {
+                class: 'vxe-textarea--suffix'
+              },
+              [
+                clearable
+                  ? h(
+                    'div',
+                    {
+                      class: 'vxe-textarea--clear-icon',
+                      onClick: clearValueEvent
+                    },
+                    [
+                      h('i', {
+                        class: getIcon().TEXTAREA_CLEAR
+                      })
+                    ]
+                  )
+                  : renderEmptyElement($xeTextarea),
+                showWordCount
+                  ? h(
+                    'span',
+                    {
+                      class: [
+                        'vxe-textarea--count',
+                        {
+                          'is--error': isCountError
+                        }
+                      ]
+                    },
+                    countMethod ? `${countMethod({ value: inputValue })}` : `${inputCount}${inpMaxLength ? `/${inpMaxLength}` : ''}`
+                  )
+                  : renderEmptyElement($xeTextarea)
+              ]
+            )
+            : renderEmptyElement($xeTextarea)
+        ]
+      )
     }
 
-    watch(() => props.modelValue, (val) => {
-      reactData.inputValue = val
-      updateAutoTxt()
-    })
+    watch(
+      () => props.modelValue,
+      (val) => {
+        reactData.inputValue = val
+        updateAutoTxt()
+      }
+    )
 
     const reFlag = ref(0)
     watch(computeFormReadonly, () => {
@@ -445,12 +470,18 @@ export default defineVxeComponent({
     watch(computeSizeOpts, () => {
       reFlag.value++
     })
-    watch(() => props.autoSize, () => {
-      reFlag.value++
-    })
-    watch(() => props.autosize, () => {
-      reFlag.value++
-    })
+    watch(
+      () => props.autoSize,
+      () => {
+        reFlag.value++
+      }
+    )
+    watch(
+      () => props.autosize,
+      () => {
+        reFlag.value++
+      }
+    )
     watch(reFlag, () => {
       updateAutoTxt()
       handleResize()
@@ -489,7 +520,7 @@ export default defineVxeComponent({
 
     return $xeTextarea
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

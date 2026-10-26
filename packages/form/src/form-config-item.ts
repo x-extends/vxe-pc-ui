@@ -1,6 +1,6 @@
 import { h, inject, provide, PropType, VNode, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { renderer, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { isEnableConf } from '../../ui/src/utils'
 import { formItemProps } from './form-item'
 import { renderTitle, getItemClass, getItemContentClass, renderItemContent, renderItemErrorIcon } from './render'
@@ -8,13 +8,15 @@ import XEUtils from 'xe-utils'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods } from '../../../types'
 
+const { renderer, renderEmptyElement } = VxeUI
+
 const VxeFormConfigItem = defineVxeComponent({
   name: 'VxeFormConfigItem',
   props: {
     itemConfig: Object as PropType<VxeFormDefines.ItemInfo>,
     ...formItemProps
   },
-  setup (props) {
+  setup(props) {
     const $xeForm = inject('$xeForm', {} as VxeFormConstructor & VxeFormPrivateMethods)
     const xeformiteminfo = { itemConfig: props.itemConfig }
     provide('xeFormItemInfo', xeformiteminfo)
@@ -32,32 +34,35 @@ const VxeFormConfigItem = defineVxeComponent({
       const { field, itemRender, contentStyle, children, showContent } = item
       const itemVisible = computeItemVisible.value
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-      const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
-      const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
+      const itemStyle = compConf ? compConf.formItemStyle || compConf.itemStyle : null
+      const itemContentStyle = compConf ? compConf.formItemContentStyle || compConf.itemContentStyle : null
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
       const hasGroup = children && children.length > 0
       if (itemVisible === false) {
         return renderEmptyElement($xeForm)
       }
-      return h('div', {
-        key: item.id,
-        itemid: item.id,
-        class: getItemClass($xeForm, item),
-        style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : itemStyle
-      }, [
-        renderTitle($xeForm, item),
-        showContent === false
-          ? renderEmptyElement($xeForm)
-          : h('div', {
-            class: getItemContentClass($xeForm, item),
-            style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
-          }, hasGroup
-            ? children.map((childItem) => renderItem($xeForm, childItem))
-            : [
-                renderItemContent($xeForm, item),
-                renderItemErrorIcon($xeForm, item)
-              ])
-      ])
+      return h(
+        'div',
+        {
+          key: item.id,
+          itemid: item.id,
+          class: getItemClass($xeForm, item),
+          style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : itemStyle
+        },
+        [
+          renderTitle($xeForm, item),
+          showContent === false
+            ? renderEmptyElement($xeForm)
+            : h(
+              'div',
+              {
+                class: getItemContentClass($xeForm, item),
+                style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
+              },
+              hasGroup ? children.map((childItem) => renderItem($xeForm, childItem)) : [renderItemContent($xeForm, item), renderItemErrorIcon($xeForm, item)]
+            )
+        ]
+      )
     }
 
     const renderVN = () => {
@@ -72,7 +77,7 @@ const VxeFormConfigItem = defineVxeComponent({
 
     return $xeFormconfigitem
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

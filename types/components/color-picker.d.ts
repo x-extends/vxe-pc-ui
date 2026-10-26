@@ -20,19 +20,21 @@ export interface VxeColorPickerConstructor extends VxeComponentBaseOptions, VxeC
 export interface ColorPickerPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeColorPickerPrivateRef extends ColorPickerPrivateRef { }
+export interface VxeColorPickerPrivateRef extends ColorPickerPrivateRef {}
 
 export namespace VxeColorPickerPropTypes {
   export type ModelValue = string | null
   export type Size = VxeComponentSizeType
   export type Type = 'rgb' | 'hex'
   export type ClassName = string | ((params: { $colorPicker: VxeColorPickerConstructor }) => string)
-  export type PopupClassName = string | ((params: {$colorPicker: VxeColorPickerConstructor }) => string)
+  export type PopupClassName = string | ((params: { $colorPicker: VxeColorPickerConstructor }) => string)
   export type Width = string | number
-  export type Colors = string[] | {
-    label?: string
-    value: string
-  }[]
+  export type Colors =
+    | string[]
+    | {
+        label?: string
+        value: string
+      }[]
   export type ShowAlpha = boolean
   export type ShowEyeDropper = boolean
   export type ShowColorExtractor = boolean
@@ -116,9 +118,8 @@ export interface VxeColorPickerProps {
   popupConfig?: VxeColorPickerPropTypes.PopupConfig
 }
 
-export interface ColorPickerPrivateComputed {
-}
-export interface VxeColorPickerPrivateComputed extends ColorPickerPrivateComputed { }
+export interface ColorPickerPrivateComputed {}
+export interface VxeColorPickerPrivateComputed extends ColorPickerPrivateComputed {}
 
 export interface ColorPickerReactData {
   initialized: boolean
@@ -143,12 +144,11 @@ export interface ColorPickerInternalData {
   hpTimeout?: undefined | number
 }
 
-export interface ColorPickerMethods {
-}
-export interface VxeColorPickerMethods extends ColorPickerMethods { }
+export interface ColorPickerMethods {}
+export interface VxeColorPickerMethods extends ColorPickerMethods {}
 
-export interface ColorPickerPrivateMethods { }
-export interface VxeColorPickerPrivateMethods extends ColorPickerPrivateMethods { }
+export interface ColorPickerPrivateMethods {}
+export interface VxeColorPickerPrivateMethods extends ColorPickerPrivateMethods {}
 
 export interface ColorController {
   /**
@@ -197,12 +197,7 @@ export interface ColorController {
   darken(color: string, ratio: number): string
 }
 
-export type VxeColorPickerEmits = [
-  'update:modelValue',
-  'change',
-  'clear',
-  'click'
-]
+export type VxeColorPickerEmits = ['update:modelValue', 'change', 'clear', 'click']
 
 export namespace VxeColorPickerDefines {
   export interface ColorPickerEventParams extends VxeComponentEventParams {
@@ -211,11 +206,11 @@ export namespace VxeColorPickerDefines {
 
   export type ParseResultMap = {
     '': VxeColorPickerDefines.RgbObj
-    'rgb': VxeColorPickerDefines.RgbObj
-    'rgba': VxeColorPickerDefines.RgbObj
-    'hex': VxeColorPickerDefines.HexObj
-    'hsl': VxeColorPickerDefines.HslObj
-    'hsv': VxeColorPickerDefines.HsvObj
+    rgb: VxeColorPickerDefines.RgbObj
+    rgba: VxeColorPickerDefines.RgbObj
+    hex: VxeColorPickerDefines.HexObj
+    hsl: VxeColorPickerDefines.HslObj
+    hsv: VxeColorPickerDefines.HsvObj
   }
 
   export interface RgbObj {

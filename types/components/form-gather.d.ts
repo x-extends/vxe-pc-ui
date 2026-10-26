@@ -32,12 +32,11 @@ export interface FormGatherPrivateRef {
 /**
  * @deprecated
  */
-export interface VxeFormGatherPrivateRef extends FormGatherPrivateRef { }
+export interface VxeFormGatherPrivateRef extends FormGatherPrivateRef {}
 /**
  * @deprecated
  */
-export namespace VxeFormGatherPropTypes {
-}
+export namespace VxeFormGatherPropTypes {}
 /**
  * @deprecated
  */
@@ -54,31 +53,28 @@ export type VxeFormGatherProps = {
 /**
  * @deprecated
  */
-export interface FormGatherPrivateComputed {
-}
-export interface VxeFormGatherPrivateComputed extends FormGatherPrivateComputed { }
+export interface FormGatherPrivateComputed {}
+export interface VxeFormGatherPrivateComputed extends FormGatherPrivateComputed {}
 /**
  * @deprecated
  */
-export interface FormGatherReactData {
-}
+export interface FormGatherReactData {}
 /**
  * @deprecated
  */
-export interface FormGatherMethods {
-}
+export interface FormGatherMethods {}
 /**
  * @deprecated
  */
-export interface VxeFormGatherMethods extends FormGatherMethods { }
+export interface VxeFormGatherMethods extends FormGatherMethods {}
 /**
  * @deprecated
  */
-export interface FormGatherPrivateMethods { }
+export interface FormGatherPrivateMethods {}
 /**
  * @deprecated
  */
-export interface VxeFormGatherPrivateMethods extends FormGatherPrivateMethods { }
+export interface VxeFormGatherPrivateMethods extends FormGatherPrivateMethods {}
 /**
  * @deprecated
  */
@@ -98,11 +94,11 @@ export type VxeFormGatherEventProps = {}
 /**
  * @deprecated
  */
-export interface VxeFormGatherListeners { }
+export interface VxeFormGatherListeners {}
 /**
  * @deprecated
  */
-export namespace VxeFormGatherEvents { }
+export namespace VxeFormGatherEvents {}
 /**
  * @deprecated
  */

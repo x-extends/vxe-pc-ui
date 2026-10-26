@@ -1,10 +1,26 @@
 import { ref, h, inject, PropType, watch, reactive, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleCollapseItem, destroyCollapseItem } from './util'
 
-import type { CollapsePaneReactData, VxeCollapsePaneEmits, VxeCollapsePanePropTypes, CollapsePaneMethods, CollapsePanePrivateMethods, ValueOf, VxeCollapsePaneDefines, VxeCollapseConstructor, VxeCollapsePrivateMethods, CollapsePanePrivateRef, VxeCollapsePanePrivateComputed, VxeCollapsePaneConstructor, VxeCollapsePanePrivateMethods } from '../../../types'
+import type {
+  CollapsePaneReactData,
+  VxeCollapsePaneEmits,
+  VxeCollapsePanePropTypes,
+  CollapsePaneMethods,
+  CollapsePanePrivateMethods,
+  ValueOf,
+  VxeCollapsePaneDefines,
+  VxeCollapseConstructor,
+  VxeCollapsePrivateMethods,
+  CollapsePanePrivateRef,
+  VxeCollapsePanePrivateComputed,
+  VxeCollapsePaneConstructor,
+  VxeCollapsePanePrivateMethods
+} from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeCollapsePane',
@@ -15,9 +31,8 @@ export default defineVxeComponent({
     preload: Boolean as PropType<VxeCollapsePanePropTypes.Preload>,
     permissionCode: [String, Number] as PropType<VxeCollapsePanePropTypes.PermissionCode>
   },
-  emits: [
-  ] as VxeCollapsePaneEmits,
-  setup (props, context) {
+  emits: [] as VxeCollapsePaneEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
@@ -26,8 +41,7 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<CollapsePaneReactData>({
-    })
+    const reactData = reactive<CollapsePaneReactData>({})
 
     const collapseConfig = reactive<VxeCollapsePaneDefines.CollapseConfig>({
       id: xID,
@@ -43,8 +57,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxeCollapsePanePrivateComputed = {
-    }
+    const computeMaps: VxeCollapsePanePrivateComputed = {}
 
     const $xeCollapsePane = {
       xID,
@@ -64,32 +77,47 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const collapsePanePrivateMethods: CollapsePanePrivateMethods = {
-    }
+    const collapsePanePrivateMethods: CollapsePanePrivateMethods = {}
 
     Object.assign($xeCollapsePane, collapsePaneMethods, collapsePanePrivateMethods)
 
     const renderVN = () => {
-      return h('div', {
-        ref: refElem
-      }, [])
+      return h(
+        'div',
+        {
+          ref: refElem
+        },
+        []
+      )
     }
 
-    watch(() => props.title, (val) => {
-      collapseConfig.title = val
-    })
+    watch(
+      () => props.title,
+      (val) => {
+        collapseConfig.title = val
+      }
+    )
 
-    watch(() => props.name, (val) => {
-      collapseConfig.name = val
-    })
+    watch(
+      () => props.name,
+      (val) => {
+        collapseConfig.name = val
+      }
+    )
 
-    watch(() => props.icon, (val) => {
-      collapseConfig.icon = val
-    })
+    watch(
+      () => props.icon,
+      (val) => {
+        collapseConfig.icon = val
+      }
+    )
 
-    watch(() => props.permissionCode, (val) => {
-      collapseConfig.permissionCode = val
-    })
+    watch(
+      () => props.permissionCode,
+      (val) => {
+        collapseConfig.permissionCode = val
+      }
+    )
 
     onMounted(() => {
       const elem = refElem.value
@@ -108,7 +136,7 @@ export default defineVxeComponent({
 
     return $xeCollapsePane
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

@@ -1,7 +1,7 @@
 import { h, ref, Ref, provide, computed, inject, reactive, watch, nextTick, PropType, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { scrollToView } from '../../ui/src/dom'
 import { createItem, handleFieldOrItem, isHiddenItem, isActiveItem } from './util'
@@ -21,7 +21,7 @@ const { getConfig, validators, renderer, createEvent, useFns, globalEvents } = V
 const { warnLog, errLog } = createComponentLog('form')
 
 class Rule {
-  constructor (rule: any) {
+  constructor(rule: any) {
     Object.assign(this, {
       $options: rule,
       required: rule.required,
@@ -35,11 +35,11 @@ class Rule {
     })
   }
 
-  get content () {
+  get content() {
     return getFuncText(this.$options.content || this.$options.message)
   }
 
-  get message () {
+  get message() {
     return this.content
   }
 
@@ -47,7 +47,7 @@ class Rule {
 }
 
 // 如果存在 pattern，判断正则
-function validREValue (pattern: string | RegExp | undefined, val: string) {
+function validREValue(pattern: string | RegExp | undefined, val: string) {
   if (pattern && !(XEUtils.isRegExp(pattern) ? pattern : new RegExp(pattern)).test(val)) {
     return false
   }
@@ -55,7 +55,7 @@ function validREValue (pattern: string | RegExp | undefined, val: string) {
 }
 
 // 如果存在 max，判断最大值
-function validMaxValue (max: string | number | undefined, num: number) {
+function validMaxValue(max: string | number | undefined, num: number) {
   if (!XEUtils.eqNull(max) && num > XEUtils.toNumber(max)) {
     return false
   }
@@ -63,14 +63,14 @@ function validMaxValue (max: string | number | undefined, num: number) {
 }
 
 // 如果存在 min，判断最小值
-function validMinValue (min: string | number | undefined, num: number) {
+function validMinValue(min: string | number | undefined, num: number) {
   if (!XEUtils.eqNull(min) && num < XEUtils.toNumber(min)) {
     return false
   }
   return true
 }
 
-function validRuleValue (rule: VxeFormDefines.FormRule, val: any, required: boolean | undefined) {
+function validRuleValue(rule: VxeFormDefines.FormRule, val: any, required: boolean | undefined) {
   const { type, min, max, pattern } = rule
   const isArrType = type === 'array'
   const isNumType = type === 'number'
@@ -126,7 +126,7 @@ function validRuleValue (rule: VxeFormDefines.FormRule, val: any, required: bool
   return true
 }
 
-function checkRuleStatus (rule: VxeFormDefines.FormRule, data: any, val: any) {
+function checkRuleStatus(rule: VxeFormDefines.FormRule, data: any, val: any) {
   const { required, field } = rule
   const currVal = field ? XEUtils.get(data, field) : val
   const isEmptyVal = XEUtils.isArray(currVal) ? !currVal.length : eqEmptyValue(currVal)
@@ -147,7 +147,7 @@ function checkRuleStatus (rule: VxeFormDefines.FormRule, data: any, val: any) {
   return true
 }
 
-export function createReactData (): FormReactData {
+export function createReactData(): FormReactData {
   return {
     collapseAll: false,
     staticItems: [],
@@ -156,7 +156,7 @@ export function createReactData (): FormReactData {
   }
 }
 
-function createInternalData (): FormInternalData {
+function createInternalData(): FormInternalData {
   return {
     meTimeout: undefined,
     stTimeout: undefined,
@@ -254,15 +254,8 @@ export default defineVxeComponent({
     },
     params: Object as PropType<VxeFormPropTypes.Params>
   },
-  emits: [
-    'update:collapseStatus',
-    'collapse',
-    'toggle-collapse',
-    'submit',
-    'submit-invalid',
-    'reset'
-  ] as VxeFormEmits,
-  setup (props, context) {
+  emits: ['update:collapseStatus', 'collapse', 'toggle-collapse', 'submit', 'submit-invalid', 'reset'] as VxeFormEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const $xeGrid = inject<(VxeGridConstructor & VxeGridPrivateMethods) | null>('$xeGrid', null)
@@ -294,18 +287,22 @@ export default defineVxeComponent({
       const { titleWidth: allTitleWidth, vertical: allVertical } = props
       const { formItems } = reactData
       const itemList: VxeFormDefines.ItemInfo[] = []
-      XEUtils.eachTree(formItems, (item) => {
-        const { titleWidth, vertical } = item
-        if (titleWidth === 'auto') {
-          itemList.push(item)
-        } else {
-          const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
-          const itemTitleWidth = itemVertical ? null : (XEUtils.eqNull(titleWidth) ? allTitleWidth : titleWidth)
-          if (itemTitleWidth === 'auto' && (!item.children || !item.children.length)) {
+      XEUtils.eachTree(
+        formItems,
+        (item) => {
+          const { titleWidth, vertical } = item
+          if (titleWidth === 'auto') {
             itemList.push(item)
+          } else {
+            const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
+            const itemTitleWidth = itemVertical ? null : XEUtils.eqNull(titleWidth) ? allTitleWidth : titleWidth
+            if (itemTitleWidth === 'auto' && (!item.children || !item.children.length)) {
+              itemList.push(item)
+            }
           }
-        }
-      }, { children: 'children' })
+        },
+        { children: 'children' }
+      )
       return itemList
     })
 
@@ -363,7 +360,7 @@ export default defineVxeComponent({
           }
         })
       }
-      reactData.staticItems = XEUtils.mapTree(list, item => createItem($xeForm, item), { children: 'children' })
+      reactData.staticItems = XEUtils.mapTree(list, (item) => createItem($xeForm, item), { children: 'children' })
       internalData.itemFormatCache = {}
       return nextTick().then(() => {
         return recalculate()
@@ -472,17 +469,21 @@ export default defineVxeComponent({
       const itemIdData: Record<string, VxeFormDefines.ItemCacheItem> = {}
       const itemFieldData: Record<string, VxeFormDefines.ItemCacheItem> = {}
       const itemList: VxeFormDefines.ItemInfo[] = []
-      XEUtils.eachTree(formItems, (item, index, items) => {
-        const { id, field } = item
-        const itemRest = { item, items, index }
-        if (id) {
-          itemIdData[id] = itemRest
-        }
-        if (field) {
-          itemFieldData[field] = itemRest
-        }
-        itemList.push(item)
-      }, { children: 'children' })
+      XEUtils.eachTree(
+        formItems,
+        (item, index, items) => {
+          const { id, field } = item
+          const itemRest = { item, items, index }
+          if (id) {
+            itemIdData[id] = itemRest
+          }
+          if (field) {
+            itemFieldData[field] = itemRest
+          }
+          itemList.push(item)
+        },
+        { children: 'children' }
+      )
       internalData.fullItemList = itemList
       internalData.fullItemFieldData = itemFieldData
       internalData.fullItemIdData = itemIdData
@@ -497,7 +498,7 @@ export default defineVxeComponent({
           if (isEnableConf(itemRender)) {
             const { name, startField, endField } = itemRender
             const compConf = renderer.get(name)
-            const fiResetMethod = compConf ? (compConf.formItemResetMethod || compConf.itemResetMethod) : null
+            const fiResetMethod = compConf ? compConf.formItemResetMethod || compConf.itemResetMethod : null
             if (compConf && fiResetMethod) {
               fiResetMethod({ data, field, property: field, item, $form: $xeForm, $grid: $xeGrid })
             } else if (field) {
@@ -629,7 +630,7 @@ export default defineVxeComponent({
                         // 如果为异步校验（注：异步校验是并发无序的）
                         syncVailds.push(
                           customValid.catch((e: any) => {
-                            errorRules.push(new Rule({ type: 'custom', trigger, content: e ? e.message : (rule.content || rule.message), rule: new Rule(rule) }))
+                            errorRules.push(new Rule({ type: 'custom', trigger, content: e ? e.message : rule.content || rule.message, rule: new Rule(rule) }))
                           })
                         )
                       }
@@ -645,7 +646,7 @@ export default defineVxeComponent({
           }
           return Promise.all(syncVailds).then(() => {
             if (errorRules.length) {
-              errorMaps[property] = errorRules.map(rule => {
+              errorMaps[property] = errorRules.map((rule) => {
                 return {
                   $form: $xeForm,
                   rule,
@@ -676,47 +677,51 @@ export default defineVxeComponent({
           const { field } = item
           if (field && !isHiddenItem($xeForm, item) && isActiveItem($xeForm, item)) {
             itemValids.push(
-              validItemRules(type || 'all', field).then(() => {
-                item.errRule = null
-              }).catch((errorMaps: VxeFormDefines.ValidateErrorMapParams) => {
-                const rest = errorMaps[field]
-                if (!validRest[field]) {
-                  validRest[field] = []
-                }
-                validRest[field].push(rest)
-                validFields.push(field)
-                item.errRule = rest[0].rule
-                return Promise.reject(rest)
-              })
+              validItemRules(type || 'all', field)
+                .then(() => {
+                  item.errRule = null
+                })
+                .catch((errorMaps: VxeFormDefines.ValidateErrorMapParams) => {
+                  const rest = errorMaps[field]
+                  if (!validRest[field]) {
+                    validRest[field] = []
+                  }
+                  validRest[field].push(rest)
+                  validFields.push(field)
+                  item.errRule = rest[0].rule
+                  return Promise.reject(rest)
+                })
             )
           }
         })
-        return Promise.all(itemValids).then(() => {
-          if (callback) {
-            callback()
-          }
-        }).catch(() => {
-          return new Promise<void>((resolve) => {
-            internalData.meTimeout = setTimeout(() => {
-              itemList.forEach((item) => {
-                if (item.errRule) {
-                  item.showError = true
-                }
-              })
-            }, 20)
-            if (validOpts.autoPos !== false) {
-              nextTick(() => {
-                handleFocus(validFields)
-              })
-            }
+        return Promise.all(itemValids)
+          .then(() => {
             if (callback) {
-              callback(validRest)
-              resolve()
-            } else {
-              resolve(validRest)
+              callback()
             }
           })
-        })
+          .catch(() => {
+            return new Promise<void>((resolve) => {
+              internalData.meTimeout = setTimeout(() => {
+                itemList.forEach((item) => {
+                  if (item.errRule) {
+                    item.showError = true
+                  }
+                })
+              }, 20)
+              if (validOpts.autoPos !== false) {
+                nextTick(() => {
+                  handleFocus(validFields)
+                })
+              }
+              if (callback) {
+                callback(validRest)
+                resolve()
+              } else {
+                resolve(validRest)
+              }
+            })
+          })
       }
       if (callback) {
         callback()
@@ -750,7 +755,7 @@ export default defineVxeComponent({
           fields = [fieldOrItem]
         }
       }
-      const itemList = fields.map(field => handleFieldOrItem($xeForm, field)) as VxeFormDefines.ItemInfo[]
+      const itemList = fields.map((field) => handleFieldOrItem($xeForm, field)) as VxeFormDefines.ItemInfo[]
       return beginValidate(itemList, '', callback).then((params) => {
         recalculate()
         return params
@@ -798,9 +803,12 @@ export default defineVxeComponent({
       return nextTick()
     }
 
-    const triggerTitleTipEvent = (evnt: MouseEvent, params: {
-      item: VxeFormDefines.ItemInfo;
-    }) => {
+    const triggerTitleTipEvent = (
+      evnt: MouseEvent,
+      params: {
+        item: VxeFormDefines.ItemInfo
+      }
+    ) => {
       const { item } = params
       const { tooltipStore } = internalData
       const $tooltip = refTooltip.value
@@ -872,13 +880,13 @@ export default defineVxeComponent({
       const autoItemWidthList = computeAutoItemWidthList.value
       const el = refElem.value
       if (el && autoItemWidthList.length) {
-        const itemElList = el.querySelectorAll<HTMLElement>(autoItemWidthList.map(item => `.vxe-form--item-title[itemid="${item.id}"]`).join(','))
+        const itemElList = el.querySelectorAll<HTMLElement>(autoItemWidthList.map((item) => `.vxe-form--item-title[itemid="${item.id}"]`).join(','))
         let maxItemWidth = 0
-        XEUtils.arrayEach(itemElList, itemEl => {
+        XEUtils.arrayEach(itemElList, (itemEl) => {
           itemEl.style.width = ''
           maxItemWidth = Math.max(maxItemWidth, Math.ceil(itemEl.clientWidth + 2))
         })
-        XEUtils.arrayEach(itemElList, itemEl => {
+        XEUtils.arrayEach(itemElList, (itemEl) => {
           itemEl.style.width = `${maxItemWidth}px`
         })
       }
@@ -892,7 +900,7 @@ export default defineVxeComponent({
     const handleItemVisible = (visible: boolean) => {
       return function (fieldOrItems?: VxeFormItemPropTypes.Field | VxeFormItemPropTypes.Field[] | VxeFormDefines.ItemInfo | VxeFormDefines.ItemInfo[] | null) {
         const objs = XEUtils.isArray(fieldOrItems) ? fieldOrItems : [fieldOrItems]
-        objs.forEach(obj => {
+        objs.forEach((obj) => {
           const item = handleFieldOrItem($xeForm, obj)
           if (item) {
             item.visible = visible
@@ -927,7 +935,7 @@ export default defineVxeComponent({
       toggleCollapseEvent,
       triggerTitleTipEvent,
       handleTitleTipLeaveEvent,
-      handleValidIconEvent (evnt, params) {
+      handleValidIconEvent(evnt, params) {
         const { item } = params
         item.showIconMsg = !item.showIconMsg
       },
@@ -942,55 +950,79 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const tooltipOpts = computeTooltipOpts.value
       const defaultSlot = slots.default
-      return h('form', {
-        ref: refElem,
-        class: ['vxe-form', className ? (XEUtils.isFunction(className) ? className({ items: formItems, data, $form: $xeForm }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          'is--border': border,
-          'custom--layout': customLayout,
-          'is--loading': loading
-        }],
-        onSubmit: submitEvent,
-        onReset: resetEvent
-      }, [
-        h('div', {
-          class: 'vxe-form--wrapper vxe-form--item-row'
-        }, customLayout
-          ? (defaultSlot ? defaultSlot({}) : [])
-          : formItems.map((item, index) => {
-            return h(VxeFormConfigItem, {
-              key: index,
-              itemConfig: item,
-              visible: item.visible
-            })
-          })),
-        h('div', {
-          class: 'vxe-form-slots'
-        }, customLayout ? [] : (defaultSlot ? defaultSlot({}) : [])),
-        /**
-         * 加载中
-         */
-        h(VxeLoadingComponent, {
-          class: 'vxe-form--loading',
-          modelValue: loading
-        }),
-        /**
-         * 工具提示
-         */
-        h(VxeTooltipComponent, {
-          ref: refTooltip,
-          ...tooltipOpts
-        })
-      ])
+      return h(
+        'form',
+        {
+          ref: refElem,
+          class: [
+            'vxe-form',
+            className ? (XEUtils.isFunction(className) ? className({ items: formItems, data, $form: $xeForm }) : className) : '',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--border': border,
+              'custom--layout': customLayout,
+              'is--loading': loading
+            }
+          ],
+          onSubmit: submitEvent,
+          onReset: resetEvent
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-form--wrapper vxe-form--item-row'
+            },
+            customLayout
+              ? defaultSlot
+                ? defaultSlot({})
+                : []
+              : formItems.map((item, index) => {
+                return h(VxeFormConfigItem, {
+                  key: index,
+                  itemConfig: item,
+                  visible: item.visible
+                })
+              })
+          ),
+          h(
+            'div',
+            {
+              class: 'vxe-form-slots'
+            },
+            customLayout ? [] : defaultSlot ? defaultSlot({}) : []
+          ),
+          /**
+           * 加载中
+           */
+          h(VxeLoadingComponent, {
+            class: 'vxe-form--loading',
+            modelValue: loading
+          }),
+          /**
+           * 工具提示
+           */
+          h(VxeTooltipComponent, {
+            ref: refTooltip,
+            ...tooltipOpts
+          })
+        ]
+      )
     }
 
     const recalcFlag = ref(0)
-    watch(() => props.vertical, () => {
-      recalcFlag.value++
-    })
-    watch(() => props.titleWidth, () => {
-      recalcFlag.value++
-    })
+    watch(
+      () => props.vertical,
+      () => {
+        recalcFlag.value++
+      }
+    )
+    watch(
+      () => props.titleWidth,
+      () => {
+        recalcFlag.value++
+      }
+    )
     watch(recalcFlag, () => {
       nextTick().then(() => {
         recalculate()
@@ -998,12 +1030,18 @@ export default defineVxeComponent({
     })
 
     const staticItemFlag = ref(0)
-    watch(() => reactData.staticItems.length, () => {
-      staticItemFlag.value++
-    })
-    watch(() => reactData.staticItems, () => {
-      staticItemFlag.value++
-    })
+    watch(
+      () => reactData.staticItems.length,
+      () => {
+        staticItemFlag.value++
+      }
+    )
+    watch(
+      () => reactData.staticItems,
+      () => {
+        staticItemFlag.value++
+      }
+    )
     watch(staticItemFlag, () => {
       reactData.formItems = reactData.staticItems
       recalcFlag.value++
@@ -1011,27 +1049,42 @@ export default defineVxeComponent({
     })
 
     const itemFlag = ref(0)
-    watch(() => props.items ? props.items.length : -1, () => {
-      itemFlag.value++
-    })
-    watch(() => props.items, () => {
-      itemFlag.value++
-    })
+    watch(
+      () => (props.items ? props.items.length : -1),
+      () => {
+        itemFlag.value++
+      }
+    )
+    watch(
+      () => props.items,
+      () => {
+        itemFlag.value++
+      }
+    )
     watch(itemFlag, () => {
       loadItems(props.items || [])
     })
 
-    watch(() => props.collapseStatus, (value) => {
-      reactData.collapseAll = !!value
-    })
+    watch(
+      () => props.collapseStatus,
+      (value) => {
+        reactData.collapseAll = !!value
+      }
+    )
 
-    watch(() => props.readonly, () => {
-      clearValidate()
-    })
+    watch(
+      () => props.readonly,
+      () => {
+        clearValidate()
+      }
+    )
 
-    watch(() => props.disabled, () => {
-      clearValidate()
-    })
+    watch(
+      () => props.disabled,
+      () => {
+        clearValidate()
+      }
+    )
 
     onMounted(() => {
       nextTick(() => {
@@ -1063,7 +1116,7 @@ export default defineVxeComponent({
 
     return $xeForm
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

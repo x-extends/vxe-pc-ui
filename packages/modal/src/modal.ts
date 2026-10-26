@@ -3,7 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getEventTargetNode, getPopupContainer, getPopupWrapperElement, isScale, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getSubLastZIndex, nextSubZIndex, getFuncText, handleBooleanDefaultValue, getDefaultConfig } from '../../ui/src/utils'
-import { VxeUI } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import { allActiveModals } from './store'
@@ -11,21 +11,38 @@ import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalEmits, VxeModalPrivateComputed, ModalEventTypes, VxeButtonInstance, ModalMethods, ModalPrivateRef, VxeModalMethods, ValueOf, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type {
+  VxeModalConstructor,
+  VxeModalPropTypes,
+  ModalReactData,
+  ModalInternalData,
+  VxeModalEmits,
+  VxeModalPrivateComputed,
+  ModalEventTypes,
+  VxeButtonInstance,
+  ModalMethods,
+  ModalPrivateRef,
+  VxeModalMethods,
+  ValueOf,
+  VxeDrawerConstructor,
+  VxeDrawerMethods,
+  VxeFormConstructor,
+  VxeFormPrivateMethods
+} from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useFns, renderEmptyElement } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('modal')
 
-function createInternalData (): ModalInternalData {
+function createInternalData(): ModalInternalData {
   return {
     // msgTimeout: undefined,
     isMoveStatus: false
   }
 }
 
-function createReactData (): ModalReactData {
+function createReactData(): ModalReactData {
   return {
     initialized: false,
     visible: false,
@@ -246,27 +263,16 @@ export default defineVxeComponent({
       default: () => getConfig().modal.animat
     }
   },
-  emits: [
-    'update:modelValue',
-    'show',
-    'hide',
-    'before-hide',
-    'close',
-    'confirm',
-    'cancel',
-    'zoom',
-    'resize',
-    'move'
-  ] as VxeModalEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'show', 'hide', 'before-hide', 'close', 'confirm', 'cancel', 'zoom', 'resize', 'move'] as VxeModalEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const $xeParentModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
+    const $xeParentModal = inject<(VxeModalConstructor & VxeModalMethods) | null>('$xeModal', null)
     const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
-    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
 
     const { computeSize } = useFns.useSize(props)
     const { computeIsVScrollbar } = useFns.useVScrollbar(props)
@@ -335,8 +341,8 @@ export default defineVxeComponent({
         yConfig: scrollbarOpts.yConfig,
         className: scrollbarOpts.className,
         viewAttrs: scrollbarOpts.viewAttrs,
-        viewClassName: 'vxe-modal--scrollbar-content-view' + (viewClassName ? (' ' + viewClassName) : ''),
-        viewInnerClassName: 'vxe-modal--scrollbar-content-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+        viewClassName: 'vxe-modal--scrollbar-content-view' + (viewClassName ? ' ' + viewClassName : ''),
+        viewInnerClassName: 'vxe-modal--scrollbar-content-inner' + (viewClassName ? ' ' + viewInnerClassName : '')
       }
     })
 
@@ -436,7 +442,7 @@ export default defineVxeComponent({
         const { type } = props
         const queueList = type === 'notification' ? notifyQueue : msgQueue
         let offsetTop = 0
-        queueList.forEach(comp => {
+        queueList.forEach((comp) => {
           const boxElem = comp.getBox()
           if (boxElem) {
             offsetTop += XEUtils.toNumber(comp.props.top)
@@ -449,7 +455,7 @@ export default defineVxeComponent({
 
     const removeActiveQueue = () => {
       if (allActiveModals.indexOf($xeModal) > -1) {
-        XEUtils.remove(allActiveModals, item => item === $xeModal)
+        XEUtils.remove(allActiveModals, (item) => item === $xeModal)
       }
     }
 
@@ -457,7 +463,7 @@ export default defineVxeComponent({
       const { type } = props
       const queueList = type === 'notification' ? notifyQueue : msgQueue
       if (queueList.indexOf($xeModal) > -1) {
-        XEUtils.remove(queueList, comp => comp === $xeModal)
+        XEUtils.remove(queueList, (comp) => comp === $xeModal)
       }
       updateStyle()
     }
@@ -469,35 +475,37 @@ export default defineVxeComponent({
       const beforeHideFn = props.beforeHideMethod || getConfig().modal.beforeHideMethod
       const params = { type }
       if (visible) {
-        Promise.resolve(beforeHideFn ? beforeHideFn(params) : null).then((rest) => {
-          if (!XEUtils.isError(rest)) {
-            const el = refElem.value
-            if (el) {
-              el.setAttribute('data-effect', 'y')
-            }
-            if (isMsg) {
-              removeMsgQueue()
-            }
-            reactData.contentVisible = false
-            if (!remember) {
-              handleRevert()
-            }
-            removeActiveQueue()
-            dispatchEvent('before-hide', params, null)
-            setTimeout(() => {
-              reactData.visible = false
-              emitModel(false)
-              dispatchEvent('hide', params, null)
-            }, 200)
-            removeBodyLockScroll()
-            setTimeout(() => {
+        Promise.resolve(beforeHideFn ? beforeHideFn(params) : null)
+          .then((rest) => {
+            if (!XEUtils.isError(rest)) {
               const el = refElem.value
               if (el) {
-                el.removeAttribute('data-effect')
+                el.setAttribute('data-effect', 'y')
               }
-            }, 350)
-          }
-        }).catch(e => e)
+              if (isMsg) {
+                removeMsgQueue()
+              }
+              reactData.contentVisible = false
+              if (!remember) {
+                handleRevert()
+              }
+              removeActiveQueue()
+              dispatchEvent('before-hide', params, null)
+              setTimeout(() => {
+                reactData.visible = false
+                emitModel(false)
+                dispatchEvent('hide', params, null)
+              }, 200)
+              removeBodyLockScroll()
+              setTimeout(() => {
+                const el = refElem.value
+                if (el) {
+                  el.removeAttribute('data-effect')
+                }
+              }, 350)
+            }
+          })
+          .catch((e) => e)
       }
       return nextTick()
     }
@@ -591,19 +599,10 @@ export default defineVxeComponent({
           return
         }
         const posStorageMap = getStorageMap(storageKey)
-        posStorageMap[id] = ([
-          boxElem.style.left,
-          boxElem.style.top,
-          boxElem.clientWidth,
-          boxElem.clientHeight
-        ] as (string | number)[]).concat(revertLocat
-          ? [
-              revertLocat.left,
-              revertLocat.top,
-              revertLocat.width,
-              revertLocat.height
-            ]
-          : []).map(val => val ? XEUtils.toNumber(val) : '').join(',')
+        posStorageMap[id] = ([boxElem.style.left, boxElem.style.top, boxElem.clientWidth, boxElem.clientHeight] as (string | number)[])
+          .concat(revertLocat ? [revertLocat.left, revertLocat.top, revertLocat.width, revertLocat.height] : [])
+          .map((val) => (val ? XEUtils.toNumber(val) : ''))
+          .join(',')
         localStorage.setItem(storageKey, XEUtils.toJSONString(posStorageMap))
       }
     }
@@ -616,7 +615,7 @@ export default defineVxeComponent({
       const prevZoomStatus = reactData.zoomStatus
       const hlMList: VxeModalConstructor[] = []
       const vlMList: VxeModalConstructor[] = []
-      allActiveModals.forEach(item => {
+      allActiveModals.forEach((item) => {
         if (item.xID !== $xeModal.xID && item.props.type === 'modal' && item.reactData.zoomStatus === 'minimize') {
           const itemZoomOpts = item.getComputeMaps().computeZoomOpts.value
           if (itemZoomOpts.minimizeLayout === 'horizontal') {
@@ -773,7 +772,7 @@ export default defineVxeComponent({
       const htmlElem = document.documentElement
       const lockData = htmlElem.getAttribute(lockScrollAttrKey)
       if (lockData) {
-        const lockList = lockData.split(',').filter(key => key !== xID)
+        const lockList = lockData.split(',').filter((key) => key !== xID)
         if (lockList.length) {
           htmlElem.setAttribute(lockScrollAttrKey, lockList.join(','))
         } else {
@@ -911,7 +910,10 @@ export default defineVxeComponent({
     const handleGlobalKeydownEvent = (evnt: KeyboardEvent) => {
       const isEsc = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ESCAPE)
       if (isEsc) {
-        const lastModal = XEUtils.max(allActiveModals.filter(item => item.reactData.zoomStatus !== 'minimize'), (item) => item.reactData.modalZindex)
+        const lastModal = XEUtils.max(
+          allActiveModals.filter((item) => item.reactData.zoomStatus !== 'minimize'),
+          (item) => item.reactData.modalZindex
+        )
         // 多个时，只关掉最上层的窗口
         if (lastModal) {
           setTimeout(() => {
@@ -970,7 +972,7 @@ export default defineVxeComponent({
 
     const handleZoom = (type?: 'minimize' | 'revert' | 'maximize') => {
       const { zoomStatus } = reactData
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         if (type) {
           if (type === 'maximize') {
             resolve(handleMaximize())
@@ -991,7 +993,7 @@ export default defineVxeComponent({
 
     const toggleZoomMinEvent = (evnt: Event) => {
       const { zoomStatus, prevZoomStatus } = reactData
-      return handleZoom(zoomStatus === 'minimize' ? (prevZoomStatus || 'revert') : 'minimize').then((type) => {
+      return handleZoom(zoomStatus === 'minimize' ? prevZoomStatus || 'revert' : 'minimize').then((type) => {
         const params = { type }
         dispatchEvent('zoom', params, evnt)
       })
@@ -1036,7 +1038,7 @@ export default defineVxeComponent({
 
     const boxMousedownEvent = () => {
       const { modalZindex } = reactData
-      if (allActiveModals.some(comp => comp.reactData.visible && comp.reactData.modalZindex > modalZindex)) {
+      if (allActiveModals.some((comp) => comp.reactData.visible && comp.reactData.modalZindex > modalZindex)) {
         updateZindex()
       }
     }
@@ -1060,7 +1062,7 @@ export default defineVxeComponent({
         const visibleHeight = parentWrapperEl.clientHeight
         const disX = evnt.clientX - boxElem.offsetLeft
         const disY = evnt.clientY - boxElem.offsetTop
-        document.onmousemove = evnt => {
+        document.onmousemove = (evnt) => {
           evnt.preventDefault()
           const offsetWidth = boxElem.offsetWidth
           const offsetHeight = boxElem.offsetHeight
@@ -1118,8 +1120,8 @@ export default defineVxeComponent({
       const marginSize = XEUtils.toNumber(props.marginSize)
       const targetElem = evnt.target as HTMLSpanElement
       const type = targetElem.getAttribute('data-type')
-      const dragMinWidth = isScale(minWidth) ? (XEUtils.toNumber(minWidth) * visibleWidth / 100) : XEUtils.toNumber(minWidth)
-      const dragMinHeight = isScale(minHeight) ? (XEUtils.toNumber(minHeight) * visibleHeight / 100) : XEUtils.toNumber(minHeight)
+      const dragMinWidth = isScale(minWidth) ? (XEUtils.toNumber(minWidth) * visibleWidth) / 100 : XEUtils.toNumber(minWidth)
+      const dragMinHeight = isScale(minHeight) ? (XEUtils.toNumber(minHeight) * visibleHeight) / 100 : XEUtils.toNumber(minHeight)
       const maxWidth = visibleWidth
       const maxHeight = visibleHeight
       const boxElem = getBox()
@@ -1130,7 +1132,7 @@ export default defineVxeComponent({
       const offsetTop = boxElem.offsetTop
       const offsetLeft = boxElem.offsetLeft
       const params = { type: 'resize' }
-      document.onmousemove = evnt => {
+      document.onmousemove = (evnt) => {
         evnt.preventDefault()
         let dragLeft
         let dragTop
@@ -1271,7 +1273,7 @@ export default defineVxeComponent({
     modalMethods = {
       dispatchEvent,
       open: openModal,
-      close () {
+      close() {
         return closeModal('close')
       },
       getBox,
@@ -1279,10 +1281,10 @@ export default defineVxeComponent({
       setPosition,
       isMinimized,
       isMaximized,
-      zoom () {
+      zoom() {
         return handleZoom()
       },
-      minimize () {
+      minimize() {
         const { visible } = reactData
         const isModal = computeIsModal.value
         if (!isModal || !visible) {
@@ -1292,7 +1294,7 @@ export default defineVxeComponent({
         }
         return handleMinimize()
       },
-      maximize () {
+      maximize() {
         const { visible } = reactData
         const isModal = computeIsModal.value
         if (!isModal || !visible) {
@@ -1302,7 +1304,7 @@ export default defineVxeComponent({
         }
         return handleMaximize()
       },
-      revert () {
+      revert() {
         const { visible } = reactData
         const isModal = computeIsModal.value
         if (!isModal || !visible) {
@@ -1324,57 +1326,85 @@ export default defineVxeComponent({
       const isMinimizeStatus = computeIsMinimizeStatus.value
       const isMaximizeStatus = computeIsMaximizeStatus.value
       return [
-        h('div', {
-          class: 'vxe-modal--header-title'
-        }, titleSlot
-          ? getSlotVNs(titleSlot({
-            $modal: $xeModal,
-            minimized: isMinimizeStatus,
-            maximized: isMaximizeStatus
-          }))
-          : (title ? getFuncText(title) : getI18n('vxe.alert.title'))),
-        h('div', {
-          class: 'vxe-modal--header-right'
-        }, [
-          cornerSlot && !isMinimizeStatus
-            ? h('div', {
-              class: 'vxe-modal--corner-wrapper'
-            }, getSlotVNs(cornerSlot({ $modal: $xeModal })))
-            : renderEmptyElement($xeModal),
-          (XEUtils.isBoolean(showMinimize) ? showMinimize : showZoom)
-            ? h('div', {
-              class: ['vxe-modal--zoom-btn', 'trigger--btn'],
-              title: getI18n(`vxe.modal.zoom${zoomStatus === 'minimize' ? 'Out' : 'Min'}`),
-              onClick: toggleZoomMinEvent
-            }, [
-              h('i', {
-                class: zoomStatus === 'minimize' ? getIcon().MODAL_ZOOM_REVERT : getIcon().MODAL_ZOOM_MIN
+        h(
+          'div',
+          {
+            class: 'vxe-modal--header-title'
+          },
+          titleSlot
+            ? getSlotVNs(
+              titleSlot({
+                $modal: $xeModal,
+                minimized: isMinimizeStatus,
+                maximized: isMaximizeStatus
               })
-            ])
-            : renderEmptyElement($xeModal),
-          (XEUtils.isBoolean(showMaximize) ? showMaximize : showZoom) && zoomStatus !== 'minimize'
-            ? h('div', {
-              class: ['vxe-modal--zoom-btn', 'trigger--btn'],
-              title: getI18n(`vxe.modal.zoom${zoomStatus === 'maximize' ? 'Out' : 'In'}`),
-              onClick: toggleZoomMaxEvent
-            }, [
-              h('i', {
-                class: zoomStatus === 'maximize' ? getIcon().MODAL_ZOOM_OUT : getIcon().MODAL_ZOOM_IN
-              })
-            ])
-            : renderEmptyElement($xeModal),
-          showClose
-            ? h('div', {
-              class: ['vxe-modal--close-btn', 'trigger--btn'],
-              title: getI18n('vxe.modal.close'),
-              onClick: closeEvent
-            }, [
-              h('i', {
-                class: getIcon().MODAL_CLOSE
-              })
-            ])
-            : renderEmptyElement($xeModal)
-        ])
+            )
+            : title
+              ? getFuncText(title)
+              : getI18n('vxe.alert.title')
+        ),
+        h(
+          'div',
+          {
+            class: 'vxe-modal--header-right'
+          },
+          [
+            cornerSlot && !isMinimizeStatus
+              ? h(
+                'div',
+                {
+                  class: 'vxe-modal--corner-wrapper'
+                },
+                getSlotVNs(cornerSlot({ $modal: $xeModal }))
+              )
+              : renderEmptyElement($xeModal),
+            (XEUtils.isBoolean(showMinimize) ? showMinimize : showZoom)
+              ? h(
+                'div',
+                {
+                  class: ['vxe-modal--zoom-btn', 'trigger--btn'],
+                  title: getI18n(`vxe.modal.zoom${zoomStatus === 'minimize' ? 'Out' : 'Min'}`),
+                  onClick: toggleZoomMinEvent
+                },
+                [
+                  h('i', {
+                    class: zoomStatus === 'minimize' ? getIcon().MODAL_ZOOM_REVERT : getIcon().MODAL_ZOOM_MIN
+                  })
+                ]
+              )
+              : renderEmptyElement($xeModal),
+            (XEUtils.isBoolean(showMaximize) ? showMaximize : showZoom) && zoomStatus !== 'minimize'
+              ? h(
+                'div',
+                {
+                  class: ['vxe-modal--zoom-btn', 'trigger--btn'],
+                  title: getI18n(`vxe.modal.zoom${zoomStatus === 'maximize' ? 'Out' : 'In'}`),
+                  onClick: toggleZoomMaxEvent
+                },
+                [
+                  h('i', {
+                    class: zoomStatus === 'maximize' ? getIcon().MODAL_ZOOM_OUT : getIcon().MODAL_ZOOM_IN
+                  })
+                ]
+              )
+              : renderEmptyElement($xeModal),
+            showClose
+              ? h(
+                'div',
+                {
+                  class: ['vxe-modal--close-btn', 'trigger--btn'],
+                  title: getI18n('vxe.modal.close'),
+                  onClick: closeEvent
+                },
+                [
+                  h('i', {
+                    class: getIcon().MODAL_CLOSE
+                  })
+                ]
+              )
+              : renderEmptyElement($xeModal)
+          ]
+        )
       ]
     }
 
@@ -1389,13 +1419,20 @@ export default defineVxeComponent({
         if ((XEUtils.isBoolean(showMaximize) ? showMaximize : showZoom) && props.dblclickZoom && props.type === 'modal') {
           headerOns.onDblclick = toggleZoomMaxEvent
         }
-        return h('div', {
-          ref: refHeaderElem,
-          class: ['vxe-modal--header', {
-            'is--ellipsis': props.showTitleOverflow
-          }],
-          ...headerOns
-        }, headerSlot ? getSlotVNs(headerSlot({ $modal: $xeModal })) : renderTitles())
+        return h(
+          'div',
+          {
+            ref: refHeaderElem,
+            class: [
+              'vxe-modal--header',
+              {
+                'is--ellipsis': props.showTitleOverflow
+              }
+            ],
+            ...headerOns
+          },
+          headerSlot ? getSlotVNs(headerSlot({ $modal: $xeModal })) : renderTitles()
+        )
       }
       return renderEmptyElement($xeModal)
     }
@@ -1412,33 +1449,41 @@ export default defineVxeComponent({
       const contVNs: VNode[] = []
       if (!isMsg && (status || iconStatus)) {
         contVNs.push(
-          h('div', {
-            class: 'vxe-modal--status-wrapper'
-          }, [
-            h('i', {
-              class: ['vxe-modal--status-icon', iconStatus || getIcon()[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
-            })
-          ])
+          h(
+            'div',
+            {
+              class: 'vxe-modal--status-wrapper'
+            },
+            [
+              h('i', {
+                class: ['vxe-modal--status-icon', iconStatus || getIcon()[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
+              })
+            ]
+          )
         )
       }
 
       if (useHtml && !defaultSlot) {
         contVNs.push(
           isVScrollbar
-            ? h(VxeScrollbarComponent, {
-              key: 'shc',
-              class: 'vxe-modal--scrollbar-content',
-              ...scrollbarProps
-            }, {
-              default () {
-                return [
-                  h('div', {
-                    class: 'vxe-modal--scrollbar-content-html',
-                    innerHTML: getFuncText(content)
-                  })
-                ]
+            ? h(
+              VxeScrollbarComponent,
+              {
+                key: 'shc',
+                class: 'vxe-modal--scrollbar-content',
+                ...scrollbarProps
+              },
+              {
+                default() {
+                  return [
+                    h('div', {
+                      class: 'vxe-modal--scrollbar-content-html',
+                      innerHTML: getFuncText(content)
+                    })
+                  ]
+                }
               }
-            })
+            )
             : h('div', {
               key: 'hc',
               class: 'vxe-modal--content',
@@ -1448,43 +1493,67 @@ export default defineVxeComponent({
       } else {
         contVNs.push(
           isVScrollbar
-            ? h(VxeScrollbarComponent, {
-              key: 'sdc',
-              class: 'vxe-modal--scrollbar-content',
-              ...scrollbarProps
-            }, {
-              default: () => defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content)
-            })
-            : h('div', {
-              key: 'dc',
-              class: 'vxe-modal--content'
-            }, defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content))
+            ? h(
+              VxeScrollbarComponent,
+              {
+                key: 'sdc',
+                class: 'vxe-modal--scrollbar-content',
+                ...scrollbarProps
+              },
+              {
+                default: () => (defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content))
+              }
+            )
+            : h(
+              'div',
+              {
+                key: 'dc',
+                class: 'vxe-modal--content'
+              },
+              defaultSlot ? getSlotVNs(defaultSlot({ $modal: $xeModal })) : getFuncText(content)
+            )
         )
       }
 
-      return h('div', {
-        class: 'vxe-modal--body'
-      }, [
-        leftSlot
-          ? h('div', {
-            class: 'vxe-modal--body-left'
-          }, getSlotVNs(leftSlot({ $modal: $xeModal })))
-          : renderEmptyElement($xeModal),
-        h('div', {
-          class: 'vxe-modal--body-default'
-        }, contVNs),
-        rightSlot
-          ? h('div', {
-            class: 'vxe-modal--body-right'
-          }, getSlotVNs(rightSlot({ $modal: $xeModal })))
-          : renderEmptyElement($xeModal),
-        isMsg
-          ? renderEmptyElement($xeModal)
-          : h(VxeLoadingComponent, {
-            class: 'vxe-modal--loading',
-            modelValue: props.loading
-          })
-      ])
+      return h(
+        'div',
+        {
+          class: 'vxe-modal--body'
+        },
+        [
+          leftSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-modal--body-left'
+              },
+              getSlotVNs(leftSlot({ $modal: $xeModal }))
+            )
+            : renderEmptyElement($xeModal),
+          h(
+            'div',
+            {
+              class: 'vxe-modal--body-default'
+            },
+            contVNs
+          ),
+          rightSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-modal--body-right'
+              },
+              getSlotVNs(rightSlot({ $modal: $xeModal }))
+            )
+            : renderEmptyElement($xeModal),
+          isMsg
+            ? renderEmptyElement($xeModal)
+            : h(VxeLoadingComponent, {
+              class: 'vxe-modal--loading',
+              modelValue: props.loading
+            })
+        ]
+      )
     }
 
     const renderDefaultFooter = () => {
@@ -1502,7 +1571,7 @@ export default defineVxeComponent({
           })
         )
       }
-      if (XEUtils.isBoolean(showConfirmButton) ? showConfirmButton : (type === 'confirm' || type === 'alert')) {
+      if (XEUtils.isBoolean(showConfirmButton) ? showConfirmButton : type === 'confirm' || type === 'alert') {
         btnVNs.push(
           h(VxeButtonComponent, {
             key: 2,
@@ -1514,25 +1583,41 @@ export default defineVxeComponent({
           })
         )
       }
-      return h('div', {
-        class: 'vxe-modal--footer-wrapper'
-      }, [
-        h('div', {
-          class: 'vxe-modal--footer-left'
-        }, lfSlot ? getSlotVNs(lfSlot({ $modal: $xeModal })) : []),
-        h('div', {
-          class: 'vxe-modal--footer-right'
-        }, rfSlot ? getSlotVNs(rfSlot({ $modal: $xeModal })) : btnVNs)
-      ])
+      return h(
+        'div',
+        {
+          class: 'vxe-modal--footer-wrapper'
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-modal--footer-left'
+            },
+            lfSlot ? getSlotVNs(lfSlot({ $modal: $xeModal })) : []
+          ),
+          h(
+            'div',
+            {
+              class: 'vxe-modal--footer-right'
+            },
+            rfSlot ? getSlotVNs(rfSlot({ $modal: $xeModal })) : btnVNs
+          )
+        ]
+      )
     }
 
     const renderFooter = () => {
       const { slots: propSlots = {} } = props
       const footerSlot = slots.footer || propSlots.footer
       if (props.showFooter) {
-        return h('div', {
-          class: 'vxe-modal--footer'
-        }, footerSlot ? getSlotVNs(footerSlot({ $modal: $xeModal })) : [renderDefaultFooter()])
+        return h(
+          'div',
+          {
+            class: 'vxe-modal--footer'
+          },
+          footerSlot ? getSlotVNs(footerSlot({ $modal: $xeModal })) : [renderDefaultFooter()]
+        )
       }
       return renderEmptyElement($xeModal)
     }
@@ -1550,82 +1635,116 @@ export default defineVxeComponent({
         ons.onMouseover = selfMouseoverEvent
         ons.onMouseout = selfMouseoutEvent
       }
-      return h(Teleport, {
-        to: getPopupContainer(appendTo),
-        disabled: btnTransfer ? !initialized : true
-      }, [
-        h('div', {
-          ref: refElem,
-          class: ['vxe-modal--wrapper', `type--${type}`, `zoom--${zoomStatus || 'revert'}`, position ? `pos--${position}` : '', isWithinAppendTo ? 'ctx--within' : 'ctx--free', className || '', {
-            [`size--${vSize}`]: vSize,
-            [`status--${status}`]: status,
-            'is--padding': padding,
-            'is--border': border,
-            'is--title-bg': showTitleBackground,
-            'is--animat': animat,
-            'lock--scroll': lockScroll,
-            'lock--view': lockView,
-            'is--draggable': draggable,
-            'is--resize': resize,
-            'is--mask': mask,
-            'is--visible': contentVisible,
-            'is--active': visible,
-            'is--loading': loading
-          }],
-          style: {
-            zIndex: reactData.modalZindex,
-            top: modalTop ? `${modalTop}px` : null
-          },
-          onClick: selfClickEvent,
-          ...ons
-        }, [
-          h('div', {
-            ref: refModalBox,
-            class: 'vxe-modal--box',
-            onMousedown: boxMousedownEvent
-          }, [
-            (isMsg || asideSlot) && !isMinimizeStatus
-              ? h('div', {
-                class: 'vxe-modal--aside'
+      return h(
+        Teleport,
+        {
+          to: getPopupContainer(appendTo),
+          disabled: btnTransfer ? !initialized : true
+        },
+        [
+          h(
+            'div',
+            {
+              ref: refElem,
+              class: [
+                'vxe-modal--wrapper',
+                `type--${type}`,
+                `zoom--${zoomStatus || 'revert'}`,
+                position ? `pos--${position}` : '',
+                isWithinAppendTo ? 'ctx--within' : 'ctx--free',
+                className || '',
+                {
+                  [`size--${vSize}`]: vSize,
+                  [`status--${status}`]: status,
+                  'is--padding': padding,
+                  'is--border': border,
+                  'is--title-bg': showTitleBackground,
+                  'is--animat': animat,
+                  'lock--scroll': lockScroll,
+                  'lock--view': lockView,
+                  'is--draggable': draggable,
+                  'is--resize': resize,
+                  'is--mask': mask,
+                  'is--visible': contentVisible,
+                  'is--active': visible,
+                  'is--loading': loading
+                }
+              ],
+              style: {
+                zIndex: reactData.modalZindex,
+                top: modalTop ? `${modalTop}px` : null
               },
-              asideSlot
-                ? getSlotVNs(asideSlot({ $modal: $xeModal }))
-                : [
-                    status || iconStatus
-                      ? h('div', {
-                        class: 'vxe-modal--status-wrapper'
-                      }, [
-                        h('i', {
-                          class: ['vxe-modal--status-icon', iconStatus || getIcon()[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
-                        })
-                      ])
-                      : renderEmptyElement($xeModal)
-                  ]
+              onClick: selfClickEvent,
+              ...ons
+            },
+            [
+              h(
+                'div',
+                {
+                  ref: refModalBox,
+                  class: 'vxe-modal--box',
+                  onMousedown: boxMousedownEvent
+                },
+                [
+                  (isMsg || asideSlot) && !isMinimizeStatus
+                    ? h(
+                      'div',
+                      {
+                        class: 'vxe-modal--aside'
+                      },
+                      asideSlot
+                        ? getSlotVNs(asideSlot({ $modal: $xeModal }))
+                        : [
+                            status || iconStatus
+                              ? h(
+                                'div',
+                                {
+                                  class: 'vxe-modal--status-wrapper'
+                                },
+                                [
+                                  h('i', {
+                                    class: ['vxe-modal--status-icon', iconStatus || getIcon()[`MODAL_${status}`.toLocaleUpperCase() as 'MODAL_SUCCESS' | 'MODAL_ERROR']]
+                                  })
+                                ]
+                              )
+                              : renderEmptyElement($xeModal)
+                          ]
+                    )
+                    : renderEmptyElement($xeModal),
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-modal--container'
+                    },
+                    !reactData.initialized || (destroyOnClose && !reactData.visible)
+                      ? []
+                      : [
+                          renderHeader(),
+                          renderBody(),
+                          renderFooter(),
+                          !isMsg && resize
+                            ? h(
+                              'span',
+                              {
+                                class: 'vxe-modal--resize'
+                              },
+                              ['wl', 'wr', 'swst', 'sest', 'st', 'swlb', 'selb', 'sb'].map((type) => {
+                                return h('span', {
+                                  class: `${type}-resize`,
+                                  'data-type': type,
+                                  onMousedown: dragEvent
+                                })
+                              })
+                            )
+                            : renderEmptyElement($xeModal)
+                        ]
+                  )
+                ]
               )
-              : renderEmptyElement($xeModal),
-            h('div', {
-              class: 'vxe-modal--container'
-            }, !reactData.initialized || (destroyOnClose && !reactData.visible)
-              ? []
-              : [
-                  renderHeader(),
-                  renderBody(),
-                  renderFooter(),
-                  !isMsg && resize
-                    ? h('span', {
-                      class: 'vxe-modal--resize'
-                    }, ['wl', 'wr', 'swst', 'sest', 'st', 'swlb', 'selb', 'sb'].map(type => {
-                      return h('span', {
-                        class: `${type}-resize`,
-                        'data-type': type,
-                        onMousedown: dragEvent
-                      })
-                    }))
-                    : renderEmptyElement($xeModal)
-                ])
-          ])
-        ])
-      ])
+            ]
+          )
+        ]
+      )
     }
 
     $xeModal.renderVN = renderVN
@@ -1633,13 +1752,16 @@ export default defineVxeComponent({
     watch(() => props.width, recalculate)
     watch(() => props.height, recalculate)
 
-    watch(() => props.modelValue, (value) => {
-      if (value) {
-        openModal()
-      } else {
-        closeModal('model')
+    watch(
+      () => props.modelValue,
+      (value) => {
+        if (value) {
+          openModal()
+        } else {
+          closeModal('model')
+        }
       }
-    })
+    )
 
     onMounted(() => {
       if (props.type === 'modal' && props.showFooter && !(props.showConfirmButton || props.showCancelButton || slots.footer)) {
@@ -1675,7 +1797,7 @@ export default defineVxeComponent({
 
     return $xeModal
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

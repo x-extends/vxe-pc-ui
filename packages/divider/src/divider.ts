@@ -1,9 +1,11 @@
 import { ref, h, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeDividerEmits, VxeDividerPropTypes, DividerMethods, DividerPrivateMethods, ValueOf, DividerPrivateRef, VxeDividerPrivateComputed, VxeDividerConstructor, VxeDividerPrivateMethods } from '../../../types'
+
+const { getConfig, createEvent, useFns } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeDivider',
@@ -25,23 +27,21 @@ export default defineVxeComponent({
       default: () => getConfig().divider.size || getConfig().size
     }
   },
-  emits: [
-  ] as VxeDividerEmits,
-  setup (props, context) {
+  emits: [] as VxeDividerEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refMaps: DividerPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxeDividerPrivateComputed = {
-    }
+    const computeMaps: VxeDividerPrivateComputed = {}
 
     const $xeDivider = {
       xID,
@@ -60,8 +60,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const dividerPrivateMethods: DividerPrivateMethods = {
-    }
+    const dividerPrivateMethods: DividerPrivateMethods = {}
 
     Object.assign($xeDivider, dividerMethods, dividerPrivateMethods)
 
@@ -69,25 +68,38 @@ export default defineVxeComponent({
       const { vertical, titleContent, titleAlign } = props
       const vSize = computeSize.value
       const titleSlot = slots.title
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-divider', vertical ? 'is--vertical' : 'is--horizontal', `t--align-${titleAlign || 'center'}`, {
-          [`size--${vSize}`]: vSize
-        }]
-      }, (titleContent || titleSlot) && !vertical
-        ? [
-            h('span', {
-              class: 'vxe-divider--content'
-            }, titleSlot ? titleSlot({}) : titleContent)
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-divider',
+            vertical ? 'is--vertical' : 'is--horizontal',
+            `t--align-${titleAlign || 'center'}`,
+            {
+              [`size--${vSize}`]: vSize
+            }
           ]
-        : [])
+        },
+        (titleContent || titleSlot) && !vertical
+          ? [
+              h(
+                'span',
+                {
+                  class: 'vxe-divider--content'
+                },
+                titleSlot ? titleSlot({}) : titleContent
+              )
+            ]
+          : []
+      )
     }
 
     $xeDivider.renderVN = renderVN
 
     return $xeDivider
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

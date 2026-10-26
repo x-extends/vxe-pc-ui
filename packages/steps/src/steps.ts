@@ -1,32 +1,30 @@
 import { ref, h, reactive } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { StepsReactData, VxeStepsEmits, StepsMethods, StepsPrivateMethods, ValueOf, StepsPrivateRef, VxeStepsPrivateComputed, VxeStepsConstructor, VxeStepsPrivateMethods } from '../../../types'
 
+const { createEvent } = VxeUI
+
 export default defineVxeComponent({
   name: 'VxeSteps',
-  props: {
-  },
-  emits: [
-  ] as VxeStepsEmits,
-  setup (props, context) {
+  props: {},
+  emits: [] as VxeStepsEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<StepsReactData>({
-    })
+    const reactData = reactive<StepsReactData>({})
 
     const refMaps: StepsPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxeStepsPrivateComputed = {
-    }
+    const computeMaps: VxeStepsPrivateComputed = {}
 
     const $xeSteps = {
       xID,
@@ -46,23 +44,26 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const stepsPrivateMethods: StepsPrivateMethods = {
-    }
+    const stepsPrivateMethods: StepsPrivateMethods = {}
 
     Object.assign($xeSteps, stepsMethods, stepsPrivateMethods)
 
     const renderVN = () => {
-      return h('div', {
-        ref: refElem,
-        class: 'vxe-steps'
-      }, [])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: 'vxe-steps'
+        },
+        []
+      )
     }
 
     $xeSteps.renderVN = renderVN
 
     return $xeSteps
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

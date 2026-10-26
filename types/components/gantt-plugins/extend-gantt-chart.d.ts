@@ -29,7 +29,7 @@ export interface VxeGanttExtendChartMethods<D = any> {
   /**
    * 获取该任务已关联依赖线的任务关系信息
    */
-  getTaskLinkInfo (rowOrRowid: any): VxeGanttDefines.LinkInfoObj<D>
+  getTaskLinkInfo(rowOrRowid: any): VxeGanttDefines.LinkInfoObj<D>
 }
 
 export interface VxeGanttExtendChartPrivateMethods<D = any> {
@@ -37,29 +37,35 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  handleTaskBarModnEvent(evnt: MouseEvent, params: {
-    $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
-    row: D
-    scaleType: VxeGanttDefines.ColumnScaleType
-  }): void
+  handleTaskBarModnEvent(
+    evnt: MouseEvent,
+    params: {
+      $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
+      row: D
+      scaleType: VxeGanttDefines.ColumnScaleType
+    }
+  ): void
   /**
    * 内部方法
    * @private
    */
-  renderGanttTaskBarContent(params: {
-    $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
-    source: string
-    type: string
-    scaleType: VxeGanttDefines.ColumnScaleType
-    row: D
-    rowIndex: number
-    $rowIndex: number
-    _rowIndex: number
-  }, renderParams: {
-    $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-    rowid: string
-  }): VNode[]
+  renderGanttTaskBarContent(
+    params: {
+      $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
+      source: string
+      type: string
+      scaleType: VxeGanttDefines.ColumnScaleType
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+    },
+    renderParams: {
+      $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
+      $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
+      rowid: string
+    }
+  ): VNode[]
   /**
    * 内部方法
    * @private
@@ -126,6 +132,6 @@ declare module '../gantt' {
     trialElem?: HTMLElement | null
   }
 
-  export interface VxeGanttMethods<D = any> extends VxeGanttExtendChartMethods<D> { }
-  export interface VxeGanttPrivateMethods<D = any> extends VxeGanttExtendChartPrivateMethods<D> { }
+  export interface VxeGanttMethods<D = any> extends VxeGanttExtendChartMethods<D> {}
+  export interface VxeGanttPrivateMethods<D = any> extends VxeGanttExtendChartPrivateMethods<D> {}
 }

@@ -1,17 +1,17 @@
 import { ref, h, reactive } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { TimelineItemReactData, TimelineItemPrivateRef, VxeTimelineItemEmits, VxeTimelineItemPrivateComputed, TimelineItemMethods, TimelineItemPrivateMethods, VxeTimelineItemConstructor, VxeTimelineItemPrivateMethods, ValueOf } from '../../../types'
 
+const { createEvent } = VxeUI
+
 export default defineVxeComponent({
   name: 'VxeTimelineItem',
-  props: {
-  },
-  emits: [
-  ] as VxeTimelineItemEmits,
-  setup (props, context) {
+  props: {},
+  emits: [] as VxeTimelineItemEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -24,8 +24,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxeTimelineItemPrivateComputed = {
-    }
+    const computeMaps: VxeTimelineItemPrivateComputed = {}
 
     const $xeTimelineItem = {
       xID,
@@ -45,8 +44,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const tagPrivateMethods: TimelineItemPrivateMethods = {
-    }
+    const tagPrivateMethods: TimelineItemPrivateMethods = {}
 
     Object.assign($xeTimelineItem, tagMethods, tagPrivateMethods)
 
@@ -61,7 +59,7 @@ export default defineVxeComponent({
 
     return $xeTimelineItem
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

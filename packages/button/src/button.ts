@@ -1,16 +1,38 @@
 import { h, ref, computed, Teleport, resolveComponent, VNode, onUnmounted, reactive, nextTick, PropType, onMounted, inject } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, getIcon, createEvent, useSize, renderer, usePermission, permission, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getEventTargetNode, getPopupContainer, updatePanelPlacement } from '../../ui/src/dom'
 import { getFuncText, getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 import VxeTooltipComponent from '../../tooltip'
 
-import type { VxeButtonConstructor, VxeButtonPropTypes, VxeButtonEmits, ButtonReactData, ButtonMethods, VxeButtonDefines, ButtonPrivateRef, ButtonInternalData, VxeButtonGroupConstructor, VxeButtonGroupPrivateMethods, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, ValueOf, VxeTreeConstructor, VxeTreePrivateMethods } from '../../../types'
+import type {
+  VxeButtonConstructor,
+  VxeButtonPropTypes,
+  VxeButtonEmits,
+  ButtonReactData,
+  ButtonMethods,
+  VxeButtonDefines,
+  ButtonPrivateRef,
+  ButtonInternalData,
+  VxeButtonGroupConstructor,
+  VxeButtonGroupPrivateMethods,
+  VxeDrawerConstructor,
+  VxeDrawerMethods,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  VxeModalConstructor,
+  VxeModalMethods,
+  ValueOf,
+  VxeTreeConstructor,
+  VxeTreePrivateMethods
+} from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 import type { VxeGridConstructor, VxeGridPrivateMethods } from '../../../types/components/grid'
+
+const { getConfig, globalEvents, getIcon, createEvent, useFns, renderer, permission, renderEmptyElement } = VxeUI
 
 const { warnLog } = createComponentLog('button')
 
@@ -125,30 +147,23 @@ const VxeButtonComponent = defineVxeComponent({
       default: null
     }
   },
-  emits: [
-    'click',
-    'mouseenter',
-    'mouseleave',
-    'dropdown-click',
-    'dropdownClick',
-    'contextmenu'
-  ] as VxeButtonEmits,
-  setup (props, context) {
+  emits: ['click', 'mouseenter', 'mouseleave', 'dropdown-click', 'dropdownClick', 'contextmenu'] as VxeButtonEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
-    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
+    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods) | null>('$xeModal', null)
     const $xeDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
     const $xeGrid = inject<(VxeGridConstructor & VxeGridPrivateMethods) | null>('$xeGrid', null)
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
     const $xeTree = inject<(VxeTreeConstructor & VxeTreePrivateMethods) | null>('$xeTree', null)
-    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const $xeButtonGroup = inject<(VxeButtonGroupConstructor & VxeButtonGroupPrivateMethods) | null>('$xeButtonGroup', null)
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
-    const { computePermissionInfo } = usePermission(props)
+    const { computePermissionInfo } = useFns.usePermission(props)
 
     const reactData = reactive<ButtonReactData>({
       initialized: false,
@@ -271,7 +286,7 @@ const VxeButtonComponent = defineVxeComponent({
     const computeDownBtnList = computed(() => {
       const { options } = props
       if (options) {
-        return options.filter(item => {
+        return options.filter((item) => {
           const { permissionCode } = item
           return !permissionCode || permission.checkVisible(permissionCode)
         })
@@ -432,13 +447,16 @@ const VxeButtonComponent = defineVxeComponent({
         if (!reactData.initialized) {
           reactData.initialized = true
         }
-        internalData.showTime = setTimeout(() => {
-          if (panelElem.dataset.active === 'Y') {
-            mouseenterDropdownEvent()
-          } else {
-            reactData.isAniVisible = false
-          }
-        }, trigger === 'click' ? 50 : 250)
+        internalData.showTime = setTimeout(
+          () => {
+            if (panelElem.dataset.active === 'Y') {
+              mouseenterDropdownEvent()
+            } else {
+              reactData.isAniVisible = false
+            }
+          },
+          trigger === 'click' ? 50 : 250
+        )
       }
       return nextTick()
     }
@@ -470,22 +488,30 @@ const VxeButtonComponent = defineVxeComponent({
     }
 
     const renderTooltipIcon = (tipOpts: VxeButtonPropTypes.PrefixTooltip | VxeButtonPropTypes.SuffixTooltip, type: 'prefix' | 'suffix') => {
-      return h(VxeTooltipComponent, {
-        useHtml: XEUtils.isBoolean(tipOpts.useHtml) ? tipOpts.useHtml : tipOpts.useHTML,
-        content: tipOpts.content,
-        enterable: tipOpts.enterable,
-        theme: tipOpts.theme
-      }, {
-        default () {
-          return h('span', {
-            class: `vxe-button--item vxe-button--tooltip-${type}-icon`
-          }, [
-            h('i', {
-              class: tipOpts.icon || getIcon().BUTTON_TOOLTIP_ICON
-            })
-          ])
+      return h(
+        VxeTooltipComponent,
+        {
+          useHtml: XEUtils.isBoolean(tipOpts.useHtml) ? tipOpts.useHtml : tipOpts.useHTML,
+          content: tipOpts.content,
+          enterable: tipOpts.enterable,
+          theme: tipOpts.theme
+        },
+        {
+          default() {
+            return h(
+              'span',
+              {
+                class: `vxe-button--item vxe-button--tooltip-${type}-icon`
+              },
+              [
+                h('i', {
+                  class: tipOpts.icon || getIcon().BUTTON_TOOLTIP_ICON
+                })
+              ]
+            )
+          }
         }
-      })
+      )
     }
 
     const renderContent = () => {
@@ -499,9 +525,7 @@ const VxeButtonComponent = defineVxeComponent({
       const defaultSlot = slots.default
       const contVNs: VNode[] = []
       if (prefixTooltip) {
-        contVNs.push(
-          renderTooltipIcon(prefixTipOpts, 'prefix')
-        )
+        contVNs.push(renderTooltipIcon(prefixTipOpts, 'prefix'))
       }
       if (loading) {
         contVNs.push(
@@ -511,17 +535,25 @@ const VxeButtonComponent = defineVxeComponent({
         )
       } else if (prefixIconSlot) {
         contVNs.push(
-          h('span', {
-            class: 'vxe-button--item vxe-button--custom-prefix-icon'
-          }, prefixIconSlot({}))
+          h(
+            'span',
+            {
+              class: 'vxe-button--item vxe-button--custom-prefix-icon'
+            },
+            prefixIconSlot({})
+          )
         )
       } else if (prefixRender) {
         const compConf = renderer.get(prefixRender.name)
         const pIconMethod = compConf ? compConf.renderButtonPrefix : null
         contVNs.push(
-          h('span', {
-            class: ['vxe-button--item vxe-button--custom-prefix-icon']
-          }, pIconMethod ? getSlotVNs(pIconMethod(prefixRender, { $button: $xeButton })) : [])
+          h(
+            'span',
+            {
+              class: ['vxe-button--item vxe-button--custom-prefix-icon']
+            },
+            pIconMethod ? getSlotVNs(pIconMethod(prefixRender, { $button: $xeButton })) : []
+          )
         )
       } else if (prefixIcon) {
         contVNs.push(
@@ -533,31 +565,47 @@ const VxeButtonComponent = defineVxeComponent({
 
       if (defaultSlot) {
         contVNs.push(
-          h('span', {
-            class: 'vxe-button--item vxe-button--content'
-          }, defaultSlot({}))
+          h(
+            'span',
+            {
+              class: 'vxe-button--item vxe-button--content'
+            },
+            defaultSlot({})
+          )
         )
       } else if (content) {
         contVNs.push(
-          h('span', {
-            class: 'vxe-button--item vxe-button--content'
-          }, getFuncText(content))
+          h(
+            'span',
+            {
+              class: 'vxe-button--item vxe-button--content'
+            },
+            getFuncText(content)
+          )
         )
       }
 
       if (suffixIconSlot) {
         contVNs.push(
-          h('span', {
-            class: 'vxe-button--item vxe-button--custom-suffix-icon'
-          }, suffixIconSlot({}))
+          h(
+            'span',
+            {
+              class: 'vxe-button--item vxe-button--custom-suffix-icon'
+            },
+            suffixIconSlot({})
+          )
         )
       } else if (suffixRender) {
         const compConf = renderer.get(suffixRender.name)
         const sIconMethod = compConf ? compConf.renderButtonSuffix : null
         contVNs.push(
-          h('span', {
-            class: ['vxe-button--item vxe-button--custom-suffix-icon']
-          }, sIconMethod ? getSlotVNs(sIconMethod(suffixRender, { $button: $xeButton })) : [])
+          h(
+            'span',
+            {
+              class: ['vxe-button--item vxe-button--custom-suffix-icon']
+            },
+            sIconMethod ? getSlotVNs(sIconMethod(suffixRender, { $button: $xeButton })) : []
+          )
         )
       } else if (suffixIcon) {
         contVNs.push(
@@ -567,9 +615,7 @@ const VxeButtonComponent = defineVxeComponent({
         )
       }
       if (suffixTooltip) {
-        contVNs.push(
-          renderTooltipIcon(suffixTipOpts, 'suffix')
-        )
+        contVNs.push(renderTooltipIcon(suffixTipOpts, 'suffix'))
       }
       return contVNs
     }
@@ -582,14 +628,14 @@ const VxeButtonComponent = defineVxeComponent({
       dispatchEvent,
       openPanel,
       closePanel: hidePanel,
-      focus () {
+      focus() {
         const btnElem = refButton.value
         if (btnElem) {
           btnElem.focus()
         }
         return nextTick()
       },
-      blur () {
+      blur() {
         const btnElem = refButton.value
         if (btnElem) {
           btnElem.blur()
@@ -662,169 +708,243 @@ const VxeButtonComponent = defineVxeComponent({
           panelOns.onMouseenter = mouseenterDropdownEvent
           panelOns.onMouseleave = mouseleaveDropdownEvent
         }
-        return h('div', {
-          ref: refElem,
-          class: ['vxe-button--dropdown', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
-            [`size--${vSize}`]: vSize,
-            'is--active': visiblePanel
-          }]
-        }, [
-          routerLink
-            ? h(resolveComponent('router-link'), {
-              ref: refButton,
-              class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, btnAlign ? `align--${btnAlign}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
+        return h(
+          'div',
+          {
+            ref: refElem,
+            class: [
+              'vxe-button--dropdown',
+              className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '',
+              {
                 [`size--${vSize}`]: vSize,
-                [`theme--${btnStatus}`]: btnStatus,
-                'is--round': btnRound,
-                'is--circle': btnCircle,
-                'is--shadow': shadow,
-                'is--disabled': btnDisabled || loading,
-                'is--loading': loading
-              }],
-              title,
-              name,
-              type: isFormBtn ? type : 'button',
-              disabled: btnDisabled || loading,
-              to: routerLink,
-              onClick: clickTargetEvent,
-              ...btnOns
-            }, {
-              default () {
-                return renderContent().concat(showDropdownIcon
-                  ? [
-                      h('i', {
-                        class: `vxe-button--dropdown-icon ${visiblePanel ? (dropdownOpenIcon || getIcon().BUTTON_DROPDOWN_OPEN) : (dropdownCloseIcon || getIcon().BUTTON_DROPDOWN_CLOSE)}`
-                      })
-                    ]
-                  : [])
+                'is--active': visiblePanel
               }
-            })
-            : h('button', {
-              ref: refButton,
-              class: ['vxe-button', `type--${btnMode}`, btnAlign ? `align--${btnAlign}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
-                [`size--${vSize}`]: vSize,
-                [`theme--${btnStatus}`]: btnStatus,
-                'is--round': btnRound,
-                'is--circle': btnCircle,
-                'is--shadow': shadow,
-                'is--disabled': btnDisabled || loading,
-                'is--loading': loading
-              }],
-              title,
-              name,
-              type: isFormBtn ? type : 'button',
-              disabled: btnDisabled || loading,
-              onClick: clickTargetEvent,
-              ...btnOns
-            }, renderContent().concat(showDropdownIcon
-              ? [
-                  h('i', {
-                    class: `vxe-button--dropdown-icon ${visiblePanel ? (dropdownOpenIcon || getIcon().BUTTON_DROPDOWN_OPEN) : (dropdownCloseIcon || getIcon().BUTTON_DROPDOWN_CLOSE)}`
-                  })
-                ]
-              : [])),
-          h(Teleport, {
-            to: getPopupContainer(appendTo),
-            disabled: btnTransfer ? !initialized : true
-          }, [
-            h('div', {
-              ref: refBtnPanel,
-              class: ['vxe-button--dropdown-panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $button: $xeButton }) : ppClassName) : '', {
-                [`size--${vSize}`]: vSize,
-                'is--transfer': btnTransfer,
-                'ani--leave': isAniVisible,
-                'ani--enter': visiblePanel
-              }],
-              placement: reactData.panelPlacement,
-              style: reactData.panelStyle,
-              ...panelOns
-            }, initialized && (visiblePanel || isAniVisible)
-              ? [
-                  dropdownsSlot
-                    ? h('div', {
-                      class: 'vxe-button--dropdown-wrapper',
-                      onMousedown: mousedownDropdownEvent,
-                      onClick: clickDropdownEvent
-                    }, initialized && (destroyOnClose ? (visiblePanel || isAniVisible) : true) ? dropdownsSlot({}) : [])
-                    : h('div', {
-                      class: 'vxe-button--dropdown-wrapper'
-                    }, initialized && (destroyOnClose ? (visiblePanel || isAniVisible) : true)
-                      ? downBtnList.map((option, i) => {
-                        return h(VxeButtonComponent, {
-                          key: i,
-                          type: option.type,
-                          mode: option.mode || btnMode,
-                          className: option.className,
-                          name: option.name,
-                          routerLink: option.routerLink,
-                          permissionCode: option.permissionCode,
-                          title: option.title,
-                          content: option.content,
-                          status: option.status,
-                          icon: option.icon,
-                          round: XEUtils.isBoolean(option.round) ? option.round : (btnMode === 'text' ? false : btnRound),
-                          circle: XEUtils.isBoolean(option.circle) ? option.circle : (btnMode === 'text' ? false : btnCircle),
-                          disabled: option.disabled,
-                          loading: option.loading,
-                          align: option.align,
-                          onClick (params: VxeButtonDefines.ClickEventParams) {
-                            downBtnClickEvent(params, option)
-                          }
+            ]
+          },
+          [
+            routerLink
+              ? h(
+                resolveComponent('router-link'),
+                {
+                  ref: refButton,
+                  class: [
+                    'vxe-button',
+                    'vxe-button--link',
+                      `type--${btnMode}`,
+                      btnAlign ? `align--${btnAlign}` : '',
+                      className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '',
+                      {
+                        [`size--${vSize}`]: vSize,
+                        [`theme--${btnStatus}`]: btnStatus,
+                        'is--round': btnRound,
+                        'is--circle': btnCircle,
+                        'is--shadow': shadow,
+                        'is--disabled': btnDisabled || loading,
+                        'is--loading': loading
+                      }
+                  ],
+                  title,
+                  name,
+                  type: isFormBtn ? type : 'button',
+                  disabled: btnDisabled || loading,
+                  to: routerLink,
+                  onClick: clickTargetEvent,
+                  ...btnOns
+                },
+                {
+                  default() {
+                    return renderContent().concat(
+                      showDropdownIcon
+                        ? [
+                            h('i', {
+                              class: `vxe-button--dropdown-icon ${visiblePanel ? dropdownOpenIcon || getIcon().BUTTON_DROPDOWN_OPEN : dropdownCloseIcon || getIcon().BUTTON_DROPDOWN_CLOSE}`
+                            })
+                          ]
+                        : []
+                    )
+                  }
+                }
+              )
+              : h(
+                'button',
+                {
+                  ref: refButton,
+                  class: [
+                    'vxe-button',
+                      `type--${btnMode}`,
+                      btnAlign ? `align--${btnAlign}` : '',
+                      className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '',
+                      {
+                        [`size--${vSize}`]: vSize,
+                        [`theme--${btnStatus}`]: btnStatus,
+                        'is--round': btnRound,
+                        'is--circle': btnCircle,
+                        'is--shadow': shadow,
+                        'is--disabled': btnDisabled || loading,
+                        'is--loading': loading
+                      }
+                  ],
+                  title,
+                  name,
+                  type: isFormBtn ? type : 'button',
+                  disabled: btnDisabled || loading,
+                  onClick: clickTargetEvent,
+                  ...btnOns
+                },
+                renderContent().concat(
+                  showDropdownIcon
+                    ? [
+                        h('i', {
+                          class: `vxe-button--dropdown-icon ${visiblePanel ? dropdownOpenIcon || getIcon().BUTTON_DROPDOWN_OPEN : dropdownCloseIcon || getIcon().BUTTON_DROPDOWN_CLOSE}`
                         })
-                      })
-                      : [])
-                ]
-              : [])
-          ])
-        ])
+                      ]
+                    : []
+                )
+              ),
+            h(
+              Teleport,
+              {
+                to: getPopupContainer(appendTo),
+                disabled: btnTransfer ? !initialized : true
+              },
+              [
+                h(
+                  'div',
+                  {
+                    ref: refBtnPanel,
+                    class: [
+                      'vxe-button--dropdown-panel',
+                      ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $button: $xeButton }) : ppClassName) : '',
+                      {
+                        [`size--${vSize}`]: vSize,
+                        'is--transfer': btnTransfer,
+                        'ani--leave': isAniVisible,
+                        'ani--enter': visiblePanel
+                      }
+                    ],
+                    placement: reactData.panelPlacement,
+                    style: reactData.panelStyle,
+                    ...panelOns
+                  },
+                  initialized && (visiblePanel || isAniVisible)
+                    ? [
+                        dropdownsSlot
+                          ? h(
+                            'div',
+                            {
+                              class: 'vxe-button--dropdown-wrapper',
+                              onMousedown: mousedownDropdownEvent,
+                              onClick: clickDropdownEvent
+                            },
+                            initialized && (destroyOnClose ? visiblePanel || isAniVisible : true) ? dropdownsSlot({}) : []
+                          )
+                          : h(
+                            'div',
+                            {
+                              class: 'vxe-button--dropdown-wrapper'
+                            },
+                            initialized && (destroyOnClose ? visiblePanel || isAniVisible : true)
+                              ? downBtnList.map((option, i) => {
+                                return h(VxeButtonComponent, {
+                                  key: i,
+                                  type: option.type,
+                                  mode: option.mode || btnMode,
+                                  className: option.className,
+                                  name: option.name,
+                                  routerLink: option.routerLink,
+                                  permissionCode: option.permissionCode,
+                                  title: option.title,
+                                  content: option.content,
+                                  status: option.status,
+                                  icon: option.icon,
+                                  round: XEUtils.isBoolean(option.round) ? option.round : btnMode === 'text' ? false : btnRound,
+                                  circle: XEUtils.isBoolean(option.circle) ? option.circle : btnMode === 'text' ? false : btnCircle,
+                                  disabled: option.disabled,
+                                  loading: option.loading,
+                                  align: option.align,
+                                  onClick(params: VxeButtonDefines.ClickEventParams) {
+                                    downBtnClickEvent(params, option)
+                                  }
+                                })
+                              })
+                              : []
+                          )
+                      ]
+                    : []
+                )
+              ]
+            )
+          ]
+        )
       }
       if (routerLink) {
-        return h(resolveComponent('router-link'), {
+        return h(
+          resolveComponent('router-link'),
+          {
+            ref: refButton,
+            class: [
+              'vxe-button',
+              'vxe-button--link',
+              `type--${btnMode}`,
+              btnAlign ? `align--${btnAlign}` : '',
+              className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '',
+              {
+                [`size--${vSize}`]: vSize,
+                [`theme--${btnStatus}`]: btnStatus,
+                'is--round': btnRound,
+                'is--circle': btnCircle,
+                'is--shadow': shadow,
+                'is--disabled': btnDisabled || loading,
+                'is--loading': loading
+              }
+            ],
+            title,
+            name,
+            type: isFormBtn ? type : 'button',
+            disabled: btnDisabled || loading,
+            to: routerLink,
+            onClick: clickEvent,
+            onMouseenter: mouseenterEvent,
+            onMouseleave: mouseleaveEvent,
+            onContextmenu: contextmenuEvent
+          },
+          {
+            default() {
+              return renderContent()
+            }
+          }
+        )
+      }
+      return h(
+        'button',
+        {
           ref: refButton,
-          class: ['vxe-button', 'vxe-button--link', `type--${btnMode}`, btnAlign ? `align--${btnAlign}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
-            [`size--${vSize}`]: vSize,
-            [`theme--${btnStatus}`]: btnStatus,
-            'is--round': btnRound,
-            'is--circle': btnCircle,
-            'is--shadow': shadow,
-            'is--disabled': btnDisabled || loading,
-            'is--loading': loading
-          }],
+          class: [
+            'vxe-button',
+            `type--${btnMode}`,
+            btnAlign ? `align--${btnAlign}` : '',
+            className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${btnStatus}`]: btnStatus,
+              'is--round': btnRound,
+              'is--circle': btnCircle,
+              'is--shadow': shadow,
+              'is--disabled': btnDisabled || loading,
+              'is--loading': loading
+            }
+          ],
           title,
           name,
           type: isFormBtn ? type : 'button',
           disabled: btnDisabled || loading,
-          to: routerLink,
           onClick: clickEvent,
           onMouseenter: mouseenterEvent,
           onMouseleave: mouseleaveEvent,
           onContextmenu: contextmenuEvent
-        }, {
-          default () {
-            return renderContent()
-          }
-        })
-      }
-      return h('button', {
-        ref: refButton,
-        class: ['vxe-button', `type--${btnMode}`, btnAlign ? `align--${btnAlign}` : '', className ? (XEUtils.isFunction(className) ? className({ $button: $xeButton }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${btnStatus}`]: btnStatus,
-          'is--round': btnRound,
-          'is--circle': btnCircle,
-          'is--shadow': shadow,
-          'is--disabled': btnDisabled || loading,
-          'is--loading': loading
-        }],
-        title,
-        name,
-        type: isFormBtn ? type : 'button',
-        disabled: btnDisabled || loading,
-        onClick: clickEvent,
-        onMouseenter: mouseenterEvent,
-        onMouseleave: mouseleaveEvent,
-        onContextmenu: contextmenuEvent
-      }, renderContent())
+        },
+        renderContent()
+      )
     }
 
     $xeButton.renderVN = renderVN
@@ -847,7 +967,7 @@ const VxeButtonComponent = defineVxeComponent({
 
     return $xeButton
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

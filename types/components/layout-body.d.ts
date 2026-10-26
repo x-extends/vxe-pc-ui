@@ -23,7 +23,7 @@ export interface VxeLayoutBodyConstructor extends VxeComponentBaseOptions, VxeLa
 export interface LayoutBodyPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeLayoutBodyPrivateRef extends LayoutBodyPrivateRef { }
+export interface VxeLayoutBodyPrivateRef extends LayoutBodyPrivateRef {}
 
 export namespace VxeLayoutBodyPropTypes {
   export type Size = VxeComponentSizeType
@@ -62,22 +62,19 @@ export interface VxeLayoutBodyProps {
   scrollbarConfig?: VxeLayoutBodyPropTypes.ScrollbarConfig
 }
 
-export interface LayoutBodyPrivateComputed {
-}
-export interface VxeLayoutBodyPrivateComputed extends LayoutBodyPrivateComputed { }
+export interface LayoutBodyPrivateComputed {}
+export interface VxeLayoutBodyPrivateComputed extends LayoutBodyPrivateComputed {}
 
-export interface LayoutBodyInternalData {
-}
-export interface LayoutBodyReactData {
-}
+export interface LayoutBodyInternalData {}
+export interface LayoutBodyReactData {}
 
 export interface LayoutBodyMethods {
   dispatchEvent(type: ValueOf<VxeLayoutBodyEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeLayoutBodyMethods extends LayoutBodyMethods { }
+export interface VxeLayoutBodyMethods extends LayoutBodyMethods {}
 
-export interface LayoutBodyPrivateMethods { }
-export interface VxeLayoutBodyPrivateMethods extends LayoutBodyPrivateMethods { }
+export interface LayoutBodyPrivateMethods {}
+export interface VxeLayoutBodyPrivateMethods extends LayoutBodyPrivateMethods {}
 
 export type VxeLayoutBodyEmits = []
 
@@ -89,9 +86,9 @@ export namespace VxeLayoutBodyDefines {
 
 export type VxeLayoutBodyEventProps = {}
 
-export interface VxeLayoutBodyListeners { }
+export interface VxeLayoutBodyListeners {}
 
-export namespace VxeLayoutBodyEvents { }
+export namespace VxeLayoutBodyEvents {}
 
 export namespace VxeLayoutBodySlotTypes {
   export interface DefaultSlotParams {}

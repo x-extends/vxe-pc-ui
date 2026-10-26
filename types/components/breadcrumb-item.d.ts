@@ -20,7 +20,7 @@ export interface VxeBreadcrumbItemConstructor extends VxeComponentBaseOptions, V
 export interface BreadcrumbItemPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeBreadcrumbItemPrivateRef extends BreadcrumbItemPrivateRef { }
+export interface VxeBreadcrumbItemPrivateRef extends BreadcrumbItemPrivateRef {}
 
 export namespace VxeBreadcrumbItemPropTypes {
   export type Title = string
@@ -37,19 +37,16 @@ export type VxeBreadcrumbItemProps = {
   routerLink?: VxeBreadcrumbItemPropTypes.RouterLink
 }
 
-export interface BreadcrumbItemPrivateComputed {
-}
-export interface VxeBreadcrumbItemPrivateComputed extends BreadcrumbItemPrivateComputed { }
+export interface BreadcrumbItemPrivateComputed {}
+export interface VxeBreadcrumbItemPrivateComputed extends BreadcrumbItemPrivateComputed {}
 
-export interface BreadcrumbItemReactData {
-}
+export interface BreadcrumbItemReactData {}
 
-export interface BreadcrumbItemMethods {
-}
-export interface VxeBreadcrumbItemMethods extends BreadcrumbItemMethods { }
+export interface BreadcrumbItemMethods {}
+export interface VxeBreadcrumbItemMethods extends BreadcrumbItemMethods {}
 
-export interface BreadcrumbItemPrivateMethods { }
-export interface VxeBreadcrumbItemPrivateMethods extends BreadcrumbItemPrivateMethods { }
+export interface BreadcrumbItemPrivateMethods {}
+export interface VxeBreadcrumbItemPrivateMethods extends BreadcrumbItemPrivateMethods {}
 
 export type VxeBreadcrumbItemEmits = []
 
@@ -61,9 +58,9 @@ export namespace VxeBreadcrumbItemDefines {
 
 export type VxeBreadcrumbItemEventProps = {}
 
-export interface VxeBreadcrumbItemListeners { }
+export interface VxeBreadcrumbItemListeners {}
 
-export namespace VxeBreadcrumbItemEvents { }
+export namespace VxeBreadcrumbItemEvents {}
 
 export namespace VxeBreadcrumbItemSlotTypes {
   export interface DefaultSlotParams {}

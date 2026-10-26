@@ -4,7 +4,7 @@ import VxeTextEllipsisComponent from './src/text-ellipsis'
 import { dynamicApp } from '../dynamics'
 
 export const VxeTextEllipsis = Object.assign({}, VxeTextEllipsisComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeTextEllipsisComponent.name as string, VxeTextEllipsisComponent)
   }
 })

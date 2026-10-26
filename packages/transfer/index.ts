@@ -4,7 +4,7 @@ import VxeTransferComponent from './src/transfer'
 import { dynamicApp } from '../dynamics'
 
 export const VxeTransfer = Object.assign({}, VxeTransferComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeTransferComponent.name as string, VxeTransferComponent)
   }
 })

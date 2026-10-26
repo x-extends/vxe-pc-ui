@@ -1,11 +1,22 @@
 import { ref, h, reactive, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { VxeUI, useFns } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
-import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, LayoutContainerPrivateMethods, VxeLayoutContainerEmits, LayoutContainerMethods, LayoutContainerPrivateRef, VxeLayoutContainerPrivateComputed, VxeLayoutContainerConstructor, VxeLayoutContainerPrivateMethods, ValueOf } from '../../../types'
+import type {
+  VxeLayoutContainerPropTypes,
+  LayoutContainerReactData,
+  LayoutContainerPrivateMethods,
+  VxeLayoutContainerEmits,
+  LayoutContainerMethods,
+  LayoutContainerPrivateRef,
+  VxeLayoutContainerPrivateComputed,
+  VxeLayoutContainerConstructor,
+  VxeLayoutContainerPrivateMethods,
+  ValueOf
+} from '../../../types'
 
-const { getConfig, baseUtils, createEvent } = VxeUI
+const { getConfig, baseUtils, useFns, createEvent } = VxeUI
 
 const { getDefVal } = baseUtils
 
@@ -23,7 +34,7 @@ export default defineVxeComponent({
     }
   },
   emits: [] as VxeLayoutContainerEmits,
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -33,8 +44,7 @@ export default defineVxeComponent({
     const { computeSize } = useFns.useSize(props)
     const { computeIsVScrollbar } = useFns.useVScrollbar(props)
 
-    const reactData = reactive<LayoutContainerReactData>({
-    })
+    const reactData = reactive<LayoutContainerReactData>({})
 
     const refMaps: LayoutContainerPrivateRef = {
       refElem
@@ -63,8 +73,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const layoutContainerPrivateMethods: LayoutContainerPrivateMethods = {
-    }
+    const layoutContainerPrivateMethods: LayoutContainerPrivateMethods = {}
 
     Object.assign($xeLayoutContainer, layoutContainerMethods, layoutContainerPrivateMethods)
 
@@ -73,20 +82,27 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const defaultSlot = slots.default
 
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-layout-container', {
-          [`size--${vSize}`]: vSize,
-          'is--vertical': vertical
-        }]
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-layout-container',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--vertical': vertical
+            }
+          ]
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
 
     $xeLayoutContainer.renderVN = renderVN
 
     return $xeLayoutContainer
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

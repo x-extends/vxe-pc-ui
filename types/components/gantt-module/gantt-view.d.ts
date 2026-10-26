@@ -17,8 +17,7 @@ export interface VxeGanttViewConstructor extends VxeComponentBaseOptions, VxeGan
 }
 export type VxeGanttViewInstance = DefineVxeComponentInstance<VxeGanttViewProps, VxeGanttViewConstructor>
 
-interface VxeGanttViewProps {
-}
+interface VxeGanttViewProps {}
 
 export interface GanttViewReactData extends VxeUseInitVScrollbarReactData {
   // 是否启用了横向 X 可视渲染方式加载
@@ -144,9 +143,7 @@ export interface VxeGanttViewPrivateMethods {
   /**
    * @private
    */
-  handleSyncScrollTop(params: {
-    scrollTop: number
-  }): void
+  handleSyncScrollTop(params: { scrollTop: number }): void
   /**
    * @private
    */
@@ -192,9 +189,7 @@ export interface VxeGanttViewMethods {
   getScrollViewElem(): HTMLElement | null | undefined
   refreshData(): Promise<void>
   updateViewData(force?: boolean): Promise<void>
-  connectUpdate(params: {
-    $table: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods
-  }): Promise<void>
+  connectUpdate(params: { $table: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods }): Promise<void>
 }
 
 type VxeGanttViewEmits = []

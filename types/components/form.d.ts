@@ -25,7 +25,7 @@ export interface VxeFormConstructor<D = any> extends VxeComponentBaseOptions, Vx
 export interface FormPrivateRef {
   refElem: Ref<HTMLFormElement | undefined>
 }
-export interface VxeFormPrivateRef extends FormPrivateRef { }
+export interface VxeFormPrivateRef extends FormPrivateRef {}
 
 export namespace VxeFormPropTypes {
   export type Size = VxeComponentSizeType
@@ -166,7 +166,7 @@ export interface FormPrivateComputed {
   computeCollapseOpts: ComputedRef<VxeFormPropTypes.CollapseConfig>
   computeAutoItemWidthList: ComputedRef<VxeFormDefines.ItemInfo[]>
 }
-export interface VxeFormPrivateComputed extends FormPrivateComputed { }
+export interface VxeFormPrivateComputed extends FormPrivateComputed {}
 
 export interface FormReactData {
   collapseAll: boolean
@@ -182,13 +182,16 @@ export interface FormInternalData {
     item: VxeFormDefines.ItemInfo | null
     visible: boolean
   }
-  itemFormatCache: Record<string, {
-    field: string
-    formatData?: {
-      value?: any
-      label?: any
+  itemFormatCache: Record<
+    string,
+    {
+      field: string
+      formatData?: {
+        value?: any
+        label?: any
+      }
     }
-  }>
+  >
   fullItemList: VxeFormDefines.ItemInfo[]
   fullItemIdData: Record<string, VxeFormDefines.ItemCacheItem>
   fullItemFieldData: Record<string, VxeFormDefines.ItemCacheItem>
@@ -268,7 +271,7 @@ export interface FormMethods<D = any> {
    */
   recalculate(): Promise<void>
 }
-export interface VxeFormMethods<D = any> extends FormMethods<D> { }
+export interface VxeFormMethods<D = any> extends FormMethods<D> {}
 
 export interface FormPrivateMethods {
   /**
@@ -286,9 +289,12 @@ export interface FormPrivateMethods {
   /**
    * @private
    */
-  triggerTitleTipEvent(evnt: MouseEvent, params: {
-    item: VxeFormDefines.ItemInfo
-  }): void
+  triggerTitleTipEvent(
+    evnt: MouseEvent,
+    params: {
+      item: VxeFormDefines.ItemInfo
+    }
+  ): void
   handleSubmitEvent(evnt: Event): void
   /**
    * @private
@@ -297,20 +303,16 @@ export interface FormPrivateMethods {
   /**
    * @private
    */
-  handleValidIconEvent(evnt: Event, params: {
-    item: VxeFormDefines.ItemInfo
-  }): void
+  handleValidIconEvent(
+    evnt: Event,
+    params: {
+      item: VxeFormDefines.ItemInfo
+    }
+  ): void
 }
-export interface VxeFormPrivateMethods extends FormPrivateMethods { }
+export interface VxeFormPrivateMethods extends FormPrivateMethods {}
 
-export type VxeFormEmits = [
-  'update:collapseStatus',
-  'collapse',
-  'toggle-collapse',
-  'submit',
-  'submit-invalid',
-  'reset'
-]
+export type VxeFormEmits = ['update:collapseStatus', 'collapse', 'toggle-collapse', 'submit', 'submit-invalid', 'reset']
 
 export namespace VxeFormDefines {
   export interface ItemCacheItem {
@@ -414,7 +416,7 @@ export namespace VxeFormDefines {
     field: string
   }
   export interface ValidateErrorParams<D = any> {
-    $form: VxeFormConstructor,
+    $form: VxeFormConstructor
     rule: VxeFormDefines.FormRule<D>
     data: any
     field: string
@@ -440,17 +442,17 @@ export namespace VxeFormDefines {
     data: D
   }
 
-  export interface CollapseParams<D = any> extends FormBaseParams<D> { }
-  export interface CollapseEventParams<D = any> extends FormEventParams<D>, CollapseParams<D> { }
+  export interface CollapseParams<D = any> extends FormBaseParams<D> {}
+  export interface CollapseEventParams<D = any> extends FormEventParams<D>, CollapseParams<D> {}
 
-  export interface SubmitParams<D = any> extends FormBaseParams<D> { }
-  export interface SubmitEventParams<D = any> extends FormEventParams<D>, SubmitParams<D> { }
+  export interface SubmitParams<D = any> extends FormBaseParams<D> {}
+  export interface SubmitEventParams<D = any> extends FormEventParams<D>, SubmitParams<D> {}
 
-  export interface SubmitInvalidParams<D = any> extends FormBaseParams<D> { }
-  export interface SubmitInvalidEventParams<D = any> extends FormEventParams<D>, SubmitInvalidParams<D> { }
+  export interface SubmitInvalidParams<D = any> extends FormBaseParams<D> {}
+  export interface SubmitInvalidEventParams<D = any> extends FormEventParams<D>, SubmitInvalidParams<D> {}
 
-  export interface ResetParams<D = any> extends FormBaseParams<D> { }
-  export interface ResetEventParams<D = any> extends FormEventParams<D>, ResetParams<D> { }
+  export interface ResetParams<D = any> extends FormBaseParams<D> {}
+  export interface ResetEventParams<D = any> extends FormEventParams<D>, ResetParams<D> {}
 }
 
 export type VxeFormEventProps = {
@@ -482,11 +484,13 @@ export interface VxeFormSlots {
   /**
    * 自定义插槽模板
    */
-  [key: string]: ((params: {
-    $form: VxeFormConstructor
+  [key: string]:
+    | ((params: {
+        $form: VxeFormConstructor
 
-    [key: string]: any
-  }) => any) | undefined
+        [key: string]: any
+      }) => any)
+    | undefined
 
   default: (params: VxeFormSlotTypes.DefaultSlotParams) => any
 }

@@ -23,7 +23,7 @@ export interface VxeToolbarConstructor extends VxeComponentBaseOptions, VxeToolb
 export interface ToolbarPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeToolbarPrivateRef extends ToolbarPrivateRef { }
+export interface VxeToolbarPrivateRef extends ToolbarPrivateRef {}
 
 export namespace VxeToolbarPropTypes {
   export type Size = VxeComponentSizeType
@@ -34,7 +34,7 @@ export namespace VxeToolbarPropTypes {
     storage?: boolean
   }
   export type Resizable = boolean | ResizableConfig
-  export interface ResizableOpts extends ResizableConfig { }
+  export interface ResizableOpts extends ResizableConfig {}
 
   interface RefreshOptions {
     queryMethod?(params: { [key: string]: any }): any
@@ -76,7 +76,7 @@ export namespace VxeToolbarPropTypes {
      * 已废弃，请使用 custom-config.trigger
      * @deprecated
      */
-    trigger?: string,
+    trigger?: string
     /**
      * 已废弃，请使用 custom-config.immediate
      * @deprecated
@@ -176,9 +176,7 @@ export namespace VxeToolbarPropTypes {
 
   export type Perfect = boolean
 
-  export type ClassName = string | ((params: {
-    $toolbar: VxeToolbarConstructor
-  }) => string)
+  export type ClassName = string | ((params: { $toolbar: VxeToolbarConstructor }) => string)
 }
 
 export type VxeToolbarProps = {
@@ -237,9 +235,8 @@ export type VxeToolbarProps = {
   className?: VxeToolbarPropTypes.ClassName
 }
 
-export interface ToolbarPrivateComputed {
-}
-export interface VxeToolbarPrivateComputed extends ToolbarPrivateComputed { }
+export interface ToolbarPrivateComputed {}
+export interface VxeToolbarPrivateComputed extends ToolbarPrivateComputed {}
 
 export interface ToolbarReactData {
   isRefresh: boolean
@@ -248,25 +245,19 @@ export interface ToolbarReactData {
 }
 
 export interface ToolbarInternalData {
-  connectTable: VxeTableConstructor<any> & VxeTablePrivateMethods<any> | null | undefined
+  connectTable: (VxeTableConstructor<any> & VxeTablePrivateMethods<any>) | null | undefined
 }
 
 export interface ToolbarMethods {
   dispatchEvent(type: ValueOf<VxeToolbarEmits>, params: Record<string, any>, evnt: Event | null): void
-  syncUpdate(params: {
-    collectColumn: VxeTableDefines.ColumnInfo[]
-    $table: VxeTableConstructor
-  }): void
+  syncUpdate(params: { collectColumn: VxeTableDefines.ColumnInfo[]; $table: VxeTableConstructor }): void
 }
-export interface VxeToolbarMethods extends ToolbarMethods { }
+export interface VxeToolbarMethods extends ToolbarMethods {}
 
-export interface ToolbarPrivateMethods { }
-export interface VxeToolbarPrivateMethods extends ToolbarPrivateMethods { }
+export interface ToolbarPrivateMethods {}
+export interface VxeToolbarPrivateMethods extends ToolbarPrivateMethods {}
 
-export type VxeToolbarEmits = [
-  'button-click',
-  'tool-click'
-]
+export type VxeToolbarEmits = ['button-click', 'tool-click']
 
 export namespace VxeToolbarDefines {
   export interface ToolbarEventParams<D = any> extends VxeComponentEventParams {

@@ -21,7 +21,7 @@ export interface VxeCountdownConstructor extends VxeComponentBaseOptions, VxeCou
 export interface CountdownPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeCountdownPrivateRef extends CountdownPrivateRef { }
+export interface VxeCountdownPrivateRef extends CountdownPrivateRef {}
 
 export namespace VxeCountdownPropTypes {
   export type ModelValue = number | string
@@ -46,7 +46,7 @@ export interface VxeCountdownProps {
 export interface CountdownPrivateComputed {
   computeSize: ComputedRef<VxeCountdownPropTypes.Size>
 }
-export interface VxeCountdownPrivateComputed extends CountdownPrivateComputed { }
+export interface VxeCountdownPrivateComputed extends CountdownPrivateComputed {}
 
 export interface CountdownReactData {
   currNum: number
@@ -60,16 +60,12 @@ export interface CountdownInternalData {
 export interface CountdownMethods {
   dispatchEvent(type: ValueOf<VxeCountdownEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCountdownMethods extends CountdownMethods { }
+export interface VxeCountdownMethods extends CountdownMethods {}
 
-export interface CountdownPrivateMethods { }
-export interface VxeCountdownPrivateMethods extends CountdownPrivateMethods { }
+export interface CountdownPrivateMethods {}
+export interface VxeCountdownPrivateMethods extends CountdownPrivateMethods {}
 
-export type VxeCountdownEmits = [
-  'update:modelValue',
-  'start',
-  'end'
-]
+export type VxeCountdownEmits = ['update:modelValue', 'start', 'end']
 
 export namespace VxeCountdownDefines {
   export interface CountdownEventParams extends VxeComponentEventParams {

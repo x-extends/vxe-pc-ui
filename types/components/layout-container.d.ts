@@ -20,7 +20,7 @@ export interface VxeLayoutContainerConstructor extends VxeComponentBaseOptions, 
 export interface LayoutContainerPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeLayoutContainerPrivateRef extends LayoutContainerPrivateRef { }
+export interface VxeLayoutContainerPrivateRef extends LayoutContainerPrivateRef {}
 
 export namespace VxeLayoutContainerPropTypes {
   export type Size = VxeComponentSizeType
@@ -34,20 +34,18 @@ export interface VxeLayoutContainerProps {
   vertical?: VxeLayoutContainerPropTypes.Vertical
 }
 
-export interface LayoutContainerPrivateComputed {
-}
-export interface VxeLayoutContainerPrivateComputed extends LayoutContainerPrivateComputed { }
+export interface LayoutContainerPrivateComputed {}
+export interface VxeLayoutContainerPrivateComputed extends LayoutContainerPrivateComputed {}
 
-export interface LayoutContainerReactData {
-}
+export interface LayoutContainerReactData {}
 
 export interface LayoutContainerMethods {
   dispatchEvent(type: ValueOf<VxeLayoutContainerEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeLayoutContainerMethods extends LayoutContainerMethods { }
+export interface VxeLayoutContainerMethods extends LayoutContainerMethods {}
 
-export interface LayoutContainerPrivateMethods { }
-export interface VxeLayoutContainerPrivateMethods extends LayoutContainerPrivateMethods { }
+export interface LayoutContainerPrivateMethods {}
+export interface VxeLayoutContainerPrivateMethods extends LayoutContainerPrivateMethods {}
 
 export type VxeLayoutContainerEmits = []
 
@@ -59,9 +57,9 @@ export namespace VxeLayoutContainerDefines {
 
 export type VxeLayoutContainerEventProps = {}
 
-export interface VxeLayoutContainerListeners { }
+export interface VxeLayoutContainerListeners {}
 
-export namespace VxeLayoutContainerEvents { }
+export namespace VxeLayoutContainerEvents {}
 
 export namespace VxeLayoutContainerSlotTypes {
   export interface DefaultSlotParams {}

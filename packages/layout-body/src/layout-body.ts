@@ -1,6 +1,6 @@
 import { ref, h, reactive, PropType, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, useFns, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { getDefaultConfig } from '../../ui/src/utils'
 import VxeLoadingComponent from '../../loading'
@@ -9,11 +9,13 @@ import VxeUIBacktopComponent from '../../backtop'
 
 import type { LayoutBodyInternalData, VxeLayoutBodyPropTypes, LayoutBodyReactData, LayoutBodyPrivateRef, VxeLayoutBodyEmits, LayoutBodyMethods, LayoutBodyPrivateMethods, VxeLayoutBodyPrivateComputed, VxeLayoutBodyConstructor, VxeLayoutBodyPrivateMethods, ValueOf } from '../../../types'
 
-function createInternalData (): LayoutBodyInternalData {
+const { getConfig, useFns, createEvent, renderEmptyElement } = VxeUI
+
+function createInternalData(): LayoutBodyInternalData {
   return {}
 }
 
-function createReactData (): LayoutBodyReactData {
+function createReactData(): LayoutBodyReactData {
   return {}
 }
 
@@ -38,7 +40,7 @@ export default defineVxeComponent({
     }
   },
   emits: [],
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -77,13 +79,13 @@ export default defineVxeComponent({
         visible: scrollbarOpts.visible,
         xConfig: scrollbarOpts.xConfig,
         yConfig: scrollbarOpts.yConfig,
-        className: 'vxe-layout-body--scrollbar' + (className ? (' ' + className) : ''),
+        className: 'vxe-layout-body--scrollbar' + (className ? ' ' + className : ''),
         viewAttrs: {
           ...scrollbarOpts.viewAttrs,
-          id: showBacktop ? (backtopId || null) : null
+          id: showBacktop ? backtopId || null : null
         },
-        viewClassName: 'vxe-layout-body--scrollbar-view' + (viewClassName ? (' ' + viewClassName) : ''),
-        viewInnerClassName: 'vxe-layout-body--scrollbar-inner' + (viewInnerClassName ? (' ' + viewInnerClassName) : '')
+        viewClassName: 'vxe-layout-body--scrollbar-view' + (viewClassName ? ' ' + viewClassName : ''),
+        viewInnerClassName: 'vxe-layout-body--scrollbar-inner' + (viewInnerClassName ? ' ' + viewInnerClassName : '')
       }
     })
 
@@ -110,8 +112,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const layoutBodyPrivateMethods: LayoutBodyPrivateMethods = {
-    }
+    const layoutBodyPrivateMethods: LayoutBodyPrivateMethods = {}
 
     Object.assign($xeLayoutBody, layoutBodyMethods, layoutBodyPrivateMethods)
 
@@ -139,43 +140,52 @@ export default defineVxeComponent({
       if (backtopBottomSlot) {
         backtopScopeSlots.bottom = backtopBottomSlot
       }
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-layout-body', {
-          [`size--${vSize}`]: vSize,
-          'is--loading': loading,
-          'is--padding': padding
-        }]
-      }, [
-        isVScrollbar
-          ? h(VxeScrollbarComponent, scrollbarProps, {
-            default: () => defaultSlot ? defaultSlot({}) : []
-          })
-          : h('div', {
-            id: showBacktop ? backtopId : '',
-            class: 'vxe-layout-body--inner'
-          }, defaultSlot ? defaultSlot({}) : []),
-        /**
-         * 加载中
-         */
-        h(VxeLoadingComponent, {
-          class: 'vxe-layout-body-view--loading',
-          modelValue: loading
-        }),
-        /**
-         * 回到顶部
-         */
-        showBacktop
-          ? h(VxeUIBacktopComponent, backtopOpts, backtopScopeSlots)
-          : renderEmptyElement($xeLayoutBody)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-layout-body',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--loading': loading,
+              'is--padding': padding
+            }
+          ]
+        },
+        [
+          isVScrollbar
+            ? h(VxeScrollbarComponent, scrollbarProps, {
+              default: () => (defaultSlot ? defaultSlot({}) : [])
+            })
+            : h(
+              'div',
+              {
+                id: showBacktop ? backtopId : '',
+                class: 'vxe-layout-body--inner'
+              },
+              defaultSlot ? defaultSlot({}) : []
+            ),
+          /**
+           * 加载中
+           */
+          h(VxeLoadingComponent, {
+            class: 'vxe-layout-body-view--loading',
+            modelValue: loading
+          }),
+          /**
+           * 回到顶部
+           */
+          showBacktop ? h(VxeUIBacktopComponent, backtopOpts, backtopScopeSlots) : renderEmptyElement($xeLayoutBody)
+        ]
+      )
     }
 
     $xeLayoutBody.renderVN = renderVN
 
     return $xeLayoutBody
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

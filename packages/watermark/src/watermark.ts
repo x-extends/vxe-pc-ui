@@ -1,11 +1,13 @@
 import { ref, h, reactive, computed, onMounted, watch, PropType, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalEvents } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { getContentUrl } from './util'
 
 import type { WatermarkReactData, VxeWatermarkEmits, WatermarkMethods, VxeWatermarkPropTypes, WatermarkPrivateMethods, ValueOf, VxeComponentStyleType, WatermarkPrivateRef, VxeWatermarkPrivateComputed, VxeWatermarkConstructor, VxeWatermarkPrivateMethods } from '../../../types'
+
+const { getConfig, createEvent, globalEvents } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeWatermark',
@@ -26,9 +28,8 @@ export default defineVxeComponent({
     offset: Object as PropType<VxeWatermarkPropTypes.Offset>,
     zIndex: [String, Number] as PropType<VxeWatermarkPropTypes.ZIndex>
   },
-  emits: [
-  ] as VxeWatermarkEmits,
-  setup (props, context) {
+  emits: [] as VxeWatermarkEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -66,8 +67,7 @@ export default defineVxeComponent({
       return stys
     })
 
-    const computeMaps: VxeWatermarkPrivateComputed = {
-    }
+    const computeMaps: VxeWatermarkPrivateComputed = {}
 
     const $xeWatermark = {
       xID,
@@ -98,15 +98,14 @@ export default defineVxeComponent({
             rotate,
             gap,
             offset
-          }).then(url => {
+          }).then((url) => {
             reactData.markUrl = url
           })
         }
       }
     }
 
-    const watermarkPrivateMethods: WatermarkPrivateMethods = {
-    }
+    const watermarkPrivateMethods: WatermarkPrivateMethods = {}
 
     Object.assign($xeWatermark, watermarkMethods, watermarkPrivateMethods)
 
@@ -119,39 +118,68 @@ export default defineVxeComponent({
       })
     }
 
-    watch(() => props.imageUrl, () => {
-      updateMarkStyle()
-    })
+    watch(
+      () => props.imageUrl,
+      () => {
+        updateMarkStyle()
+      }
+    )
 
-    watch(() => props.content, () => {
-      updateMarkStyle()
-    })
+    watch(
+      () => props.content,
+      () => {
+        updateMarkStyle()
+      }
+    )
 
-    watch(() => props.gap, () => {
-      updateMarkStyle()
-    })
+    watch(
+      () => props.gap,
+      () => {
+        updateMarkStyle()
+      }
+    )
 
-    watch(() => props.rotate, () => {
-      updateMarkStyle()
-    })
+    watch(
+      () => props.rotate,
+      () => {
+        updateMarkStyle()
+      }
+    )
 
-    watch(() => props.width, () => {
-      updateMarkStyle()
-    })
+    watch(
+      () => props.width,
+      () => {
+        updateMarkStyle()
+      }
+    )
 
-    watch(() => props.height, () => {
-      updateMarkStyle()
-    })
+    watch(
+      () => props.height,
+      () => {
+        updateMarkStyle()
+      }
+    )
 
-    watch(() => props.font, () => {
-      updateMarkStyle()
-    })
+    watch(
+      () => props.font,
+      () => {
+        updateMarkStyle()
+      }
+    )
 
     onMounted(() => {
       updateMarkStyle()
-      globalEvents.on($xeWatermark, 'resize', XEUtils.throttle(() => {
-        updateMarkStyle()
-      }, 300, { trailing: true, leading: true }))
+      globalEvents.on(
+        $xeWatermark,
+        'resize',
+        XEUtils.throttle(
+          () => {
+            updateMarkStyle()
+          },
+          300,
+          { trailing: true, leading: true }
+        )
+      )
     })
 
     onUnmounted(() => {
@@ -162,7 +190,7 @@ export default defineVxeComponent({
 
     return $xeWatermark
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

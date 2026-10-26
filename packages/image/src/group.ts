@@ -32,12 +32,8 @@ export default defineVxeComponent({
     },
     getThumbnailUrlMethod: Function as PropType<VxeImageGroupPropTypes.GetThumbnailUrlMethod>
   },
-  emits: [
-    'click',
-    'change',
-    'rotate'
-  ] as VxeImageGroupEmits,
-  setup (props, context) {
+  emits: ['click', 'change', 'rotate'] as VxeImageGroupEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -47,7 +43,7 @@ export default defineVxeComponent({
     const computeImgList = computed(() => {
       const { urlList } = props
       if (urlList) {
-        return (XEUtils.isArray(urlList) ? urlList : [urlList]).map(item => {
+        return (XEUtils.isArray(urlList) ? urlList : [urlList]).map((item) => {
           if (XEUtils.isString(item)) {
             return {
               url: item,
@@ -84,29 +80,32 @@ export default defineVxeComponent({
     } as unknown as VxeImageGroupConstructor & VxeImageGroupPrivateMethods
 
     const imageGroupMethods: ImageGroupMethods = {
-      dispatchEvent (type, params, evnt) {
+      dispatchEvent(type, params, evnt) {
         emit(type, createEvent(evnt, { $imageGroup: $xeImageGroup }, params))
       }
     }
 
     const imageGroupPrivateMethods: ImageGroupPrivateMethods = {
-      handleClickImgEvent (evnt, params) {
+      handleClickImgEvent(evnt, params) {
         const { showPreview, toolbarConfig, showPrintButton, showDownloadButton, zIndex } = props
         const { url } = params
         const imgList = computeImgList.value
         if (showPreview && url) {
           openPreviewImage({
-            activeIndex: Math.max(0, XEUtils.findIndexOf(imgList, item => item.url === url)),
+            activeIndex: Math.max(
+              0,
+              XEUtils.findIndexOf(imgList, (item) => item.url === url)
+            ),
             urlList: imgList,
             toolbarConfig,
             showPrintButton,
             showDownloadButton,
             zIndex,
             events: {
-              change (eventParams) {
+              change(eventParams) {
                 $xeImageGroup.dispatchEvent('change', eventParams, eventParams.$event)
               },
-              rotate (eventParams) {
+              rotate(eventParams) {
                 $xeImageGroup.dispatchEvent('rotate', eventParams, eventParams.$event)
               }
             }
@@ -123,22 +122,29 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const imgStyleOpts = computeImgStyleOpts.value
       const getThumbnailUrlMethod = computeGetThumbnailUrlMethod.value
-      return h('div', {
-        class: ['vxe-image-group', {
-          [`size--${vSize}`]: vSize
-        }]
-      }, imgList
-        ? imgList.map((item, index) => {
-          return h(VxeImageComponent, {
-            key: index,
-            src: item.url,
-            alt: item.alt,
-            width: imgStyleOpts.width,
-            height: imgStyleOpts.height,
-            getThumbnailUrlMethod
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-image-group',
+            {
+              [`size--${vSize}`]: vSize
+            }
+          ]
+        },
+        imgList
+          ? imgList.map((item, index) => {
+            return h(VxeImageComponent, {
+              key: index,
+              src: item.url,
+              alt: item.alt,
+              width: imgStyleOpts.width,
+              height: imgStyleOpts.height,
+              getThumbnailUrlMethod
+            })
           })
-        })
-        : [])
+          : []
+      )
     }
 
     $xeImageGroup.renderVN = renderVN
@@ -147,7 +153,7 @@ export default defineVxeComponent({
 
     return $xeImageGroup
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

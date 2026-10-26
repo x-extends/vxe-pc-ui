@@ -20,7 +20,7 @@ export interface VxeBadgeConstructor extends VxeComponentBaseOptions, VxeBadgeMe
 export interface BadgePrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeBadgePrivateRef extends BadgePrivateRef { }
+export interface VxeBadgePrivateRef extends BadgePrivateRef {}
 
 export namespace VxeBadgePropTypes {
   export type Count = string | number
@@ -40,19 +40,16 @@ export interface VxeBadgeProps {
   size?: VxeBadgePropTypes.Size
 }
 
-export interface BadgePrivateComputed {
-}
-export interface VxeBadgePrivateComputed extends BadgePrivateComputed { }
+export interface BadgePrivateComputed {}
+export interface VxeBadgePrivateComputed extends BadgePrivateComputed {}
 
-export interface BadgeReactData {
-}
+export interface BadgeReactData {}
 
-export interface BadgeMethods {
-}
-export interface VxeBadgeMethods extends BadgeMethods { }
+export interface BadgeMethods {}
+export interface VxeBadgeMethods extends BadgeMethods {}
 
-export interface BadgePrivateMethods { }
-export interface VxeBadgePrivateMethods extends BadgePrivateMethods { }
+export interface BadgePrivateMethods {}
+export interface VxeBadgePrivateMethods extends BadgePrivateMethods {}
 
 export type VxeBadgeEmits = []
 
@@ -64,9 +61,9 @@ export namespace VxeBadgeDefines {
 
 export type VxeBadgeEventProps = {}
 
-export interface VxeBadgeListeners { }
+export interface VxeBadgeListeners {}
 
-export namespace VxeBadgeEvents { }
+export namespace VxeBadgeEvents {}
 
 export namespace VxeBadgeSlotTypes {
   export interface DefaultSlotParams {}

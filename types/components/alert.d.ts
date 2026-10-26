@@ -20,7 +20,7 @@ export interface VxeAlertConstructor extends VxeComponentBaseOptions, VxeAlertMe
 export interface AlertPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeAlertPrivateRef extends AlertPrivateRef { }
+export interface VxeAlertPrivateRef extends AlertPrivateRef {}
 
 export namespace VxeAlertPropTypes {
   export type Title = string | number
@@ -42,24 +42,20 @@ export type VxeAlertProps = {
   size?: VxeAlertPropTypes.Size
 }
 
-export interface AlertPrivateComputed {
-}
-export interface VxeAlertPrivateComputed extends AlertPrivateComputed { }
+export interface AlertPrivateComputed {}
+export interface VxeAlertPrivateComputed extends AlertPrivateComputed {}
 
-export interface AlertReactData {
-}
+export interface AlertReactData {}
 
 export interface AlertMethods {
   dispatchEvent(type: ValueOf<VxeAlertEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeAlertMethods extends AlertMethods { }
+export interface VxeAlertMethods extends AlertMethods {}
 
-export interface AlertPrivateMethods { }
-export interface VxeAlertPrivateMethods extends AlertPrivateMethods { }
+export interface AlertPrivateMethods {}
+export interface VxeAlertPrivateMethods extends AlertPrivateMethods {}
 
-export type VxeAlertEmits = [
-  'close'
-]
+export type VxeAlertEmits = ['close']
 
 export namespace VxeAlertDefines {
   export interface AlertEventParams extends VxeComponentEventParams {
@@ -69,9 +65,9 @@ export namespace VxeAlertDefines {
 
 export type VxeAlertEventProps = {}
 
-export interface VxeAlertListeners { }
+export interface VxeAlertListeners {}
 
-export namespace VxeAlertEvents { }
+export namespace VxeAlertEvents {}
 
 export namespace VxeAlertSlotTypes {
   export interface DefaultSlotParams {}

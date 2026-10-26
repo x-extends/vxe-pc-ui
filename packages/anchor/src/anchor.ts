@@ -1,11 +1,13 @@
 import { ref, h, reactive, PropType, VNode, provide, nextTick, onBeforeUnmount, onMounted, watch, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getOffsetPos } from '../../ui/src/dom'
 import VxeAnchorLinkComponent from './anchor-link'
 
 import type { VxeAnchorPropTypes, AnchorReactData, VxeAnchorEmits, AnchorPrivateRef, VxeAnchorPrivateComputed, VxeAnchorConstructor, VxeAnchorPrivateMethods, AnchorMethods, AnchorPrivateMethods } from '../../../types'
+
+const { createEvent, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeAnchor',
@@ -18,12 +20,8 @@ export default defineVxeComponent({
       default: true
     }
   },
-  emits: [
-    'update:modelValue',
-    'change',
-    'click'
-  ] as VxeAnchorEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'change', 'click'] as VxeAnchorEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -43,14 +41,17 @@ export default defineVxeComponent({
 
     const computeAllHrefList = computed(() => {
       const list: VxeAnchorPropTypes.ModelValue[] = []
-      XEUtils.eachTree(reactData.staticLinks, item => {
-        list.push(item.href || '')
-      }, { children: 'children' })
+      XEUtils.eachTree(
+        reactData.staticLinks,
+        (item) => {
+          list.push(item.href || '')
+        },
+        { children: 'children' }
+      )
       return list
     })
 
-    const computeMaps: VxeAnchorPrivateComputed = {
-    }
+    const computeMaps: VxeAnchorPrivateComputed = {}
 
     const $xeAnchor = {
       xID,
@@ -63,7 +64,7 @@ export default defineVxeComponent({
     } as unknown as VxeAnchorConstructor & VxeAnchorPrivateMethods
 
     const anchorMethods: AnchorMethods = {
-      dispatchEvent (type, params, evnt) {
+      dispatchEvent(type, params, evnt) {
         emit(type, createEvent(evnt, { $anchor: $xeAnchor }, params))
       }
     }
@@ -93,7 +94,7 @@ export default defineVxeComponent({
       const allHrefList = computeAllHrefList.value
       const { containerElem } = reactData
       if (containerElem) {
-        const wrapperElList = containerElem.querySelectorAll(allHrefList.map(href => `${href}`).join(','))
+        const wrapperElList = containerElem.querySelectorAll(allHrefList.map((href) => `${href}`).join(','))
         for (let i = 0; i < wrapperElList.length; i++) {
           const wrapperEl = wrapperElList[i]
           const wrapperRect = wrapperEl.getBoundingClientRect()
@@ -141,7 +142,7 @@ export default defineVxeComponent({
     }
 
     const anchorPrivateMethods: AnchorPrivateMethods = {
-      handleClickLink (evnt, href) {
+      handleClickLink(evnt, href) {
         evnt.preventDefault()
         const targetEl = document.getElementById(`${href}`.replace('#', ''))
         if (targetEl) {
@@ -159,22 +160,30 @@ export default defineVxeComponent({
     const renderSubItems = (options?: VxeAnchorPropTypes.Options) => {
       const itemVNs: VNode[] = []
       if (options) {
-        options.forEach(item => {
+        options.forEach((item) => {
           const subItems = item.children
           if (subItems && subItems.length) {
-            itemVNs.push(h(VxeAnchorLinkComponent, {
-              content: item.content,
-              title: item.title,
-              href: item.href
-            }, {
-              sub: () => renderSubItems(subItems)
-            }))
+            itemVNs.push(
+              h(
+                VxeAnchorLinkComponent,
+                {
+                  content: item.content,
+                  title: item.title,
+                  href: item.href
+                },
+                {
+                  sub: () => renderSubItems(subItems)
+                }
+              )
+            )
           } else {
-            itemVNs.push(h(VxeAnchorLinkComponent, {
-              content: item.content,
-              title: item.title,
-              href: item.href
-            }))
+            itemVNs.push(
+              h(VxeAnchorLinkComponent, {
+                content: item.content,
+                title: item.title,
+                href: item.href
+              })
+            )
           }
         })
       }
@@ -184,36 +193,56 @@ export default defineVxeComponent({
     const renderVN = () => {
       const { options, showMarker } = props
       const defaultSlot = slots.default
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-anchor', {
-          'is--marker': showMarker
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-anchor--list'
-        }, defaultSlot ? defaultSlot({}) : renderSubItems(options)),
-        showMarker
-          ? h('div', {
-            ref: refMarkerElem,
-            class: 'vxe-anchor--marker'
-          })
-          : renderEmptyElement($xeAnchor)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-anchor',
+            {
+              'is--marker': showMarker
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-anchor--list'
+            },
+            defaultSlot ? defaultSlot({}) : renderSubItems(options)
+          ),
+          showMarker
+            ? h('div', {
+              ref: refMarkerElem,
+              class: 'vxe-anchor--marker'
+            })
+            : renderEmptyElement($xeAnchor)
+        ]
+      )
     }
 
-    watch(() => props.modelValue, (val) => {
-      reactData.activeHref = val
-    })
+    watch(
+      () => props.modelValue,
+      (val) => {
+        reactData.activeHref = val
+      }
+    )
 
-    watch(() => reactData.activeHref, () => {
-      updateMarkerPos()
-    })
+    watch(
+      () => reactData.activeHref,
+      () => {
+        updateMarkerPos()
+      }
+    )
 
-    watch(() => props.container, () => {
-      removeContainerElemScroll()
-      updateContainerElem()
-    })
+    watch(
+      () => props.container,
+      () => {
+        removeContainerElemScroll()
+        updateContainerElem()
+      }
+    )
 
     onMounted(() => {
       nextTick(() => {
@@ -231,7 +260,7 @@ export default defineVxeComponent({
 
     return $xeAnchor
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

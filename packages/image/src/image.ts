@@ -1,22 +1,23 @@
 import { ref, h, inject, reactive, PropType, computed, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { toCssUnit } from '../../ui/src/dom'
 import { openPreviewImage } from './util'
 
 import type { VxeImagePropTypes, ImageReactData, ImageInternalData, VxeImageEmits, ImagePrivateRef, VxeImagePrivateComputed, VxeImageConstructor, VxeImagePrivateMethods, ImageMethods, ImagePrivateMethods, VxeImageGroupConstructor, VxeImageGroupPrivateMethods, ValueOf } from '../../../types'
 
-function createInternalData (): ImageInternalData {
+const { getConfig, createEvent, useFns } = VxeUI
+
+function createInternalData(): ImageInternalData {
   return {
     // dgTime: 0,
     // mdTime: 0
   }
 }
 
-function createReactData (): ImageReactData {
-  return {
-  }
+function createReactData(): ImageReactData {
+  return {}
 }
 
 export default defineVxeComponent({
@@ -61,15 +62,8 @@ export default defineVxeComponent({
     },
     getThumbnailUrlMethod: Function as PropType<VxeImagePropTypes.GetThumbnailUrlMethod>
   },
-  emits: [
-    'click',
-    'change',
-    'rotate',
-    'dragstart',
-    'drag',
-    'dragend'
-  ] as VxeImageEmits,
-  setup (props, context) {
+  emits: ['click', 'change', 'rotate', 'dragstart', 'drag', 'dragend'] as VxeImageEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -78,7 +72,7 @@ export default defineVxeComponent({
 
     const refElem = ref<HTMLDivElement>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const internalData = createInternalData()
     const reactData = reactive(createReactData())
@@ -142,7 +136,7 @@ export default defineVxeComponent({
     const computeImgList = computed(() => {
       const { src } = props
       if (src) {
-        return (XEUtils.isArray(src) ? src : [src]).map(item => {
+        return (XEUtils.isArray(src) ? src : [src]).map((item) => {
           if (XEUtils.isString(item)) {
             return {
               url: item,
@@ -217,10 +211,10 @@ export default defineVxeComponent({
             maskClosable,
             zIndex,
             events: {
-              change (eventParams) {
+              change(eventParams) {
                 dispatchEvent('change', eventParams, eventParams.$event)
               },
-              rotate (eventParams) {
+              rotate(eventParams) {
                 dispatchEvent('rotate', eventParams, eventParams.$event)
               }
             }
@@ -243,8 +237,7 @@ export default defineVxeComponent({
       dispatchEvent(evnt.type as 'dragstart' | 'drag' | 'dragend', {}, evnt)
     }
 
-    const imagePrivateMethods: ImagePrivateMethods = {
-    }
+    const imagePrivateMethods: ImagePrivateMethods = {}
 
     Object.assign($xeImage, imageMethods, imagePrivateMethods)
 
@@ -259,28 +252,35 @@ export default defineVxeComponent({
       if (!XEUtils.eqNull(draggable)) {
         imgDrag = !!(draggable === true || draggable === 'true')
       }
-      return h('div', {
-        class: ['vxe-image', {
-          [`size--${vSize}`]: vSize,
-          'is--circle': circle
-        }],
-        style: wrapperStyle
-      }, [
-        h('img', {
-          ref: refElem,
-          class: 'vxe-image-img',
-          src: imgThumbnailUrl || imgUrl,
-          alt,
-          loading,
-          draggable: imgDrag,
-          style: imgStyle,
-          onMousedown: mousedownEvent,
-          onClick: clickEvent,
-          onDragstart: handleDragstartEvent,
-          onDrag: handleDragEvent,
-          onDragend: handleDragEvent
-        })
-      ])
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-image',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--circle': circle
+            }
+          ],
+          style: wrapperStyle
+        },
+        [
+          h('img', {
+            ref: refElem,
+            class: 'vxe-image-img',
+            src: imgThumbnailUrl || imgUrl,
+            alt,
+            loading,
+            draggable: imgDrag,
+            style: imgStyle,
+            onMousedown: mousedownEvent,
+            onClick: clickEvent,
+            onDragstart: handleDragstartEvent,
+            onDrag: handleDragEvent,
+            onDragend: handleDragEvent
+          })
+        ]
+      )
     }
 
     onBeforeUnmount(() => {
@@ -292,7 +292,7 @@ export default defineVxeComponent({
 
     return $xeImage
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

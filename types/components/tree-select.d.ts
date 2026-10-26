@@ -21,7 +21,7 @@ export interface VxeTreeSelectConstructor extends VxeComponentBaseOptions, VxeTr
 export interface TreeSelectPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeTreeSelectPrivateRef extends TreeSelectPrivateRef { }
+export interface VxeTreeSelectPrivateRef extends TreeSelectPrivateRef {}
 
 export namespace VxeTreeSelectPropTypes {
   export type Size = VxeComponentSizeType
@@ -108,11 +108,7 @@ export namespace VxeTreeSelectPropTypes {
     /**
      * 远程查询方法
      */
-    queryMethod?(params: {
-      $treeSelect: VxeTreeSelectConstructor
-      searchValue: string
-      value: ModelValue | undefined
-    }): Promise<void> | void
+    queryMethod?(params: { $treeSelect: VxeTreeSelectConstructor; searchValue: string; value: ModelValue | undefined }): Promise<void> | void
   }
 
   export type ShowRadio = boolean
@@ -163,7 +159,7 @@ export namespace VxeTreeSelectPropTypes {
      */
     slots?: {
       icon?: string | ((params: VxeTreeSlotTypes.IconSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
-      title?: string | ((params: VxeTreeSlotTypes.TitleSlotParams) =>VxeComponentSlotType | VxeComponentSlotType[])
+      title?: string | ((params: VxeTreeSlotTypes.TitleSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
       extra?: string | ((params: VxeTreeSlotTypes.ExtraSlotParams) => VxeComponentSlotType | VxeComponentSlotType[])
     }
   }
@@ -245,9 +241,8 @@ export interface VxeTreeSelectProps<D = any> {
   popupClassName?: VxeTreeSelectPropTypes.PopupClassName
 }
 
-export interface TreeSelectPrivateComputed {
-}
-export interface VxeTreeSelectPrivateComputed extends TreeSelectPrivateComputed { }
+export interface TreeSelectPrivateComputed {}
+export interface VxeTreeSelectPrivateComputed extends TreeSelectPrivateComputed {}
 
 export interface TreeSelectReactData {
   initialized: boolean
@@ -275,22 +270,12 @@ export interface TreeSelectInternalData {
 export interface TreeSelectMethods {
   dispatchEvent(type: ValueOf<VxeTreeSelectEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeTreeSelectMethods extends TreeSelectMethods { }
+export interface VxeTreeSelectMethods extends TreeSelectMethods {}
 
-export interface TreeSelectPrivateMethods { }
-export interface VxeTreeSelectPrivateMethods extends TreeSelectPrivateMethods { }
+export interface TreeSelectPrivateMethods {}
+export interface VxeTreeSelectPrivateMethods extends TreeSelectPrivateMethods {}
 
-export type VxeTreeSelectEmits = [
-  'update:modelValue',
-  'change',
-  'all-change',
-  'clear',
-  'blur',
-  'focus',
-  'click',
-  'node-click',
-  'visible-change'
-]
+export type VxeTreeSelectEmits = ['update:modelValue', 'change', 'all-change', 'clear', 'blur', 'focus', 'click', 'node-click', 'visible-change']
 
 export namespace VxeTreeSelectDefines {
   export interface NodeCacheObj {
@@ -315,9 +300,9 @@ export namespace VxeTreeSelectDefines {
     value: any
   }
 
-  export interface FocusEventParams extends TreeSelectEventParams { }
-  export interface BlurEventParams extends TreeSelectEventParams { }
-  export interface ClickEventParams extends TreeSelectEventParams { }
+  export interface FocusEventParams extends TreeSelectEventParams {}
+  export interface BlurEventParams extends TreeSelectEventParams {}
+  export interface ClickEventParams extends TreeSelectEventParams {}
   export interface VisibleChangeEventParams extends TreeSelectEventParams {
     visible: boolean
   }

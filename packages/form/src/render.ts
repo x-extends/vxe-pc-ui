@@ -1,5 +1,5 @@
 import { h, VNode } from 'vue'
-import { getIcon, getI18n, formats, renderer, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { eqEmptyValue, getFuncText, isEnableConf } from '../../ui/src/utils'
 import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -10,29 +10,39 @@ import XEUtils from 'xe-utils'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormItemPropTypes, VxeFormPrivateMethods, VxeComponentSlotType, VxeComponentStyleType } from '../../../types'
 
-function renderPrefixIcon (titlePrefix: VxeFormItemPropTypes.TitlePrefix) {
-  return h('span', {
-    class: 'vxe-form--item-title-tip-prefix'
-  }, [
-    h(VxeIconComponent, {
-      class: titlePrefix.icon || getIcon().FORM_PREFIX,
-      status: titlePrefix.iconStatus
-    })
-  ])
+const { getIcon, getI18n, formats, renderer, renderEmptyElement } = VxeUI
+
+function renderPrefixIcon(titlePrefix: VxeFormItemPropTypes.TitlePrefix) {
+  return h(
+    'span',
+    {
+      class: 'vxe-form--item-title-tip-prefix'
+    },
+    [
+      h(VxeIconComponent, {
+        class: titlePrefix.icon || getIcon().FORM_PREFIX,
+        status: titlePrefix.iconStatus
+      })
+    ]
+  )
 }
 
-function renderSuffixIcon (titleSuffix: VxeFormItemPropTypes.TitleSuffix) {
-  return h('span', {
-    class: 'vxe-form--item-title-tip-suffix'
-  }, [
-    h(VxeIconComponent, {
-      class: titleSuffix.icon || getIcon().FORM_SUFFIX,
-      status: titleSuffix.iconStatus
-    })
-  ])
+function renderSuffixIcon(titleSuffix: VxeFormItemPropTypes.TitleSuffix) {
+  return h(
+    'span',
+    {
+      class: 'vxe-form--item-title-tip-suffix'
+    },
+    [
+      h(VxeIconComponent, {
+        class: titleSuffix.icon || getIcon().FORM_SUFFIX,
+        status: titleSuffix.iconStatus
+      })
+    ]
+  )
 }
 
-export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) {
+export function getItemClass($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) {
   const formProps = $xeForm.props
   const formReactData = $xeForm.reactData
   const $xeGrid = $xeForm.xeGrid
@@ -45,7 +55,7 @@ export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethod
   const validOpts = computeValidOpts.value
   const { showErrorMessage, showMessage, showErrorBackground, showErrorIcon } = validOpts
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-  const itemClassName = compConf ? (compConf.formItemClassName || compConf.itemClassName) : ''
+  const itemClassName = compConf ? compConf.formItemClassName || compConf.itemClassName : ''
   const span = item.span || allSpan
   const itemPadding = XEUtils.eqNull(padding) ? allPadding : padding
   const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
@@ -93,7 +103,7 @@ export function getItemClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethod
   ]
 }
 
-export function getItemContentClass ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) {
+export function getItemContentClass($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) {
   const formProps = $xeForm.props
   const $xeGrid = $xeForm.xeGrid
 
@@ -101,9 +111,9 @@ export function getItemContentClass ($xeForm: VxeFormConstructor & VxeFormPrivat
   const { field, itemRender, contentClassName, children } = item
   const hasGroup = children && children.length > 0
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-  const itemContentClassName = compConf ? (compConf.formItemContentClassName || compConf.itemContentClassName) : ''
-  const align = hasGroup ? item.align : (XEUtils.eqNull(item.align) ? allAlign : item.align)
-  const verticalAlign = hasGroup ? item.verticalAlign : (XEUtils.eqNull(item.verticalAlign) ? allVerticalAlign : item.verticalAlign)
+  const itemContentClassName = compConf ? compConf.formItemContentClassName || compConf.itemContentClassName : ''
+  const align = hasGroup ? item.align : XEUtils.eqNull(item.align) ? allAlign : item.align
+  const verticalAlign = hasGroup ? item.verticalAlign : XEUtils.eqNull(item.verticalAlign) ? allVerticalAlign : item.verticalAlign
   const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
 
   return [
@@ -116,7 +126,7 @@ export function getItemContentClass ($xeForm: VxeFormConstructor & VxeFormPrivat
   ]
 }
 
-export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) {
+export function renderTitle($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo, isGroup?: boolean) {
   const formProps = $xeForm.props
   const $xeGrid = $xeForm.xeGrid
 
@@ -125,11 +135,11 @@ export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
   const { computeTooltipOpts } = $xeForm.getComputeMaps()
   const tooltipOpts = computeTooltipOpts.value
   const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-  const itemTitleClassName = compConf ? (compConf.formItemTitleClassName || compConf.itemTitleClassName) : ''
-  const itemTitleStyle = compConf ? (compConf.formItemTitleStyle || compConf.itemTitleStyle) : null
+  const itemTitleClassName = compConf ? compConf.formItemTitleClassName || compConf.itemTitleClassName : ''
+  const itemTitleStyle = compConf ? compConf.formItemTitleStyle || compConf.itemTitleStyle : null
   const itemVertical = XEUtils.eqNull(vertical) ? allVertical : vertical
   const titleAlign = XEUtils.eqNull(item.titleAlign) ? allTitleAlign : item.titleAlign
-  const titleWidth = itemVertical ? null : (XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth)
+  const titleWidth = itemVertical ? null : XEUtils.eqNull(item.titleWidth) ? allTitleWidth : item.titleWidth
   const itemOverflow = XEUtils.eqNull(titleOverflow) ? allTitleOverflow : titleOverflow
   const ovEllipsis = itemOverflow === 'ellipsis'
   const ovTitle = itemOverflow === 'title'
@@ -139,104 +149,132 @@ export function renderTitle ($xeForm: VxeFormConstructor & VxeFormPrivateMethods
   const titleSlot = slots ? slots.title : null
   const prefixSlot = slots ? slots.prefix : null
   const suffixSlot = slots ? slots.suffix || slots.extra : null
-  const isTitle = (showTitle !== false) && (title || titleSlot)
+  const isTitle = showTitle !== false && (title || titleSlot)
   const hasGroup = children && children.length > 0
   const titVNs: VNode[] = []
   if (prefixSlot) {
     titVNs.push(
-      h('span', {
-        key: 'pt',
-        class: 'vxe-form--item-title-prefix'
-      }, $xeForm.callSlot(prefixSlot, params))
+      h(
+        'span',
+        {
+          key: 'pt',
+          class: 'vxe-form--item-title-prefix'
+        },
+        $xeForm.callSlot(prefixSlot, params)
+      )
     )
   }
   if (titlePrefix) {
     titVNs.push(
-      (titlePrefix.content || titlePrefix.message)
-        ? h(VxeTooltipComponent, {
-          key: 'pm',
-          ...tooltipOpts,
-          ...titlePrefix,
-          content: getFuncText(titlePrefix.content || titlePrefix.message)
-        }, {
-          default: () => renderPrefixIcon(titlePrefix)
-        })
+      titlePrefix.content || titlePrefix.message
+        ? h(
+          VxeTooltipComponent,
+          {
+            key: 'pm',
+            ...tooltipOpts,
+            ...titlePrefix,
+            content: getFuncText(titlePrefix.content || titlePrefix.message)
+          },
+          {
+            default: () => renderPrefixIcon(titlePrefix)
+          }
+        )
         : renderPrefixIcon(titlePrefix)
     )
   }
-  const rftTitle = compConf ? (compConf.renderFormItemTitle || compConf.renderItemTitle) : null
+  const rftTitle = compConf ? compConf.renderFormItemTitle || compConf.renderItemTitle : null
   titVNs.push(
-    h('span', {
-      key: 'pl',
-      class: 'vxe-form--item-title-label'
-    }, titleSlot ? $xeForm.callSlot(titleSlot, params) : (rftTitle ? getSlotVNs(rftTitle(itemRender, params)) : getFuncText(item.title)))
+    h(
+      'span',
+      {
+        key: 'pl',
+        class: 'vxe-form--item-title-label'
+      },
+      titleSlot ? $xeForm.callSlot(titleSlot, params) : rftTitle ? getSlotVNs(rftTitle(itemRender, params)) : getFuncText(item.title)
+    )
   )
   const fixVNs: VNode[] = []
   if (titleSuffix) {
     fixVNs.push(
-      (titleSuffix.content || titleSuffix.message)
-        ? h(VxeTooltipComponent, {
-          key: 'sm',
-          ...tooltipOpts,
-          ...titleSuffix,
-          content: getFuncText(titleSuffix.content || titleSuffix.message)
-        }, {
-          default: () => renderSuffixIcon(titleSuffix)
-        })
+      titleSuffix.content || titleSuffix.message
+        ? h(
+          VxeTooltipComponent,
+          {
+            key: 'sm',
+            ...tooltipOpts,
+            ...titleSuffix,
+            content: getFuncText(titleSuffix.content || titleSuffix.message)
+          },
+          {
+            default: () => renderSuffixIcon(titleSuffix)
+          }
+        )
         : renderSuffixIcon(titleSuffix)
     )
   }
   if (suffixSlot) {
     fixVNs.push(
-      h('span', {
-        key: 'st',
-        class: 'vxe-form--item-title-suffix'
-      }, $xeForm.callSlot(suffixSlot, params))
+      h(
+        'span',
+        {
+          key: 'st',
+          class: 'vxe-form--item-title-suffix'
+        },
+        $xeForm.callSlot(suffixSlot, params)
+      )
     )
   }
   const ons = ovTooltip
     ? {
-        onMouseenter (evnt: MouseEvent) {
+        onMouseenter(evnt: MouseEvent) {
           $xeForm.triggerTitleTipEvent(evnt, params)
         },
         onMouseleave: $xeForm.handleTitleTipLeaveEvent
       }
     : {}
-  const itStyle: VxeComponentStyleType = Object.assign(
-    {},
-    XEUtils.isFunction(itemTitleStyle) ? itemTitleStyle(params) : itemTitleStyle,
-    XEUtils.isFunction(titleStyle) ? titleStyle(params) : titleStyle
-  )
+  const itStyle: VxeComponentStyleType = Object.assign({}, XEUtils.isFunction(itemTitleStyle) ? itemTitleStyle(params) : itemTitleStyle, XEUtils.isFunction(titleStyle) ? titleStyle(params) : titleStyle)
   if (titleWidth && titleWidth !== 'auto' && showContent !== false) {
     itStyle.width = toCssUnit(titleWidth)
   }
 
   return isTitle
-    ? h('div', {
-      class: [
-        isGroup || hasGroup ? 'vxe-form--group-title' : '',
-        'vxe-form--item-title',
-        titleAlign ? `align--${titleAlign}` : '',
-        hasEllipsis ? 'is--ellipsis' : '',
-        itemTitleClassName ? (XEUtils.isFunction(itemTitleClassName) ? itemTitleClassName(params) : itemTitleClassName) : '',
-        titleClassName ? (XEUtils.isFunction(titleClassName) ? titleClassName(params) : titleClassName) : ''
-      ],
-      style: itStyle,
-      itemid: item.id,
-      title: ovTitle ? getFuncText(title) : null,
-      ...ons
-    }, [
-      h('div', {
-        class: 'vxe-form--item-title-content'
-      }, titVNs),
-      h('div', {
-        class: 'vxe-form--item-title-postfix'
-      }, fixVNs)
-    ])
+    ? h(
+      'div',
+      {
+        class: [
+          isGroup || hasGroup ? 'vxe-form--group-title' : '',
+          'vxe-form--item-title',
+          titleAlign ? `align--${titleAlign}` : '',
+          hasEllipsis ? 'is--ellipsis' : '',
+          itemTitleClassName ? (XEUtils.isFunction(itemTitleClassName) ? itemTitleClassName(params) : itemTitleClassName) : '',
+          titleClassName ? (XEUtils.isFunction(titleClassName) ? titleClassName(params) : titleClassName) : ''
+        ],
+        style: itStyle,
+        itemid: item.id,
+        title: ovTitle ? getFuncText(title) : null,
+        ...ons
+      },
+      [
+        h(
+          'div',
+          {
+            class: 'vxe-form--item-title-content'
+          },
+          titVNs
+        ),
+        h(
+          'div',
+          {
+            class: 'vxe-form--item-title-postfix'
+          },
+          fixVNs
+        )
+      ]
+    )
     : renderEmptyElement($xeForm)
 }
 
-export function renderItemErrorIcon ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) {
+export function renderItemErrorIcon($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) {
   const { computeValidOpts } = $xeForm.getComputeMaps()
   const validOpts = computeValidOpts.value
   const { showErrorIcon, errorIcon } = validOpts
@@ -244,36 +282,55 @@ export function renderItemErrorIcon ($xeForm: VxeFormConstructor & VxeFormPrivat
   if (!showErrorIcon) {
     return renderEmptyElement($xeForm)
   }
-  return h('div', {
-    key: 'emi',
-    class: ['vxe-form-item--valid-error-icon-wrapper', {
-      'is--show': showIconMsg,
-      'is--hide': !showIconMsg
-    }]
-  }, [
-    h('span', {
-      class: 'vxe-form-item--valid-error-icon-btn',
-      onClick (evnt) {
-        $xeForm.handleValidIconEvent(evnt, { item })
-      }
-    }, [
-      h('i', {
-        class: errorIcon || getIcon().FORM_VALID_ERROR_ICON
-      })
-    ]),
-    h('div', {
-      class: 'vxe-form-item--valid-error-icon-msg-tip'
-    }, errRule
-      ? [
-          h('div', {
-            class: `vxe-form-item--valid-error-icon-msg vxe-form-item--valid-error-icon-theme-${validOpts.theme || 'normal'}`
-          }, errRule.content || errRule.message)
+  return h(
+    'div',
+    {
+      key: 'emi',
+      class: [
+        'vxe-form-item--valid-error-icon-wrapper',
+        {
+          'is--show': showIconMsg,
+          'is--hide': !showIconMsg
+        }
+      ]
+    },
+    [
+      h(
+        'span',
+        {
+          class: 'vxe-form-item--valid-error-icon-btn',
+          onClick(evnt) {
+            $xeForm.handleValidIconEvent(evnt, { item })
+          }
+        },
+        [
+          h('i', {
+            class: errorIcon || getIcon().FORM_VALID_ERROR_ICON
+          })
         ]
-      : [])
-  ])
+      ),
+      h(
+        'div',
+        {
+          class: 'vxe-form-item--valid-error-icon-msg-tip'
+        },
+        errRule
+          ? [
+              h(
+                'div',
+                {
+                  class: `vxe-form-item--valid-error-icon-msg vxe-form-item--valid-error-icon-theme-${validOpts.theme || 'normal'}`
+                },
+                errRule.content || errRule.message
+              )
+            ]
+          : []
+      )
+    ]
+  )
 }
 
-export function renderItemContent ($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) {
+export function renderItemContent($xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo) {
   const formProps = $xeForm.props
   const formReactData = $xeForm.reactData
   const formInternalData = $xeForm.internalData
@@ -295,7 +352,7 @@ export function renderItemContent ($xeForm: VxeFormConstructor & VxeFormPrivateM
   const params = { data, disabled, readonly, field, property: field, item, itemValue, $form: $xeForm, $grid: $xeGrid }
 
   let contentVNs: VxeComponentSlotType[] = []
-  const rftContent = compConf ? (compConf.renderFormItemContent || compConf.renderItemContent) : null
+  const rftContent = compConf ? compConf.renderFormItemContent || compConf.renderItemContent : null
   if (defaultSlot) {
     contentVNs = $xeForm.callSlot(defaultSlot, params)
   } else if (rftContent) {
@@ -303,10 +360,12 @@ export function renderItemContent ($xeForm: VxeFormConstructor & VxeFormPrivateM
   } else if (field) {
     let itemLabel = itemValue
     if (formatter) {
-      let formatData: {
-        value?: any
-        label?: any
-      } | undefined
+      let formatData:
+        | {
+            value?: any
+            label?: any
+          }
+        | undefined
       if (field) {
         const itemRest = itemFormatCache[field]
         if (itemRest) {
@@ -342,46 +401,70 @@ export function renderItemContent ($xeForm: VxeFormConstructor & VxeFormPrivateM
   }
   if (collapseNode) {
     contentVNs.push(
-      h('div', {
-        class: 'vxe-form--item-trigger-node',
-        onClick: $xeForm.toggleCollapseEvent
-      }, [
-        h('span', {
-          class: 'vxe-form--item-trigger-text'
-        }, collapseAll ? (collapseOpts.unfoldButtonText || getI18n('vxe.form.unfolding')) : (collapseOpts.foldButtonText || getI18n('vxe.form.folding'))),
-        h('i', {
-          class: ['vxe-form--item-trigger-icon', collapseAll ? (collapseOpts.foldIcon || getIcon().FORM_FOLDING) : (collapseOpts.unfoldIcon || getIcon().FORM_UNFOLDING)]
-        })
-      ])
+      h(
+        'div',
+        {
+          class: 'vxe-form--item-trigger-node',
+          onClick: $xeForm.toggleCollapseEvent
+        },
+        [
+          h(
+            'span',
+            {
+              class: 'vxe-form--item-trigger-text'
+            },
+            collapseAll ? collapseOpts.unfoldButtonText || getI18n('vxe.form.unfolding') : collapseOpts.foldButtonText || getI18n('vxe.form.folding')
+          ),
+          h('i', {
+            class: ['vxe-form--item-trigger-icon', collapseAll ? collapseOpts.foldIcon || getIcon().FORM_FOLDING : collapseOpts.unfoldIcon || getIcon().FORM_UNFOLDING]
+          })
+        ]
+      )
     )
   }
   if (errRule && (XEUtils.isBoolean(showErrorMessage) ? showErrorMessage : showMessage)) {
     const validParams = { ...params, rule: errRule }
     contentVNs.push(
-      h('div', {
-        class: 'vxe-form-item--valid-error-tip',
-        style: errRule.maxWidth
-          ? {
-              width: toCssUnit(errRule.maxWidth)
-            }
-          : null
-      }, [
-        h('div', {
-          class: `vxe-form-item--valid-error-wrapper vxe-form-item--valid-error-theme-${validOpts.theme || 'normal'}`
-        }, [
-          validSlot
-            ? $xeForm.callSlot(validSlot, validParams)
-            : [
-                h('span', {
-                  class: 'vxe-form--item--valid-error-msg'
-                }, errRule.content || errRule.message)
-              ]
-        ])
-      ])
+      h(
+        'div',
+        {
+          class: 'vxe-form-item--valid-error-tip',
+          style: errRule.maxWidth
+            ? {
+                width: toCssUnit(errRule.maxWidth)
+              }
+            : null
+        },
+        [
+          h(
+            'div',
+            {
+              class: `vxe-form-item--valid-error-wrapper vxe-form-item--valid-error-theme-${validOpts.theme || 'normal'}`
+            },
+            [
+              validSlot
+                ? $xeForm.callSlot(validSlot, validParams)
+                : [
+                    h(
+                      'span',
+                      {
+                        class: 'vxe-form--item--valid-error-msg'
+                      },
+                      errRule.content || errRule.message
+                    )
+                  ]
+            ]
+          )
+        ]
+      )
     )
   }
-  return h('div', {
-    key: 'ct',
-    class: 'vxe-form--item-inner'
-  }, contentVNs)
+  return h(
+    'div',
+    {
+      key: 'ct',
+      class: 'vxe-form--item-inner'
+    },
+    contentVNs
+  )
 }

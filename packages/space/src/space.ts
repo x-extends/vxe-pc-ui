@@ -1,11 +1,13 @@
 import { ref, h, PropType, computed, reactive, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getPropClass, toCssUnit } from '../../ui/src/dom'
 import { eqEmptyValue } from '../../ui/src/utils'
 
 import type { SpaceReactData, VxeSpaceEmits, SpaceMethods, VxeSpacePropTypes, SpacePrivateMethods, ValueOf, SpacePrivateRef, VxeSpacePrivateComputed, VxeSpaceConstructor, VxeSpacePrivateMethods, VxeComponentStyleType } from '../../../types'
+
+const { getConfig, createEvent, useFns } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeSpace',
@@ -65,12 +67,12 @@ export default defineVxeComponent({
     }
   },
   emits: [] as VxeSpaceEmits,
-  setup (props, context) {
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -160,19 +162,27 @@ export default defineVxeComponent({
       if (defaultSlot) {
         XEUtils.each(defaultSlot({}), (itemVN, index, items) => {
           itemVNs.push(
-            h('div', {
-              key: 'i' + index,
-              class: ['vxe-space--item', getPropClass(itemClassName, { index })],
-              style: itemStys
-            }, [itemVN])
+            h(
+              'div',
+              {
+                key: 'i' + index,
+                class: ['vxe-space--item', getPropClass(itemClassName, { index })],
+                style: itemStys
+              },
+              [itemVN]
+            )
           )
           if ((separator || separatorSlot) && index < items.length - 1) {
             itemVNs.push(
-              h('div', {
-                key: 's' + index,
-                class: 'vxe-space--separator',
-                style: srStys
-              }, separatorSlot ? separatorSlot({}) : ('' + separator))
+              h(
+                'div',
+                {
+                  key: 's' + index,
+                  class: 'vxe-space--separator',
+                  style: srStys
+                },
+                separatorSlot ? separatorSlot({}) : '' + separator
+              )
             )
           }
         })
@@ -184,24 +194,32 @@ export default defineVxeComponent({
       const { vertical, wrap, className, fill, itemWidth, itemMinWidth, itemMaxWidth } = props
       const currStyle = computeCurrStyle.value
       const vSize = computeSize.value
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-space', getPropClass(className, {}), {
-          [`size--${vSize}`]: vSize,
-          'is--wrap': wrap,
-          'is--vertical': vertical,
-          'is--fill': fill,
-          'is--width': itemWidth || itemMinWidth || itemMaxWidth
-        }],
-        style: currStyle
-      }, renderItems())
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-space',
+            getPropClass(className, {}),
+            {
+              [`size--${vSize}`]: vSize,
+              'is--wrap': wrap,
+              'is--vertical': vertical,
+              'is--fill': fill,
+              'is--width': itemWidth || itemMinWidth || itemMaxWidth
+            }
+          ],
+          style: currStyle
+        },
+        renderItems()
+      )
     }
 
     $xeSpace.renderVN = renderVN
 
     return $xeSpace
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

@@ -4,7 +4,7 @@ import VxeLinkComponent from './src/link'
 import { dynamicApp } from '../dynamics'
 
 export const VxeLink = Object.assign({}, VxeLinkComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeLinkComponent.name as string, VxeLinkComponent)
   }
 })

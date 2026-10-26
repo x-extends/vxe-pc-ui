@@ -20,7 +20,7 @@ export interface VxeAvatarConstructor extends VxeComponentBaseOptions, VxeAvatar
 export interface AvatarPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeAvatarPrivateRef extends AvatarPrivateRef { }
+export interface VxeAvatarPrivateRef extends AvatarPrivateRef {}
 
 export namespace VxeAvatarPropTypes {
   export type Count = string | number
@@ -48,19 +48,16 @@ export interface VxeAvatarProps {
   size?: VxeAvatarPropTypes.Size
 }
 
-export interface AvatarPrivateComputed {
-}
-export interface VxeAvatarPrivateComputed extends AvatarPrivateComputed { }
+export interface AvatarPrivateComputed {}
+export interface VxeAvatarPrivateComputed extends AvatarPrivateComputed {}
 
-export interface AvatarReactData {
-}
+export interface AvatarReactData {}
 
-export interface AvatarMethods {
-}
-export interface VxeAvatarMethods extends AvatarMethods { }
+export interface AvatarMethods {}
+export interface VxeAvatarMethods extends AvatarMethods {}
 
-export interface AvatarPrivateMethods { }
-export interface VxeAvatarPrivateMethods extends AvatarPrivateMethods { }
+export interface AvatarPrivateMethods {}
+export interface VxeAvatarPrivateMethods extends AvatarPrivateMethods {}
 
 export type VxeAvatarEmits = []
 
@@ -72,9 +69,9 @@ export namespace VxeAvatarDefines {
 
 export type VxeAvatarEventProps = {}
 
-export interface VxeAvatarListeners { }
+export interface VxeAvatarListeners {}
 
-export namespace VxeAvatarEvents { }
+export namespace VxeAvatarEvents {}
 
 export namespace VxeAvatarSlotTypes {
   export interface DefaultSlotParams {}

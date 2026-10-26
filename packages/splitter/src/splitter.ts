@@ -1,13 +1,30 @@
 import { PropType, ref, h, reactive, provide, VNode, computed, watch, nextTick, onMounted, onUnmounted, onActivated } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, getIcon, createEvent, globalEvents, globalResize, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, addClass, removeClass } from '../../ui/src/dom'
 import { getGlobalDefaultConfig } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import XEUtils from 'xe-utils'
 
-import type { SplitterReactData, SplitterPrivateRef, VxeSplitterPropTypes, SplitterInternalData, SplitterMethods, VxeSplitterPanelPropTypes, VxeSplitterDefines, VxeSplitterPanelProps, VxeSplitterPrivateComputed, SplitterPrivateMethods, VxeSplitterEmits, VxeSplitterConstructor, ValueOf, VxeSplitterPrivateMethods } from '../../../types'
+import type {
+  SplitterReactData,
+  SplitterPrivateRef,
+  VxeSplitterPropTypes,
+  SplitterInternalData,
+  SplitterMethods,
+  VxeSplitterPanelPropTypes,
+  VxeSplitterDefines,
+  VxeSplitterPanelProps,
+  VxeSplitterPrivateComputed,
+  SplitterPrivateMethods,
+  VxeSplitterEmits,
+  VxeSplitterConstructor,
+  ValueOf,
+  VxeSplitterPrivateMethods
+} from '../../../types'
+
+const { getConfig, getIcon, createEvent, globalEvents, globalResize, useFns, renderEmptyElement } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('splitter')
 
@@ -42,15 +59,8 @@ export default defineVxeComponent({
       default: () => getConfig().splitter.size || getConfig().size
     }
   },
-  emits: [
-    'action-dblclick',
-    'action-click',
-    'toggle-expand',
-    'resize-start',
-    'resize-drag',
-    'resize-end'
-  ] as VxeSplitterEmits,
-  setup (props, context) {
+  emits: ['action-dblclick', 'action-click', 'toggle-expand', 'resize-start', 'resize-drag', 'resize-end'] as VxeSplitterEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
@@ -59,7 +69,7 @@ export default defineVxeComponent({
     const refBarInfoElem = ref<HTMLDivElement>()
     const refResizableSplitterTip = ref<HTMLDivElement>()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const reactData = reactive<SplitterReactData>({
       staticItems: [],
@@ -91,7 +101,7 @@ export default defineVxeComponent({
     })
 
     const computeVisibleItems = computed(() => {
-      return reactData.itemList.filter(item => item.isExpand)
+      return reactData.itemList.filter((item) => item.isExpand)
     })
 
     const computeAutoItems = computed(() => {
@@ -99,23 +109,25 @@ export default defineVxeComponent({
       const autoItems: VxeSplitterDefines.PaneConfig[] = []
       let heightCount = 0
       let widthCount = 0
-      reactData.itemList.forEach(vertical
-        ? item => {
-          const { renderHeight, resizeHeight, foldHeight, isExpand, height } = item
-          const itemHeight = isExpand ? (foldHeight || resizeHeight || renderHeight) : 0
-          if (!height) {
-            autoItems.push(item)
-          }
-          heightCount += itemHeight
-        }
-        : item => {
-          const { renderWidth, resizeWidth, foldWidth, isExpand, width } = item
-          const itemWidth = isExpand ? (foldWidth || resizeWidth || renderWidth) : 0
-          if (!width) {
-            autoItems.push(item)
-          }
-          widthCount += itemWidth
-        })
+      reactData.itemList.forEach(
+        vertical
+          ? (item) => {
+              const { renderHeight, resizeHeight, foldHeight, isExpand, height } = item
+              const itemHeight = isExpand ? foldHeight || resizeHeight || renderHeight : 0
+              if (!height) {
+                autoItems.push(item)
+              }
+              heightCount += itemHeight
+            }
+          : (item) => {
+              const { renderWidth, resizeWidth, foldWidth, isExpand, width } = item
+              const itemWidth = isExpand ? foldWidth || resizeWidth || renderWidth : 0
+              if (!width) {
+                autoItems.push(item)
+              }
+              widthCount += itemWidth
+            }
+      )
       return {
         autoItems,
         heightCount,
@@ -210,7 +222,7 @@ export default defineVxeComponent({
 
     const reset = () => {
       const { itemList } = reactData
-      itemList.forEach(item => {
+      itemList.forEach((item) => {
         item.isExpand = true
         item.foldHeight = 0
         item.foldWidth = 0
@@ -233,7 +245,7 @@ export default defineVxeComponent({
         resizeHeight: 0,
         foldHeight: 0
       }
-      reactData.itemList = list.map(item => {
+      reactData.itemList = list.map((item) => {
         if (item.showAction) {
           warnLog('vxe.error.removeProp', ['show-action'])
         }
@@ -360,12 +372,12 @@ export default defineVxeComponent({
         const residueItems: VxeSplitterDefines.PaneConfig[] = []
         if (vertical) {
           let countHeight = 0
-          itemList.forEach(item => {
+          itemList.forEach((item) => {
             const { height } = item
             let itemHeight = 0
             if (height) {
               if (isScale(height)) {
-                itemHeight = contentHeight * XEUtils.toNumber(height) / 100
+                itemHeight = (contentHeight * XEUtils.toNumber(height)) / 100
               } else {
                 itemHeight = XEUtils.toNumber(height)
               }
@@ -377,18 +389,18 @@ export default defineVxeComponent({
           })
           if (residueItems.length) {
             const reMeanHeight = (contentHeight - countHeight) / residueItems.length
-            residueItems.forEach(item => {
+            residueItems.forEach((item) => {
               item.renderHeight = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minHeight, allMinHeight)), reMeanHeight)
             })
           }
         } else {
           let countWidth = 0
-          itemList.forEach(item => {
+          itemList.forEach((item) => {
             const { width } = item
             let itemWidth = 0
             if (width) {
               if (isScale(width)) {
-                itemWidth = contentWidth * XEUtils.toNumber(width) / 100
+                itemWidth = (contentWidth * XEUtils.toNumber(width)) / 100
               } else {
                 itemWidth = XEUtils.toNumber(width)
               }
@@ -400,7 +412,7 @@ export default defineVxeComponent({
           })
           if (residueItems.length) {
             const reMeanWidth = (contentWidth - countWidth) / residueItems.length
-            residueItems.forEach(item => {
+            residueItems.forEach((item) => {
               item.renderWidth = Math.max(XEUtils.toNumber(getGlobalDefaultConfig(item.minWidth, allMinWidth)), reMeanWidth)
             })
           }
@@ -430,15 +442,15 @@ export default defineVxeComponent({
       }
       const prevId = prevEl.getAttribute('itemid')
       const nextId = nextEl.getAttribute('itemid')
-      const prevItem = itemList.find(item => item.id === prevId)
-      const nextItem = itemList.find(item => item.id === nextId)
+      const prevItem = itemList.find((item) => item.id === prevId)
+      const nextItem = itemList.find((item) => item.id === nextId)
       if (!prevItem || !nextItem) {
         return
       }
       const containerRect = el.getBoundingClientRect()
       const barRect = barEl.getBoundingClientRect()
       const rsSplitterLineEl = refResizableSplitterTip.value
-      const rsSplitterTipEl = rsSplitterLineEl ? rsSplitterLineEl.children[0] as HTMLDivElement : null
+      const rsSplitterTipEl = rsSplitterLineEl ? (rsSplitterLineEl.children[0] as HTMLDivElement) : null
       const itemOpts = computeItemOpts.value
       const resizeOpts = computeResizeOpts.value
       const { immediate } = resizeOpts
@@ -476,8 +488,8 @@ export default defineVxeComponent({
         if (!rsSplitterLineEl) {
           return
         }
-        const rsNumPrevEl = rsSplitterTipEl ? rsSplitterTipEl.children[0] as HTMLDivElement : null
-        const rsNumNextEl = rsSplitterTipEl ? rsSplitterTipEl.children[1] as HTMLDivElement : null
+        const rsNumPrevEl = rsSplitterTipEl ? (rsSplitterTipEl.children[0] as HTMLDivElement) : null
+        const rsNumNextEl = rsSplitterTipEl ? (rsSplitterTipEl.children[1] as HTMLDivElement) : null
         if (vertical) {
           let tipWidth = 0
           if (rsNumPrevEl) {
@@ -665,10 +677,10 @@ export default defineVxeComponent({
       const handleEl = btnWrapperEl.parentElement as HTMLDivElement
       const prevEl = handleEl.previousElementSibling as HTMLDivElement
       const prevId = prevEl.getAttribute('itemid')
-      const prevItem = itemList.find(item => item.id === prevId)
+      const prevItem = itemList.find((item) => item.id === prevId)
       const nextEl = handleEl.nextElementSibling as HTMLDivElement
       const nextId = nextEl.getAttribute('itemid')
-      const nextItem = itemList.find(item => item.id === nextId)
+      const nextItem = itemList.find((item) => item.id === nextId)
 
       if (actionOpts.trigger === 'dblclick') {
         if (prevItem && nextItem && nextItem.isExpand) {
@@ -686,10 +698,10 @@ export default defineVxeComponent({
       const handleEl = btnWrapperEl.parentElement as HTMLDivElement
       const prevEl = handleEl.previousElementSibling as HTMLDivElement
       const prevId = prevEl.getAttribute('itemid')
-      const prevItem = itemList.find(item => item.id === prevId)
+      const prevItem = itemList.find((item) => item.id === prevId)
       const nextEl = handleEl.nextElementSibling as HTMLDivElement
       const nextId = nextEl.getAttribute('itemid')
-      const nextItem = itemList.find(item => item.id === nextId)
+      const nextItem = itemList.find((item) => item.id === nextId)
 
       if (actionOpts.trigger !== 'dblclick') {
         if (prevItem && nextItem && nextItem.isExpand) {
@@ -707,10 +719,10 @@ export default defineVxeComponent({
       const handleEl = btnWrapperEl.parentElement as HTMLDivElement
       const prevEl = handleEl.previousElementSibling as HTMLDivElement
       const prevId = prevEl.getAttribute('itemid')
-      const prevItem = itemList.find(item => item.id === prevId)
+      const prevItem = itemList.find((item) => item.id === prevId)
       const nextEl = handleEl.nextElementSibling as HTMLDivElement
       const nextId = nextEl.getAttribute('itemid')
-      const nextItem = itemList.find(item => item.id === nextId)
+      const nextItem = itemList.find((item) => item.id === nextId)
 
       if (actionOpts.trigger === 'dblclick') {
         if (prevItem && nextItem && prevItem.isExpand) {
@@ -728,10 +740,10 @@ export default defineVxeComponent({
       const handleEl = btnWrapperEl.parentElement as HTMLDivElement
       const prevEl = handleEl.previousElementSibling as HTMLDivElement
       const prevId = prevEl.getAttribute('itemid')
-      const prevItem = itemList.find(item => item.id === prevId)
+      const prevItem = itemList.find((item) => item.id === prevId)
       const nextEl = handleEl.nextElementSibling as HTMLDivElement
       const nextId = nextEl.getAttribute('itemid')
-      const nextItem = itemList.find(item => item.id === nextId)
+      const nextItem = itemList.find((item) => item.id === nextId)
 
       if (actionOpts.trigger !== 'dblclick') {
         if (prevItem && nextItem && prevItem.isExpand) {
@@ -756,8 +768,7 @@ export default defineVxeComponent({
       reloadItem
     }
 
-    const splitterPrivateMethods: SplitterPrivateMethods = {
-    }
+    const splitterPrivateMethods: SplitterPrivateMethods = {}
 
     Object.assign($xeSplitter, splitterMethods, splitterPrivateMethods)
 
@@ -766,49 +777,70 @@ export default defineVxeComponent({
       const { itemList } = reactData
       const actionOpts = computeActionOpts.value
       const { direction } = actionOpts
-      const showPrevButton = XEUtils.isBoolean(actionOpts.showPrevButton) ? actionOpts.showPrevButton : (itemList.some(item => item.showAction))
-      const showNextButton = XEUtils.isBoolean(actionOpts.showNextButton) ? actionOpts.showNextButton : (direction === 'next' && itemList.some(item => item.showAction))
+      const showPrevButton = XEUtils.isBoolean(actionOpts.showPrevButton) ? actionOpts.showPrevButton : itemList.some((item) => item.showAction)
+      const showNextButton = XEUtils.isBoolean(actionOpts.showNextButton) ? actionOpts.showNextButton : direction === 'next' && itemList.some((item) => item.showAction)
       const resizeOpts = computeResizeOpts.value
       const { immediate } = resizeOpts
-      return h('div', {
-        class: ['vxe-splitter-panel-handle', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
-          'is--resize': resize,
-          'is--border': border
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-splitter-panel-handle-bar',
-          onMousedown: dragEvent
-        }),
-        itemList.length === 2
-          ? h('div', {
-            class: 'vxe-splitter-panel-action-btn-wrapper'
-          }, [
-            showPrevButton && nextItem.isExpand
-              ? h('div', {
-                class: ['vxe-splitter-panel-action-btn', prevItem.isExpand ? 'is--prev' : 'is--next'],
-                onDblclick: handlePrevActionDblclickEvent,
-                onClick: handlePrevActionClickEvent
-              }, [
-                h('i', {
-                  class: getActionIcon(prevItem, nextItem, false)
-                })
-              ])
-              : renderEmptyElement($xeSplitter),
-            showNextButton && prevItem.isExpand
-              ? h('div', {
-                class: ['vxe-splitter-panel-action-btn', nextItem.isExpand ? 'is--next' : 'is--prev'],
-                onDblclick: handleNextActionDblclickEvent,
-                onClick: handleNextActionClickEvent
-              }, [
-                h('i', {
-                  class: getActionIcon(prevItem, nextItem, true)
-                })
-              ])
-              : renderEmptyElement($xeSplitter)
-          ])
-          : renderEmptyElement($xeSplitter)
-      ])
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-splitter-panel-handle',
+            vertical ? 'is--vertical' : 'is--horizontal',
+            immediate ? 'is-resize--immediate' : 'is-resize--lazy',
+            {
+              'is--resize': resize,
+              'is--border': border
+            }
+          ]
+        },
+        [
+          h('div', {
+            class: 'vxe-splitter-panel-handle-bar',
+            onMousedown: dragEvent
+          }),
+          itemList.length === 2
+            ? h(
+              'div',
+              {
+                class: 'vxe-splitter-panel-action-btn-wrapper'
+              },
+              [
+                showPrevButton && nextItem.isExpand
+                  ? h(
+                    'div',
+                    {
+                      class: ['vxe-splitter-panel-action-btn', prevItem.isExpand ? 'is--prev' : 'is--next'],
+                      onDblclick: handlePrevActionDblclickEvent,
+                      onClick: handlePrevActionClickEvent
+                    },
+                    [
+                      h('i', {
+                        class: getActionIcon(prevItem, nextItem, false)
+                      })
+                    ]
+                  )
+                  : renderEmptyElement($xeSplitter),
+                showNextButton && prevItem.isExpand
+                  ? h(
+                    'div',
+                    {
+                      class: ['vxe-splitter-panel-action-btn', nextItem.isExpand ? 'is--next' : 'is--prev'],
+                      onDblclick: handleNextActionDblclickEvent,
+                      onClick: handleNextActionClickEvent
+                    },
+                    [
+                      h('i', {
+                        class: getActionIcon(prevItem, nextItem, true)
+                      })
+                    ]
+                  )
+                  : renderEmptyElement($xeSplitter)
+              ]
+            )
+            : renderEmptyElement($xeSplitter)
+        ]
+      )
     }
 
     const renderItems = () => {
@@ -828,8 +860,8 @@ export default defineVxeComponent({
         const nextItem = itemList[index + 1]
         const defaultSlot = slots ? slots.default : null
         const stys: Record<string, string | number> = {}
-        let itemWidth = isExpand ? (foldWidth || resizeWidth || renderWidth) : 0
-        let itemHeight = isExpand ? (foldHeight || resizeHeight || renderHeight) : 0
+        let itemWidth = isExpand ? foldWidth || resizeWidth || renderWidth : 0
+        let itemHeight = isExpand ? foldHeight || resizeHeight || renderHeight : 0
         // 至少存在一个自适应
         if (autoItems.length === 1) {
           if (vertical) {
@@ -856,42 +888,66 @@ export default defineVxeComponent({
         }
 
         itemVNs.push(
-          h('div', {
-            itemid: id,
-            class: ['vxe-splitter-panel', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
-              [`size--${vSize}`]: vSize,
-              'is--resize': resize,
-              'is--padding': padding,
-              'is--border': border,
-              'is--height': itemHeight,
-              'is--width': itemWidth,
-              'is--visible': isExpand,
-              'is--hidden': !isExpand,
-              'is--fill': isExpand && isFill
-            }],
-            style: stys
-          }, [
-            h('div', {
+          h(
+            'div',
+            {
               itemid: id,
-              class: 'vxe-splitter-panel--wrapper'
-            }, [
-              h('div', {
-                class: 'vxe-splitter-panel--inner'
-              }, defaultSlot ? callSlot(defaultSlot, { name, isExpand }) : [])
-            ])
-          ])
+              class: [
+                'vxe-splitter-panel',
+                vertical ? 'is--vertical' : 'is--horizontal',
+                immediate ? 'is-resize--immediate' : 'is-resize--lazy',
+                {
+                  [`size--${vSize}`]: vSize,
+                  'is--resize': resize,
+                  'is--padding': padding,
+                  'is--border': border,
+                  'is--height': itemHeight,
+                  'is--width': itemWidth,
+                  'is--visible': isExpand,
+                  'is--hidden': !isExpand,
+                  'is--fill': isExpand && isFill
+                }
+              ],
+              style: stys
+            },
+            [
+              h(
+                'div',
+                {
+                  itemid: id,
+                  class: 'vxe-splitter-panel--wrapper'
+                },
+                [
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-splitter-panel--inner'
+                    },
+                    defaultSlot ? callSlot(defaultSlot, { name, isExpand }) : []
+                  )
+                ]
+              )
+            ]
+          )
         )
 
         if (nextItem) {
           itemVNs.push(renderHandleBar(prevItem, nextItem))
         }
       })
-      return h('div', {
-        class: ['vxe-splitter-wrapper', {
-          'is--ah-btn': autoHideButton,
-          'is--only-view': isOnlyView
-        }]
-      }, itemVNs)
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-splitter-wrapper',
+            {
+              'is--ah-btn': autoHideButton,
+              'is--only-view': isOnlyView
+            }
+          ]
+        },
+        itemVNs
+      )
     }
 
     const renderVN = () => {
@@ -901,74 +957,108 @@ export default defineVxeComponent({
       const wrapperStyle = computeWrapperStyle.value
       const { immediate, showTip } = resizeOpts
       const defaultSlot = slots.default
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-splitter', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy', {
-          [`size--${vSize}`]: vSize
-        }],
-        style: wrapperStyle
-      }, [
-        h('div', {
-          class: 'vxe-splitter-slots'
-        }, defaultSlot ? defaultSlot({}) : []),
-        renderItems(),
-        h('div', {
-          ref: refResizableSplitterTip,
-          class: ['vxe-splitter--resizable-splitter-tip', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy']
-        }, showTip
-          ? [
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-splitter',
+            vertical ? 'is--vertical' : 'is--horizontal',
+            immediate ? 'is-resize--immediate' : 'is-resize--lazy',
+            {
+              [`size--${vSize}`]: vSize
+            }
+          ],
+          style: wrapperStyle
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-splitter-slots'
+            },
+            defaultSlot ? defaultSlot({}) : []
+          ),
+          renderItems(),
+          h(
+            'div',
+            {
+              ref: refResizableSplitterTip,
+              class: ['vxe-splitter--resizable-splitter-tip', vertical ? 'is--vertical' : 'is--horizontal', immediate ? 'is-resize--immediate' : 'is-resize--lazy']
+            },
+            showTip
+              ? [
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-splitter--resizable-splitter-tip-number'
+                    },
+                    [
+                      h('div', {
+                        class: 'vxe-splitter--resizable-splitter-number-prev'
+                      }),
+                      h('div', {
+                        class: 'vxe-splitter--resizable-splitter-number-next'
+                      })
+                    ]
+                  )
+                ]
+              : []
+          ),
+          h(
+            'div',
+            {
+              class: 'vxe-splitter--render-vars'
+            },
+            [
               h('div', {
-                class: 'vxe-splitter--resizable-splitter-tip-number'
-              }, [
-                h('div', {
-                  class: 'vxe-splitter--resizable-splitter-number-prev'
-                }),
-                h('div', {
-                  class: 'vxe-splitter--resizable-splitter-number-next'
-                })
-              ])
+                ref: refBarInfoElem,
+                class: 'vxe-splitter--handle-bar-info'
+              })
             ]
-          : []),
-        h('div', {
-          class: 'vxe-splitter--render-vars'
-        }, [
-          h('div', {
-            ref: refBarInfoElem,
-            class: 'vxe-splitter--handle-bar-info'
-          })
-        ])
-      ])
+          )
+        ]
+      )
     }
 
     const itemFlag = ref(0)
-    watch(() => props.items ? props.items.length : -1, () => {
-      itemFlag.value++
-    })
-    watch(() => props.items, () => {
-      itemFlag.value++
-    })
+    watch(
+      () => (props.items ? props.items.length : -1),
+      () => {
+        itemFlag.value++
+      }
+    )
+    watch(
+      () => props.items,
+      () => {
+        itemFlag.value++
+      }
+    )
     watch(itemFlag, () => {
       loadItem(props.items || [])
     })
 
-    watch(() => reactData.staticItems, (val) => {
-      const actionOpts = computeActionOpts.value
-      const { showPrevButton, showNextButton } = actionOpts
-      if (props.items && props.items.length) {
-        errLog('vxe.error.errConflicts', ['<vxe-splitter-panel ...>', 'items'])
-      }
-      reactData.itemList = val || []
-
-      if ((showPrevButton || showNextButton) && reactData.itemList.length > 2) {
-        errLog('vxe.error.modelConflicts', ['action-config.showPrevButton | action-config.showNextButton', '<vxe-splitter-panel ...> Only supports 2 panel'])
-      }
-      reactData.itemList.forEach(item => {
-        if (item.showAction) {
-          warnLog('vxe.error.removeProp', ['showAction'])
+    watch(
+      () => reactData.staticItems,
+      (val) => {
+        const actionOpts = computeActionOpts.value
+        const { showPrevButton, showNextButton } = actionOpts
+        if (props.items && props.items.length) {
+          errLog('vxe.error.errConflicts', ['<vxe-splitter-panel ...>', 'items'])
         }
-      })
-      recalculate()
-    })
+        reactData.itemList = val || []
+
+        if ((showPrevButton || showNextButton) && reactData.itemList.length > 2) {
+          errLog('vxe.error.modelConflicts', ['action-config.showPrevButton | action-config.showNextButton', '<vxe-splitter-panel ...> Only supports 2 panel'])
+        }
+        reactData.itemList.forEach((item) => {
+          if (item.showAction) {
+            warnLog('vxe.error.removeProp', ['showAction'])
+          }
+        })
+        recalculate()
+      }
+    )
 
     let resizeObserver: ResizeObserver
 
@@ -1014,7 +1104,7 @@ export default defineVxeComponent({
 
     return $xeSplitter
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

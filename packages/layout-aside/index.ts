@@ -4,7 +4,7 @@ import VxeLayoutAsideComponent from './src/layout-aside'
 import { dynamicApp } from '../dynamics'
 
 export const VxeLayoutAside = Object.assign({}, VxeLayoutAsideComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeLayoutAsideComponent.name as string, VxeLayoutAsideComponent)
   }
 })

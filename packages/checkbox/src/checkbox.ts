@@ -2,10 +2,12 @@ import { h, computed, inject, PropType, reactive, onMounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getFuncText } from '../../ui/src/utils'
-import { getConfig, createEvent, useSize, getIcon, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeCheckboxConstructor, VxeCheckboxGroupConstructor, CheckboxReactData, VxeCheckboxEmits, ValueOf, VxeCheckboxGroupPrivateMethods, CheckboxMethods, VxeCheckboxPropTypes, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+
+const { getConfig, createEvent, useFns, getIcon, renderEmptyElement } = VxeUI
 
 const { warnLog } = createComponentLog('checkbox')
 
@@ -41,21 +43,17 @@ export default defineVxeComponent({
       default: () => getConfig().checkbox.size || getConfig().size
     }
   },
-  emits: [
-    'update:modelValue',
-    'change'
-  ] as VxeCheckboxEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'change'] as VxeCheckboxEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
     const $xeCheckboxGroup = inject<(VxeCheckboxGroupConstructor & VxeCheckboxGroupPrivateMethods) | null>('$xeCheckboxGroup', null)
 
     const xID = XEUtils.uniqueId()
 
-    const reactData: CheckboxReactData = reactive({
-    })
+    const reactData: CheckboxReactData = reactive({})
 
     const $xeCheckbox = {
       xID,
@@ -66,7 +64,7 @@ export default defineVxeComponent({
 
     let checkboxMethods = {} as CheckboxMethods
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const computeCheckValue = computed(() => {
       const { checkedValue, label } = props
@@ -143,44 +141,66 @@ export default defineVxeComponent({
         const isGroupReadonly = computeIsGroupReadonly.value
         if (isGroupReadonly) {
           if (isChecked) {
-            return h('label', {
-              class: ['vxe-checkbox vxe-checkbox--view', {
-                [`size--${vSize}`]: vSize,
-                'is--readonly': isGroupReadonly
-              }]
-            }, [
-              h('span', {
-                class: 'vxe-checkbox--label'
-              }, defaultSlot ? defaultSlot({}) : getFuncText(content))
-            ])
+            return h(
+              'label',
+              {
+                class: [
+                  'vxe-checkbox vxe-checkbox--view',
+                  {
+                    [`size--${vSize}`]: vSize,
+                    'is--readonly': isGroupReadonly
+                  }
+                ]
+              },
+              [
+                h(
+                  'span',
+                  {
+                    class: 'vxe-checkbox--label'
+                  },
+                  defaultSlot ? defaultSlot({}) : getFuncText(content)
+                )
+              ]
+            )
           }
           return renderEmptyElement($xeCheckbox)
         }
       }
-      return h('label', {
-        key: `${checkValue}`,
-        class: ['vxe-checkbox vxe-checkbox--default', {
-          [`size--${vSize}`]: vSize,
-          'is--indeterminate': indeterminate,
-          'is--disabled': isDisabled,
-          'is--checked': isChecked
-        }],
-        title: props.title
-      }, [
-        h('input', {
-          class: 'vxe-checkbox--input',
-          type: 'checkbox',
-          disabled: isDisabled,
-          checked: isChecked,
-          onChange: changeEvent
-        }),
-        h('span', {
-          class: ['vxe-checkbox--icon', indeterminate ? getIcon().CHECKBOX_INDETERMINATE : (isChecked ? getIcon().CHECKBOX_CHECKED : (isDisabled ? getIcon().CHECKBOX_DISABLED_UNCHECKED : getIcon().CHECKBOX_UNCHECKED))]
-        }),
-        h('span', {
-          class: 'vxe-checkbox--label'
-        }, defaultSlot ? defaultSlot({}) : getFuncText(content))
-      ])
+      return h(
+        'label',
+        {
+          key: `${checkValue}`,
+          class: [
+            'vxe-checkbox vxe-checkbox--default',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--indeterminate': indeterminate,
+              'is--disabled': isDisabled,
+              'is--checked': isChecked
+            }
+          ],
+          title: props.title
+        },
+        [
+          h('input', {
+            class: 'vxe-checkbox--input',
+            type: 'checkbox',
+            disabled: isDisabled,
+            checked: isChecked,
+            onChange: changeEvent
+          }),
+          h('span', {
+            class: ['vxe-checkbox--icon', indeterminate ? getIcon().CHECKBOX_INDETERMINATE : isChecked ? getIcon().CHECKBOX_CHECKED : isDisabled ? getIcon().CHECKBOX_DISABLED_UNCHECKED : getIcon().CHECKBOX_UNCHECKED]
+          }),
+          h(
+            'span',
+            {
+              class: 'vxe-checkbox--label'
+            },
+            defaultSlot ? defaultSlot({}) : getFuncText(content)
+          )
+        ]
+      )
     }
 
     onMounted(() => {
@@ -193,7 +213,7 @@ export default defineVxeComponent({
 
     return $xeCheckbox
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

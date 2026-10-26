@@ -1,9 +1,11 @@
 import { h, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, createEvent, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
 import type { VxeIconPropTypes, VxeIconEmits, IconMethods, IconPrivateMethods, VxeIconConstructor, VxeIconPrivateMethods, ValueOf } from '../../../types'
+
+const { getConfig, createEvent, useFns } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeIcon',
@@ -17,25 +19,22 @@ export default defineVxeComponent({
       default: () => getConfig().icon.size || getConfig().size
     }
   },
-  emits: [
-    'click'
-  ] as VxeIconEmits,
-  setup (props, context) {
+  emits: ['click'] as VxeIconEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const $xeIcon = {
       xID,
       props,
       context
-
     } as unknown as VxeIconConstructor & VxeIconPrivateMethods
 
     const clickEvent = (evnt: KeyboardEvent) => {
-      emit('click', createEvent(evnt, { }))
+      emit('click', createEvent(evnt, {}))
     }
 
     const dispatchEvent = (type: ValueOf<VxeIconEmits>, params: Record<string, any>, evnt: Event | null) => {
@@ -46,8 +45,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const iconPrivateMethods: IconPrivateMethods = {
-    }
+    const iconPrivateMethods: IconPrivateMethods = {}
 
     Object.assign($xeIcon, iconMethods, iconPrivateMethods)
 
@@ -56,11 +54,16 @@ export default defineVxeComponent({
       const vSize = computeSize.value
 
       return h('i', {
-        class: ['vxe-icon', `vxe-icon-${name}`, `${className || ''}`, {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          roll: roll
-        }],
+        class: [
+          'vxe-icon',
+          `vxe-icon-${name}`,
+          `${className || ''}`,
+          {
+            [`size--${vSize}`]: vSize,
+            [`theme--${status}`]: status,
+            roll: roll
+          }
+        ],
         onClick: clickEvent
       })
     }
@@ -69,7 +72,7 @@ export default defineVxeComponent({
 
     return $xeIcon
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

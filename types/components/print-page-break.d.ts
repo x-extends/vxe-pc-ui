@@ -20,28 +20,24 @@ export interface VxePrintPageBreakConstructor extends VxeComponentBaseOptions, V
 export interface PrintPageBreakPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxePrintPageBreakPrivateRef extends PrintPageBreakPrivateRef { }
+export interface VxePrintPageBreakPrivateRef extends PrintPageBreakPrivateRef {}
 
-export namespace VxePrintPageBreakPropTypes {
-}
+export namespace VxePrintPageBreakPropTypes {}
 
-export interface VxePrintPageBreakProps {
-}
+export interface VxePrintPageBreakProps {}
 
-export interface PrintPageBreakPrivateComputed {
-}
-export interface VxePrintPageBreakPrivateComputed extends PrintPageBreakPrivateComputed { }
+export interface PrintPageBreakPrivateComputed {}
+export interface VxePrintPageBreakPrivateComputed extends PrintPageBreakPrivateComputed {}
 
-export interface PrintPageBreakReactData {
-}
+export interface PrintPageBreakReactData {}
 
 export interface PrintPageBreakMethods {
   dispatchEvent(type: ValueOf<VxePrintPageBreakEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxePrintPageBreakMethods extends PrintPageBreakMethods { }
+export interface VxePrintPageBreakMethods extends PrintPageBreakMethods {}
 
-export interface PrintPageBreakPrivateMethods { }
-export interface VxePrintPageBreakPrivateMethods extends PrintPageBreakPrivateMethods { }
+export interface PrintPageBreakPrivateMethods {}
+export interface VxePrintPageBreakPrivateMethods extends PrintPageBreakPrivateMethods {}
 
 export type VxePrintPageBreakEmits = []
 
@@ -53,9 +49,9 @@ export namespace VxePrintPageBreakDefines {
 
 export type VxePrintPageBreakEventProps = {}
 
-export interface VxePrintPageBreakListeners { }
+export interface VxePrintPageBreakListeners {}
 
-export namespace VxePrintPageBreakEvents { }
+export namespace VxePrintPageBreakEvents {}
 
 export namespace VxePrintPageBreakSlotTypes {
   export interface DefaultSlotParams {}

@@ -4,7 +4,7 @@ import VxeMenuComponent from './src/menu'
 import { dynamicApp } from '../dynamics'
 
 export const VxeMenu = Object.assign({}, VxeMenuComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeMenuComponent.name as string, VxeMenuComponent)
   }
 })

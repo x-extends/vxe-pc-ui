@@ -21,18 +21,13 @@ export interface DatePanelPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
   refInput: Ref<HTMLInputElement>
 }
-export interface VxeDatePanelPrivateRef extends DatePanelPrivateRef { }
+export interface VxeDatePanelPrivateRef extends DatePanelPrivateRef {}
 
 export namespace VxeDatePanelPropTypes {
   export type Size = VxeComponentSizeType
   export type ModelValue = string | number | Date | null | (string | number | Date | null)[]
   export type ClassName = string
-  export type CellClassName = string | ((params: {
-    $datePanel: VxeDatePanelConstructor
-    type: string
-    viewType: VxeDatePanelDefines.DatePanelType
-    date: Date
-  }) => string)
+  export type CellClassName = string | ((params: { $datePanel: VxeDatePanelConstructor; type: string; viewType: VxeDatePanelDefines.DatePanelType; date: Date }) => string)
   export type Type = 'date' | 'time' | 'datetime' | 'week' | 'month' | 'quarter' | 'year'
   export type Multiple = boolean
   export type LimitCount = string | number
@@ -53,30 +48,33 @@ export namespace VxeDatePanelPropTypes {
   export type DisabledMethod = (params: VxeDatePanelDefines.DateDisabledParams) => boolean
 
   export interface TimeConfig {
-    hours?: number[] | string[] | {
-      label?: string | number
-      value: string | number
-      disabled?: boolean
-    }[]
-    hourDisabledMethod?(params: {
-      hour: number
-    }): boolean
-    minutes?: number[] | string[] | {
-      label?: string | number
-      value: string | number
-      disabled?: boolean
-    }[]
-    minuteDisabledMethod?(params: {
-      minute: number
-    }): boolean
-    seconds?: number[] | string[] | {
-      label?: string | number
-      value: string | number
-      disabled?: boolean
-    }[]
-    secondDisabledMethod?(params: {
-      second: number
-    }): boolean
+    hours?:
+      | number[]
+      | string[]
+      | {
+          label?: string | number
+          value: string | number
+          disabled?: boolean
+        }[]
+    hourDisabledMethod?(params: { hour: number }): boolean
+    minutes?:
+      | number[]
+      | string[]
+      | {
+          label?: string | number
+          value: string | number
+          disabled?: boolean
+        }[]
+    minuteDisabledMethod?(params: { minute: number }): boolean
+    seconds?:
+      | number[]
+      | string[]
+      | {
+          label?: string | number
+          value: string | number
+          disabled?: boolean
+        }[]
+    secondDisabledMethod?(params: { second: number }): boolean
   }
 }
 
@@ -126,7 +124,7 @@ export interface DatePanelPrivateComputed {
   computeSize: ComputedRef<VxeDatePanelPropTypes.Size>
   computeYearList: ComputedRef<VxeDatePanelDefines.DateYearItem[]>
 }
-export interface VxeDatePanelPrivateComputed extends DatePanelPrivateComputed { }
+export interface VxeDatePanelPrivateComputed extends DatePanelPrivateComputed {}
 
 export interface DatePanelReactData {
   visiblePanel: boolean
@@ -159,22 +157,12 @@ export interface DatePanelMethods {
   checkValue(inputLabel: string): void
   confirmByEvent(event: Event): void
 }
-export interface VxeDatePanelMethods extends DatePanelMethods { }
+export interface VxeDatePanelMethods extends DatePanelMethods {}
 
-export interface DatePanelPrivateMethods { }
-export interface VxeDatePanelPrivateMethods extends DatePanelPrivateMethods { }
+export interface DatePanelPrivateMethods {}
+export interface VxeDatePanelPrivateMethods extends DatePanelPrivateMethods {}
 
-export type VxeDatePanelEmits = [
-  'update:modelValue',
-  'change',
-  'click',
-  'clear',
-  'date-prev',
-  'date-today',
-  'date-next',
-  'confirm',
-  'revert'
-]
+export type VxeDatePanelEmits = ['update:modelValue', 'change', 'click', 'clear', 'date-prev', 'date-today', 'date-next', 'confirm', 'revert']
 
 export namespace VxeDatePanelDefines {
   export interface DatePanelEventParams extends VxeComponentEventParams {
@@ -182,40 +170,40 @@ export namespace VxeDatePanelDefines {
   }
 
   export interface DateYearItem {
-    date: Date;
-    isPrev: boolean;
-    isCurrent: boolean;
-    isNow: boolean;
-    isNext: boolean;
-    year: number;
+    date: Date
+    isPrev: boolean
+    isCurrent: boolean
+    isNow: boolean
+    isNext: boolean
+    year: number
   }
 
   export interface DateMonthItem {
-    date: Date;
-    isPrev: boolean;
-    isCurrent: boolean;
-    isNow: boolean;
-    isNext: boolean;
-    month: number;
+    date: Date
+    isPrev: boolean
+    isCurrent: boolean
+    isNow: boolean
+    isNext: boolean
+    month: number
   }
 
   export interface DateQuarterItem {
-    date: Date;
-    isPrev: boolean;
-    isCurrent: boolean;
-    isNow: boolean;
-    isNext: boolean;
-    quarter: number;
+    date: Date
+    isPrev: boolean
+    isCurrent: boolean
+    isNow: boolean
+    isNext: boolean
+    quarter: number
   }
 
   export interface DateDayItem {
-    date: Date;
-    isWeekNumber?: boolean;
-    isPrev: boolean;
-    isCurrent: boolean;
-    isNow: boolean;
-    isNext: boolean;
-    label: number;
+    date: Date
+    isWeekNumber?: boolean
+    isPrev: boolean
+    isCurrent: boolean
+    isNow: boolean
+    isNext: boolean
+    label: number
   }
 
   export interface DateHourMinuteSecondItem {

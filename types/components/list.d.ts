@@ -23,7 +23,7 @@ export interface VxeListConstructor<D = any> extends VxeComponentBaseOptions, Vx
 export interface ListPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeListPrivateRef extends ListPrivateRef { }
+export interface VxeListPrivateRef extends ListPrivateRef {}
 
 export namespace VxeListPropTypes {
   export type Size = VxeComponentSizeType
@@ -40,14 +40,8 @@ export namespace VxeListPropTypes {
   export type CheckRowKey = string | number | null
   export interface RadioConfig<D = any> {
     strict?: boolean
-    visibleMethod?: (params: {
-      $list: VxeListConstructor
-      row: D
-    }) => boolean
-    checkMethod?: (params: {
-      $list: VxeListConstructor
-      row: D
-    }) => boolean
+    visibleMethod?: (params: { $list: VxeListConstructor; row: D }) => boolean
+    checkMethod?: (params: { $list: VxeListConstructor; row: D }) => boolean
     highlight?: boolean
     showIcon?: boolean
     trigger?: '' | 'default' | 'row'
@@ -58,14 +52,8 @@ export namespace VxeListPropTypes {
     showHeader?: boolean
     headerTitle?: string | number
     highlight?: boolean
-    visibleMethod?: (params: {
-      $list: VxeListConstructor
-      row: D
-    }) => boolean
-    checkMethod?: (params: {
-      $list: VxeListConstructor
-      row: D
-    }) => boolean
+    visibleMethod?: (params: { $list: VxeListConstructor; row: D }) => boolean
+    checkMethod?: (params: { $list: VxeListConstructor; row: D }) => boolean
     showIcon?: boolean
     trigger?: '' | 'default' | 'row'
   }
@@ -90,7 +78,7 @@ export namespace VxeListPropTypes {
     /**
      * 给每一行的附加 className
      */
-    className?: string | ((params: { row: D, $list: VxeListConstructor }) => string)
+    className?: string | ((params: { row: D; $list: VxeListConstructor }) => string)
     /**
      * 当鼠标移到每一行时，是否要高亮当前头
      */
@@ -103,7 +91,7 @@ export namespace VxeListPropTypes {
   /**
    * 拖拽排序配置项
    */
-  export interface DragConfig<D = any>{
+  export interface DragConfig<D = any> {
     /**
      * 是否启用
      */
@@ -139,24 +127,15 @@ export namespace VxeListPropTypes {
     /**
      * 是否禁用拖拽按钮
      */
-    disabledMethod?(params: {
-      $list: VxeListConstructor
-      row: D
-    }): boolean
+    disabledMethod?(params: { $list: VxeListConstructor; row: D }): boolean
     /**
      * 是否显示拖拽按钮
      */
-    visibleMethod?(params: {
-      $list: VxeListConstructor
-      row: D
-    }): boolean
+    visibleMethod?(params: { $list: VxeListConstructor; row: D }): boolean
     /**
      * 自定义提示内容
      */
-    tooltipMethod?(params: {
-      $list: VxeListConstructor
-      row: D
-    }): string | number | null
+    tooltipMethod?(params: { $list: VxeListConstructor; row: D }): string | number | null
     /**
      * 拖拽开始时是否允许行拖拽调整顺序的方法，该方法的返回值用来决定是否允许被拖拽
      */
@@ -179,11 +158,7 @@ export namespace VxeListPropTypes {
     /**
      * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
      */
-    visibleMethod?(params: {
-      $list: VxeListConstructor
-      options: VxeContextMenuPropTypes.Options
-      row: D
-    }): boolean
+    visibleMethod?(params: { $list: VxeListConstructor; options: VxeContextMenuPropTypes.Options; row: D }): boolean
   }
 
   export interface VirtualYConfig {
@@ -291,9 +266,8 @@ export interface VxeListProps<D = any> {
   scrollY?: VxeListPropTypes.ScrollY
 }
 
-export interface ListPrivateComputed {
-}
-export interface VxeListPrivateComputed extends ListPrivateComputed { }
+export interface ListPrivateComputed {}
+export interface VxeListPrivateComputed extends ListPrivateComputed {}
 
 export interface ListReactData {
   scrollYLoad: boolean
@@ -384,10 +358,17 @@ export interface ListMethods<D = any> {
   /**
    * 如果有滚动条，则滚动到对应的位置
    */
-  scrollTo(x: {
-    top?: number | null
-    left?: number | null
-  } | number | null | undefined, y?: number | null): Promise<void>
+  scrollTo(
+    x:
+      | {
+          top?: number | null
+          left?: number | null
+        }
+      | number
+      | null
+      | undefined,
+    y?: number | null
+  ): Promise<void>
   /**
    * 刷新滚动操作，手动同步滚动相关位置
    */
@@ -516,18 +497,18 @@ export interface ListMethods<D = any> {
   /**
    * 往列表插入临时数据，从第一个行新增一个行或多个行新数据
    */
-  insert(records: any): Promise<{ row: D, rows: D[] }>
+  insert(records: any): Promise<{ row: D; rows: D[] }>
   /**
    * 往列表指定行中插入临时数据
    * 如果 row 为空则从插入到顶部，如果为树结构，则插入到目标行顶部
    * 如果 row 为 -1 则从插入到底部，如果为树结构，则插入到目标行底部
    * 如果 row 为有效行则插入到该行的位置
    */
-  insertAt(records: any, targetRowOrRowKey?: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertAt(records: any, targetRowOrRowKey?: any | -1 | null): Promise<{ row: D; rows: D[] }>
   /**
    * 用于 transform 模式，与 insertAt 行为一致，区别就是会插入指定目标的到下一行
    */
-  insertNextAt(records: any, targetRowOrRowKey?: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertNextAt(records: any, targetRowOrRowKey?: any | -1 | null): Promise<{ row: D; rows: D[] }>
   /**
    * 判断行是否为新增的临时数据
    */
@@ -535,7 +516,7 @@ export interface ListMethods<D = any> {
   /**
    * 用于 transform 模式，删除指定行数据，指定 row 或 [row, ...] 删除多条数据，如果为空则删除所有数据
    */
-  remove(rows?: any | any[]): Promise<{ row: D, rows: D[] }>
+  remove(rows?: any | any[]): Promise<{ row: D; rows: D[] }>
   /**
    * 用于 transform 模式，获取新增的临时数据
    */
@@ -557,7 +538,7 @@ export interface ListMethods<D = any> {
     removeRecords: D[]
   }
 }
-export interface VxeListMethods<D = any> extends ListMethods<D> { }
+export interface VxeListMethods<D = any> extends ListMethods<D> {}
 
 export interface ListPrivateMethods<D = any> {
   /**
@@ -581,29 +562,11 @@ export interface ListPrivateMethods<D = any> {
    */
   hideCrossListRowDropClearStatus(): void
 }
-export interface VxeListPrivateMethods<D = any> extends ListPrivateMethods<D> { }
+export interface VxeListPrivateMethods<D = any> extends ListPrivateMethods<D> {}
 
-export type VxeListEmits = [
-  'update:checkRowKey',
-  'update:checkRowKeys',
-  'row-click',
-  'row-dblclick',
-  'current-change',
-  'radio-change',
-  'checkbox-change',
-  'checkbox-all',
-  'scroll',
-  'row-dragstart',
-  'row-dragover',
-  'row-dragend',
-  'row-remove-dragend',
-  'row-insert-dragend',
-  'row-menu',
-  'menu-click'
-]
+export type VxeListEmits = ['update:checkRowKey', 'update:checkRowKeys', 'row-click', 'row-dblclick', 'current-change', 'radio-change', 'checkbox-change', 'checkbox-all', 'scroll', 'row-dragstart', 'row-dragover', 'row-dragend', 'row-remove-dragend', 'row-insert-dragend', 'row-menu', 'menu-click']
 
 export namespace VxeListDefines {
-
   export interface RowCacheItem {
     item: any
     index: number
@@ -618,9 +581,9 @@ export namespace VxeListDefines {
   export interface RowClickParams<D = any> {
     row: D
   }
-  export interface RowClickEventParams<D = any> extends ListEventParams, RowClickParams<D> { }
+  export interface RowClickEventParams<D = any> extends ListEventParams, RowClickParams<D> {}
 
-  export interface RowDblclickEventParams<D = any> extends RowClickEventParams<D> { }
+  export interface RowDblclickEventParams<D = any> extends RowClickEventParams<D> {}
 
   export interface RowDragstartEventParams<D = any> {
     row: D
@@ -646,8 +609,8 @@ export namespace VxeListDefines {
     }
   }
 
-  export interface ScrollParams { }
-  export interface ScrollEventParams extends ListEventParams, ScrollParams { }
+  export interface ScrollParams {}
+  export interface ScrollEventParams extends ListEventParams, ScrollParams {}
 
   export interface MenuClickEventParams<D = any> extends ListEventParams<D> {
     row: D
@@ -704,11 +667,11 @@ export namespace VxeListSlotTypes {
 
 export interface VxeListSlots {
   default?: (params: VxeListSlotTypes.DefaultSlotParams) => any
-  header?:(params: VxeListSlotTypes.HeaderSlotParams) => any
-  footer?:(params: VxeListSlotTypes.FooterSlotParams) => any
-  content?:(params: VxeListSlotTypes.ContentSlotParams) => any
-  extra?:(params: VxeListSlotTypes.ExtraSlotParams) => any
-  tip?:(params: VxeListSlotTypes.DragSlotParams) => any
+  header?: (params: VxeListSlotTypes.HeaderSlotParams) => any
+  footer?: (params: VxeListSlotTypes.FooterSlotParams) => any
+  content?: (params: VxeListSlotTypes.ContentSlotParams) => any
+  extra?: (params: VxeListSlotTypes.ExtraSlotParams) => any
+  tip?: (params: VxeListSlotTypes.DragSlotParams) => any
 }
 
 export const List: typeof VxeList

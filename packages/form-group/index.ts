@@ -4,7 +4,7 @@ import VxeFormGroupComponent from '../form/src/form-group'
 import { dynamicApp } from '../dynamics'
 
 export const VxeFormGroup = Object.assign(VxeFormGroupComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeFormGroupComponent.name as string, VxeFormGroupComponent)
   }
 })

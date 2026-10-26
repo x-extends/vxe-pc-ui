@@ -20,7 +20,7 @@ export interface VxeColConstructor extends VxeComponentBaseOptions, VxeColMethod
 export interface ColPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeColPrivateRef extends ColPrivateRef { }
+export interface VxeColPrivateRef extends ColPrivateRef {}
 
 export namespace VxeColPropTypes {
   export type Span = string | number
@@ -40,19 +40,16 @@ export interface VxeColProps {
   size?: VxeColPropTypes.Size
 }
 
-export interface ColPrivateComputed {
-}
-export interface VxeColPrivateComputed extends ColPrivateComputed { }
+export interface ColPrivateComputed {}
+export interface VxeColPrivateComputed extends ColPrivateComputed {}
 
-export interface ColReactData {
-}
+export interface ColReactData {}
 
-export interface ColMethods {
-}
-export interface VxeColMethods extends ColMethods { }
+export interface ColMethods {}
+export interface VxeColMethods extends ColMethods {}
 
-export interface ColPrivateMethods { }
-export interface VxeColPrivateMethods extends ColPrivateMethods { }
+export interface ColPrivateMethods {}
+export interface VxeColPrivateMethods extends ColPrivateMethods {}
 
 export type VxeColEmits = []
 
@@ -64,9 +61,9 @@ export namespace VxeColDefines {
 
 export type VxeColEventProps = {}
 
-export interface VxeColListeners { }
+export interface VxeColListeners {}
 
-export namespace VxeColEvents { }
+export namespace VxeColEvents {}
 
 export namespace VxeColSlotTypes {
   export interface DefaultSlotParams {}

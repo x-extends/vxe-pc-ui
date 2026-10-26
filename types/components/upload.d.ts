@@ -22,7 +22,7 @@ export interface VxeUploadConstructor extends VxeComponentBaseOptions, VxeUpload
 export interface UploadPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeUploadPrivateRef extends UploadPrivateRef { }
+export interface VxeUploadPrivateRef extends UploadPrivateRef {}
 
 export namespace VxeUploadPropTypes {
   export type ModelValue = VxeUploadDefines.FileObjItem | VxeUploadDefines.FileObjItem[] | string | string[]
@@ -32,10 +32,7 @@ export namespace VxeUploadPropTypes {
     maxCount?: number
     showMoreButton?: boolean
     layout?: '' | 'vertical' | 'horizontal'
-    moreButtonText?: string | ((params: {
-      $upload: VxeUploadConstructor
-      options: VxeUploadDefines.FileObjItem[]
-    }) => string | number)
+    moreButtonText?: string | ((params: { $upload: VxeUploadConstructor; options: VxeUploadDefines.FileObjItem[] }) => string | number)
   }
   export type Mode = null | '' | 'all' | 'image'
   export type Readonly = boolean
@@ -67,14 +64,10 @@ export namespace VxeUploadPropTypes {
   export type Multiple = boolean
   export type LimitSize = number | string
   export type ShowLimitSize = boolean
-  export type LimitSizeText = number | string | ((params: {
-    maxSize: number
-  }) => number | string)
+  export type LimitSizeText = number | string | ((params: { maxSize: number }) => number | string)
   export type LimitCount = number | string
   export type ShowLimitCount = boolean
-  export type LimitCountText = number | string | ((params: {
-    maxCount: number
-  }) => number | string)
+  export type LimitCountText = number | string | ((params: { maxCount: number }) => number | string)
   export type NameField = string
   export type TypeField = string
   export type UrlField = string
@@ -96,44 +89,15 @@ export namespace VxeUploadPropTypes {
   export type AutoHiddenButton = boolean
   export type ShowUploadButton = boolean
   export interface PreviewImageConfig extends Omit<VxeImagePreviewProps, 'modelValue' | 'urlList' | 'urlField'> {}
-  export type PreviewMethod = undefined | ((params: {
-    $upload: VxeUploadConstructor
-    option: VxeUploadDefines.FileObjItem
-  }) => Promise<any>)
- export type BeforeSelectMethod = undefined | ((params: {
-    $upload: VxeUploadConstructor
-    file: File,
-  }) => boolean)
-  export type UploadMethod = undefined | ((params: {
-    $upload: VxeUploadConstructor
-    file: File,
-    option: VxeUploadDefines.FileObjItem
-    updateProgress: (percentNum: number) => void
-  }) => Promise<any>)
-  export type BeforeRemoveMethod = undefined | ((params: {
-    $upload: VxeUploadConstructor
-    option: VxeUploadDefines.FileObjItem
-  }) => boolean | Promise<boolean>)
-  export type RemoveMethod = undefined | ((params: {
-    $upload: VxeUploadConstructor
-    option: VxeUploadDefines.FileObjItem
-  }) => Promise<any>)
-  export type BeforeDownloadMethod = undefined | ((params: {
-    $upload: VxeUploadConstructor
-    option: VxeUploadDefines.FileObjItem
-  }) => boolean | Promise<boolean>)
-  export type DownloadMethod = undefined | ((params: {
-    $upload: VxeUploadConstructor
-    option: VxeUploadDefines.FileObjItem
-  }) => Promise<any>)
-  export type GetUrlMethod = undefined | ((params: {
-    $upload: VxeUploadConstructor
-    option: VxeUploadDefines.FileObjItem
-  }) => string)
-  export type GetThumbnailUrlMethod = undefined | ((params: {
-    $upload: VxeUploadConstructor
-    option: VxeUploadDefines.FileObjItem
-  }) => string)
+  export type PreviewMethod = undefined | ((params: { $upload: VxeUploadConstructor; option: VxeUploadDefines.FileObjItem }) => Promise<any>)
+  export type BeforeSelectMethod = undefined | ((params: { $upload: VxeUploadConstructor; file: File }) => boolean)
+  export type UploadMethod = undefined | ((params: { $upload: VxeUploadConstructor; file: File; option: VxeUploadDefines.FileObjItem; updateProgress: (percentNum: number) => void }) => Promise<any>)
+  export type BeforeRemoveMethod = undefined | ((params: { $upload: VxeUploadConstructor; option: VxeUploadDefines.FileObjItem }) => boolean | Promise<boolean>)
+  export type RemoveMethod = undefined | ((params: { $upload: VxeUploadConstructor; option: VxeUploadDefines.FileObjItem }) => Promise<any>)
+  export type BeforeDownloadMethod = undefined | ((params: { $upload: VxeUploadConstructor; option: VxeUploadDefines.FileObjItem }) => boolean | Promise<boolean>)
+  export type DownloadMethod = undefined | ((params: { $upload: VxeUploadConstructor; option: VxeUploadDefines.FileObjItem }) => Promise<any>)
+  export type GetUrlMethod = undefined | ((params: { $upload: VxeUploadConstructor; option: VxeUploadDefines.FileObjItem }) => string)
+  export type GetThumbnailUrlMethod = undefined | ((params: { $upload: VxeUploadConstructor; option: VxeUploadDefines.FileObjItem }) => string)
 
   /**
    * 已废弃，请使用 TipText
@@ -221,7 +185,7 @@ export interface VxeUploadProps {
 export interface UploadPrivateComputed {
   computeUrlProp: ComputedRef<string>
 }
-export interface VxeUploadPrivateComputed extends UploadPrivateComputed { }
+export interface VxeUploadPrivateComputed extends UploadPrivateComputed {}
 
 export interface UploadReactData {
   isDragUploadStatus: boolean
@@ -254,7 +218,7 @@ export interface UploadMethods {
   /**
    * 获取未上传的文件对象
    */
-  getPendingFiles (): File[]
+  getPendingFiles(): File[]
   /**
    * 用于 auto-upload 模式，手动调用上传附件；如果传 true，这包含未上传和上传失败的都会重新提交
    */
@@ -262,17 +226,21 @@ export interface UploadMethods {
   /**
    * 清除所有文件
    */
-  clear(): Promise<{
-    url: string
-    status: boolean
-  }[]>
+  clear(): Promise<
+    {
+      url: string
+      status: boolean
+    }[]
+  >
   /**
    * 区别就是会触发对应的事件
    */
-  clearByEvent(event: Event): Promise<{
-    url: string
-    status: boolean
-  }[]>
+  clearByEvent(event: Event): Promise<
+    {
+      url: string
+      status: boolean
+    }[]
+  >
   /**
    * 获取更多弹窗的可视状态
    */
@@ -292,19 +260,26 @@ export interface UploadMethods {
   /**
    * 删除指定文件
    */
-  remove(urlOrItem: string | VxeUploadDefines.FileObjItem | string[] | VxeUploadDefines.FileObjItem[] | null): Promise<{
-    url: string
-    status: boolean
-  }[]>
+  remove(urlOrItem: string | VxeUploadDefines.FileObjItem | string[] | VxeUploadDefines.FileObjItem[] | null): Promise<
+    {
+      url: string
+      status: boolean
+    }[]
+  >
   /**
    * 区别就是会触发对应的事件
    */
-  removeByEvent(event: Event, urlOrItem: string | VxeUploadDefines.FileObjItem | string[] | VxeUploadDefines.FileObjItem[] | null): Promise<{
-    url: string
-    status: boolean
-  }[]>
+  removeByEvent(
+    event: Event,
+    urlOrItem: string | VxeUploadDefines.FileObjItem | string[] | VxeUploadDefines.FileObjItem[] | null
+  ): Promise<
+    {
+      url: string
+      status: boolean
+    }[]
+  >
 }
-export interface VxeUploadMethods extends UploadMethods { }
+export interface VxeUploadMethods extends UploadMethods {}
 
 export interface UploadPrivateMethods {
   /**
@@ -313,46 +288,30 @@ export interface UploadPrivateMethods {
    */
   removeFileEvent(evnt: Event | null, item: VxeUploadDefines.FileObjItem, index: number): Promise<any>
 }
-export interface VxeUploadPrivateMethods extends UploadPrivateMethods { }
+export interface VxeUploadPrivateMethods extends UploadPrivateMethods {}
 
-export type VxeUploadEmits = [
-  'update:modelValue',
-  'change',
-  'add',
-  'remove',
-  'remove-fail',
-  'download',
-  'download-fail',
-  'upload-start',
-  'upload-success',
-  'upload-error',
-  'upload-end',
-  'upload-queue-start',
-  'upload-queue-end',
-  'sort-dragend',
-  'more-visible'
-]
+export type VxeUploadEmits = ['update:modelValue', 'change', 'add', 'remove', 'remove-fail', 'download', 'download-fail', 'upload-start', 'upload-success', 'upload-error', 'upload-end', 'upload-queue-start', 'upload-queue-end', 'sort-dragend', 'more-visible']
 
 export namespace VxeUploadDefines {
   export interface UploadEventParams extends VxeComponentEventParams {
     $upload: VxeUploadConstructor
   }
 
-  export type SaveFileFunction = (options: {
-    filename: string
-    type: string
-    content: string | Blob
-  } | {
-    filename: string
-    type?: string
-    content: Blob
-  }) => Promise<any>
+  export type SaveFileFunction = (
+    options:
+      | {
+          filename: string
+          type: string
+          content: string | Blob
+        }
+      | {
+          filename: string
+          type?: string
+          content: Blob
+        }
+  ) => Promise<any>
 
-  export type ReadFileFunction = (options?: {
-    multiple?: boolean
-    types?: string[]
-    message?: boolean
-  }) => Promise<{
+  export type ReadFileFunction = (options?: { multiple?: boolean; types?: string[]; message?: boolean }) => Promise<{
     status: boolean
     files: File[]
     file: File
@@ -384,7 +343,7 @@ export namespace VxeUploadDefines {
     options: VxeUploadDefines.FileObjItem[]
     option: VxeUploadDefines.FileObjItem
   }
-  export interface AddEventParams extends UploadEventParams, AddParams { }
+  export interface AddEventParams extends UploadEventParams, AddParams {}
 
   export interface RemoveEventParams extends UploadEventParams {
     options: VxeUploadDefines.FileObjItem[]

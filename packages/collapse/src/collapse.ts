@@ -1,13 +1,31 @@
 import { ref, h, reactive, provide, computed, PropType, watch, nextTick, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, getIcon, createEvent, permission, renderEmptyElement, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
-import type { CollapseReactData, CollapseInternalData, VxeCollapseEmits, CollapsePrivateRef, VxeCollapsePropTypes, VxeCollapsePanePropTypes, VxeCollapseDefines, VxeCollapsePaneProps, VxeCollapsePaneDefines, ValueOf, CollapseMethods, CollapsePrivateMethods, VxeCollapsePrivateComputed, VxeCollapseConstructor, VxeCollapsePrivateMethods } from '../../../types'
+import type {
+  CollapseReactData,
+  CollapseInternalData,
+  VxeCollapseEmits,
+  CollapsePrivateRef,
+  VxeCollapsePropTypes,
+  VxeCollapsePanePropTypes,
+  VxeCollapseDefines,
+  VxeCollapsePaneProps,
+  VxeCollapsePaneDefines,
+  ValueOf,
+  CollapseMethods,
+  CollapsePrivateMethods,
+  VxeCollapsePrivateComputed,
+  VxeCollapseConstructor,
+  VxeCollapsePrivateMethods
+} from '../../../types'
 
-function createReactData (): CollapseReactData {
+const { getConfig, getIcon, createEvent, permission, renderEmptyElement, useFns } = VxeUI
+
+function createReactData(): CollapseReactData {
   return {
     staticPanes: [],
     cachePaneMaps: {},
@@ -16,7 +34,7 @@ function createReactData (): CollapseReactData {
   }
 }
 
-function createInternalData (): CollapseInternalData {
+function createInternalData(): CollapseInternalData {
   return {
     // esTime: null,
     activeKeyMaps: {},
@@ -43,18 +61,13 @@ export default defineVxeComponent({
       default: () => getConfig().collapse.size || getConfig().size
     }
   },
-  emits: [
-    'update:modelValue',
-    'load',
-    'change',
-    'toggle-expand'
-  ] as VxeCollapseEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'load', 'change', 'toggle-expand'] as VxeCollapseEmits,
+  setup(props, context) {
     const { emit, slots } = context
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -80,8 +93,7 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().collapse.expandConfig, props.expandConfig)
     })
 
-    const computeMaps: VxeCollapsePrivateComputed = {
-    }
+    const computeMaps: VxeCollapsePrivateComputed = {}
 
     const $xeCollapse = {
       xID,
@@ -121,7 +133,7 @@ export default defineVxeComponent({
       const { openKeyMaps } = internalData
       const activeMaps: Record<string, boolean> = {}
       if (modelValue) {
-        modelValue.forEach(name => {
+        modelValue.forEach((name) => {
           if (!openKeyMaps[name as string]) {
             openKeyMaps[name as string] = true
           }
@@ -241,8 +253,7 @@ export default defineVxeComponent({
       }
     }
 
-    const collapsePrivateMethods: CollapsePrivateMethods = {
-    }
+    const collapsePrivateMethods: CollapsePrivateMethods = {}
 
     Object.assign($xeCollapse, collapseMethods, collapsePrivateMethods)
 
@@ -250,57 +261,86 @@ export default defineVxeComponent({
       const { activeKeyFlag, openKeyFlag } = reactData
       const { activeKeyMaps, openKeyMaps } = internalData
       const expandOpts = computeExpandOpts.value
-      return itemList.map(item => {
+      return itemList.map((item) => {
         const { icon, name, title, slots } = item
         const titleSlot = slots ? slots.title : null
         const defaultSlot = slots ? slots.default : null
         const isActive = name && activeKeyFlag && activeKeyMaps[name as string]
-        return h('div', {
-          class: 'vxe-collapse-item'
-        }, [
-          h('div', {
-            class: 'vxe-collapse--item-header',
-            onClick (evnt) {
-              handleClickEvent(evnt, item)
-            }
-          }, [
-            expandOpts.showIcon
-              ? h('span', {
-                class: 'vxe-collapse--item-switch'
-              }, [
-                h('i', {
-                  class: isActive ? getIcon().COLLAPSE_OPEN : getIcon().COLLAPSE_CLOSE
-                })
-              ])
-              : renderEmptyElement($xeCollapse),
-            icon
-              ? h('span', {
-                class: 'vxe-collapse--item-icon'
-              }, [
-                h('i', {
-                  class: icon
-                })
-              ])
-              : renderEmptyElement($xeCollapse),
-            h('span', {
-              class: 'vxe-collapse--item-name'
-            }, titleSlot ? callSlot(titleSlot, { name, title }) : `${title}`)
-          ]),
-          h('div', {
-            class: ['vxe-collapse--item-content', {
-              'is--visible': isActive,
-              'is--hidden': !isActive
-            }]
-          }, [
-            name && openKeyFlag && openKeyMaps[name as string]
-              ? h('div', {
-                class: 'vxe-collapse--item-inner'
-              }, [
-                defaultSlot ? callSlot(defaultSlot, { name, title }) : ''
-              ])
-              : renderEmptyElement($xeCollapse)
-          ])
-        ])
+        return h(
+          'div',
+          {
+            class: 'vxe-collapse-item'
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-collapse--item-header',
+                onClick(evnt) {
+                  handleClickEvent(evnt, item)
+                }
+              },
+              [
+                expandOpts.showIcon
+                  ? h(
+                    'span',
+                    {
+                      class: 'vxe-collapse--item-switch'
+                    },
+                    [
+                      h('i', {
+                        class: isActive ? getIcon().COLLAPSE_OPEN : getIcon().COLLAPSE_CLOSE
+                      })
+                    ]
+                  )
+                  : renderEmptyElement($xeCollapse),
+                icon
+                  ? h(
+                    'span',
+                    {
+                      class: 'vxe-collapse--item-icon'
+                    },
+                    [
+                      h('i', {
+                        class: icon
+                      })
+                    ]
+                  )
+                  : renderEmptyElement($xeCollapse),
+                h(
+                  'span',
+                  {
+                    class: 'vxe-collapse--item-name'
+                  },
+                  titleSlot ? callSlot(titleSlot, { name, title }) : `${title}`
+                )
+              ]
+            ),
+            h(
+              'div',
+              {
+                class: [
+                  'vxe-collapse--item-content',
+                  {
+                    'is--visible': isActive,
+                    'is--hidden': !isActive
+                  }
+                ]
+              },
+              [
+                name && openKeyFlag && openKeyMaps[name as string]
+                  ? h(
+                    'div',
+                    {
+                      class: 'vxe-collapse--item-inner'
+                    },
+                    [defaultSlot ? callSlot(defaultSlot, { name, title }) : '']
+                  )
+                  : renderEmptyElement($xeCollapse)
+              ]
+            )
+          ]
+        )
       })
     }
 
@@ -312,50 +352,79 @@ export default defineVxeComponent({
       const defaultSlot = slots.default
       const itemList = defaultSlot ? itemStaticOptions : itemOptions
 
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-collapse', {
-          [`size--${vSize}`]: vSize,
-          'is--padding': padding,
-          'is--border': border
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-collapse-slots'
-        }, defaultSlot ? defaultSlot({}) : []),
-        renderList(itemList)
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-collapse',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--padding': padding,
+              'is--border': border
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-collapse-slots'
+            },
+            defaultSlot ? defaultSlot({}) : []
+          ),
+          renderList(itemList)
+        ]
+      )
     }
 
     const valFlag = ref(0)
-    watch(() => props.modelValue ? props.modelValue.length : -1, () => {
-      valFlag.value++
-    })
-    watch(() => props.modelValue, () => {
-      valFlag.value++
-    })
+    watch(
+      () => (props.modelValue ? props.modelValue.length : -1),
+      () => {
+        valFlag.value++
+      }
+    )
+    watch(
+      () => props.modelValue,
+      () => {
+        valFlag.value++
+      }
+    )
     watch(valFlag, () => {
       updateModel()
     })
 
     const optsFlag = ref(0)
-    watch(() => props.options ? props.options.length : -1, () => {
-      optsFlag.value++
-    })
-    watch(() => props.options, () => {
-      optsFlag.value++
-    })
+    watch(
+      () => (props.options ? props.options.length : -1),
+      () => {
+        optsFlag.value++
+      }
+    )
+    watch(
+      () => props.options,
+      () => {
+        optsFlag.value++
+      }
+    )
     watch(optsFlag, () => {
       initDefaultName(props.options)
     })
 
     const stFlag = ref(0)
-    watch(() => reactData.staticPanes ? reactData.staticPanes.length : -1, () => {
-      stFlag.value++
-    })
-    watch(() => reactData.staticPanes, () => {
-      stFlag.value++
-    })
+    watch(
+      () => (reactData.staticPanes ? reactData.staticPanes.length : -1),
+      () => {
+        stFlag.value++
+      }
+    )
+    watch(
+      () => reactData.staticPanes,
+      () => {
+        stFlag.value++
+      }
+    )
     watch(stFlag, () => {
       initDefaultName(reactData.staticPanes)
     })
@@ -378,7 +447,7 @@ export default defineVxeComponent({
 
     return $xeCollapse
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

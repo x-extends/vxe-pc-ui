@@ -20,7 +20,7 @@ export interface VxeCarouselItemConstructor extends VxeComponentBaseOptions, Vxe
 export interface CarouselItemPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeCarouselItemPrivateRef extends CarouselItemPrivateRef { }
+export interface VxeCarouselItemPrivateRef extends CarouselItemPrivateRef {}
 
 export namespace VxeCarouselItemPropTypes {
   export type Name = string | number | null
@@ -34,20 +34,18 @@ export interface VxeCarouselItemProps {
   url?: VxeCarouselItemPropTypes.Url
 }
 
-export interface CarouselItemPrivateComputed {
-}
-export interface VxeCarouselItemPrivateComputed extends CarouselItemPrivateComputed { }
+export interface CarouselItemPrivateComputed {}
+export interface VxeCarouselItemPrivateComputed extends CarouselItemPrivateComputed {}
 
-export interface CarouselItemReactData {
-}
+export interface CarouselItemReactData {}
 
 export interface CarouselItemMethods {
   dispatchEvent(type: ValueOf<VxeCarouselItemEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCarouselItemMethods extends CarouselItemMethods { }
+export interface VxeCarouselItemMethods extends CarouselItemMethods {}
 
-export interface CarouselItemPrivateMethods { }
-export interface VxeCarouselItemPrivateMethods extends CarouselItemPrivateMethods { }
+export interface CarouselItemPrivateMethods {}
+export interface VxeCarouselItemPrivateMethods extends CarouselItemPrivateMethods {}
 
 export type VxeCarouselItemEmits = []
 
@@ -59,9 +57,9 @@ export namespace VxeCarouselItemDefines {
 
 export type VxeCarouselItemEventProps = {}
 
-export interface VxeCarouselItemListeners { }
+export interface VxeCarouselItemListeners {}
 
-export namespace VxeCarouselItemEvents { }
+export namespace VxeCarouselItemEvents {}
 
 export namespace VxeCarouselItemSlotTypes {
   export interface DefaultSlotParams {}

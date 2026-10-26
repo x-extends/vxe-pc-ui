@@ -4,7 +4,7 @@ import VxeTipComponent from './src/tip'
 import { dynamicApp } from '../dynamics'
 
 export const VxeTip = Object.assign({}, VxeTipComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeTipComponent.name as string, VxeTipComponent)
     app.component('VxeTipsComponent' as string, VxeTipComponent)
   }

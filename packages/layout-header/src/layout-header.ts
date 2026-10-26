@@ -1,9 +1,11 @@
 import { ref, h, reactive, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
 import type { VxeLayoutHeaderPropTypes, LayoutHeaderReactData, LayoutHeaderMethods, LayoutHeaderPrivateMethods, VxeLayoutHeaderEmits, LayoutHeaderPrivateRef, VxeLayoutHeaderPrivateComputed, VxeLayoutHeaderConstructor, VxeLayoutHeaderPrivateMethods, ValueOf } from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeLayoutHeader',
@@ -11,22 +13,20 @@ export default defineVxeComponent({
     fixed: Boolean as PropType<VxeLayoutHeaderPropTypes.Fixed>
   },
   emits: [] as VxeLayoutHeaderEmits,
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
     const refElem = ref<HTMLDivElement>()
 
-    const reactData = reactive<LayoutHeaderReactData>({
-    })
+    const reactData = reactive<LayoutHeaderReactData>({})
 
     const refMaps: LayoutHeaderPrivateRef = {
       refElem
     }
 
-    const computeMaps: VxeLayoutHeaderPrivateComputed = {
-    }
+    const computeMaps: VxeLayoutHeaderPrivateComputed = {}
 
     const $xeLayoutHeader = {
       xID,
@@ -46,8 +46,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const layoutHeaderPrivateMethods: LayoutHeaderPrivateMethods = {
-    }
+    const layoutHeaderPrivateMethods: LayoutHeaderPrivateMethods = {}
 
     Object.assign($xeLayoutHeader, layoutHeaderMethods, layoutHeaderPrivateMethods)
 
@@ -55,19 +54,26 @@ export default defineVxeComponent({
       const { fixed } = props
       const defaultSlot = slots.default
 
-      return h('header', {
-        ref: refElem,
-        class: ['vxe-layout-header', {
-          'is--fixed': fixed
-        }]
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'header',
+        {
+          ref: refElem,
+          class: [
+            'vxe-layout-header',
+            {
+              'is--fixed': fixed
+            }
+          ]
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
 
     $xeLayoutHeader.renderVN = renderVN
 
     return $xeLayoutHeader
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

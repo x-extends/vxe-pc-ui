@@ -10,7 +10,7 @@ const VxeFormGatherComponent = Object.assign({}, VxeFormGroupComponent, { name: 
  * @deprecated
  */
 export const VxeFormGather = Object.assign(VxeFormGatherComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeFormGatherComponent.name as string, VxeFormGatherComponent)
   }
 })

@@ -5,6 +5,6 @@ export const crossTreeDragNodeInfo = reactive({
   node: null as any
 })
 
-export function getCrossTreeDragNodeInfo () {
+export function getCrossTreeDragNodeInfo() {
   return crossTreeDragNodeInfo
 }

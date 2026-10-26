@@ -4,7 +4,7 @@ import VxeMentionComponent from './src/mention'
 import { dynamicApp } from '../dynamics'
 
 export const VxeMention = Object.assign({}, VxeMentionComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeMentionComponent.name as string, VxeMentionComponent)
   }
 })

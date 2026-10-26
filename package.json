@@ -1,20 +1,20 @@
 {
   "name": "vxe-pc-ui",
-  "version": "4.20.25",
+  "version": "4.20.26",
   "description": "A vue based PC component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
     "serve": "vue-cli-service serve",
+    "lint": "vue-cli-service lint",
+    "lint:es": "eslint packages/** types/**",
+    "lint:ox": "oxfmt --check packages/** types/**",
+    "esfix": "eslint --fix packages/** types/**",
+    "oxfix": "oxfmt packages/** types/** --write",
     "lib:pack": "vue-cli-service build --target lib --name index --dest lib_temp index.ts",
     "lib:modules": "gulp build",
     "lib:old": "npm run lib:pack && npm run lib:modules",
     "lib:new": "node scripts/build-modules.js",
     "lib": "npm run lib:new",
-    "lint": "npm run lint:es",
-    "lint:es": "eslint packages/**",
-    "lint:ox": "oxfmt --check packages/**",
-    "esfix": "eslint --fix packages/**",
-    "oxfix": "oxfmt packages/** --write",
     "sync:i18n": "node ./syncI18n.js && eslint --fix --ext .js,.ts packages/language/*"
   },
   "files": [
@@ -34,7 +34,7 @@
   "style": "lib/style.css",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "@vxe-ui/core": "^4.4.42"
+    "@vxe-ui/core": "^4.5.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
@@ -76,8 +76,8 @@
     "typescript": "~5.9.3",
     "vue": "3.4.27",
     "vue-router": "~4.5.1",
-    "vxe-table": "^4.23.7",
-    "vxe-gantt": "^4.9.3"
+    "vxe-table": "^4.23.8",
+    "vxe-gantt": "^4.9.6"
   },
   "vetur": {
     "tags": "helper/vetur/tags.json",

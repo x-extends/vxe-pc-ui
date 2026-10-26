@@ -6,49 +6,49 @@ export interface TableEditMethods<D = any> {
   /**
    * 往表格插入临时数据，从第一行新增一行或多行新数据
    */
-  insert(records: any): Promise<{ row: D, rows: D[] }>
+  insert(records: any): Promise<{ row: D; rows: D[] }>
   /**
    * 往表格指定行中插入临时数据
    * 如果 row 为空则从插入到顶部，如果为树结构，则插入到目标节点顶部
    * 如果 row 为 -1 则从插入到底部，如果为树结构，则插入到目标节点底部
    * 如果 row 为有效行则插入到该行的位置，如果为树结构，则有插入到效的目标节点该行的位置
    */
-  insertAt(records: any, targetRowOrRowid?: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertAt(records: any, targetRowOrRowid?: any | -1 | null): Promise<{ row: D; rows: D[] }>
   /**
    * 与 insertAt 行为一致，区别就是会插入指定目标的到下一行
    */
-  insertNextAt(records: any, targetRowOrRowid?: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertNextAt(records: any, targetRowOrRowid?: any | -1 | null): Promise<{ row: D; rows: D[] }>
   /**
    * 用于树结构，往指定节点插入子级临时数据，从子级的第一行新增一行或多行新数据
    */
-  insertChild(records: any, parentRowOrParentId: any): Promise<{ row: D, rows: D[] }>
+  insertChild(records: any, parentRowOrParentId: any): Promise<{ row: D; rows: D[] }>
   /**
    * 用于树结构，往指定节点插入子级临时数据
    * 如果 row 为空则从插入到顶部，如果为树结构，则插入到目标节点顶部
    * 如果 row 为 -1 则从插入到底部，如果为树结构，则插入到目标节点底部
    * 如果 row 为有效行则插入到该行的位置，如果为树结构，则有插入到效的目标节点该行的位置
    */
-  insertChildAt(records: any, parentRowOrParentId: any, targetRowOrRowid: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertChildAt(records: any, parentRowOrParentId: any, targetRowOrRowid: any | -1 | null): Promise<{ row: D; rows: D[] }>
   /**
    * 与 insertChildAt 行为一致，区别就是会插入指定目标子级的到下一行
    */
-  insertChildNextAt(records: any, parentRowOrParentId: any, targetRowOrRowid: any | -1 | null): Promise<{ row: D, rows: D[] }>
+  insertChildNextAt(records: any, parentRowOrParentId: any, targetRowOrRowid: any | -1 | null): Promise<{ row: D; rows: D[] }>
   /**
    * 删除指定行数据，指定 row 或 [row, ...] 删除多条数据，如果为空则删除所有数据
    */
-  remove(rows?: any | any[]): Promise<{ row: D, rows: D[] }>
+  remove(rows?: any | any[]): Promise<{ row: D; rows: D[] }>
   /**
    * 删除复选框选中的行数据
    */
-  removeCheckboxRow(): Promise<{ row: D, rows: D[] }>
+  removeCheckboxRow(): Promise<{ row: D; rows: D[] }>
   /**
    * 删除单选框选中的行数据
    */
-  removeRadioRow(): Promise<{ row: D, rows: D[] }>
+  removeRadioRow(): Promise<{ row: D; rows: D[] }>
   /**
    * 删除当前行选中的行数据
    */
-  removeCurrentRow(): Promise<{ row: D, rows: D[] }>
+  removeCurrentRow(): Promise<{ row: D; rows: D[] }>
   /**
    * 获取表格数据集
    * 获取新增、删除、更改的数据
@@ -182,9 +182,13 @@ export interface TableEditMethods<D = any> {
   /**
    * 用于 edit-config，激活行编辑并默认激活第一个列，也可以指定列；如果第二个参数为 true，则默认自动激活第一个可编辑列；也可以传指定列
    */
-  setEditRow(row: any, fieldOrColumn?: boolean | string | VxeTableDefines.ColumnInfo | null, options?: {
-    isClear?: boolean
-  }): Promise<void>
+  setEditRow(
+    row: any,
+    fieldOrColumn?: boolean | string | VxeTableDefines.ColumnInfo | null,
+    options?: {
+      isClear?: boolean
+    }
+  ): Promise<void>
   /**
    * 请使用 setEditCell
    * @deprecated
@@ -193,9 +197,13 @@ export interface TableEditMethods<D = any> {
   /**
    * 用于 edit-config，激活单元格编辑
    */
-  setEditCell(row: any, fieldOrColumn: string | VxeTableDefines.ColumnInfo | null, options?: {
-    isClear?: boolean
-  }): Promise<void>
+  setEditCell(
+    row: any,
+    fieldOrColumn: string | VxeTableDefines.ColumnInfo | null,
+    options?: {
+      isClear?: boolean
+    }
+  ): Promise<void>
   /**
    * 用于 mouse-config.mouse-config，选中某个单元格
    */
@@ -206,19 +214,23 @@ export interface TableEditPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleEdit(params: {
-    $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo
-    columnIndex: number
-    _columnIndex: number
-    $columnIndex: number
-    row: D
-    rowIndex: number
-    $rowIndex: number
-    _rowIndex: number
-  }, evnt: any, options?: {
-    isClear?: boolean
-  }): Promise<any>
+  handleEdit(
+    params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo
+      columnIndex: number
+      _columnIndex: number
+      $columnIndex: number
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+    },
+    evnt: any,
+    options?: {
+      isClear?: boolean
+    }
+  ): Promise<any>
   /**
    * @private
    */
@@ -226,34 +238,43 @@ export interface TableEditPrivateMethods<D = any> {
   /**
    * @private
    */
-  handleCellFocus(cell: HTMLElement, params: {
-    $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo
-    row: D
-  }): HTMLInputElement | null
+  handleCellFocus(
+    cell: HTMLElement,
+    params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo
+      row: D
+    }
+  ): HTMLInputElement | null
   /**
    * @private
    */
-  handleFocus(params: {
-    $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo
-    row: D
-    cell: HTMLElement
-  }, evnt?: Event | null): void
+  handleFocus(
+    params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo
+      row: D
+      cell: HTMLElement
+    },
+    evnt?: Event | null
+  ): void
   /**
    * @private
    */
-  handleSelected(params: {
-    $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo
-    columnIndex: number
-    _columnIndex: number
-    $columnIndex: number
-    row: D
-    rowIndex: number
-    $rowIndex: number
-    _rowIndex: number
-  }, evnt: Event | null): Promise<any>
+  handleSelected(
+    params: {
+      $table: VxeTableConstructor<D>
+      column: VxeTableDefines.ColumnInfo
+      columnIndex: number
+      _columnIndex: number
+      $columnIndex: number
+      row: D
+      rowIndex: number
+      $rowIndex: number
+      _rowIndex: number
+    },
+    evnt: Event | null
+  ): Promise<any>
   /**
    * @private
    */
@@ -267,10 +288,10 @@ export interface TableEditPrivateMethods<D = any> {
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableEditMethods<D> { }
+  export interface VxeGridMethods<D = any> extends TableEditMethods<D> {}
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableEditMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableEditPrivateMethods<D> { }
+  export interface VxeTableMethods<D = any> extends TableEditMethods<D> {}
+  export interface VxeTablePrivateMethods<D = any> extends TableEditPrivateMethods<D> {}
 }

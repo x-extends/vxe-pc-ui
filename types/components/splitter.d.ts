@@ -21,7 +21,7 @@ export interface VxeSplitterConstructor extends VxeComponentBaseOptions, VxeSpli
 export interface SplitterPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeSplitterPrivateRef extends SplitterPrivateRef { }
+export interface VxeSplitterPrivateRef extends SplitterPrivateRef {}
 
 export namespace VxeSplitterPropTypes {
   export type Size = VxeComponentSizeType
@@ -150,7 +150,7 @@ export interface SplitterPrivateComputed {
   computeBarOpts: ComputedRef<VxeSplitterPropTypes.BarConfig>
   computeActionOpts: ComputedRef<VxeSplitterPropTypes.ActionConfig>
 }
-export interface VxeSplitterPrivateComputed extends SplitterPrivateComputed { }
+export interface VxeSplitterPrivateComputed extends SplitterPrivateComputed {}
 
 export interface SplitterReactData {
   staticItems: VxeSplitterDefines.PaneConfig[]
@@ -196,19 +196,12 @@ export interface SplitterMethods {
    */
   reloadItem(list: VxeSplitterPanelProps[]): Promise<void>
 }
-export interface VxeSplitterMethods extends SplitterMethods { }
+export interface VxeSplitterMethods extends SplitterMethods {}
 
-export interface SplitterPrivateMethods { }
-export interface VxeSplitterPrivateMethods extends SplitterPrivateMethods { }
+export interface SplitterPrivateMethods {}
+export interface VxeSplitterPrivateMethods extends SplitterPrivateMethods {}
 
-export type VxeSplitterEmits = [
-  'action-dblclick',
-  'action-click',
-  'toggle-expand',
-  'resize-start',
-  'resize-drag',
-  'resize-end'
-]
+export type VxeSplitterEmits = ['action-dblclick', 'action-click', 'toggle-expand', 'resize-start', 'resize-drag', 'resize-end']
 
 export namespace VxeSplitterDefines {
   export interface SplitterEventParams extends VxeComponentEventParams {
@@ -281,18 +274,14 @@ export namespace VxeSplitterEvents {
 }
 
 export namespace VxeSplitterSlotTypes {
-  export interface DefaultSlotParams {
-  }
+  export interface DefaultSlotParams {}
 }
 
 export interface VxeSplitterSlots {
   /**
    * 自定义插槽模板
    */
-  [key: string]: ((params: {
-    name: VxeSplitterPanelPropTypes.Name
-    isExpand: boolean
-  }) => any) | undefined
+  [key: string]: ((params: { name: VxeSplitterPanelPropTypes.Name; isExpand: boolean }) => any) | undefined
 
   default?: (params: VxeSplitterSlotTypes.DefaultSlotParams) => any
 }

@@ -1,12 +1,14 @@
 import { h, ref, Ref, computed, reactive, nextTick, PropType, inject, onUnmounted, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchInternalData, ValueOf, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
-function createReactData (): SwitchReactData {
+const { getConfig, getI18n, createEvent, useFns, renderEmptyElement } = VxeUI
+
+function createReactData(): SwitchReactData {
   return {
     isActivated: false,
     hasAnimat: false,
@@ -14,7 +16,7 @@ function createReactData (): SwitchReactData {
   }
 }
 
-function createInternalData (): SwitchInternalData {
+function createInternalData(): SwitchInternalData {
   return {
     // atTimeout: undefined
   }
@@ -51,20 +53,15 @@ export default defineVxeComponent({
     openActiveIcon: String as PropType<VxeSwitchPropTypes.OpenActiveIcon>,
     closeActiveIcon: String as PropType<VxeSwitchPropTypes.CloseActiveIcon>
   },
-  emits: [
-    'update:modelValue',
-    'change',
-    'focus',
-    'blur'
-  ] as VxeSwitchEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'change', 'focus', 'blur'] as VxeSwitchEmits,
+  setup(props, context) {
     const { emit } = context
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const reactData = reactive(createReactData())
 
@@ -160,7 +157,7 @@ export default defineVxeComponent({
 
     switchMethods = {
       dispatchEvent,
-      focus () {
+      focus() {
         const btnElem = refButton.value
         reactData.isActivated = true
         if (btnElem) {
@@ -168,7 +165,7 @@ export default defineVxeComponent({
         }
         return nextTick()
       },
-      blur () {
+      blur() {
         const btnElem = refButton.value
         if (btnElem) {
           btnElem.blur()
@@ -191,62 +188,94 @@ export default defineVxeComponent({
       const isReadonly = computeIsReadonly.value
 
       if (isReadonly) {
-        return h('div', {
-          class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
-            [`size--${vSize}`]: vSize,
-            'is--readonly': isReadonly
-          }]
-        }, isChecked ? (onShowLabel || getI18n('vxe.switch.onText')) : offShowLabel || getI18n('vxe.switch.offText'))
+        return h(
+          'div',
+          {
+            class: [
+              'vxe-switch',
+              isChecked ? 'is--on' : 'is--off',
+              {
+                [`size--${vSize}`]: vSize,
+                'is--readonly': isReadonly
+              }
+            ]
+          },
+          isChecked ? onShowLabel || getI18n('vxe.switch.onText') : offShowLabel || getI18n('vxe.switch.offText')
+        )
       }
-      return h('div', {
-        class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
-          [`size--${vSize}`]: vSize,
-          'is--active': isActivated,
-          'is--disabled': isDisabled,
-          'is--readonly': isReadonly,
-          'is--animat': hasAnimat
-        }]
-      }, [
-        h('button', {
-          ref: refButton,
-          class: 'vxe-switch--button',
-          type: 'button',
-          disabled: isDisabled || isReadonly,
-          onClick: clickEvent,
-          onFocus: focusEvent,
-          onBlur: blurEvent
-        }, [
-          h('span', {
-            class: 'vxe-switch--label vxe-switch--label-on'
-          }, [
-            openIcon
-              ? h('i', {
-                class: ['vxe-switch--label-icon', openIcon]
-              })
-              : renderEmptyElement($xeSwitch),
-            onShowLabel
-          ]),
-          h('span', {
-            class: 'vxe-switch--label vxe-switch--label-off'
-          }, [
-            closeIcon
-              ? h('i', {
-                class: ['vxe-switch--label-icon', closeIcon]
-              })
-              : renderEmptyElement($xeSwitch),
-            offShowLabel
-          ]),
-          h('span', {
-            class: ['vxe-switch--icon']
-          }, openActiveIcon || closeActiveIcon
-            ? [
-                h('i', {
-                  class: isChecked ? openActiveIcon : closeActiveIcon
-                })
-              ]
-            : [])
-        ])
-      ])
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-switch',
+            isChecked ? 'is--on' : 'is--off',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--active': isActivated,
+              'is--disabled': isDisabled,
+              'is--readonly': isReadonly,
+              'is--animat': hasAnimat
+            }
+          ]
+        },
+        [
+          h(
+            'button',
+            {
+              ref: refButton,
+              class: 'vxe-switch--button',
+              type: 'button',
+              disabled: isDisabled || isReadonly,
+              onClick: clickEvent,
+              onFocus: focusEvent,
+              onBlur: blurEvent
+            },
+            [
+              h(
+                'span',
+                {
+                  class: 'vxe-switch--label vxe-switch--label-on'
+                },
+                [
+                  openIcon
+                    ? h('i', {
+                      class: ['vxe-switch--label-icon', openIcon]
+                    })
+                    : renderEmptyElement($xeSwitch),
+                  onShowLabel
+                ]
+              ),
+              h(
+                'span',
+                {
+                  class: 'vxe-switch--label vxe-switch--label-off'
+                },
+                [
+                  closeIcon
+                    ? h('i', {
+                      class: ['vxe-switch--label-icon', closeIcon]
+                    })
+                    : renderEmptyElement($xeSwitch),
+                  offShowLabel
+                ]
+              ),
+              h(
+                'span',
+                {
+                  class: ['vxe-switch--icon']
+                },
+                openActiveIcon || closeActiveIcon
+                  ? [
+                      h('i', {
+                        class: isChecked ? openActiveIcon : closeActiveIcon
+                      })
+                    ]
+                  : []
+              )
+            ]
+          )
+        ]
+      )
     }
 
     onBeforeUnmount(() => {
@@ -265,7 +294,7 @@ export default defineVxeComponent({
 
     return $xeSwitch
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

@@ -2,28 +2,34 @@ import XEUtils from 'xe-utils'
 
 import type { VxeDatePanelPropTypes } from '../../../types'
 
-export function getChunkDefaultNum (selectKey: string) {
+export function getChunkDefaultNum(selectKey: string) {
   const currDate = new Date()
   switch (selectKey) {
-    case 'y': return currDate.getFullYear()
-    case 'M': return currDate.getMonth() + 1
-    case 'd': return currDate.getDate()
-    case 'H': return currDate.getHours()
-    case 'm': return currDate.getMinutes()
-    case 's': return currDate.getSeconds()
+    case 'y':
+      return currDate.getFullYear()
+    case 'M':
+      return currDate.getMonth() + 1
+    case 'd':
+      return currDate.getDate()
+    case 'H':
+      return currDate.getHours()
+    case 'm':
+      return currDate.getMinutes()
+    case 's':
+      return currDate.getSeconds()
   }
   return 0
 }
 
-export function hasTimestampValueType (valueFormat?: string) {
+export function hasTimestampValueType(valueFormat?: string) {
   return valueFormat === 'timestamp'
 }
 
-export function hasDateValueType (valueFormat?: string) {
+export function hasDateValueType(valueFormat?: string) {
   return valueFormat === 'date'
 }
 
-export function handleValueFormat (type: string, valueFormat?: string) {
+export function handleValueFormat(type: string, valueFormat?: string) {
   if (valueFormat) {
     if (!(hasDateValueType(valueFormat) || hasTimestampValueType(valueFormat))) {
       return valueFormat
@@ -38,7 +44,7 @@ export function handleValueFormat (type: string, valueFormat?: string) {
   return 'yyyy-MM-dd'
 }
 
-export function toStringTimeDate (str: string | number | Date | null | undefined) {
+export function toStringTimeDate(str: string | number | Date | null | undefined) {
   const rest = new Date(2e3, 0, 1)
   if (str) {
     let h = 0
@@ -68,7 +74,7 @@ export function toStringTimeDate (str: string | number | Date | null | undefined
   return rest
 }
 
-export function getDateQuarter (date: Date) {
+export function getDateQuarter(date: Date) {
   const month = date.getMonth()
   if (month < 3) {
     return 1
@@ -80,9 +86,13 @@ export function getDateQuarter (date: Date) {
   return 4
 }
 
-export function parseDateValue (val: string | number | Date | (string | number | Date | null)[] | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
-  valueFormat: string
-}) {
+export function parseDateValue(
+  val: string | number | Date | (string | number | Date | null)[] | null | undefined,
+  type: VxeDatePanelPropTypes.Type,
+  options: {
+    valueFormat: string
+  }
+) {
   const { valueFormat } = options
   if (val) {
     if (type === 'time') {
@@ -102,18 +112,26 @@ export function parseDateValue (val: string | number | Date | (string | number |
   return null
 }
 
-export const parseDateString = (val: string | number | Date | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
-  valueFormat: string
-}) => {
+export const parseDateString = (
+  val: string | number | Date | null | undefined,
+  type: VxeDatePanelPropTypes.Type,
+  options: {
+    valueFormat: string
+  }
+) => {
   const dValue = parseDateValue(val, type, options)
   return dValue ? XEUtils.toDateString(dValue, options.valueFormat) : ''
 }
 
-export function parseDateObj (val: string | number | Date | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
-  valueFormat: string
-  labelFormat: string
-  firstDay: VxeDatePanelPropTypes.StartDay
-}) {
+export function parseDateObj(
+  val: string | number | Date | null | undefined,
+  type: VxeDatePanelPropTypes.Type,
+  options: {
+    valueFormat: string
+    labelFormat: string
+    firstDay: VxeDatePanelPropTypes.StartDay
+  }
+) {
   const { labelFormat, firstDay } = options
   let dValue: Date | null = null
   let dLabel = ''
@@ -144,13 +162,18 @@ export function parseDateObj (val: string | number | Date | null | undefined, ty
   return { label: dLabel, value: dValue }
 }
 
-export function getDateByCode (code: 'now' | 'prev' | 'next' | 'minus' | 'plus', val: string | number | Date | null | undefined, type: VxeDatePanelPropTypes.Type, options: {
-  valueFormat: string
-  firstDay: VxeDatePanelPropTypes.StartDay
-}) {
+export function getDateByCode(
+  code: 'now' | 'prev' | 'next' | 'minus' | 'plus',
+  val: string | number | Date | null | undefined,
+  type: VxeDatePanelPropTypes.Type,
+  options: {
+    valueFormat: string
+    firstDay: VxeDatePanelPropTypes.StartDay
+  }
+) {
   const { valueFormat, firstDay } = options
   let dValue: Date | null = null
-  const value = (code === 'prev' || code === 'next' ? new Date() : (val ? parseDateValue(val, type, options) : null)) || new Date()
+  const value = (code === 'prev' || code === 'next' ? new Date() : val ? parseDateValue(val, type, options) : null) || new Date()
   switch (code) {
     case 'prev':
     case 'next':
@@ -196,14 +219,19 @@ const rangeDateOffsetNumMaps: Record<string, number> = {
   last1: -1
 }
 
-function getRangeDateOffsetNum (code: string) {
+function getRangeDateOffsetNum(code: string) {
   return rangeDateOffsetNumMaps[code] || 0
 }
 
-export function getRangeDateByCode (code: 'last1' | 'last3' | 'last7' | 'last30' | 'last60' | 'last90' | 'last180', val: string | number | Date | null | (string | number | Date | null)[] | undefined, type: VxeDatePanelPropTypes.Type, options: {
-  valueFormat: string
-  firstDay: VxeDatePanelPropTypes.StartDay
-}) {
+export function getRangeDateByCode(
+  code: 'last1' | 'last3' | 'last7' | 'last30' | 'last60' | 'last90' | 'last180',
+  val: string | number | Date | null | (string | number | Date | null)[] | undefined,
+  type: VxeDatePanelPropTypes.Type,
+  options: {
+    valueFormat: string
+    firstDay: VxeDatePanelPropTypes.StartDay
+  }
+) {
   const { valueFormat, firstDay } = options
   if (XEUtils.isArray(val)) {
     val = val.join('')
@@ -255,11 +283,11 @@ export function getRangeDateByCode (code: 'last1' | 'last3' | 'last7' | 'last30'
 /**
  * 判断周的年份是否跨年
  */
-function checkWeekOfsetYear (W: number | string, M: number | string) {
+function checkWeekOfsetYear(W: number | string, M: number | string) {
   return `${W}` === '1' && `${M}` === '12'
 }
 
-export function isAllSameChar (str: string, char: string) {
+export function isAllSameChar(str: string, char: string) {
   if (str.length === 0) {
     return false
   }
@@ -271,20 +299,20 @@ export function isAllSameChar (str: string, char: string) {
   return true
 }
 
-export function checkDateInputFormat (numStr: number, formatKey: string) {
+export function checkDateInputFormat(numStr: number, formatKey: string) {
   const numVal = XEUtils.toNumber(numStr)
   switch (formatKey) {
     case 'yyyy':
-      return (numVal >= 9999 ? 9999 : (numVal <= 0 ? 0 : numVal))
+      return numVal >= 9999 ? 9999 : numVal <= 0 ? 0 : numVal
     case 'MM':
-      return (numVal >= 12 ? 12 : (numVal <= 0 ? 0 : numVal))
+      return numVal >= 12 ? 12 : numVal <= 0 ? 0 : numVal
     case 'dd':
-      return (numVal >= 31 ? 31 : (numVal <= 0 ? 0 : numVal))
+      return numVal >= 31 ? 31 : numVal <= 0 ? 0 : numVal
 
     case 'HH':
     case 'mm':
     case 'ss':
-      return (numVal >= 59 ? 59 : (numVal <= 0 ? 0 : numVal))
+      return numVal >= 59 ? 59 : numVal <= 0 ? 0 : numVal
   }
   return numVal
 }

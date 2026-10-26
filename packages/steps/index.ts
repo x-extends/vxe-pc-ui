@@ -4,7 +4,7 @@ import VxeStepsComponent from './src/steps'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSteps = Object.assign({}, VxeStepsComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeStepsComponent.name as string, VxeStepsComponent)
   }
 })

@@ -1,10 +1,25 @@
 import { h, provide, PropType, ref, reactive, computed, watch, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { getDomNode, addClass, removeClass, hasControlKey } from '../../ui/src/dom'
 
-import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes, ValueOf, VxeImagePreviewDefines } from '../../../types'
+import type {
+  VxeImagePreviewConstructor,
+  ImagePreviewReactData,
+  ImagePreviewPrivateRef,
+  VxeGlobalIcon,
+  VxeImagePreviewEmits,
+  VxeImagePreviewPrivateMethods,
+  ImagePreviewPrivateMethods,
+  ImagePreviewPrivateComputed,
+  ImagePreviewMethods,
+  VxeImagePreviewPropTypes,
+  ValueOf,
+  VxeImagePreviewDefines
+} from '../../../types'
+
+const { getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeImagePreview',
@@ -36,15 +51,8 @@ export default defineVxeComponent({
     beforeDownloadMethod: Function as PropType<VxeImagePreviewPropTypes.BeforeDownloadMethod>,
     downloadMethod: Function as PropType<VxeImagePreviewPropTypes.DownloadMethod>
   },
-  emits: [
-    'update:modelValue',
-    'change',
-    'download',
-    'download-fail',
-    'rotate',
-    'close'
-  ] as VxeImagePreviewEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'change', 'download', 'download-fail', 'rotate', 'close'] as VxeImagePreviewEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -95,7 +103,7 @@ export default defineVxeComponent({
       const { urlList } = props
       const urlProp = computeUrlProp.value
       if (urlList && urlList.length) {
-        return urlList.map(item => {
+        return urlList.map((item) => {
           if (XEUtils.isString(item)) {
             return item
           }
@@ -182,8 +190,7 @@ export default defineVxeComponent({
       dispatchEvent('close', {}, evnt)
     }
 
-    const imagePreviewPrivateMethods: ImagePreviewPrivateMethods = {
-    }
+    const imagePreviewPrivateMethods: ImagePreviewPrivateMethods = {}
 
     const resetStyle = () => {
       const elem = refElem.value
@@ -307,22 +314,24 @@ export default defineVxeComponent({
 
     const handleDefaultDownload = (evnt: MouseEvent, imgUrl: string) => {
       if (VxeUI.saveFile) {
-        fetch(imgUrl).then(res => {
-          return res.blob().then(blob => {
-            VxeUI.saveFile({
-              filename: imgUrl,
-              content: blob
+        fetch(imgUrl)
+          .then((res) => {
+            return res.blob().then((blob) => {
+              VxeUI.saveFile({
+                filename: imgUrl,
+                content: blob
+              })
+              handleDownloadEvent(evnt, imgUrl)
             })
-            handleDownloadEvent(evnt, imgUrl)
           })
-        }).catch(() => {
-          if (VxeUI.modal) {
-            VxeUI.modal.message({
-              content: getI18n('vxe.error.downErr'),
-              status: 'error'
-            })
-          }
-        })
+          .catch(() => {
+            if (VxeUI.modal) {
+              VxeUI.modal.message({
+                content: getI18n('vxe.error.downErr'),
+                status: 'error'
+              })
+            }
+          })
       }
     }
 
@@ -330,7 +339,7 @@ export default defineVxeComponent({
       const { activeIndex } = reactData
       const toolbarOpts = computeToolbarOpts.value
       const btnConf = toolbarOpts.download
-      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : (btnConf ? Object.assign({}, btnConf) : {})
+      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : btnConf ? Object.assign({}, btnConf) : {}
       const imgList = computeImgList.value
       const imgUrl = imgList[activeIndex || 0]
       const beforeDownloadFn = props.beforeDownloadMethod || btnOpts.beforeDownloadMethod || getConfig().imagePreview.beforeDownloadMethod
@@ -343,7 +352,7 @@ export default defineVxeComponent({
             index: activeIndex || 0
           })
           : true
-      ).then(status => {
+      ).then((status) => {
         if (status) {
           if (downloadFn) {
             Promise.resolve(
@@ -352,9 +361,11 @@ export default defineVxeComponent({
                 url: imgUrl,
                 index: activeIndex || 0
               })
-            ).then(() => {
-              handleDownloadEvent(evnt, imgUrl)
-            }).catch(e => e)
+            )
+              .then(() => {
+                handleDownloadEvent(evnt, imgUrl)
+              })
+              .catch((e) => e)
           } else {
             handleDefaultDownload(evnt, imgUrl)
           }
@@ -416,13 +427,13 @@ export default defineVxeComponent({
       const startX = evnt.pageX
       const startY = evnt.pageY
       const marginSize = computeMarginSize.value
-      document.onmousemove = et => {
+      document.onmousemove = (et) => {
         const { pageX, pageY } = et
         const { visibleHeight, visibleWidth } = getDomNode()
         et.preventDefault()
         addClass(elem, 'is--move')
         // 限制边界值
-        if (pageX > marginSize && pageY > marginSize && pageX < (visibleWidth - marginSize) && pageY < (visibleHeight - marginSize)) {
+        if (pageX > marginSize && pageY > marginSize && pageX < visibleWidth - marginSize && pageY < visibleHeight - marginSize) {
           reactData.offsetLeft = offsetLeft + pageX - startX
           reactData.offsetTop = offsetTop + pageY - startY
         }
@@ -498,45 +509,56 @@ export default defineVxeComponent({
       const { activeIndex } = reactData
       const imgList = computeImgList.value
       const imgTransform = computeImgTransform.value
-      return h('div', {
-        class: 'vxe-image-preview--img-list',
-        onClick: handleClickMaskEvent
-      }, imgList.map((url, index) => {
-        const isActive = activeIndex === index
-        return h('img', {
-          class: ['vxe-image-preview--img-item', {
-            'is--active': isActive
-          }],
-          src: url,
-          style: isActive
-            ? {
-                transform: imgTransform
+      return h(
+        'div',
+        {
+          class: 'vxe-image-preview--img-list',
+          onClick: handleClickMaskEvent
+        },
+        imgList.map((url, index) => {
+          const isActive = activeIndex === index
+          return h('img', {
+            class: [
+              'vxe-image-preview--img-item',
+              {
+                'is--active': isActive
               }
-            : null,
-          onMousedown (evnt) {
-            moveEvent(evnt)
-          }
+            ],
+            src: url,
+            style: isActive
+              ? {
+                  transform: imgTransform
+                }
+              : null,
+            onMousedown(evnt) {
+              moveEvent(evnt)
+            }
+          })
         })
-      }))
+      )
     }
 
     const renderOperationBtn = (code: VxeImagePreviewDefines.ToolbarCode, icon: keyof VxeGlobalIcon) => {
       const toolbarOpts = computeToolbarOpts.value
       const btnConf = toolbarOpts[code]
-      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : (btnConf ? Object.assign({}, btnConf) : {})
+      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : btnConf ? Object.assign({}, btnConf) : {}
       const showBtn = btnConf !== false
       return showBtn
-        ? h('div', {
-          class: 'vxe-image-preview--operation-btn',
-          title: getI18n(`vxe.imagePreview.operBtn.${code}`),
-          onClick (evnt) {
-            handleOperationBtn(evnt, code)
-          }
-        }, [
-          h('i', {
-            class: btnOpts.icon || getIcon()[icon]
-          })
-        ])
+        ? h(
+          'div',
+          {
+            class: 'vxe-image-preview--operation-btn',
+            title: getI18n(`vxe.imagePreview.operBtn.${code}`),
+            onClick(evnt) {
+              handleOperationBtn(evnt, code)
+            }
+          },
+          [
+            h('i', {
+              class: btnOpts.icon || getIcon()[icon]
+            })
+          ]
+        )
         : renderEmptyElement($xeImagePreview)
     }
 
@@ -548,100 +570,155 @@ export default defineVxeComponent({
       const scaleText = computeScaleText.value
       const toolbarOpts = computeToolbarOpts.value
 
-      return h('div', {
-        class: 'vxe-image-preview--btn-wrapper'
-      }, [
-        h('div', {
-          class: 'vxe-image-preview--close-wrapper'
-        }, [
-          h('div', {
-            class: 'vxe-image-preview--close-btn',
-            onClick: handleCloseEvent
-          }, [
-            h('i', {
-              class: getIcon().IMAGE_PREVIEW_CLOSE
-            })
-          ]),
-          h('div', {
-            class: 'vxe-image-preview--close-bg'
-          })
-        ]),
-        imgList.length > 1
-          ? h('div', {
-            class: 'vxe-image-preview--previous-btn',
-            onClick (evnt) {
-              handleChangeEvent(evnt, false)
-            }
-          }, [
-            h('i', {
-              class: getIcon().IMAGE_PREVIEW_PREVIOUS
-            })
-          ])
-          : renderEmptyElement($xeImagePreview),
-        imgList.length > 1
-          ? h('div', {
-            class: 'vxe-image-preview--next-btn',
-            onClick (evnt) {
-              handleChangeEvent(evnt, true)
-            }
-          }, [
-            h('i', {
-              class: getIcon().IMAGE_PREVIEW_NEXT
-            })
-          ])
-          : renderEmptyElement($xeImagePreview),
-        h('div', {
-          class: 'vxe-image-preview--operation-info'
-        }, [
-          h('div', {
-            class: 'vxe-image-preview--operation-deg'
-          }, rotateText),
-          h('div', {
-            class: 'vxe-image-preview--operation-pct'
-          }, scaleText)
-        ]),
-        h('div', {
-          class: 'vxe-image-preview--operation-wrapper'
-        }, [
-          h('div', {
-            class: 'vxe-image-preview--operation-active-count'
-          }, [
-            h('span', {
-              class: 'vxe-image-preview--operation-active-current'
-            }, `${(activeIndex || 0) + 1}`),
-            h('span', {
-              class: 'vxe-image-preview--operation-active-total'
-            }, `/${imgList.length}`)
-          ]),
-          renderOperationBtn('zoomOut', 'IMAGE_PREVIEW_ZOOM_OUT'),
-          renderOperationBtn('zoomIn', 'IMAGE_PREVIEW_ZOOM_IN'),
-          renderOperationBtn('pctFull', 'IMAGE_PREVIEW_PCT_FULL'),
-          renderOperationBtn('pct11', 'IMAGE_PREVIEW_PCT_1_1'),
-          renderOperationBtn('rotateLeft', 'IMAGE_PREVIEW_ROTATE_LEFT'),
-          renderOperationBtn('rotateRight', 'IMAGE_PREVIEW_ROTATE_RIGHT'),
-          showPrintButton || toolbarOpts.print ? renderOperationBtn('print', 'IMAGE_PREVIEW_PRINT') : renderEmptyElement($xeImagePreview),
-          showDownloadButton || toolbarOpts.download ? renderOperationBtn('download', 'IMAGE_PREVIEW_DOWNLOAD') : renderEmptyElement($xeImagePreview)
-        ])
-      ])
+      return h(
+        'div',
+        {
+          class: 'vxe-image-preview--btn-wrapper'
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-image-preview--close-wrapper'
+            },
+            [
+              h(
+                'div',
+                {
+                  class: 'vxe-image-preview--close-btn',
+                  onClick: handleCloseEvent
+                },
+                [
+                  h('i', {
+                    class: getIcon().IMAGE_PREVIEW_CLOSE
+                  })
+                ]
+              ),
+              h('div', {
+                class: 'vxe-image-preview--close-bg'
+              })
+            ]
+          ),
+          imgList.length > 1
+            ? h(
+              'div',
+              {
+                class: 'vxe-image-preview--previous-btn',
+                onClick(evnt) {
+                  handleChangeEvent(evnt, false)
+                }
+              },
+              [
+                h('i', {
+                  class: getIcon().IMAGE_PREVIEW_PREVIOUS
+                })
+              ]
+            )
+            : renderEmptyElement($xeImagePreview),
+          imgList.length > 1
+            ? h(
+              'div',
+              {
+                class: 'vxe-image-preview--next-btn',
+                onClick(evnt) {
+                  handleChangeEvent(evnt, true)
+                }
+              },
+              [
+                h('i', {
+                  class: getIcon().IMAGE_PREVIEW_NEXT
+                })
+              ]
+            )
+            : renderEmptyElement($xeImagePreview),
+          h(
+            'div',
+            {
+              class: 'vxe-image-preview--operation-info'
+            },
+            [
+              h(
+                'div',
+                {
+                  class: 'vxe-image-preview--operation-deg'
+                },
+                rotateText
+              ),
+              h(
+                'div',
+                {
+                  class: 'vxe-image-preview--operation-pct'
+                },
+                scaleText
+              )
+            ]
+          ),
+          h(
+            'div',
+            {
+              class: 'vxe-image-preview--operation-wrapper'
+            },
+            [
+              h(
+                'div',
+                {
+                  class: 'vxe-image-preview--operation-active-count'
+                },
+                [
+                  h(
+                    'span',
+                    {
+                      class: 'vxe-image-preview--operation-active-current'
+                    },
+                    `${(activeIndex || 0) + 1}`
+                  ),
+                  h(
+                    'span',
+                    {
+                      class: 'vxe-image-preview--operation-active-total'
+                    },
+                    `/${imgList.length}`
+                  )
+                ]
+              ),
+              renderOperationBtn('zoomOut', 'IMAGE_PREVIEW_ZOOM_OUT'),
+              renderOperationBtn('zoomIn', 'IMAGE_PREVIEW_ZOOM_IN'),
+              renderOperationBtn('pctFull', 'IMAGE_PREVIEW_PCT_FULL'),
+              renderOperationBtn('pct11', 'IMAGE_PREVIEW_PCT_1_1'),
+              renderOperationBtn('rotateLeft', 'IMAGE_PREVIEW_ROTATE_LEFT'),
+              renderOperationBtn('rotateRight', 'IMAGE_PREVIEW_ROTATE_RIGHT'),
+              showPrintButton || toolbarOpts.print ? renderOperationBtn('print', 'IMAGE_PREVIEW_PRINT') : renderEmptyElement($xeImagePreview),
+              showDownloadButton || toolbarOpts.download ? renderOperationBtn('download', 'IMAGE_PREVIEW_DOWNLOAD') : renderEmptyElement($xeImagePreview)
+            ]
+          )
+        ]
+      )
     }
 
     const renderVN = () => {
       const { offsetPct11 } = reactData
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-image-preview', {
-          'is--pct11': offsetPct11
-        }]
-      }, [
-        renderImgWrapper(),
-        renderBtnWrapper()
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-image-preview',
+            {
+              'is--pct11': offsetPct11
+            }
+          ]
+        },
+        [renderImgWrapper(), renderBtnWrapper()]
+      )
     }
 
-    watch(() => props.modelValue, val => {
-      reactData.activeIndex = val
-      resetStyle()
-    })
+    watch(
+      () => props.modelValue,
+      (val) => {
+        reactData.activeIndex = val
+        resetStyle()
+      }
+    )
 
     onMounted(() => {
       const elem = refElem.value

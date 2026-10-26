@@ -5,7 +5,7 @@ import { dynamicApp } from '../dynamics'
 import { parseColor, hasRgb, hasHex, toRgb, toHex, toHsl, toHsv, toRgbString, toHexString, lighten, darken } from './src/util'
 
 export const VxeColorPicker = Object.assign({}, VxeColorPickerComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeColorPickerComponent.name as string, VxeColorPickerComponent)
   }
 })

@@ -4,7 +4,7 @@ import VxeTimelineItemComponent from '../timeline/src/timeline-item'
 import { dynamicApp } from '../dynamics'
 
 export const VxeTimelineItem = Object.assign({}, VxeTimelineItemComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeTimelineItemComponent.name as string, VxeTimelineItemComponent)
   }
 })

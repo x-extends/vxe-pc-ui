@@ -1,9 +1,10 @@
 import { ref, h, reactive, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { MentionReactData, VxeMentionPropTypes, MentionPrivateRef, VxeMentionEmits, VxeMentionPrivateComputed, MentionMethods, MentionPrivateMethods, VxeMentionConstructor, VxeMentionPrivateMethods, ValueOf } from '../../../types'
+const { getConfig, createEvent } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeMention',
@@ -13,9 +14,8 @@ export default defineVxeComponent({
       default: () => getConfig().mention.size || getConfig().size
     }
   },
-  emits: [
-  ] as VxeMentionEmits,
-  setup (props, context) {
+  emits: [] as VxeMentionEmits,
+  setup(props, context) {
     const { emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -28,8 +28,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxeMentionPrivateComputed = {
-    }
+    const computeMaps: VxeMentionPrivateComputed = {}
 
     const $xeMention = {
       xID,
@@ -49,8 +48,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const tagPrivateMethods: MentionPrivateMethods = {
-    }
+    const tagPrivateMethods: MentionPrivateMethods = {}
 
     Object.assign($xeMention, tagMethods, tagPrivateMethods)
 
@@ -65,7 +63,7 @@ export default defineVxeComponent({
 
     return $xeMention
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

@@ -4,7 +4,7 @@ import VxeNumberInputComponent from './src/number-input'
 import { dynamicApp } from '../dynamics'
 
 export const VxeNumberInput = Object.assign({}, VxeNumberInputComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeNumberInputComponent.name as string, VxeNumberInputComponent)
   }
 })

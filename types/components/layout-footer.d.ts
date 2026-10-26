@@ -20,7 +20,7 @@ export interface VxeLayoutFooterConstructor extends VxeComponentBaseOptions, Vxe
 export interface LayoutFooterPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeLayoutFooterPrivateRef extends LayoutFooterPrivateRef { }
+export interface VxeLayoutFooterPrivateRef extends LayoutFooterPrivateRef {}
 
 export namespace VxeLayoutFooterPropTypes {
   export type Fixed = boolean
@@ -32,20 +32,18 @@ export interface VxeLayoutFooterProps {
   align?: VxeLayoutFooterPropTypes.Align
 }
 
-export interface LayoutFooterPrivateComputed {
-}
-export interface VxeLayoutFooterPrivateComputed extends LayoutFooterPrivateComputed { }
+export interface LayoutFooterPrivateComputed {}
+export interface VxeLayoutFooterPrivateComputed extends LayoutFooterPrivateComputed {}
 
-export interface LayoutFooterReactData {
-}
+export interface LayoutFooterReactData {}
 
 export interface LayoutFooterMethods {
   dispatchEvent(type: ValueOf<VxeLayoutFooterEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeLayoutFooterMethods extends LayoutFooterMethods { }
+export interface VxeLayoutFooterMethods extends LayoutFooterMethods {}
 
-export interface LayoutFooterPrivateMethods { }
-export interface VxeLayoutFooterPrivateMethods extends LayoutFooterPrivateMethods { }
+export interface LayoutFooterPrivateMethods {}
+export interface VxeLayoutFooterPrivateMethods extends LayoutFooterPrivateMethods {}
 
 export type VxeLayoutFooterEmits = []
 
@@ -57,9 +55,9 @@ export namespace VxeLayoutFooterDefines {
 
 export type VxeLayoutFooterEventProps = {}
 
-export interface VxeLayoutFooterListeners { }
+export interface VxeLayoutFooterListeners {}
 
-export namespace VxeLayoutFooterEvents { }
+export namespace VxeLayoutFooterEvents {}
 
 export namespace VxeLayoutFooterSlotTypes {
   export interface DefaultSlotParams {}

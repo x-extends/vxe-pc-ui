@@ -2,7 +2,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeSplitterConstructor, VxeSplitterPrivateMethods, VxeSplitterDefines } from '../../../types'
 
-export function assembleSplitterItem ($xeSplitter: VxeSplitterConstructor & VxeSplitterPrivateMethods, elem: HTMLElement, paneConfig: VxeSplitterDefines.PaneConfig) {
+export function assembleSplitterItem($xeSplitter: VxeSplitterConstructor & VxeSplitterPrivateMethods, elem: HTMLElement, paneConfig: VxeSplitterDefines.PaneConfig) {
   const staticItems = $xeSplitter.reactData.staticItems
   const parentElem = elem.parentNode
   if (parentElem) {
@@ -11,9 +11,9 @@ export function assembleSplitterItem ($xeSplitter: VxeSplitterConstructor & VxeS
   }
 }
 
-export function destroySplitterItem ($xeSplitter: VxeSplitterConstructor & VxeSplitterPrivateMethods, paneConfig: VxeSplitterDefines.PaneConfig) {
+export function destroySplitterItem($xeSplitter: VxeSplitterConstructor & VxeSplitterPrivateMethods, paneConfig: VxeSplitterDefines.PaneConfig) {
   const staticItems = $xeSplitter.reactData.staticItems
-  const index = XEUtils.findIndexOf(staticItems, item => item.id === paneConfig.id)
+  const index = XEUtils.findIndexOf(staticItems, (item) => item.id === paneConfig.id)
   if (index > -1) {
     staticItems.splice(index, 1)
   }

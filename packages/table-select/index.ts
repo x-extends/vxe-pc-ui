@@ -4,7 +4,7 @@ import VxeTableSelectComponent from './src/table-select'
 import { dynamicApp } from '../dynamics'
 
 export const VxeTableSelect = Object.assign({}, VxeTableSelectComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeTableSelectComponent.name as string, VxeTableSelectComponent)
   }
 })

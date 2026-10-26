@@ -1,12 +1,29 @@
 import { ref, h, reactive, PropType, watch, computed, inject, onMounted, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, createEvent, renderEmptyElement, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getText } from '../../ui/src/utils'
 
-import type { SliderReactData, SliderInternalData, VxeSliderEmits, VxeSliderPropTypes, SliderMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, SliderPrivateMethods, ValueOf, SliderPrivateRef, VxeSliderPrivateComputed, VxeSliderConstructor, VxeSliderPrivateMethods } from '../../../types'
+import type {
+  SliderReactData,
+  SliderInternalData,
+  VxeSliderEmits,
+  VxeSliderPropTypes,
+  SliderMethods,
+  VxeFormDefines,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  SliderPrivateMethods,
+  ValueOf,
+  SliderPrivateRef,
+  VxeSliderPrivateComputed,
+  VxeSliderConstructor,
+  VxeSliderPrivateMethods
+} from '../../../types'
 
-function createInternalData (): SliderInternalData {
+const { getConfig, createEvent, renderEmptyElement, useFns } = VxeUI
+
+function createInternalData(): SliderInternalData {
   return {
     // _isUp: false,
     isDragStatus: false,
@@ -17,9 +34,8 @@ function createInternalData (): SliderInternalData {
   }
 }
 
-function createReactData (): SliderReactData {
-  return {
-  }
+function createReactData(): SliderReactData {
+  return {}
 }
 
 export default defineVxeComponent({
@@ -71,24 +87,16 @@ export default defineVxeComponent({
     },
     tooltipConfig: Object as PropType<VxeSliderPropTypes.TooltipConfig>
   },
-  emits: [
-    'update:modelValue',
-    'update:startValue',
-    'update:endValue',
-    'change',
-    'track-dragstart',
-    'track-dragover',
-    'track-dragend'
-  ] as VxeSliderEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'update:startValue', 'update:endValue', 'change', 'track-dragstart', 'track-dragover', 'track-dragend'] as VxeSliderEmits,
+  setup(props, context) {
     const { emit } = context
 
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
     const refBarElem = ref<HTMLDivElement>()
@@ -142,8 +150,7 @@ export default defineVxeComponent({
       return Object.assign({}, getConfig().slider.tooltipConfig, props.tooltipConfig)
     })
 
-    const computeMaps: VxeSliderPrivateComputed = {
-    }
+    const computeMaps: VxeSliderPrivateComputed = {}
 
     const $xeSlider = {
       xID,
@@ -216,7 +223,7 @@ export default defineVxeComponent({
             }
           } else {
             if (XEUtils.isArray(modelValue)) {
-              parseArrs(modelValue.map(num => XEUtils.toNumber(num)))
+              parseArrs(modelValue.map((num) => XEUtils.toNumber(num)))
             } else {
               parseNum(modelValue)
             }
@@ -228,7 +235,7 @@ export default defineVxeComponent({
         parseFields(startValue, endValue)
       } else {
         if (XEUtils.isArray(modelValue)) {
-          parseArrs(modelValue.map(num => XEUtils.toNumber(num)))
+          parseArrs(modelValue.map((num) => XEUtils.toNumber(num)))
         } else {
           parseNum(modelValue)
         }
@@ -309,19 +316,28 @@ export default defineVxeComponent({
           const { currValue } = internalData
           const tooltipOpts = computeTooltipOpts.value
           const { contentMethod } = tooltipOpts
-          const content = getText(contentMethod
-            ? contentMethod({
-              $slider: $xeSlider,
-              value: currValue
-            })
-            : '' + currValue)
+          const content = getText(
+            contentMethod
+              ? contentMethod({
+                $slider: $xeSlider,
+                value: currValue
+              })
+              : '' + currValue
+          )
           if (content) {
-            VxeUI.tooltip.open(btnElem, Object.assign({}, {
-              ...tooltipOpts,
-              content
-            }, {
-              contentMethod: undefined
-            }))
+            VxeUI.tooltip.open(
+              btnElem,
+              Object.assign(
+                {},
+                {
+                  ...tooltipOpts,
+                  content
+                },
+                {
+                  contentMethod: undefined
+                }
+              )
+            )
           } else {
             VxeUI.tooltip.close()
           }
@@ -345,7 +361,7 @@ export default defineVxeComponent({
       const isDisabled = computeIsDisabled.value
       if (!(formReadonly || isDisabled)) {
         evnt.preventDefault()
-        document.onmousemove = evnt => {
+        document.onmousemove = (evnt) => {
           evnt.preventDefault()
           const el = refElem.value
           const barElem = refBarElem.value
@@ -365,11 +381,15 @@ export default defineVxeComponent({
             }
             internalData.currValue = currValue
             btnElem.style.left = getBarPercent(currValue) + '%'
-            dispatchEvent('track-dragover', {
-              currentValue: internalData.currValue,
-              startValue: internalData.startValue,
-              endValue: internalData.endValue
-            }, evnt)
+            dispatchEvent(
+              'track-dragover',
+              {
+                currentValue: internalData.currValue,
+                startValue: internalData.startValue,
+                endValue: internalData.endValue
+              },
+              evnt
+            )
           }
           if (immediate) {
             changeEvent(evnt)
@@ -381,22 +401,30 @@ export default defineVxeComponent({
           document.onmousemove = null
           document.onmouseup = null
           internalData.isDragStatus = false
-          dispatchEvent('track-dragend', {
-            currentValue: internalData.currValue,
-            startValue: internalData.startValue,
-            endValue: internalData.endValue
-          }, evnt)
+          dispatchEvent(
+            'track-dragend',
+            {
+              currentValue: internalData.currValue,
+              startValue: internalData.startValue,
+              endValue: internalData.endValue
+            },
+            evnt
+          )
           changeEvent(evnt)
           updateTrackStyle()
           if (!internalData.isBtnActive) {
             handleHideTip()
           }
         }
-        dispatchEvent('track-dragstart', {
-          currentValue: internalData.currValue,
-          startValue: internalData.startValue,
-          endValue: internalData.endValue
-        }, evnt)
+        dispatchEvent(
+          'track-dragstart',
+          {
+            currentValue: internalData.currValue,
+            startValue: internalData.startValue,
+            endValue: internalData.endValue
+          },
+          evnt
+        )
         internalData.isDragStatus = false
       }
     }
@@ -418,8 +446,7 @@ export default defineVxeComponent({
       }
     }
 
-    const collapsePanePrivateMethods: SliderPrivateMethods = {
-    }
+    const collapsePanePrivateMethods: SliderPrivateMethods = {}
 
     Object.assign($xeSlider, collapsePaneMethods, collapsePanePrivateMethods)
 
@@ -428,57 +455,71 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const formReadonly = computeFormReadonly.value
       const isDisabled = computeIsDisabled.value
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-slider', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--vertical': vertical,
-          'is--readonly': formReadonly,
-          'is--disabled': isDisabled
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-slider--inner'
-        }, [
-          h('div', {
-            ref: refBarElem,
-            class: 'vxe-slider--bar-wrapper'
-          }),
-          h('div', {
-            ref: refTrackElem,
-            class: 'vxe-slider--bar-track'
-          }),
-          formReadonly || !range
-            ? renderEmptyElement($xeSlider)
-            : h('div', {
-              ref: refStartBtnElem,
-              class: 'vxe-slider--bar-btn',
-              'data-type': '1',
-              onMouseenter: handleBtnMouseenterEvent,
-              onMouseleave: handleBtnMouseleaveEvent,
-              onMousedown: handleBtnMousedownEvent
-            }),
-          formReadonly
-            ? renderEmptyElement($xeSlider)
-            : h('div', {
-              ref: refEndBtnElem,
-              class: 'vxe-slider--bar-btn',
-              'data-type': '2',
-              onMouseenter: handleBtnMouseenterEvent,
-              onMouseleave: handleBtnMouseleaveEvent,
-              onMousedown: handleBtnMousedownEvent
-            })
-        ])
-      ])
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-slider',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--vertical': vertical,
+              'is--readonly': formReadonly,
+              'is--disabled': isDisabled
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-slider--inner'
+            },
+            [
+              h('div', {
+                ref: refBarElem,
+                class: 'vxe-slider--bar-wrapper'
+              }),
+              h('div', {
+                ref: refTrackElem,
+                class: 'vxe-slider--bar-track'
+              }),
+              formReadonly || !range
+                ? renderEmptyElement($xeSlider)
+                : h('div', {
+                  ref: refStartBtnElem,
+                  class: 'vxe-slider--bar-btn',
+                  'data-type': '1',
+                  onMouseenter: handleBtnMouseenterEvent,
+                  onMouseleave: handleBtnMouseleaveEvent,
+                  onMousedown: handleBtnMousedownEvent
+                }),
+              formReadonly
+                ? renderEmptyElement($xeSlider)
+                : h('div', {
+                  ref: refEndBtnElem,
+                  class: 'vxe-slider--bar-btn',
+                  'data-type': '2',
+                  onMouseenter: handleBtnMouseenterEvent,
+                  onMouseleave: handleBtnMouseleaveEvent,
+                  onMousedown: handleBtnMousedownEvent
+                })
+            ]
+          )
+        ]
+      )
     }
 
-    watch(() => props.modelValue, () => {
-      if (!internalData._isUp) {
-        updateModelValue(1)
+    watch(
+      () => props.modelValue,
+      () => {
+        if (!internalData._isUp) {
+          updateModelValue(1)
+        }
+        internalData._isUp = false
       }
-      internalData._isUp = false
-    })
+    )
 
     watch(computeMVal, () => {
       if (!internalData._isUp) {
@@ -500,7 +541,7 @@ export default defineVxeComponent({
 
     return $xeSlider
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

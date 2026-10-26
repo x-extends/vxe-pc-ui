@@ -1,11 +1,14 @@
 import { ref, h, reactive, PropType, provide } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { printHtml, trimHtml } from './util'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintEmits, PrintPrivateMethods, ValueOf, VxePrintPrivateComputed, VxePrintConstructor, VxePrintPrivateMethods, PrintMethods } from '../../../types'
+
+const { getConfig, createEvent, renderEmptyElement } = VxeUI
+
 export default defineVxeComponent({
   name: 'VxePrint',
   props: {
@@ -60,7 +63,7 @@ export default defineVxeComponent({
     afterPrintMethod: Function as PropType<VxePrintPropTypes.AfterPrintMethod>
   },
   emits: [] as VxePrintEmits,
-  setup (props, context) {
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
@@ -75,8 +78,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxePrintPrivateComputed = {
-    }
+    const computeMaps: VxePrintPrivateComputed = {}
 
     const $xePrint = {
       xID,
@@ -94,39 +96,44 @@ export default defineVxeComponent({
 
     const printMethods: PrintMethods = {
       dispatchEvent,
-      print () {
+      print() {
         const { align, title, headerAlign, footerAlign, showPageNumber, customLayout, pageBreaks, content, headerHtml, footerHtml, leftHtml, rightHtml, showAllPageTitle, pageStyle, customStyle, styleUrls, beforeMethod, beforePrintMethod, printMethod, afterPrintMethod } = props
         const elem = refElem.value
-        return printHtml(Object.assign({}, {
-          align,
-          title,
-          headerAlign,
-          footerAlign,
-          showPageNumber,
-          customLayout,
-          pageBreaks,
-          content,
-          headerHtml,
-          footerHtml,
-          leftHtml,
-          rightHtml,
-          showAllPageTitle,
-          pageStyle,
-          customStyle,
-          styleUrls,
-          beforeMethod,
-          beforePrintMethod,
-          printMethod,
-          afterPrintMethod
-        }, {
-          _pageBreaks: !!reactData.staticPageBreaks.length,
-          html: trimHtml(elem ? elem.outerHTML : '') || props.html || props.content || ''
-        }))
+        return printHtml(
+          Object.assign(
+            {},
+            {
+              align,
+              title,
+              headerAlign,
+              footerAlign,
+              showPageNumber,
+              customLayout,
+              pageBreaks,
+              content,
+              headerHtml,
+              footerHtml,
+              leftHtml,
+              rightHtml,
+              showAllPageTitle,
+              pageStyle,
+              customStyle,
+              styleUrls,
+              beforeMethod,
+              beforePrintMethod,
+              printMethod,
+              afterPrintMethod
+            },
+            {
+              _pageBreaks: !!reactData.staticPageBreaks.length,
+              html: trimHtml(elem ? elem.outerHTML : '') || props.html || props.content || ''
+            }
+          )
+        )
       }
     }
 
-    const printPrivateMethods: PrintPrivateMethods = {
-    }
+    const printPrivateMethods: PrintPrivateMethods = {}
 
     Object.assign($xePrint, printMethods, printPrivateMethods)
 
@@ -146,45 +153,81 @@ export default defineVxeComponent({
           currentPage,
           pageCount
         }
-        return h('div', {
-          class: ['vxe-print-page-break', align ? `align--${align}` : '']
-        }, [
-          h('div', {
-            class: ['vxe-print-page-break--header', headerAlign ? `align--${headerAlign}` : '']
-          }, headerHtml
-            ? `${XEUtils.isFunction(headerHtml) ? headerHtml(params) : (headerHtml || '')}`
-            : [
-                title && (showAllPageTitle || !index)
-                  ? h('div', {
-                    class: 'vxe-print-page-break--header-title'
-                  }, `${title || ''}`)
-                  : renderEmptyElement($xePrint)
-              ]),
-          h('div', {
-            class: 'vxe-print-page-break--body'
-          }, [
-            h('div', {
-              class: 'vxe-print-page-break--left'
-            }, `${XEUtils.isFunction(leftHtml) ? leftHtml(params) : (leftHtml || '')}`),
-            h('div', {
-              class: 'vxe-print-page-break--content'
-            }, `${XEUtils.isFunction(bodyHtml) ? bodyHtml(params) : (bodyHtml || '')}`),
-            h('div', {
-              class: 'vxe-print-page-break--right'
-            }, `${XEUtils.isFunction(rightHtml) ? rightHtml(params) : (rightHtml || '')}`)
-          ]),
-          h('div', {
-            class: ['vxe-print-page-break--footer', footerAlign ? `align--${footerAlign}` : '']
-          }, footerHtml
-            ? `${XEUtils.isFunction(footerHtml) ? footerHtml(params) : (footerHtml || '')}`
-            : [
-                showPageNumber
-                  ? h('div', {
-                    class: 'vxe-print-page-break--footer-page-number'
-                  }, `${currentPage}/${pageCount}`)
-                  : renderEmptyElement($xePrint)
-              ])
-        ])
+        return h(
+          'div',
+          {
+            class: ['vxe-print-page-break', align ? `align--${align}` : '']
+          },
+          [
+            h(
+              'div',
+              {
+                class: ['vxe-print-page-break--header', headerAlign ? `align--${headerAlign}` : '']
+              },
+              headerHtml
+                ? `${XEUtils.isFunction(headerHtml) ? headerHtml(params) : headerHtml || ''}`
+                : [
+                    title && (showAllPageTitle || !index)
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-print-page-break--header-title'
+                        },
+                          `${title || ''}`
+                      )
+                      : renderEmptyElement($xePrint)
+                  ]
+            ),
+            h(
+              'div',
+              {
+                class: 'vxe-print-page-break--body'
+              },
+              [
+                h(
+                  'div',
+                  {
+                    class: 'vxe-print-page-break--left'
+                  },
+                  `${XEUtils.isFunction(leftHtml) ? leftHtml(params) : leftHtml || ''}`
+                ),
+                h(
+                  'div',
+                  {
+                    class: 'vxe-print-page-break--content'
+                  },
+                  `${XEUtils.isFunction(bodyHtml) ? bodyHtml(params) : bodyHtml || ''}`
+                ),
+                h(
+                  'div',
+                  {
+                    class: 'vxe-print-page-break--right'
+                  },
+                  `${XEUtils.isFunction(rightHtml) ? rightHtml(params) : rightHtml || ''}`
+                )
+              ]
+            ),
+            h(
+              'div',
+              {
+                class: ['vxe-print-page-break--footer', footerAlign ? `align--${footerAlign}` : '']
+              },
+              footerHtml
+                ? `${XEUtils.isFunction(footerHtml) ? footerHtml(params) : footerHtml || ''}`
+                : [
+                    showPageNumber
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-print-page-break--footer-page-number'
+                        },
+                          `${currentPage}/${pageCount}`
+                      )
+                      : renderEmptyElement($xePrint)
+                  ]
+            )
+          ]
+        )
       })
     }
 
@@ -206,45 +249,81 @@ export default defineVxeComponent({
           currentPage,
           pageCount
         }
-        return h('div', {
-          class: ['vxe-print-page-break', align ? `align--${align}` : '']
-        }, [
-          h('div', {
-            class: ['vxe-print-page-break--header', headerAlign ? `align--${headerAlign}` : '']
-          }, headerSlot
-            ? getSlotVNs(headerSlot(params))
-            : [
-                title && (showAllPageTitle || !index)
-                  ? h('div', {
-                    class: 'vxe-print-page-break--header-title'
-                  }, `${title || ''}`)
-                  : renderEmptyElement($xePrint)
-              ]),
-          h('div', {
-            class: 'vxe-print-page-break--body'
-          }, [
-            h('div', {
-              class: 'vxe-print-page-break--left'
-            }, leftSlot ? getSlotVNs(leftSlot(params)) : []),
-            h('div', {
-              class: 'vxe-print-page-break--content'
-            }, defaultSlot ? getSlotVNs(defaultSlot(params)) : []),
-            h('div', {
-              class: 'vxe-print-page-break--right'
-            }, rightSlot ? getSlotVNs(rightSlot(params)) : [])
-          ]),
-          h('div', {
-            class: ['vxe-print-page-break--footer', footerAlign ? `align--${footerAlign}` : '']
-          }, footerSlot
-            ? getSlotVNs(footerSlot(params))
-            : [
-                showPageNumber
-                  ? h('div', {
-                    class: 'vxe-print-page-break--footer-page-number'
-                  }, `${currentPage}/${pageCount}`)
-                  : renderEmptyElement($xePrint)
-              ])
-        ])
+        return h(
+          'div',
+          {
+            class: ['vxe-print-page-break', align ? `align--${align}` : '']
+          },
+          [
+            h(
+              'div',
+              {
+                class: ['vxe-print-page-break--header', headerAlign ? `align--${headerAlign}` : '']
+              },
+              headerSlot
+                ? getSlotVNs(headerSlot(params))
+                : [
+                    title && (showAllPageTitle || !index)
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-print-page-break--header-title'
+                        },
+                          `${title || ''}`
+                      )
+                      : renderEmptyElement($xePrint)
+                  ]
+            ),
+            h(
+              'div',
+              {
+                class: 'vxe-print-page-break--body'
+              },
+              [
+                h(
+                  'div',
+                  {
+                    class: 'vxe-print-page-break--left'
+                  },
+                  leftSlot ? getSlotVNs(leftSlot(params)) : []
+                ),
+                h(
+                  'div',
+                  {
+                    class: 'vxe-print-page-break--content'
+                  },
+                  defaultSlot ? getSlotVNs(defaultSlot(params)) : []
+                ),
+                h(
+                  'div',
+                  {
+                    class: 'vxe-print-page-break--right'
+                  },
+                  rightSlot ? getSlotVNs(rightSlot(params)) : []
+                )
+              ]
+            ),
+            h(
+              'div',
+              {
+                class: ['vxe-print-page-break--footer', footerAlign ? `align--${footerAlign}` : '']
+              },
+              footerSlot
+                ? getSlotVNs(footerSlot(params))
+                : [
+                    showPageNumber
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-print-page-break--footer-page-number'
+                        },
+                          `${currentPage}/${pageCount}`
+                      )
+                      : renderEmptyElement($xePrint)
+                  ]
+            )
+          ]
+        )
       })
     }
 
@@ -252,21 +331,27 @@ export default defineVxeComponent({
       const { customLayout } = props
       const { staticPageBreaks } = reactData
       const defaultSlot = slots.default
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-print']
-      }, customLayout
-        ? (defaultSlot ? getSlotVNs(defaultSlot({})) : [])
-        : ([
-            h('div', {
-              key: 'slot',
-              class: 'vxe-print-slots'
-            }, defaultSlot ? getSlotVNs(defaultSlot({})) : [])
-          ].concat(
-            staticPageBreaks.length
-              ? renderPageStaticLayouts()
-              : renderPageConfigLayouts()
-          )))
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: ['vxe-print']
+        },
+        customLayout
+          ? defaultSlot
+            ? getSlotVNs(defaultSlot({}))
+            : []
+          : [
+              h(
+                'div',
+                {
+                  key: 'slot',
+                  class: 'vxe-print-slots'
+                },
+                defaultSlot ? getSlotVNs(defaultSlot({})) : []
+              )
+            ].concat(staticPageBreaks.length ? renderPageStaticLayouts() : renderPageConfigLayouts())
+      )
     }
 
     $xePrint.renderVN = renderVN
@@ -275,7 +360,7 @@ export default defineVxeComponent({
 
     return $xePrint
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

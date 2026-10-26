@@ -22,7 +22,7 @@ export interface VxeTooltipConstructor extends VxeComponentBaseOptions, VxeToolt
 export interface TooltipPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeTooltipPrivateRef extends TooltipPrivateRef { }
+export interface VxeTooltipPrivateRef extends TooltipPrivateRef {}
 
 export namespace VxeTooltipPropTypes {
   export type Size = VxeComponentSizeType
@@ -120,9 +120,8 @@ export interface VxeTooltipProps {
   scrollbarConfig?: VxeTooltipPropTypes.ScrollbarConfig
 }
 
-export interface TooltipPrivateComputed {
-}
-export interface VxeTooltipPrivateComputed extends TooltipPrivateComputed { }
+export interface TooltipPrivateComputed {}
+export interface VxeTooltipPrivateComputed extends TooltipPrivateComputed {}
 
 export interface TooltipReactData {
   target: HTMLElement | null
@@ -173,18 +172,14 @@ export interface TooltipMethods {
   isActived(): boolean
   setActived(actived: boolean): void
 }
-export interface VxeTooltipMethods extends TooltipMethods { }
+export interface VxeTooltipMethods extends TooltipMethods {}
 
 export interface TooltipPrivateMethods {
   handleCloseEvent(): void
 }
-export interface VxeTooltipPrivateMethods extends TooltipPrivateMethods { }
+export interface VxeTooltipPrivateMethods extends TooltipPrivateMethods {}
 
-export type VxeTooltipEmits = [
-  'update:modelValue',
-  'show',
-  'hide'
-]
+export type VxeTooltipEmits = ['update:modelValue', 'show', 'hide']
 
 export namespace VxeTooltipDefines {
   export interface TooltipEventParams extends VxeComponentEventParams {

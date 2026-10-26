@@ -1,9 +1,11 @@
 import { ref, h, reactive, PropType, watch } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, useSize, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeTagPropTypes, TagReactData, TagPrivateRef, VxeTagEmits, VxeTagPrivateComputed, TagMethods, TagPrivateMethods, VxeTagConstructor, VxeTagPrivateMethods, ValueOf } from '../../../types'
+
+const { getConfig, getIcon, createEvent, useFns, renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeTag',
@@ -36,18 +38,13 @@ export default defineVxeComponent({
       default: () => getConfig().tag.size || getConfig().size
     }
   },
-  emits: [
-    'click',
-    'dblclick',
-    'close',
-    'update:visible'
-  ] as VxeTagEmits,
-  setup (props, context) {
+  emits: ['click', 'dblclick', 'close', 'update:visible'] as VxeTagEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -59,8 +56,7 @@ export default defineVxeComponent({
       refElem
     }
 
-    const computeMaps: VxeTagPrivateComputed = {
-    }
+    const computeMaps: VxeTagPrivateComputed = {}
 
     const $xeTag = {
       xID,
@@ -80,8 +76,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const tagPrivateMethods: TagPrivateMethods = {
-    }
+    const tagPrivateMethods: TagPrivateMethods = {}
 
     const updateVisible = () => {
       reactData.showTag = props.visible !== false
@@ -120,30 +115,42 @@ export default defineVxeComponent({
       const closeIconSlot = slots.closeIcon || slots['close-icon']
       return [
         iconSlot || icon
-          ? h('span', {
-            class: 'vxe-tag--icon'
-          }, iconSlot
-            ? iconSlot({})
-            : [
-                h('i', {
-                  class: icon
-                })
-              ])
+          ? h(
+            'span',
+            {
+              class: 'vxe-tag--icon'
+            },
+            iconSlot
+              ? iconSlot({})
+              : [
+                  h('i', {
+                    class: icon
+                  })
+                ]
+          )
           : renderEmptyElement($xeTag),
-        h('span', {
-          class: 'vxe-tag--content'
-        }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content)),
+        h(
+          'span',
+          {
+            class: 'vxe-tag--content'
+          },
+          defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content)
+        ),
         loading || closable
-          ? h('span', {
-            class: loading ? 'vxe-tag--loading' : 'vxe-tag--close',
-            onClick: closeEvent
-          }, !loading && closeIconSlot
-            ? closeIconSlot({})
-            : [
-                h('i', {
-                  class: loading ? getIcon().TAG_LOADING : (closeIcon || getIcon().TAG_CLOSE)
-                })
-              ])
+          ? h(
+            'span',
+            {
+              class: loading ? 'vxe-tag--loading' : 'vxe-tag--close',
+              onClick: closeEvent
+            },
+            !loading && closeIconSlot
+              ? closeIconSlot({})
+              : [
+                  h('i', {
+                    class: loading ? getIcon().TAG_LOADING : closeIcon || getIcon().TAG_CLOSE
+                  })
+                ]
+          )
           : renderEmptyElement($xeTag)
       ]
     }
@@ -155,25 +162,35 @@ export default defineVxeComponent({
       if (!showTag) {
         return renderEmptyElement($xeTag)
       }
-      return h('span', {
-        ref: refElem,
-        class: ['vxe-tag', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status && !color,
-          [`color--${color}`]: color && !status,
-          'is--round': round,
-          'is--border': border,
-          'is--loading': loading
-        }],
-        title,
-        onClick: clickEvent,
-        onDblclick: dblclickEvent
-      }, renderContent())
+      return h(
+        'span',
+        {
+          ref: refElem,
+          class: [
+            'vxe-tag',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status && !color,
+              [`color--${color}`]: color && !status,
+              'is--round': round,
+              'is--border': border,
+              'is--loading': loading
+            }
+          ],
+          title,
+          onClick: clickEvent,
+          onDblclick: dblclickEvent
+        },
+        renderContent()
+      )
     }
 
-    watch(() => props.visible, () => {
-      updateVisible()
-    })
+    watch(
+      () => props.visible,
+      () => {
+        updateVisible()
+      }
+    )
 
     updateVisible()
 
@@ -181,7 +198,7 @@ export default defineVxeComponent({
 
     return $xeTag
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

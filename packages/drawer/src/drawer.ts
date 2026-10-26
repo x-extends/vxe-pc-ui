@@ -1,7 +1,7 @@
 import { h, Teleport, ref, Ref, inject, reactive, nextTick, provide, watch, PropType, onMounted, onUnmounted, computed, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getLastZIndex, nextZIndex, getFuncText, getDefaultConfig } from '../../ui/src/utils'
 import { getPopupContainer, getPopupWrapperElement, toCssUnit } from '../../ui/src/dom'
 import { allActiveDrawers } from './store'
@@ -10,7 +10,24 @@ import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, DrawerPrivateRef, DrawerMethods, DrawerPrivateMethods, VxeDrawerPrivateComputed, VxeDrawerConstructor, VxeDrawerMethods, VxeButtonInstance, DrawerEventTypes, ValueOf, VxeModalConstructor, VxeModalMethods, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+import type {
+  VxeDrawerPropTypes,
+  DrawerReactData,
+  VxeDrawerEmits,
+  DrawerPrivateRef,
+  DrawerMethods,
+  DrawerPrivateMethods,
+  VxeDrawerPrivateComputed,
+  VxeDrawerConstructor,
+  VxeDrawerMethods,
+  VxeButtonInstance,
+  DrawerEventTypes,
+  ValueOf,
+  VxeModalConstructor,
+  VxeModalMethods,
+  VxeFormConstructor,
+  VxeFormPrivateMethods
+} from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { getIcon, getConfig, getI18n, useFns, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } = VxeUI
@@ -154,25 +171,16 @@ export default defineVxeComponent({
     },
     scrollbarConfig: Object as PropType<VxeDrawerPropTypes.ScrollbarConfig>
   },
-  emits: [
-    'update:modelValue',
-    'show',
-    'hide',
-    'before-hide',
-    'close',
-    'confirm',
-    'cancel',
-    'resize'
-  ] as VxeDrawerEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'show', 'hide', 'before-hide', 'close', 'confirm', 'cancel', 'resize'] as VxeDrawerEmits,
+  setup(props, context) {
     const { slots, emit } = context
 
     const xID = XEUtils.uniqueId()
 
-    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods)| null>('$xeModal', null)
+    const $xeModal = inject<(VxeModalConstructor & VxeModalMethods) | null>('$xeModal', null)
     const $xeParentDrawer = inject<(VxeDrawerConstructor & VxeDrawerMethods) | null>('$xeDrawer', null)
     const $xeTable = inject<(VxeTableConstructor & VxeTablePrivateMethods) | null>('$xeTable', null)
-    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods)| null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
 
     const { computeSize } = useFns.useSize(props)
     const { computeIsVScrollbar } = useFns.useVScrollbar(props)
@@ -240,13 +248,12 @@ export default defineVxeComponent({
         yConfig: scrollbarOpts.yConfig,
         className: scrollbarOpts.className,
         viewAttrs: scrollbarOpts.viewAttrs,
-        viewClassName: 'vxe-drawer--scrollbar-content-view' + (viewClassName ? (' ' + viewClassName) : ''),
-        viewInnerClassName: 'vxe-drawer--scrollbar-content-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
+        viewClassName: 'vxe-drawer--scrollbar-content-view' + (viewClassName ? ' ' + viewClassName : ''),
+        viewInnerClassName: 'vxe-drawer--scrollbar-content-inner' + (viewClassName ? ' ' + viewInnerClassName : '')
       }
     })
 
-    const computeMaps: VxeDrawerPrivateComputed = {
-    }
+    const computeMaps: VxeDrawerPrivateComputed = {}
 
     const $xeDrawer = {
       xID,
@@ -286,7 +293,7 @@ export default defineVxeComponent({
 
     const removeActiveQueue = () => {
       if (allActiveDrawers.indexOf($xeDrawer) > -1) {
-        XEUtils.remove(allActiveDrawers, item => item === $xeDrawer)
+        XEUtils.remove(allActiveDrawers, (item) => item === $xeDrawer)
       }
     }
 
@@ -295,28 +302,30 @@ export default defineVxeComponent({
       const beHideMethod = props.beforeHideMethod || defaultFuncProps.beforeHideMethod
       const params = { type }
       if (visible) {
-        Promise.resolve(beHideMethod ? beHideMethod(params) : null).then((rest) => {
-          if (!XEUtils.isError(rest)) {
-            const el = refElem.value
-            if (el) {
-              el.setAttribute('data-effect', 'y')
-            }
-            reactData.contentVisible = false
-            removeActiveQueue()
-            dispatchEvent('before-hide', params, null)
-            setTimeout(() => {
-              reactData.visible = false
-              emit('update:modelValue', false)
-              dispatchEvent('hide', params, null)
-            }, 200)
-            setTimeout(() => {
+        Promise.resolve(beHideMethod ? beHideMethod(params) : null)
+          .then((rest) => {
+            if (!XEUtils.isError(rest)) {
               const el = refElem.value
               if (el) {
-                el.removeAttribute('data-effect')
+                el.setAttribute('data-effect', 'y')
               }
-            }, 350)
-          }
-        }).catch(e => e)
+              reactData.contentVisible = false
+              removeActiveQueue()
+              dispatchEvent('before-hide', params, null)
+              setTimeout(() => {
+                reactData.visible = false
+                emit('update:modelValue', false)
+                dispatchEvent('hide', params, null)
+              }, 200)
+              setTimeout(() => {
+                const el = refElem.value
+                if (el) {
+                  el.removeAttribute('data-effect')
+                }
+              }, 350)
+            }
+          })
+          .catch((e) => e)
       }
       return nextTick()
     }
@@ -397,7 +406,7 @@ export default defineVxeComponent({
     const drawerMethods: DrawerMethods = {
       dispatchEvent,
       open: openDrawer,
-      close () {
+      close() {
         return closeDrawer('close')
       },
       getBox
@@ -430,7 +439,7 @@ export default defineVxeComponent({
 
     const boxMousedownEvent = () => {
       const { drawerZIndex } = reactData
-      if (allActiveDrawers.some(comp => comp.reactData.visible && comp.reactData.drawerZIndex > drawerZIndex)) {
+      if (allActiveDrawers.some((comp) => comp.reactData.visible && comp.reactData.drawerZIndex > drawerZIndex)) {
         updateZindex()
       }
     }
@@ -460,7 +469,7 @@ export default defineVxeComponent({
       const offsetTop = boxElem.offsetTop
       const offsetLeft = boxElem.offsetLeft
       const params = { type: 'resize' }
-      document.onmousemove = evnt => {
+      document.onmousemove = (evnt) => {
         evnt.preventDefault()
         let dragLeft
         let dragTop
@@ -527,29 +536,45 @@ export default defineVxeComponent({
       const titleSlot = slots.title || propSlots.title
       const cornerSlot = slots.corner || propSlots.corner
       return [
-        h('div', {
-          class: 'vxe-drawer--header-title'
-        }, titleSlot ? getSlotVNs(titleSlot({ $drawer: $xeDrawer })) : (title ? getFuncText(title) : getI18n('vxe.alert.title'))),
-        h('div', {
-          class: 'vxe-drawer--header-right'
-        }, [
-          cornerSlot
-            ? h('div', {
-              class: 'vxe-drawer--corner-wrapper'
-            }, getSlotVNs(cornerSlot({ $drawer: $xeDrawer })))
-            : renderEmptyElement($xeDrawer),
-          showClose
-            ? h('div', {
-              class: ['vxe-drawer--close-btn', 'trigger--btn'],
-              title: getI18n('vxe.drawer.close'),
-              onClick: closeEvent
-            }, [
-              h('i', {
-                class: getIcon().DRAWER_CLOSE
-              })
-            ])
-            : renderEmptyElement($xeDrawer)
-        ])
+        h(
+          'div',
+          {
+            class: 'vxe-drawer--header-title'
+          },
+          titleSlot ? getSlotVNs(titleSlot({ $drawer: $xeDrawer })) : title ? getFuncText(title) : getI18n('vxe.alert.title')
+        ),
+        h(
+          'div',
+          {
+            class: 'vxe-drawer--header-right'
+          },
+          [
+            cornerSlot
+              ? h(
+                'div',
+                {
+                  class: 'vxe-drawer--corner-wrapper'
+                },
+                getSlotVNs(cornerSlot({ $drawer: $xeDrawer }))
+              )
+              : renderEmptyElement($xeDrawer),
+            showClose
+              ? h(
+                'div',
+                {
+                  class: ['vxe-drawer--close-btn', 'trigger--btn'],
+                  title: getI18n('vxe.drawer.close'),
+                  onClick: closeEvent
+                },
+                [
+                  h('i', {
+                    class: getIcon().DRAWER_CLOSE
+                  })
+                ]
+              )
+              : renderEmptyElement($xeDrawer)
+          ]
+        )
       ]
     }
 
@@ -557,11 +582,18 @@ export default defineVxeComponent({
       const { slots: propSlots = {}, showTitleOverflow } = props
       const headerSlot = slots.header || propSlots.header
       if (props.showHeader) {
-        return h('div', {
-          class: ['vxe-drawer--header', {
-            'is--ellipsis': showTitleOverflow
-          }]
-        }, headerSlot ? getSlotVNs(headerSlot({ $drawer: $xeDrawer })) : renderTitles())
+        return h(
+          'div',
+          {
+            class: [
+              'vxe-drawer--header',
+              {
+                'is--ellipsis': showTitleOverflow
+              }
+            ]
+          },
+          headerSlot ? getSlotVNs(headerSlot({ $drawer: $xeDrawer })) : renderTitles()
+        )
       }
       return renderEmptyElement($xeDrawer)
     }
@@ -577,20 +609,24 @@ export default defineVxeComponent({
       if (useHtml && !defaultSlot) {
         contVNs.push(
           isVScrollbar
-            ? h(VxeScrollbarComponent, {
-              key: 'shc',
-              class: 'vxe-drawer--scrollbar-content',
-              ...scrollbarProps
-            }, {
-              default () {
-                return [
-                  h('div', {
-                    class: 'vxe-drawer--scrollbar-content-html',
-                    innerHTML: getFuncText(content)
-                  })
-                ]
+            ? h(
+              VxeScrollbarComponent,
+              {
+                key: 'shc',
+                class: 'vxe-drawer--scrollbar-content',
+                ...scrollbarProps
+              },
+              {
+                default() {
+                  return [
+                    h('div', {
+                      class: 'vxe-drawer--scrollbar-content-html',
+                      innerHTML: getFuncText(content)
+                    })
+                  ]
+                }
               }
-            })
+            )
             : h('div', {
               key: 'hc',
               class: 'vxe-drawer--content',
@@ -600,40 +636,64 @@ export default defineVxeComponent({
       } else {
         contVNs.push(
           isVScrollbar
-            ? h(VxeScrollbarComponent, {
-              key: 'sdc',
-              class: 'vxe-drawer--scrollbar-content',
-              ...scrollbarProps
-            }, {
-              default: () => defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer })) : getFuncText(content)
-            })
-            : h('div', {
-              key: 'dc',
-              class: 'vxe-drawer--content'
-            }, defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer })) : getFuncText(content))
+            ? h(
+              VxeScrollbarComponent,
+              {
+                key: 'sdc',
+                class: 'vxe-drawer--scrollbar-content',
+                ...scrollbarProps
+              },
+              {
+                default: () => (defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer })) : getFuncText(content))
+              }
+            )
+            : h(
+              'div',
+              {
+                key: 'dc',
+                class: 'vxe-drawer--content'
+              },
+              defaultSlot ? getSlotVNs(defaultSlot({ $drawer: $xeDrawer })) : getFuncText(content)
+            )
         )
       }
-      return h('div', {
-        class: 'vxe-drawer--body'
-      }, [
-        leftSlot
-          ? h('div', {
-            class: 'vxe-drawer--body-left'
-          }, getSlotVNs(leftSlot({ $drawer: $xeDrawer })))
-          : renderEmptyElement($xeDrawer),
-        h('div', {
-          class: 'vxe-drawer--body-default'
-        }, contVNs),
-        rightSlot
-          ? h('div', {
-            class: 'vxe-drawer--body-right'
-          }, getSlotVNs(rightSlot({ $drawer: $xeDrawer })))
-          : renderEmptyElement($xeDrawer),
-        h(VxeLoadingComponent, {
-          class: 'vxe-drawer--loading',
-          modelValue: props.loading
-        })
-      ])
+      return h(
+        'div',
+        {
+          class: 'vxe-drawer--body'
+        },
+        [
+          leftSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-drawer--body-left'
+              },
+              getSlotVNs(leftSlot({ $drawer: $xeDrawer }))
+            )
+            : renderEmptyElement($xeDrawer),
+          h(
+            'div',
+            {
+              class: 'vxe-drawer--body-default'
+            },
+            contVNs
+          ),
+          rightSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-drawer--body-right'
+              },
+              getSlotVNs(rightSlot({ $drawer: $xeDrawer }))
+            )
+            : renderEmptyElement($xeDrawer),
+          h(VxeLoadingComponent, {
+            class: 'vxe-drawer--loading',
+            modelValue: props.loading
+          })
+        ]
+      )
     }
 
     const renderDefaultFooter = () => {
@@ -663,25 +723,41 @@ export default defineVxeComponent({
           })
         )
       }
-      return h('div', {
-        class: 'vxe-drawer--footer-wrapper'
-      }, [
-        h('div', {
-          class: 'vxe-drawer--footer-left'
-        }, lfSlot ? getSlotVNs(lfSlot({ $drawer: $xeDrawer })) : []),
-        h('div', {
-          class: 'vxe-drawer--footer-right'
-        }, rfSlot ? getSlotVNs(rfSlot({ $drawer: $xeDrawer })) : btnVNs)
-      ])
+      return h(
+        'div',
+        {
+          class: 'vxe-drawer--footer-wrapper'
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-drawer--footer-left'
+            },
+            lfSlot ? getSlotVNs(lfSlot({ $drawer: $xeDrawer })) : []
+          ),
+          h(
+            'div',
+            {
+              class: 'vxe-drawer--footer-right'
+            },
+            rfSlot ? getSlotVNs(rfSlot({ $drawer: $xeDrawer })) : btnVNs
+          )
+        ]
+      )
     }
 
     const renderFooter = () => {
       const { slots: propSlots = {} } = props
       const footerSlot = slots.footer || propSlots.footer
       if (props.showFooter) {
-        return h('div', {
-          class: 'vxe-drawer--footer'
-        }, footerSlot ? getSlotVNs(footerSlot({ $drawer: $xeDrawer })) : [renderDefaultFooter()])
+        return h(
+          'div',
+          {
+            class: 'vxe-drawer--footer'
+          },
+          footerSlot ? getSlotVNs(footerSlot({ $drawer: $xeDrawer })) : [renderDefaultFooter()]
+        )
       }
       return renderEmptyElement($xeDrawer)
     }
@@ -693,84 +769,126 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const dragType = computeDragType.value
       const btnTransfer = computeBtnTransfer.value
-      return h(Teleport, {
-        to: getPopupContainer(appendTo),
-        disabled: btnTransfer ? !initialized : true
-      }, [
-        h('div', {
-          ref: refElem,
-          class: ['vxe-drawer--wrapper', `pos--${position}`, isWithinAppendTo ? 'ctx--within' : 'ctx--free', className || '', {
-            [`size--${vSize}`]: vSize,
-            'is--padding': padding,
-            'is--border': border,
-            'is--title-bg': showTitleBackground,
-            'lock--scroll': lockScroll,
-            'lock--view': lockView,
-            'is--resize': resize,
-            'is--mask': mask,
-            'is--visible': contentVisible,
-            'is--active': visible,
-            'is--loading': loading
-          }],
-          style: {
-            zIndex: reactData.drawerZIndex
-          },
-          onClick: selfClickEvent
-        }, [
-          h('div', {
-            ref: refDrawerBox,
-            class: 'vxe-drawer--box',
-            onMousedown: boxMousedownEvent
-          }, [
-            asideSlot
-              ? h('div', {
-                class: 'vxe-drawer--aside'
-              }, getSlotVNs(asideSlot({ $drawer: $xeDrawer })))
-              : renderEmptyElement($xeDrawer),
-            h('div', {
-              class: 'vxe-drawer--container'
-            }, !reactData.initialized || (destroyOnClose && !reactData.visible)
-              ? []
-              : [
-                  renderHeader(),
-                  renderBody(),
-                  renderFooter(),
-                  resize
-                    ? h('span', {
-                      class: 'vxe-drawer--resize'
-                    }, [
-                      h('span', {
-                        class: `${dragType}-resize`,
-                        type: dragType,
-                        onMousedown: dragEvent
-                      })
-                    ])
-                    : renderEmptyElement($xeDrawer)
-                ])
-          ])
-        ])
-      ])
+      return h(
+        Teleport,
+        {
+          to: getPopupContainer(appendTo),
+          disabled: btnTransfer ? !initialized : true
+        },
+        [
+          h(
+            'div',
+            {
+              ref: refElem,
+              class: [
+                'vxe-drawer--wrapper',
+                `pos--${position}`,
+                isWithinAppendTo ? 'ctx--within' : 'ctx--free',
+                className || '',
+                {
+                  [`size--${vSize}`]: vSize,
+                  'is--padding': padding,
+                  'is--border': border,
+                  'is--title-bg': showTitleBackground,
+                  'lock--scroll': lockScroll,
+                  'lock--view': lockView,
+                  'is--resize': resize,
+                  'is--mask': mask,
+                  'is--visible': contentVisible,
+                  'is--active': visible,
+                  'is--loading': loading
+                }
+              ],
+              style: {
+                zIndex: reactData.drawerZIndex
+              },
+              onClick: selfClickEvent
+            },
+            [
+              h(
+                'div',
+                {
+                  ref: refDrawerBox,
+                  class: 'vxe-drawer--box',
+                  onMousedown: boxMousedownEvent
+                },
+                [
+                  asideSlot
+                    ? h(
+                      'div',
+                      {
+                        class: 'vxe-drawer--aside'
+                      },
+                      getSlotVNs(asideSlot({ $drawer: $xeDrawer }))
+                    )
+                    : renderEmptyElement($xeDrawer),
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-drawer--container'
+                    },
+                    !reactData.initialized || (destroyOnClose && !reactData.visible)
+                      ? []
+                      : [
+                          renderHeader(),
+                          renderBody(),
+                          renderFooter(),
+                          resize
+                            ? h(
+                              'span',
+                              {
+                                class: 'vxe-drawer--resize'
+                              },
+                              [
+                                h('span', {
+                                  class: `${dragType}-resize`,
+                                  type: dragType,
+                                  onMousedown: dragEvent
+                                })
+                              ]
+                            )
+                            : renderEmptyElement($xeDrawer)
+                        ]
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
     }
 
     const reFlag = ref(0)
-    watch(() => props.width, () => {
-      reFlag.value++
-    })
-    watch(() => props.height, () => {
-      reFlag.value++
-    })
-    watch(() => props.position, () => {
-      reFlag.value++
-    })
+    watch(
+      () => props.width,
+      () => {
+        reFlag.value++
+      }
+    )
+    watch(
+      () => props.height,
+      () => {
+        reFlag.value++
+      }
+    )
+    watch(
+      () => props.position,
+      () => {
+        reFlag.value++
+      }
+    )
     watch(reFlag, recalculate)
 
-    watch(() => props.modelValue, (value) => {
-      if (value) {
-        openDrawer()
-      } else {
-        closeDrawer('model')
+    watch(
+      () => props.modelValue,
+      (value) => {
+        if (value) {
+          openDrawer()
+        } else {
+          closeDrawer('model')
+        }
       }
-    })
+    )
 
     onMounted(() => {
       reactData.initialized = !!props.preload
@@ -796,7 +914,7 @@ export default defineVxeComponent({
 
     return $xeDrawer
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

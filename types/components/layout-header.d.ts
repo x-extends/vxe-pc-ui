@@ -18,7 +18,7 @@ export interface VxeLayoutHeaderConstructor extends VxeComponentBaseOptions, Vxe
 export interface LayoutHeaderPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeLayoutHeaderPrivateRef extends LayoutHeaderPrivateRef { }
+export interface VxeLayoutHeaderPrivateRef extends LayoutHeaderPrivateRef {}
 
 export namespace VxeLayoutHeaderPropTypes {
   export type Fixed = boolean
@@ -28,20 +28,18 @@ export interface VxeLayoutHeaderProps {
   fixed?: VxeLayoutHeaderPropTypes.Fixed
 }
 
-export interface LayoutHeaderPrivateComputed {
-}
-export interface VxeLayoutHeaderPrivateComputed extends LayoutHeaderPrivateComputed { }
+export interface LayoutHeaderPrivateComputed {}
+export interface VxeLayoutHeaderPrivateComputed extends LayoutHeaderPrivateComputed {}
 
-export interface LayoutHeaderReactData {
-}
+export interface LayoutHeaderReactData {}
 
 export interface LayoutHeaderMethods {
   dispatchEvent(type: ValueOf<VxeLayoutHeaderEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeLayoutHeaderMethods extends LayoutHeaderMethods { }
+export interface VxeLayoutHeaderMethods extends LayoutHeaderMethods {}
 
-export interface LayoutHeaderPrivateMethods { }
-export interface VxeLayoutHeaderPrivateMethods extends LayoutHeaderPrivateMethods { }
+export interface LayoutHeaderPrivateMethods {}
+export interface VxeLayoutHeaderPrivateMethods extends LayoutHeaderPrivateMethods {}
 
 export type VxeLayoutHeaderEmits = []
 
@@ -53,9 +51,9 @@ export namespace VxeLayoutHeaderDefines {
 
 export type VxeLayoutHeaderEventProps = {}
 
-export interface VxeLayoutHeaderListeners { }
+export interface VxeLayoutHeaderListeners {}
 
-export namespace VxeLayoutHeaderEvents { }
+export namespace VxeLayoutHeaderEvents {}
 
 export namespace VxeLayoutHeaderSlotTypes {
   export interface DefaultSlotParams {}

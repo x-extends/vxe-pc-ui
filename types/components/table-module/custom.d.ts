@@ -46,17 +46,13 @@ export interface TableCustomPanelPrivateRef {
   refDragTipElem: Ref<HTMLDivElement | undefined>
 }
 
-export interface TableCustomPanelPrivateComputed {
-}
+export interface TableCustomPanelPrivateComputed {}
 
-export interface VxeTableCustomPanelMethods {
-
-}
+export interface VxeTableCustomPanelMethods {}
 
 type VxeTableCustomPanelEmits = []
 
-export interface VxeCustomPanel {
-}
+export interface VxeCustomPanel {}
 
 export interface TableCustomMethods<D = any> {
   /**
@@ -79,12 +75,16 @@ export interface TableCustomMethods<D = any> {
    * 重置个性化列操作
    * 支持只重置指定的操作（列可视、列宽、冻结列、列顺序）
    */
-  resetCustom(options?: boolean | {
-    visible?: boolean
-    resizable?: boolean
-    fixed?: boolean
-    order?: boolean
-  }): Promise<void>
+  resetCustom(
+    options?:
+      | boolean
+      | {
+          visible?: boolean
+          resizable?: boolean
+          fixed?: boolean
+          order?: boolean
+        }
+  ): Promise<void>
   /**
    * 保存个性化列操作
    */
@@ -107,17 +107,17 @@ export interface TableCustomPrivateMethods<D = any> {
   checkCustomStatus(): void
   emitCustomEvent(type: string, evnt: Event): void
   triggerCustomEvent(evnt: MouseEvent): void
-  customOpenEvent (evnt: Event): void
-  customCloseEvent (evnt: Event): void
+  customOpenEvent(evnt: Event): void
+  customCloseEvent(evnt: Event): void
   handleUpdateCustomColumn(): void
   handleCustomStyle(): Promise<any>
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableCustomMethods<D> { }
+  export interface VxeGridMethods<D = any> extends TableCustomMethods<D> {}
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableCustomMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableCustomPrivateMethods<D> { }
+  export interface VxeTableMethods<D = any> extends TableCustomMethods<D> {}
+  export interface VxeTablePrivateMethods<D = any> extends TableCustomPrivateMethods<D> {}
 }

@@ -21,7 +21,7 @@ export interface VxeCarouselConstructor extends VxeComponentBaseOptions, VxeCaro
 export interface CarouselPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeCarouselPrivateRef extends CarouselPrivateRef { }
+export interface VxeCarouselPrivateRef extends CarouselPrivateRef {}
 
 export namespace VxeCarouselPropTypes {
   export type ModelValue = VxeCarouselItemPropTypes.Name
@@ -52,9 +52,8 @@ export type VxeCarouselProps = {
   showIndicators?: VxeCarouselPropTypes.ShowIndicators
 }
 
-export interface CarouselPrivateComputed {
-}
-export interface VxeCarouselPrivateComputed extends CarouselPrivateComputed { }
+export interface CarouselPrivateComputed {}
+export interface VxeCarouselPrivateComputed extends CarouselPrivateComputed {}
 
 export interface CarouselReactData {
   activeName: VxeCarouselPropTypes.ModelValue | undefined
@@ -79,15 +78,12 @@ export interface CarouselMethods {
    */
   next(): Promise<any>
 }
-export interface VxeCarouselMethods extends CarouselMethods { }
+export interface VxeCarouselMethods extends CarouselMethods {}
 
-export interface CarouselPrivateMethods { }
-export interface VxeCarouselPrivateMethods extends CarouselPrivateMethods { }
+export interface CarouselPrivateMethods {}
+export interface VxeCarouselPrivateMethods extends CarouselPrivateMethods {}
 
-export type VxeCarouselEmits = [
-  'update:modelValue',
-  'change'
-]
+export type VxeCarouselEmits = ['update:modelValue', 'change']
 
 export namespace VxeCarouselDefines {
   export interface CarouselEventParams extends VxeComponentEventParams {

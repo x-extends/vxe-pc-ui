@@ -20,7 +20,7 @@ export interface VxeCheckboxConstructor extends VxeComponentBaseOptions, VxeChec
 export interface CheckboxPrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeCheckboxPrivateRef extends CheckboxPrivateRef { }
+export interface VxeCheckboxPrivateRef extends CheckboxPrivateRef {}
 
 export namespace VxeCheckboxPropTypes {
   export type Size = VxeComponentSizeType
@@ -69,25 +69,20 @@ export type VxeCheckboxProps = {
   disabled?: VxeCheckboxPropTypes.Disabled
 }
 
-export interface CheckboxPrivateComputed {
-}
-export interface VxeCheckboxPrivateComputed extends CheckboxPrivateComputed { }
+export interface CheckboxPrivateComputed {}
+export interface VxeCheckboxPrivateComputed extends CheckboxPrivateComputed {}
 
-export interface CheckboxReactData {
-}
+export interface CheckboxReactData {}
 
 export interface CheckboxMethods {
   dispatchEvent(type: ValueOf<VxeCheckboxEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCheckboxMethods extends CheckboxMethods { }
+export interface VxeCheckboxMethods extends CheckboxMethods {}
 
-export interface CheckboxPrivateMethods { }
-export interface VxeCheckboxPrivateMethods extends CheckboxPrivateMethods { }
+export interface CheckboxPrivateMethods {}
+export interface VxeCheckboxPrivateMethods extends CheckboxPrivateMethods {}
 
-export type VxeCheckboxEmits = [
-  'update:modelValue',
-  'change'
-]
+export type VxeCheckboxEmits = ['update:modelValue', 'change']
 
 export namespace VxeCheckboxDefines {
   export interface CheckboxEventParams extends VxeComponentEventParams {
@@ -98,7 +93,7 @@ export namespace VxeCheckboxDefines {
     checked: boolean
     label: any
   }
-  export interface ChangeEventParams extends CheckboxEventParams, ChangeParams { }
+  export interface ChangeEventParams extends CheckboxEventParams, ChangeParams {}
 }
 
 export type VxeCheckboxEventProps = {

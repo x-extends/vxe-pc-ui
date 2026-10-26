@@ -22,7 +22,7 @@ export interface VxeCollapseConstructor extends VxeComponentBaseOptions, VxeColl
 export interface CollapsePrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeCollapsePrivateRef extends CollapsePrivateRef { }
+export interface VxeCollapsePrivateRef extends CollapsePrivateRef {}
 
 export namespace VxeCollapsePropTypes {
   export type Size = VxeComponentSizeType
@@ -48,9 +48,8 @@ export type VxeCollapseProps = {
   expandConfig?: VxeCollapsePropTypes.ExpandConfig
 }
 
-export interface CollapsePrivateComputed {
-}
-export interface VxeCollapsePrivateComputed extends CollapsePrivateComputed { }
+export interface CollapsePrivateComputed {}
+export interface VxeCollapsePrivateComputed extends CollapsePrivateComputed {}
 
 export interface CollapseReactData {
   staticPanes: VxeCollapsePaneDefines.CollapseConfig[]
@@ -65,22 +64,15 @@ export interface CollapseInternalData {
   openKeyMaps: Record<string, boolean>
 }
 
-export interface CollapseMethods {
-}
-export interface VxeCollapseMethods extends CollapseMethods { }
+export interface CollapseMethods {}
+export interface VxeCollapseMethods extends CollapseMethods {}
 
-export interface CollapsePrivateMethods { }
-export interface VxeCollapsePrivateMethods extends CollapsePrivateMethods { }
+export interface CollapsePrivateMethods {}
+export interface VxeCollapsePrivateMethods extends CollapsePrivateMethods {}
 
-export type VxeCollapseEmits = [
-  'update:modelValue',
-  'load',
-  'change',
-  'toggle-expand',
-]
+export type VxeCollapseEmits = ['update:modelValue', 'load', 'change', 'toggle-expand']
 
 export namespace VxeCollapseDefines {
-
   export interface CacheItemObj {
     height: number
     loading: boolean
@@ -122,9 +114,7 @@ export interface VxeCollapseSlots {
   /**
    * 自定义插槽模板
    */
-  [key: string]: ((params: {
-    [key: string]: any
-  }) => any) | undefined
+  [key: string]: ((params: { [key: string]: any }) => any) | undefined
 
   default?: (params: VxeCollapseSlotTypes.DefaultSlotParams) => any
 }

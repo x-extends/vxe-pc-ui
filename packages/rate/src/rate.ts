@@ -1,9 +1,11 @@
 import { ref, h, PropType, inject, reactive, computed } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, useSize } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { RateReactData, VxeRateEmits, RateMethods, VxeRatePropTypes, RatePrivateMethods, VxeFormDefines, ValueOf, VxeFormConstructor, VxeFormPrivateMethods, RatePrivateRef, VxeRatePrivateComputed, VxeRateConstructor, VxeRatePrivateMethods } from '../../../types'
+
+const { getConfig, getIcon, createEvent, useFns } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeRate',
@@ -23,19 +25,16 @@ export default defineVxeComponent({
     },
     status: String as PropType<VxeRatePropTypes.Status>
   },
-  emits: [
-    'update:modelValue',
-    'change'
-  ] as VxeRateEmits,
-  setup (props, context) {
+  emits: ['update:modelValue', 'change'] as VxeRateEmits,
+  setup(props, context) {
     const { emit } = context
 
-    const $xeForm = inject<VxeFormConstructor & VxeFormPrivateMethods | null>('$xeForm', null)
+    const $xeForm = inject<(VxeFormConstructor & VxeFormPrivateMethods) | null>('$xeForm', null)
     const formItemInfo = inject<VxeFormDefines.ProvideItemInfo | null>('xeFormItemInfo', null)
 
     const xID = XEUtils.uniqueId()
 
-    const { computeSize } = useSize(props)
+    const { computeSize } = useFns.useSize(props)
 
     const refElem = ref<HTMLDivElement>()
 
@@ -76,7 +75,7 @@ export default defineVxeComponent({
     })
 
     const computeItemList = computed(() => {
-      return [1, 2, 3, 4, 5].map(num => {
+      return [1, 2, 3, 4, 5].map((num) => {
         return {
           value: num,
           label: num
@@ -84,8 +83,7 @@ export default defineVxeComponent({
       })
     })
 
-    const computeMaps: VxeRatePrivateComputed = {
-    }
+    const computeMaps: VxeRatePrivateComputed = {}
 
     const $xeRate = {
       xID,
@@ -105,8 +103,7 @@ export default defineVxeComponent({
       dispatchEvent
     }
 
-    const ratePrivateMethods: RatePrivateMethods = {
-    }
+    const ratePrivateMethods: RatePrivateMethods = {}
 
     const emitModel = (value: any) => {
       emit('update:modelValue', value)
@@ -149,44 +146,58 @@ export default defineVxeComponent({
       const vSize = computeSize.value
       const numVal = computeNumVal.value
 
-      return h('div', {
-        ref: refElem,
-        class: ['vxe-rate', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--disabled': isDisabled,
-          'is--readonly': isReadonly
-        }]
-      }, itemList.map(item => {
-        const isChecked = numVal >= item.value
-        return h('div', {
-          class: ['vxe-rte--item', {
-            'is--checked': isChecked
-          }],
-          onMouseenter (evnt) {
-            if (!(isDisabled || isReadonly)) {
-              mouseenterEvent(evnt, item)
+      return h(
+        'div',
+        {
+          ref: refElem,
+          class: [
+            'vxe-rate',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--disabled': isDisabled,
+              'is--readonly': isReadonly
             }
-          },
-          onMouseleave: mouseleaveEvent,
-          onClick (evnt) {
-            if (!(isDisabled || isReadonly)) {
-              clickEvent(evnt, item)
-            }
-          }
-        }, [
-          h('i', {
-            class: isChecked ? getIcon().RATE_CHECKED : getIcon().RATE_UNCHECKED
-          })
-        ])
-      }))
+          ]
+        },
+        itemList.map((item) => {
+          const isChecked = numVal >= item.value
+          return h(
+            'div',
+            {
+              class: [
+                'vxe-rte--item',
+                {
+                  'is--checked': isChecked
+                }
+              ],
+              onMouseenter(evnt) {
+                if (!(isDisabled || isReadonly)) {
+                  mouseenterEvent(evnt, item)
+                }
+              },
+              onMouseleave: mouseleaveEvent,
+              onClick(evnt) {
+                if (!(isDisabled || isReadonly)) {
+                  clickEvent(evnt, item)
+                }
+              }
+            },
+            [
+              h('i', {
+                class: isChecked ? getIcon().RATE_CHECKED : getIcon().RATE_UNCHECKED
+              })
+            ]
+          )
+        })
+      )
     }
 
     $xeRate.renderVN = renderVN
 
     return $xeRate
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

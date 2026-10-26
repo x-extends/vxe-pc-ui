@@ -1,9 +1,11 @@
 import { ref, h, reactive, computed, resolveComponent, inject, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeBreadcrumbItemPropTypes, VxeBreadcrumbItemEmits, BreadcrumbItemReactData, BreadcrumbItemPrivateRef, VxeBreadcrumbItemPrivateComputed, VxeBreadcrumbItemConstructor, VxeBreadcrumbItemPrivateMethods, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods } from '../../../types'
+
+const { renderEmptyElement } = VxeUI
 
 export default defineVxeComponent({
   name: 'VxeBreadcrumbItem',
@@ -11,9 +13,8 @@ export default defineVxeComponent({
     title: String as PropType<VxeBreadcrumbItemPropTypes.Title>,
     routerLink: Object as PropType<VxeBreadcrumbItemPropTypes.RouterLink>
   },
-  emits: [
-  ] as VxeBreadcrumbItemEmits,
-  setup (props, context) {
+  emits: [] as VxeBreadcrumbItemEmits,
+  setup(props, context) {
     const { slots } = context
 
     const xID = XEUtils.uniqueId()
@@ -22,8 +23,7 @@ export default defineVxeComponent({
 
     const $xeBreadcrumb = inject<(VxeBreadcrumbConstructor & VxeBreadcrumbPrivateMethods) | null>('$xeBreadcrumb', null)
 
-    const reactData = reactive<BreadcrumbItemReactData>({
-    })
+    const reactData = reactive<BreadcrumbItemReactData>({})
 
     const refMaps: BreadcrumbItemPrivateRef = {
       refElem
@@ -46,8 +46,7 @@ export default defineVxeComponent({
       }
     }
 
-    const computeMaps: VxeBreadcrumbItemPrivateComputed = {
-    }
+    const computeMaps: VxeBreadcrumbItemPrivateComputed = {}
 
     const $xeBreadcrumbItem = {
       xID,
@@ -64,43 +63,67 @@ export default defineVxeComponent({
       const separator = computeSeparator.value
       const defaultSlot = slots.default
 
-      return h('span', {
-        ref: refElem,
-        class: 'vxe-breadcrumb-item',
-        onClick: clickEvent
-      }, [
-        h('span', {
-          class: 'vxe-breadcrumb-item--content'
-        }, [
-          routerLink
-            ? h(resolveComponent('router-link'), {
-              class: 'vxe-breadcrumb-item--content-link',
-              title,
-              to: routerLink
-            }, {
-              default () {
-                return h('span', {
-                  class: 'vxe-breadcrumb-item--content-text'
-                }, defaultSlot ? defaultSlot({}) : `${title || ''}`)
-              }
-            })
-            : h('span', {
-              class: 'vxe-breadcrumb-item--content-text'
-            }, defaultSlot ? defaultSlot({}) : `${title || ''}`)
-        ]),
-        separator
-          ? h('span', {
-            class: 'vxe-breadcrumb-item--separator'
-          }, `${separator}`)
-          : renderEmptyElement($xeBreadcrumbItem)
-      ])
+      return h(
+        'span',
+        {
+          ref: refElem,
+          class: 'vxe-breadcrumb-item',
+          onClick: clickEvent
+        },
+        [
+          h(
+            'span',
+            {
+              class: 'vxe-breadcrumb-item--content'
+            },
+            [
+              routerLink
+                ? h(
+                  resolveComponent('router-link'),
+                  {
+                    class: 'vxe-breadcrumb-item--content-link',
+                    title,
+                    to: routerLink
+                  },
+                  {
+                    default() {
+                      return h(
+                        'span',
+                        {
+                          class: 'vxe-breadcrumb-item--content-text'
+                        },
+                        defaultSlot ? defaultSlot({}) : `${title || ''}`
+                      )
+                    }
+                  }
+                )
+                : h(
+                  'span',
+                  {
+                    class: 'vxe-breadcrumb-item--content-text'
+                  },
+                  defaultSlot ? defaultSlot({}) : `${title || ''}`
+                )
+            ]
+          ),
+          separator
+            ? h(
+              'span',
+              {
+                class: 'vxe-breadcrumb-item--separator'
+              },
+                `${separator}`
+            )
+            : renderEmptyElement($xeBreadcrumbItem)
+        ]
+      )
     }
 
     $xeBreadcrumbItem.renderVN = renderVN
 
     return $xeBreadcrumbItem
   },
-  render () {
+  render() {
     return this.renderVN()
   }
 })

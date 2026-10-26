@@ -115,7 +115,7 @@ import VxeListView from './components/list-view'
 // Vxe Gantt
 import VxeGantt from './components/gantt'
 
-export function install (app: App, options?: VxeGlobalConfig): void
+export function install(app: App, options?: VxeGlobalConfig): void
 
 interface UIComponents {
   /**

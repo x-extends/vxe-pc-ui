@@ -4,7 +4,7 @@ import VxeDatePanelComponent from './src/date-panel'
 import { dynamicApp } from '../dynamics'
 
 export const VxeDatePanel = Object.assign({}, VxeDatePanelComponent, {
-  install (app: App) {
+  install(app: App) {
     app.component(VxeDatePanelComponent.name as string, VxeDatePanelComponent)
   }
 })
