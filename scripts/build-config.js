@@ -34,7 +34,7 @@ exports.doLocale = true
 // 是否编译 UMD 产物
 exports.doUmd = true
 
-exports.exportModuleName = 'VxeUIGantt'
+exports.exportModuleName = 'VxeUI'
 
 exports.externalGlobals = {
   vue: 'Vue',

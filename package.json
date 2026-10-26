@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "4.20.24",
+  "version": "4.20.25",
   "description": "A vue based PC component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -10,6 +10,11 @@
     "lib:old": "npm run lib:pack && npm run lib:modules",
     "lib:new": "node scripts/build-modules.js",
     "lib": "npm run lib:new",
+    "lint": "npm run lint:es",
+    "lint:es": "eslint packages/**",
+    "lint:ox": "oxfmt --check packages/**",
+    "esfix": "eslint --fix packages/**",
+    "oxfix": "oxfmt packages/** --write",
     "sync:i18n": "node ./syncI18n.js && eslint --fix --ext .js,.ts packages/language/*"
   },
   "files": [
@@ -62,6 +67,7 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
+    "oxfmt": "~0.51.0",
     "postcss": "^8.4.38",
     "rollup": "^4.53.3",
     "sass": "~1.101.7",

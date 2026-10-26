@@ -2,6 +2,7 @@ import * as VxeUIExport from './packages/components'
 import './styles/all.scss'
 
 if (typeof window !== 'undefined') {
+  // 兼容旧版本
   if (!(window as any).VxeUIAll) {
     (window as any).VxeUIAll = VxeUIExport
   }

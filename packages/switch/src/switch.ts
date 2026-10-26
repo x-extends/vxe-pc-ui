@@ -1,10 +1,24 @@
-import { h, ref, Ref, computed, reactive, nextTick, PropType, inject } from 'vue'
+import { h, ref, Ref, computed, reactive, nextTick, PropType, inject, onUnmounted, onBeforeUnmount } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { getConfig, getI18n, createEvent, useSize, renderEmptyElement } from '../../ui'
 import { getFuncText } from '../../ui/src/utils'
 
 import type { VxeSwitchPropTypes, VxeSwitchConstructor, VxeSwitchEmits, SwitchInternalData, ValueOf, SwitchReactData, SwitchMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
+
+function createReactData (): SwitchReactData {
+  return {
+    isActivated: false,
+    hasAnimat: false,
+    offsetLeft: 0
+  }
+}
+
+function createInternalData (): SwitchInternalData {
+  return {
+    // atTimeout: undefined
+  }
+}
 
 export default defineVxeComponent({
   name: 'VxeSwitch',
@@ -52,14 +66,9 @@ export default defineVxeComponent({
 
     const { computeSize } = useSize(props)
 
-    const reactData = reactive<SwitchReactData>({
-      isActivated: false,
-      hasAnimat: false,
-      offsetLeft: 0
-    })
+    const reactData = reactive(createReactData())
 
-    const internalData: SwitchInternalData = {
-    }
+    const internalData = createInternalData()
 
     const $xeSwitch = {
       xID,
@@ -116,7 +125,10 @@ export default defineVxeComponent({
       const isReadonly = computeIsReadonly.value
       if (!(isDisabled || isReadonly)) {
         const isChecked = computeIsChecked.value
-        clearTimeout(internalData.atTimeout)
+        const { atTimeout } = internalData
+        if (atTimeout) {
+          clearTimeout(atTimeout)
+        }
         const value = isChecked ? props.closeValue : props.openValue
         reactData.hasAnimat = true
         emitModel(value)
@@ -170,6 +182,7 @@ export default defineVxeComponent({
 
     const renderVN = () => {
       const { openIcon, closeIcon, openActiveIcon, closeActiveIcon } = props
+      const { hasAnimat, isActivated } = reactData
       const vSize = computeSize.value
       const isChecked = computeIsChecked.value
       const onShowLabel = computeOnShowLabel.value
@@ -188,9 +201,10 @@ export default defineVxeComponent({
       return h('div', {
         class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
           [`size--${vSize}`]: vSize,
+          'is--active': isActivated,
           'is--disabled': isDisabled,
           'is--readonly': isReadonly,
-          'is--animat': reactData.hasAnimat
+          'is--animat': hasAnimat
         }]
       }, [
         h('button', {
@@ -234,6 +248,18 @@ export default defineVxeComponent({
         ])
       ])
     }
+
+    onBeforeUnmount(() => {
+      const { atTimeout } = internalData
+      if (atTimeout) {
+        clearTimeout(atTimeout)
+      }
+    })
+
+    onUnmounted(() => {
+      XEUtils.assign(reactData, createReactData())
+      XEUtils.assign(internalData, createInternalData())
+    })
 
     $xeSwitch.renderVN = renderVN
 
