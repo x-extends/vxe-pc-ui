@@ -1,24 +1,23 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeTimelinePropTypes, TimelineReactData, VxeTimelineEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
+const { getConfig, createEvent, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTimeline',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     size: {
       type: String as PropType<VxeTimelinePropTypes.Size>,
       default: () => getConfig().timeline.size || getConfig().size
     }
   },
-  data () {
-    const reactData: TimelineReactData = {
-    }
+  data() {
+    const reactData: TimelineReactData = {}
     return {
       xID: XEUtils.uniqueId(),
       reactData
@@ -33,7 +32,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeTimelineEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeTimelineEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTimeline = this
       $xeTimeline.$emit(type, createEvent(evnt, { $timeline: $xeTimeline }, params))
     },
@@ -41,14 +40,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN  (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       return h('div', {
         ref: 'refElem',
         class: 'vxe-timeline'
       })
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

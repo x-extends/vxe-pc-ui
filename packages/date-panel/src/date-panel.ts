@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toStringTimeDate, getDateQuarter, parseDateValue, parseDateObj, handleValueFormat, hasDateValueType, hasTimestampValueType } from './util'
 import { createComponentLog } from '../../ui/src/log'
 import { handleEmitModelVal } from '../../ui/src/vn'
@@ -9,13 +9,13 @@ import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeDatePanelConstructor, DatePanelInternalData, DatePanelReactData, VxeDatePanelPropTypes, VxeComponentSizeType, ValueOf, VxeDatePanelEmits, VxeDatePanelDefines } from '../../../types'
 
+const { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } = VxeUI
+
 const { errLog } = createComponentLog('date-panel')
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDatePanel',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   model: {
     prop: 'value',
     event: 'modelValue'
@@ -71,7 +71,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().datePanel.selectDay
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
 
     const reactData: DatePanelReactData = {
@@ -111,14 +111,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeIsTimeType () {
+    computeIsTimeType() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       const { type } = props
       return type === 'time'
     },
-    computeIsTimeOrDateTimeType () {
+    computeIsTimeOrDateTimeType() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -126,26 +126,26 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isTimeType = $xeDatePanel.computeIsTimeType
       return isTimeType || type === 'datetime'
     },
-    computeIsDatePanelType () {
+    computeIsDatePanelType() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       const isTimeOrDateTimeType = $xeDatePanel.computeIsTimeOrDateTimeType
       return isTimeOrDateTimeType || ['date', 'week', 'month', 'quarter', 'year'].indexOf(props.type) > -1
     },
-    computeDateStartDate () {
+    computeDateStartDate() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       return props.startDate ? XEUtils.toStringDate(props.startDate) : null
     },
-    computeDateEndDate () {
+    computeDateEndDate() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       return props.endDate ? XEUtils.toStringDate(props.endDate) : null
     },
-    computeDateListValue () {
+    computeDateListValue() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -154,7 +154,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dateValueFormat = $xeDatePanel.computeDateValueFormat as string
       const restList: Date[] = []
       if (modelValue && isDatePanelType) {
-        (XEUtils.isArray(modelValue) ? modelValue : XEUtils.toValueString(modelValue).split(',')).forEach(val => {
+        ;(XEUtils.isArray(modelValue) ? modelValue : XEUtils.toValueString(modelValue).split(',')).forEach((val) => {
           let strVal: string | number | Date | null = val
           if (val) {
             if (valueFormat === 'timestamp') {
@@ -169,27 +169,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return restList
     },
-    computeDateMultipleValue () {
+    computeDateMultipleValue() {
       const $xeDatePanel = this
 
       const dateListValue = $xeDatePanel.computeDateListValue as Date[]
       const dateValueFormat = $xeDatePanel.computeDateValueFormat as string
-      return dateListValue.map(date => XEUtils.toDateString(date, dateValueFormat))
+      return dateListValue.map((date) => XEUtils.toDateString(date, dateValueFormat))
     },
-    computeDateMultipleLabel () {
+    computeDateMultipleLabel() {
       const $xeDatePanel = this
 
       const dateListValue = $xeDatePanel.computeDateListValue as Date[]
       const dateLabelFormat = $xeDatePanel.computeDateLabelFormat as string
-      return dateListValue.map(date => XEUtils.toDateString(date, dateLabelFormat)).join(', ')
+      return dateListValue.map((date) => XEUtils.toDateString(date, dateLabelFormat)).join(', ')
     },
-    computeLimitMaxCount () {
+    computeLimitMaxCount() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       return props.multiple ? XEUtils.toNumber(props.limitCount) : 0
     },
-    computeOverCount () {
+    computeOverCount() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -201,20 +201,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    computeDateValueFormat () {
+    computeDateValueFormat() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       const { type, valueFormat } = props
       return handleValueFormat(type, valueFormat)
     },
-    computeTimeOpts () {
+    computeTimeOpts() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       return Object.assign({}, getConfig().datePanel.timeConfig, props.timeConfig)
     },
-    computeDateValue () {
+    computeDateValue() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -232,7 +232,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return val
     },
-    computeIsDisabledPrevDateBtn () {
+    computeIsDisabledPrevDateBtn() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData as DatePanelReactData
 
@@ -243,7 +243,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    computeIsDisabledNextDateBtn () {
+    computeIsDisabledNextDateBtn() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData as DatePanelReactData
 
@@ -254,7 +254,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    computeDateTimeLabel () {
+    computeDateTimeLabel() {
       const $xeDatePanel = this
       const reactData = ($xeDatePanel as unknown as VxeDatePanelConstructor).reactData
 
@@ -262,18 +262,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const hasTimeSecond = $xeDatePanel.computeHasTimeSecond
       const hasTimeMinute = $xeDatePanel.computeHasTimeMinute
       if (datetimePanelValue) {
-        return XEUtils.toDateString(datetimePanelValue, hasTimeMinute && hasTimeSecond ? 'HH:mm:ss' : (hasTimeMinute ? 'HH:mm' : 'HH'))
+        return XEUtils.toDateString(datetimePanelValue, hasTimeMinute && hasTimeSecond ? 'HH:mm:ss' : hasTimeMinute ? 'HH:mm' : 'HH')
       }
       return ''
     },
-    computeDateHMSTime () {
+    computeDateHMSTime() {
       const $xeDatePanel = this
 
       const dateValue = $xeDatePanel.computeDateValue as Date | null
       const isTimeOrDateTimeType = $xeDatePanel.computeIsTimeOrDateTimeType
       return dateValue && isTimeOrDateTimeType ? (dateValue.getHours() * 3600 + dateValue.getMinutes() * 60 + dateValue.getSeconds()) * 1000 : 0
     },
-    computeDateLabelFormat () {
+    computeDateLabelFormat() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -284,7 +284,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return ''
     },
-    computeYearList () {
+    computeYearList() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
       const internalData = $xeDatePanel.internalData
@@ -295,7 +295,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (selectMonth && currentDate) {
         const currFullYear = currentDate.getFullYear()
         const selectFullYear = selectMonth.getFullYear()
-        const startYearDate = new Date(selectFullYear - selectFullYear % yearSize, 0, 1)
+        const startYearDate = new Date(selectFullYear - (selectFullYear % yearSize), 0, 1)
         for (let index = 0; index < yearSize; index++) {
           const date = XEUtils.getWhatYear(startYearDate, index, 'first')
           const itemFullYear = date.getFullYear()
@@ -311,7 +311,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return years
     },
-    computeSelectDatePanelObj () {
+    computeSelectDatePanelObj() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -341,14 +341,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         m
       }
     },
-    computeFirstDayOfWeek () {
+    computeFirstDayOfWeek() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       const { startDay } = props
       return XEUtils.toNumber(startDay) as VxeDatePanelPropTypes.StartDay
     },
-    computeWeekDatas () {
+    computeWeekDatas() {
       const $xeDatePanel = this
 
       const weeks: number[] = []
@@ -367,7 +367,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return weeks
     },
-    computeDateHeaders () {
+    computeDateHeaders() {
       const $xeDatePanel = this
 
       const isDatePanelType = $xeDatePanel.computeIsDatePanelType
@@ -382,26 +382,26 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return []
     },
-    computeWeekHeaders () {
+    computeWeekHeaders() {
       const $xeDatePanel = this
 
       const isDatePanelType = $xeDatePanel.computeIsDatePanelType
       if (isDatePanelType) {
         const dateHeaders = $xeDatePanel.computeDateHeaders as {
-          value: number;
-          label: string;
-      }[]
+          value: number
+          label: string
+        }[]
         return [{ label: getI18n('vxe.input.date.weeks.w') }].concat(dateHeaders)
       }
       return []
     },
-    computeYearDatas () {
+    computeYearDatas() {
       const $xeDatePanel = this
 
       const yearList = $xeDatePanel.computeYearList as VxeDatePanelDefines.DateYearItem[]
       return XEUtils.chunk(yearList, 4)
     },
-    computeQuarterList () {
+    computeQuarterList() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
       const internalData = $xeDatePanel.internalData
@@ -431,13 +431,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return quarters
     },
-    computeQuarterDatas () {
+    computeQuarterDatas() {
       const $xeDatePanel = this
 
       const quarterList = $xeDatePanel.computeQuarterList as VxeDatePanelDefines.DateQuarterItem[]
       return XEUtils.chunk(quarterList, 2)
     },
-    computeMonthList () {
+    computeMonthList() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
       const internalData = $xeDatePanel.internalData
@@ -466,13 +466,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return months
     },
-    computeMonthDatas () {
+    computeMonthDatas() {
       const $xeDatePanel = this
 
       const monthList = $xeDatePanel.computeMonthList as VxeDatePanelDefines.DateMonthItem[]
       return XEUtils.chunk(monthList, 4)
     },
-    computeDayList () {
+    computeDayList() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -507,13 +507,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return days
     },
-    computeDayDatas () {
+    computeDayDatas() {
       const $xeDatePanel = this
 
       const dayList = $xeDatePanel.computeDayList as VxeDatePanelDefines.DateDayItem[]
       return XEUtils.chunk(dayList, 7)
     },
-    computeWeekDates () {
+    computeWeekDates() {
       const $xeDatePanel = this
 
       const dayDatas = $xeDatePanel.computeDayDatas as VxeDatePanelDefines.DateDayItem[][]
@@ -532,7 +532,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return [item].concat(list)
       })
     },
-    computeHourList () {
+    computeHourList() {
       const $xeDatePanel = this
 
       const timeOpts = $xeDatePanel.computeTimeOpts
@@ -541,7 +541,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isTimeOrDateTimeType = $xeDatePanel.computeIsTimeOrDateTimeType
       if (isTimeOrDateTimeType) {
         if (hourOptions && hourOptions.length) {
-          hourOptions.forEach(item => {
+          hourOptions.forEach((item) => {
             if (XEUtils.isNumber(item) || XEUtils.isString(item)) {
               const hour = XEUtils.toNumber(item)
               list.push({
@@ -571,7 +571,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return list
     },
-    computeMinuteList () {
+    computeMinuteList() {
       const $xeDatePanel = this
 
       const timeOpts = $xeDatePanel.computeTimeOpts
@@ -580,7 +580,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isTimeOrDateTimeType = $xeDatePanel.computeIsTimeOrDateTimeType
       if (isTimeOrDateTimeType) {
         if (minuteOptions && minuteOptions.length) {
-          minuteOptions.forEach(item => {
+          minuteOptions.forEach((item) => {
             if (XEUtils.isNumber(item) || XEUtils.isString(item)) {
               const minute = XEUtils.toNumber(item)
               list.push({
@@ -610,7 +610,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return list
     },
-    computeHasTimeMinute () {
+    computeHasTimeMinute() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -618,7 +618,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dateValueFormat = $xeDatePanel.computeDateValueFormat as string
       return !/HH/.test(timeFormat || dateValueFormat) || /mm/.test(timeFormat || dateValueFormat)
     },
-    computeHasTimeSecond () {
+    computeHasTimeSecond() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -626,7 +626,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dateValueFormat = $xeDatePanel.computeDateValueFormat as string
       return !/HH/.test(timeFormat || dateValueFormat) || /ss/.test(timeFormat || dateValueFormat)
     },
-    computeSecondList () {
+    computeSecondList() {
       const $xeDatePanel = this
 
       const timeOpts = $xeDatePanel.computeTimeOpts
@@ -635,7 +635,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isTimeOrDateTimeType = $xeDatePanel.computeIsTimeOrDateTimeType
       if (isTimeOrDateTimeType) {
         if (secondOptions && secondOptions.length) {
-          secondOptions.forEach(item => {
+          secondOptions.forEach((item) => {
             if (XEUtils.isNumber(item) || XEUtils.isString(item)) {
               const second = XEUtils.toNumber(item)
               list.push({
@@ -670,18 +670,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeDatePanelEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeDatePanelEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeDatePanel = this
       $xeDatePanel.$emit(type, createEvent(evnt, { $datePanel: $xeDatePanel }, params))
     },
-    emitModel (value: any) {
+    emitModel(value: any) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
       reactData.inputValue = value
       handleEmitModelVal($xeDatePanel, value)
     },
-    updateModelValue (modelValue: VxeDatePanelPropTypes.ModelValue | undefined) {
+    updateModelValue(modelValue: VxeDatePanelPropTypes.ModelValue | undefined) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -694,7 +694,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.inputLabel = inpDate
       $xeDatePanel.dateOpenPanel()
     },
-    parseDate (value: VxeDatePanelPropTypes.ModelValue, format: string) {
+    parseDate(value: VxeDatePanelPropTypes.ModelValue, format: string) {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -710,7 +710,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return XEUtils.toStringDate(value, format)
     },
-    dateRevert () {
+    dateRevert() {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -719,7 +719,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.inputLabel = label
       $xeDatePanel.dispatchEvent('revert', { label }, null)
     },
-    afterCheckValue (inpVal: string) {
+    afterCheckValue(inpVal: string) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -772,9 +772,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.handleChange('', { type: 'check' })
       }
     },
-    handleChange (value: string, evnt: Event | { type: string }, params?: {
-      currValue: string
-    }) {
+    handleChange(
+      value: string,
+      evnt: Event | { type: string },
+      params?: {
+        currValue: string
+      }
+    ) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -802,12 +806,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    hidePanel () {
+    hidePanel() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
       const internalData = $xeDatePanel.internalData
 
-      return new Promise<void>(resolve => {
+      return new Promise<void>((resolve) => {
         reactData.visiblePanel = false
         internalData.hpTimeout = setTimeout(() => {
           reactData.isAniVisible = false
@@ -815,7 +819,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, 350)
       })
     },
-    dateParseValue (val?: string | Date | null) {
+    dateParseValue(val?: string | Date | null) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -835,7 +839,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 值变化时处理
      */
-    changeValue () {
+    changeValue() {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -850,7 +854,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 检查初始值
      */
-    initValue () {
+    initValue() {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
@@ -861,7 +865,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.changeValue()
       }
     },
-    dateCheckMonth (date: Date) {
+    dateCheckMonth(date: Date) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -873,7 +877,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.selectMonth = month
       }
     },
-    dateChange (date: Date, isReload?: boolean) {
+    dateChange(date: Date, isReload?: boolean) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -903,7 +907,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           // 如果是datetime特殊类型
           const dateListValue = isReload ? [] : [...$xeDatePanel.computeDateListValue]
           let datetimeRest: Date[] = []
-          const eqIndex = XEUtils.findIndexOf(dateListValue, val => XEUtils.isDateSame(date, val, 'yyyyMMdd'))
+          const eqIndex = XEUtils.findIndexOf(dateListValue, (val) => XEUtils.isDateSame(date, val, 'yyyyMMdd'))
           if (eqIndex === -1) {
             if (overCount) {
               // 如果超出最大多选数量
@@ -913,7 +917,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           } else {
             dateListValue.splice(eqIndex, 1)
           }
-          dateListValue.forEach(item => {
+          dateListValue.forEach((item) => {
             if (item) {
               if (datetimePanelValue) {
                 item.setHours(datetimePanelValue.getHours())
@@ -927,13 +931,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (valueSort) {
             datetimeRest = datetimeRest.sort((a, b) => a.getTime() - b.getTime())
           }
-          $xeDatePanel.handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' }, { currValue: inpVal })
+          $xeDatePanel.handleChange(datetimeRest.map((date) => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' }, { currValue: inpVal })
         } else {
           const dateMultipleValue = isReload ? [] : $xeDatePanel.computeDateMultipleValue
           let dateRest: string[] = []
           // 如果是日期类型
-          if (dateMultipleValue.some(val => XEUtils.isEqual(val, inpVal))) {
-            dateRest = dateMultipleValue.filter(val => !XEUtils.isEqual(val, inpVal))
+          if (dateMultipleValue.some((val) => XEUtils.isEqual(val, inpVal))) {
+            dateRest = dateMultipleValue.filter((val) => !XEUtils.isEqual(val, inpVal))
           } else {
             if (overCount) {
               // 如果超出最大多选数量
@@ -955,7 +959,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     // 日期
-    dateMonthHandle (date: Date, offsetMonth: number) {
+    dateMonthHandle(date: Date, offsetMonth: number) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -965,7 +969,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const month = XEUtils.getWhatMonth(weekNum === 1 ? XEUtils.getWhatDay(weekStartDate, 6) : date, offsetMonth, 'first')
       reactData.selectMonth = month
     },
-    dateNowHandle () {
+    dateNowHandle() {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -988,13 +992,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.currentDate = currentDate
       $xeDatePanel.dateMonthHandle(currentDate, 0)
     },
-    dateToggleYearTypeEvent () {
+    dateToggleYearTypeEvent() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
       reactData.datePanelType = 'year'
     },
-    dateToggleMonthTypeEvent () {
+    dateToggleMonthTypeEvent() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -1006,7 +1010,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       reactData.datePanelType = datePanelType
     },
-    datePrevEvent (evnt: Event) {
+    datePrevEvent(evnt: Event) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1040,7 +1044,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dispatchEvent('date-prev', { viewType: datePanelType, viewDate, value, type }, evnt)
       }
     },
-    dateTodayMonthEvent (evnt: Event) {
+    dateTodayMonthEvent(evnt: Event) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1052,7 +1056,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeDatePanel.dispatchEvent('date-today', { viewType: reactData.datePanelType, type: props.type, viewDate: reactData.selectMonth }, evnt)
     },
-    dateNextEvent (evnt: Event) {
+    dateNextEvent(evnt: Event) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1086,7 +1090,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dispatchEvent('date-next', { viewType: datePanelType, value, type, viewDate }, evnt)
       }
     },
-    isRangeDisabled (item: { date: Date }) {
+    isRangeDisabled(item: { date: Date }) {
       const $xeDatePanel = this
 
       const dateStartTime = $xeDatePanel.computeDateStartDate
@@ -1100,7 +1104,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    isDateDisabled (item: { date: Date }) {
+    isDateDisabled(item: { date: Date }) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1114,12 +1118,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    hasAllDisabled (item: { date: Date }) {
+    hasAllDisabled(item: { date: Date }) {
       const $xeDatePanel = this
 
       return $xeDatePanel.isRangeDisabled(item) || $xeDatePanel.isDateDisabled(item)
     },
-    dateSelectItem (date: Date) {
+    dateSelectItem(date: Date) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1170,14 +1174,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    dateSelectEvent (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) {
+    dateSelectEvent(item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) {
       const $xeDatePanel = this
 
       if (!$xeDatePanel.hasAllDisabled(item)) {
         $xeDatePanel.dateSelectItem(item.date)
       }
     },
-    dateMoveDay (offsetDay: Date) {
+    dateMoveDay(offsetDay: Date) {
       const $xeDatePanel = this
 
       if (!$xeDatePanel.hasAllDisabled({ date: offsetDay })) {
@@ -1188,7 +1192,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dateParseValue(offsetDay)
       }
     },
-    dateMoveYear (offsetYear: Date) {
+    dateMoveYear(offsetYear: Date) {
       const $xeDatePanel = this
 
       if (!$xeDatePanel.hasAllDisabled({ date: offsetYear })) {
@@ -1199,7 +1203,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dateParseValue(offsetYear)
       }
     },
-    dateMoveQuarter (offsetQuarter: Date) {
+    dateMoveQuarter(offsetQuarter: Date) {
       const $xeDatePanel = this
 
       if (!$xeDatePanel.hasAllDisabled({ date: offsetQuarter })) {
@@ -1210,7 +1214,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dateParseValue(offsetQuarter)
       }
     },
-    dateMoveMonth (offsetMonth: Date) {
+    dateMoveMonth(offsetMonth: Date) {
       const $xeDatePanel = this
 
       if (!$xeDatePanel.hasAllDisabled({ date: offsetMonth })) {
@@ -1221,7 +1225,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dateParseValue(offsetMonth)
       }
     },
-    dateMouseenterEvent (item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) {
+    dateMouseenterEvent(item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -1238,20 +1242,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    dateMouseleaveEvent () {
+    dateMouseleaveEvent() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
       reactData.datePanelValue = null
     },
-    updateTimePos (liElem: Element) {
+    updateTimePos(liElem: Element) {
       if (liElem) {
         const height = (liElem as HTMLElement).offsetHeight
         const ulElem = liElem.parentNode as HTMLElement
         ulElem.scrollTop = (liElem as HTMLElement).offsetTop - height * 4
       }
     },
-    dateTimeChangeEvent (evnt: Event) {
+    dateTimeChangeEvent(evnt: Event) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -1259,7 +1263,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.datetimePanelValue = datetimePanelValue ? new Date(datetimePanelValue.getTime()) : new Date()
       $xeDatePanel.updateTimePos(evnt.currentTarget as HTMLLIElement)
     },
-    dateHourEvent (evnt: MouseEvent, item: VxeDatePanelDefines.DateHourMinuteSecondItem) {
+    dateHourEvent(evnt: MouseEvent, item: VxeDatePanelDefines.DateHourMinuteSecondItem) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -1271,7 +1275,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dateTimeChangeEvent(evnt)
       }
     },
-    dateConfirmEvent (evnt: Event) {
+    dateConfirmEvent(evnt: Event) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1291,7 +1295,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             // 如果是datetime特殊类型
             const listVals = dateListValue.length ? [...dateListValue] : []
             const datetimeRest: Date[] = []
-            listVals.forEach(item => {
+            listVals.forEach((item) => {
               if (item) {
                 if (datetimePanelValue) {
                   item.setHours(datetimePanelValue.getHours())
@@ -1301,19 +1305,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 datetimeRest.push(item)
               }
             })
-            $xeDatePanel.handleChange(datetimeRest.map(date => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
+            $xeDatePanel.handleChange(datetimeRest.map((date) => XEUtils.toDateString(date, dateValueFormat)).join(','), { type: 'update' })
           } else {
             // 如果是日期类型
             $xeDatePanel.handleChange(dateMultipleValue.join(','), { type: 'update' })
           }
         } else {
-          $xeDatePanel.dateChange(dateValue || reactData.currentDate as Date)
+          $xeDatePanel.dateChange(dateValue || (reactData.currentDate as Date))
         }
       }
       $xeDatePanel.hidePanel()
       $xeDatePanel.dispatchEvent('confirm', {}, evnt)
     },
-    dateMinuteEvent (evnt: MouseEvent, item: VxeDatePanelDefines.DateHourMinuteSecondItem) {
+    dateMinuteEvent(evnt: MouseEvent, item: VxeDatePanelDefines.DateHourMinuteSecondItem) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -1325,7 +1329,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dateTimeChangeEvent(evnt)
       }
     },
-    dateSecondEvent (evnt: MouseEvent, item: VxeDatePanelDefines.DateHourMinuteSecondItem) {
+    dateSecondEvent(evnt: MouseEvent, item: VxeDatePanelDefines.DateHourMinuteSecondItem) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -1337,7 +1341,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeDatePanel.dateTimeChangeEvent(evnt)
       }
     },
-    dateOpenPanel () {
+    dateOpenPanel() {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1389,39 +1393,39 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
     },
-    getModelValue () {
+    getModelValue() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
       return reactData.inputValue
     },
-    getViewType () {
+    getViewType() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
       const { datePanelType } = reactData
       return datePanelType
     },
-    setPanelDate (date: Date) {
+    setPanelDate(date: Date) {
       const $xeDatePanel = this
 
       if (date) {
         $xeDatePanel.dateCheckMonth(date)
       }
     },
-    getPanelDate () {
+    getPanelDate() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
       const { selectMonth } = reactData
       return selectMonth ? new Date(selectMonth.getTime()) : new Date()
     },
-    checkValue (value: string) {
+    checkValue(value: string) {
       const $xeDatePanel = this
 
       $xeDatePanel.afterCheckValue(value)
     },
-    confirmByEvent (evnt: Event) {
+    confirmByEvent(evnt: Event) {
       const $xeDatePanel = this
 
       $xeDatePanel.dateConfirmEvent(evnt)
@@ -1430,7 +1434,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderDateLabel (h: CreateElement, item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem, label: string | number) {
+    renderDateLabel(h: CreateElement, item: VxeDatePanelDefines.DateYearItem | VxeDatePanelDefines.DateQuarterItem | VxeDatePanelDefines.DateMonthItem | VxeDatePanelDefines.DateDayItem, label: string | number) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1444,51 +1448,82 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const festivalItem = festivalRest ? (XEUtils.isString(festivalRest) ? { label: festivalRest } : festivalRest) : {}
         const extraItem = festivalItem.extra ? (XEUtils.isString(festivalItem.extra) ? { label: festivalItem.extra } : festivalItem.extra) : null
         labelVNs.push(
-          h('div', {
-            class: ['vxe-date-panel--label', {
-              'is-notice': festivalItem.notice
-            }]
-          }, extraItem && extraItem.label
-            ? [
-                h('div', {
-                  class: 'vxe-date-panel--label--number'
-                }, `${label}`),
-                h('div', {
-                  class: ['vxe-date-panel--label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
-                  style: extraItem.style
-                }, XEUtils.toValueString(extraItem.label))
+          h(
+            'div',
+            {
+              class: [
+                'vxe-date-panel--label',
+                {
+                  'is-notice': festivalItem.notice
+                }
               ]
-            : `${label}`)
+            },
+            extraItem && extraItem.label
+              ? [
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-date-panel--label--number'
+                    },
+                    `${label}`
+                  ),
+                  h(
+                    'div',
+                    {
+                      class: ['vxe-date-panel--label--extra', extraItem.important ? 'is-important' : '', extraItem.className],
+                      style: extraItem.style
+                    },
+                    XEUtils.toValueString(extraItem.label)
+                  )
+                ]
+              : `${label}`
+          )
         )
         const festivalLabel = festivalItem.label
         if (festivalLabel) {
-        // 默认最多支持3个节日重叠
+          // 默认最多支持3个节日重叠
           const festivalLabels = XEUtils.toValueString(festivalLabel).split(',')
           labelVNs.push(
-            h('div', {
-              class: ['vxe-date-panel--festival', festivalItem.important ? 'is-important' : '', festivalItem.className],
-              style: festivalItem.style
-            }, [
-              festivalLabels.length > 1
-                ? h('div', {
-                  class: ['vxe-date-panel--festival--overlap', `overlap--${festivalLabels.length}`]
-                }, festivalLabels.map(label => h('div', label.substring(0, 3))))
-                : h('div', {
-                  class: 'vxe-date-panel--festival--label'
-                }, festivalLabels[0].substring(0, 3))
-            ])
+            h(
+              'div',
+              {
+                class: ['vxe-date-panel--festival', festivalItem.important ? 'is-important' : '', festivalItem.className],
+                style: festivalItem.style
+              },
+              [
+                festivalLabels.length > 1
+                  ? h(
+                    'div',
+                    {
+                      class: ['vxe-date-panel--festival--overlap', `overlap--${festivalLabels.length}`]
+                    },
+                    festivalLabels.map((label) => h('div', label.substring(0, 3)))
+                  )
+                  : h(
+                    'div',
+                    {
+                      class: 'vxe-date-panel--festival--label'
+                    },
+                    festivalLabels[0].substring(0, 3)
+                  )
+              ]
+            )
           )
         }
       } else {
         labelVNs.push(
-          h('div', {
-            class: 'vxe-date-panel--label'
-          }, `${label}`)
+          h(
+            'div',
+            {
+              class: 'vxe-date-panel--label'
+            },
+            `${label}`
+          )
         )
       }
       return labelVNs
     },
-    renderDateDayTable (h: CreateElement) {
+    renderDateDayTable(h: CreateElement) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1502,72 +1537,116 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const overCount = $xeDatePanel.computeOverCount
       const matchFormat = 'yyyyMMdd'
       return [
-        h('div', {
-          class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
-        }, [
-          h('div', {
-            class: 'vxe-date-panel--view-header'
-          }, [
-            h('div', {
-              class: 'vxe-date-panel--view-row'
-            }, dateHeaders.map((item) => {
-              return h('div', {
-                class: 'vxe-date-panel--view-item',
-                style: {
-                  width: `${100 / dateHeaders.length}%`
-                }
-              }, [
-                h('div', {
-                  class: 'vxe-date-panel--view-item-inner'
-                }, [
-                  h('div', {
-                    class: 'vxe-date-panel--view-item-label'
-                  }, item.label)
-                ])
-              ])
-            }))
-          ]),
-          h('div', {
-            class: 'vxe-date-panel--view-body'
-          }, dayDatas.map((rows) => {
-            return h('div', {
-              class: 'vxe-date-panel--view-row',
-              style: {
-                height: `${100 / dayDatas.length}%`
-              }
-            }, rows.map((item) => {
-              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
-              return h('div', {
-                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
-                  'is--prev': item.isPrev,
-                  'is--current': item.isCurrent,
-                  'is--now': item.isNow,
-                  'is--next': item.isNext,
-                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
-                  'is--disabled': $xeDatePanel.isDateDisabled(item),
-                  'is--selected': isSelected,
-                  'is--over': overCount && !isSelected,
-                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
-                }],
-                style: {
-                  width: `${100 / rows.length}%`
-                },
-                on: {
-                  click: () => $xeDatePanel.dateSelectEvent(item),
-                  mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
-                  mouseleave: $xeDatePanel.dateMouseleaveEvent
-                }
-              }, [
-                h('div', {
-                  class: 'vxe-date-panel--view-item-inner'
-                }, $xeDatePanel.renderDateLabel(h, item, item.label))
-              ])
-            }))
-          }))
-        ])
+        h(
+          'div',
+          {
+            class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--view-header'
+              },
+              [
+                h(
+                  'div',
+                  {
+                    class: 'vxe-date-panel--view-row'
+                  },
+                  dateHeaders.map((item) => {
+                    return h(
+                      'div',
+                      {
+                        class: 'vxe-date-panel--view-item',
+                        style: {
+                          width: `${100 / dateHeaders.length}%`
+                        }
+                      },
+                      [
+                        h(
+                          'div',
+                          {
+                            class: 'vxe-date-panel--view-item-inner'
+                          },
+                          [
+                            h(
+                              'div',
+                              {
+                                class: 'vxe-date-panel--view-item-label'
+                              },
+                              item.label
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  })
+                )
+              ]
+            ),
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--view-body'
+              },
+              dayDatas.map((rows) => {
+                return h(
+                  'div',
+                  {
+                    class: 'vxe-date-panel--view-row',
+                    style: {
+                      height: `${100 / dayDatas.length}%`
+                    }
+                  },
+                  rows.map((item) => {
+                    const isSelected = multiple ? dateListValue.some((val) => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
+                    return h(
+                      'div',
+                      {
+                        class: [
+                          'vxe-date-panel--view-item',
+                          cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '',
+                          {
+                            'is--prev': item.isPrev,
+                            'is--current': item.isCurrent,
+                            'is--now': item.isNow,
+                            'is--next': item.isNext,
+                            'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
+                            'is--disabled': $xeDatePanel.isDateDisabled(item),
+                            'is--selected': isSelected,
+                            'is--over': overCount && !isSelected,
+                            'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                          }
+                        ],
+                        style: {
+                          width: `${100 / rows.length}%`
+                        },
+                        on: {
+                          click: () => $xeDatePanel.dateSelectEvent(item),
+                          mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
+                          mouseleave: $xeDatePanel.dateMouseleaveEvent
+                        }
+                      },
+                      [
+                        h(
+                          'div',
+                          {
+                            class: 'vxe-date-panel--view-item-inner'
+                          },
+                          $xeDatePanel.renderDateLabel(h, item, item.label)
+                        )
+                      ]
+                    )
+                  })
+                )
+              })
+            )
+          ]
+        )
       ]
     },
-    renderDateWeekTable (h: CreateElement) {
+    renderDateWeekTable(h: CreateElement) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1581,74 +1660,118 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const overCount = $xeDatePanel.computeOverCount
       const matchFormat = 'yyyyMMdd'
       return [
-        h('div', {
-          class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
-        }, [
-          h('div', {
-            class: 'vxe-date-panel--view-header'
-          }, [
-            h('div', {
-              class: 'vxe-date-panel--view-row'
-            }, weekHeaders.map((item, rIndex) => {
-              return h('div', {
-                class: 'vxe-date-panel--view-item',
-                style: {
-                  width: `${rIndex ? 13 : 9}%`
-                }
-              }, [
-                h('div', {
-                  class: 'vxe-date-panel--view-item-inner'
-                }, [
-                  h('div', {
-                    class: 'vxe-date-panel--view-item-label'
-                  }, item.label)
-                ])
-              ])
-            }))
-          ]),
-          h('div', {
-            class: 'vxe-date-panel--view-body'
-          }, weekDates.map((rows) => {
-            const isSelected = multiple ? rows.some((item) => dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat))) : rows.some((item) => XEUtils.isDateSame(dateValue, item.date, matchFormat))
-            const isHover = rows.some((item) => XEUtils.isDateSame(datePanelValue, item.date, matchFormat))
-            const isNowWeek = rows.some(item => item.isNow)
-            return h('div', {
-              class: 'vxe-date-panel--view-row',
-              style: {
-                height: `${100 / weekDates.length}%`
-              }
-            }, rows.map((item, rIndex) => {
-              return h('div', {
-                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
-                  'is--prev': item.isPrev,
-                  'is--current': item.isCurrent,
-                  'is--now': rIndex ? item.isNow : isNowWeek,
-                  'is--next': item.isNext,
-                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
-                  'is--disabled': $xeDatePanel.isDateDisabled(item),
-                  'is--selected': isSelected,
-                  'is--over': overCount && !isSelected,
-                  'is--hover': !overCount && isHover
-                }],
-                style: {
-                  width: `${rIndex ? 13 : 9}%`
-                },
-                on: {
-                  click: () => $xeDatePanel.dateSelectEvent(item),
-                  mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
-                  mouseleave: $xeDatePanel.dateMouseleaveEvent
-                }
-              }, [
-                h('div', {
-                  class: 'vxe-date-panel--view-item-inner'
-                }, $xeDatePanel.renderDateLabel(h, item, item.label))
-              ])
-            }))
-          }))
-        ])
+        h(
+          'div',
+          {
+            class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--view-header'
+              },
+              [
+                h(
+                  'div',
+                  {
+                    class: 'vxe-date-panel--view-row'
+                  },
+                  weekHeaders.map((item, rIndex) => {
+                    return h(
+                      'div',
+                      {
+                        class: 'vxe-date-panel--view-item',
+                        style: {
+                          width: `${rIndex ? 13 : 9}%`
+                        }
+                      },
+                      [
+                        h(
+                          'div',
+                          {
+                            class: 'vxe-date-panel--view-item-inner'
+                          },
+                          [
+                            h(
+                              'div',
+                              {
+                                class: 'vxe-date-panel--view-item-label'
+                              },
+                              item.label
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  })
+                )
+              ]
+            ),
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--view-body'
+              },
+              weekDates.map((rows) => {
+                const isSelected = multiple ? rows.some((item) => dateListValue.some((val) => XEUtils.isDateSame(val, item.date, matchFormat))) : rows.some((item) => XEUtils.isDateSame(dateValue, item.date, matchFormat))
+                const isHover = rows.some((item) => XEUtils.isDateSame(datePanelValue, item.date, matchFormat))
+                const isNowWeek = rows.some((item) => item.isNow)
+                return h(
+                  'div',
+                  {
+                    class: 'vxe-date-panel--view-row',
+                    style: {
+                      height: `${100 / weekDates.length}%`
+                    }
+                  },
+                  rows.map((item, rIndex) => {
+                    return h(
+                      'div',
+                      {
+                        class: [
+                          'vxe-date-panel--view-item',
+                          cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '',
+                          {
+                            'is--prev': item.isPrev,
+                            'is--current': item.isCurrent,
+                            'is--now': rIndex ? item.isNow : isNowWeek,
+                            'is--next': item.isNext,
+                            'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
+                            'is--disabled': $xeDatePanel.isDateDisabled(item),
+                            'is--selected': isSelected,
+                            'is--over': overCount && !isSelected,
+                            'is--hover': !overCount && isHover
+                          }
+                        ],
+                        style: {
+                          width: `${rIndex ? 13 : 9}%`
+                        },
+                        on: {
+                          click: () => $xeDatePanel.dateSelectEvent(item),
+                          mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
+                          mouseleave: $xeDatePanel.dateMouseleaveEvent
+                        }
+                      },
+                      [
+                        h(
+                          'div',
+                          {
+                            class: 'vxe-date-panel--view-item-inner'
+                          },
+                          $xeDatePanel.renderDateLabel(h, item, item.label)
+                        )
+                      ]
+                    )
+                  })
+                )
+              })
+            )
+          ]
+        )
       ]
     },
-    renderDateMonthTable (h: CreateElement) {
+    renderDateMonthTable(h: CreateElement) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1661,50 +1784,74 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const overCount = $xeDatePanel.computeOverCount
       const matchFormat = 'yyyyMM'
       return [
-        h('div', {
-          class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
-        }, [
-          h('div', {
-            class: 'vxe-date-panel--view-body'
-          }, monthDatas.map((rows) => {
-            return h('div', {
-              class: 'vxe-date-panel--view-row',
-              style: {
-                height: `${100 / monthDatas.length}%`
-              }
-            }, rows.map((item) => {
-              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
-              return h('div', {
-                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
-                  'is--prev': item.isPrev,
-                  'is--current': item.isCurrent,
-                  'is--now': item.isNow,
-                  'is--next': item.isNext,
-                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
-                  'is--disabled': $xeDatePanel.isDateDisabled(item),
-                  'is--selected': isSelected,
-                  'is--over': overCount && !isSelected,
-                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
-                }],
-                style: {
-                  width: `${100 / rows.length}%`
-                },
-                on: {
-                  click: () => $xeDatePanel.dateSelectEvent(item),
-                  mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
-                  mouseleave: $xeDatePanel.dateMouseleaveEvent
-                }
-              }, [
-                h('div', {
-                  class: 'vxe-date-panel--view-item-inner'
-                }, $xeDatePanel.renderDateLabel(h, item, getI18n(`vxe.input.date.months.m${item.month}`)))
-              ])
-            }))
-          }))
-        ])
+        h(
+          'div',
+          {
+            class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--view-body'
+              },
+              monthDatas.map((rows) => {
+                return h(
+                  'div',
+                  {
+                    class: 'vxe-date-panel--view-row',
+                    style: {
+                      height: `${100 / monthDatas.length}%`
+                    }
+                  },
+                  rows.map((item) => {
+                    const isSelected = multiple ? dateListValue.some((val) => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
+                    return h(
+                      'div',
+                      {
+                        class: [
+                          'vxe-date-panel--view-item',
+                          cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '',
+                          {
+                            'is--prev': item.isPrev,
+                            'is--current': item.isCurrent,
+                            'is--now': item.isNow,
+                            'is--next': item.isNext,
+                            'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
+                            'is--disabled': $xeDatePanel.isDateDisabled(item),
+                            'is--selected': isSelected,
+                            'is--over': overCount && !isSelected,
+                            'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                          }
+                        ],
+                        style: {
+                          width: `${100 / rows.length}%`
+                        },
+                        on: {
+                          click: () => $xeDatePanel.dateSelectEvent(item),
+                          mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
+                          mouseleave: $xeDatePanel.dateMouseleaveEvent
+                        }
+                      },
+                      [
+                        h(
+                          'div',
+                          {
+                            class: 'vxe-date-panel--view-item-inner'
+                          },
+                          $xeDatePanel.renderDateLabel(h, item, getI18n(`vxe.input.date.months.m${item.month}`))
+                        )
+                      ]
+                    )
+                  })
+                )
+              })
+            )
+          ]
+        )
       ]
     },
-    renderDateQuarterTable (h: CreateElement) {
+    renderDateQuarterTable(h: CreateElement) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1717,50 +1864,74 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const overCount = $xeDatePanel.computeOverCount
       const matchFormat = 'yyyyq'
       return [
-        h('div', {
-          class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
-        }, [
-          h('div', {
-            class: 'vxe-date-panel--view-body'
-          }, quarterDatas.map((rows) => {
-            return h('div', {
-              class: 'vxe-date-panel--view-row',
-              style: {
-                height: `${100 / quarterDatas.length}%`
-              }
-            }, rows.map((item) => {
-              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
-              return h('div', {
-                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
-                  'is--prev': item.isPrev,
-                  'is--current': item.isCurrent,
-                  'is--now': item.isNow,
-                  'is--next': item.isNext,
-                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
-                  'is--disabled': $xeDatePanel.isDateDisabled(item),
-                  'is--selected': isSelected,
-                  'is--over': overCount && !isSelected,
-                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
-                }],
-                style: {
-                  width: `${100 / rows.length}%`
-                },
-                on: {
-                  click: () => $xeDatePanel.dateSelectEvent(item),
-                  mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
-                  mouseleave: $xeDatePanel.dateMouseleaveEvent
-                }
-              }, [
-                h('div', {
-                  class: 'vxe-date-panel--view-item-inner'
-                }, $xeDatePanel.renderDateLabel(h, item, getI18n(`vxe.input.date.quarters.q${item.quarter}`)))
-              ])
-            }))
-          }))
-        ])
+        h(
+          'div',
+          {
+            class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--view-body'
+              },
+              quarterDatas.map((rows) => {
+                return h(
+                  'div',
+                  {
+                    class: 'vxe-date-panel--view-row',
+                    style: {
+                      height: `${100 / quarterDatas.length}%`
+                    }
+                  },
+                  rows.map((item) => {
+                    const isSelected = multiple ? dateListValue.some((val) => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
+                    return h(
+                      'div',
+                      {
+                        class: [
+                          'vxe-date-panel--view-item',
+                          cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '',
+                          {
+                            'is--prev': item.isPrev,
+                            'is--current': item.isCurrent,
+                            'is--now': item.isNow,
+                            'is--next': item.isNext,
+                            'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
+                            'is--disabled': $xeDatePanel.isDateDisabled(item),
+                            'is--selected': isSelected,
+                            'is--over': overCount && !isSelected,
+                            'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                          }
+                        ],
+                        style: {
+                          width: `${100 / rows.length}%`
+                        },
+                        on: {
+                          click: () => $xeDatePanel.dateSelectEvent(item),
+                          mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
+                          mouseleave: $xeDatePanel.dateMouseleaveEvent
+                        }
+                      },
+                      [
+                        h(
+                          'div',
+                          {
+                            class: 'vxe-date-panel--view-item-inner'
+                          },
+                          $xeDatePanel.renderDateLabel(h, item, getI18n(`vxe.input.date.quarters.q${item.quarter}`))
+                        )
+                      ]
+                    )
+                  })
+                )
+              })
+            )
+          ]
+        )
       ]
     },
-    renderDateYearTable (h: CreateElement) {
+    renderDateYearTable(h: CreateElement) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1773,67 +1944,91 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const overCount = $xeDatePanel.computeOverCount
       const matchFormat = 'yyyy'
       return [
-        h('div', {
-          class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
-        }, [
-          h('div', {
-            class: 'vxe-date-panel--view-body'
-          }, yearDatas.map((rows) => {
-            return h('div', {
-              class: 'vxe-date-panel--view-row',
-              style: {
-                height: `${100 / yearDatas.length}%`
-              }
-            }, rows.map((item) => {
-              const isSelected = multiple ? dateListValue.some(val => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
-              return h('div', {
-                class: ['vxe-date-panel--view-item', cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '', {
-                  'is--prev': item.isPrev,
-                  'is--current': item.isCurrent,
-                  'is--now': item.isNow,
-                  'is--next': item.isNext,
-                  'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
-                  'is--disabled': $xeDatePanel.isDateDisabled(item),
-                  'is--selected': isSelected,
-                  'is--over': overCount && !isSelected,
-                  'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
-                }],
-                style: {
-                  width: `${100 / rows.length}%`
-                },
-                on: {
-                  click: () => $xeDatePanel.dateSelectEvent(item),
-                  mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
-                  mouseleave: $xeDatePanel.dateMouseleaveEvent
-                }
-              }, [
-                h('div', {
-                  class: 'vxe-date-panel--view-item-inner'
-                }, $xeDatePanel.renderDateLabel(h, item, item.year))
-              ])
-            }))
-          }))
-        ])
+        h(
+          'div',
+          {
+            class: ['vxe-date-panel--view-wrapper', `type--${datePanelType}`]
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--view-body'
+              },
+              yearDatas.map((rows) => {
+                return h(
+                  'div',
+                  {
+                    class: 'vxe-date-panel--view-row',
+                    style: {
+                      height: `${100 / yearDatas.length}%`
+                    }
+                  },
+                  rows.map((item) => {
+                    const isSelected = multiple ? dateListValue.some((val) => XEUtils.isDateSame(val, item.date, matchFormat)) : XEUtils.isDateSame(dateValue, item.date, matchFormat)
+                    return h(
+                      'div',
+                      {
+                        class: [
+                          'vxe-date-panel--view-item',
+                          cellClassName ? (XEUtils.isFunction(cellClassName) ? `${cellClassName({ $datePanel: $xeDatePanel, type, viewType: datePanelType, date: item.date }) || ''}` : `${cellClassName || ''}`) : '',
+                          {
+                            'is--prev': item.isPrev,
+                            'is--current': item.isCurrent,
+                            'is--now': item.isNow,
+                            'is--next': item.isNext,
+                            'is--range-disabled': $xeDatePanel.isRangeDisabled(item),
+                            'is--disabled': $xeDatePanel.isDateDisabled(item),
+                            'is--selected': isSelected,
+                            'is--over': overCount && !isSelected,
+                            'is--hover': !overCount && XEUtils.isDateSame(datePanelValue, item.date, matchFormat)
+                          }
+                        ],
+                        style: {
+                          width: `${100 / rows.length}%`
+                        },
+                        on: {
+                          click: () => $xeDatePanel.dateSelectEvent(item),
+                          mouseenter: () => $xeDatePanel.dateMouseenterEvent(item),
+                          mouseleave: $xeDatePanel.dateMouseleaveEvent
+                        }
+                      },
+                      [
+                        h(
+                          'div',
+                          {
+                            class: 'vxe-date-panel--view-item-inner'
+                          },
+                          $xeDatePanel.renderDateLabel(h, item, item.year)
+                        )
+                      ]
+                    )
+                  })
+                )
+              })
+            )
+          ]
+        )
       ]
     },
-    renderDateTable (h: CreateElement) {
+    renderDateTable(h: CreateElement) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
       const { datePanelType } = reactData
       switch (datePanelType) {
-        case 'week' :
+        case 'week':
           return $xeDatePanel.renderDateWeekTable(h)
-        case 'month' :
+        case 'month':
           return $xeDatePanel.renderDateMonthTable(h)
-        case 'quarter' :
+        case 'quarter':
           return $xeDatePanel.renderDateQuarterTable(h)
-        case 'year' :
+        case 'year':
           return $xeDatePanel.renderDateYearTable(h)
       }
       return $xeDatePanel.renderDateDayTable(h)
     },
-    renderDatePanel (h: CreateElement) {
+    renderDatePanel(h: CreateElement) {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -1842,80 +2037,130 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isDisabledNextDateBtn = $xeDatePanel.computeIsDisabledNextDateBtn
       const selectDatePanelObj = $xeDatePanel.computeSelectDatePanelObj
       return [
-        h('div', {
-          class: 'vxe-date-panel--picker-header'
-        }, [
-          h('div', {
-            class: 'vxe-date-panel--picker-type-wrapper'
-          }, [
-            datePanelType === 'year'
-              ? h('span', {
-                class: 'vxe-date-panel--picker-label'
-              }, selectDatePanelObj.y)
-              : h('span', {
-                class: 'vxe-date-panel--picker-btns'
-              }, [
-                h('span', {
-                  class: 'vxe-date-panel--picker-btn',
-                  on: {
-                    click: $xeDatePanel.dateToggleYearTypeEvent
-                  }
-                }, selectDatePanelObj.y),
-                selectDatePanelObj.m
-                  ? h('span', {
-                    class: 'vxe-date-panel--picker-btn',
+        h(
+          'div',
+          {
+            class: 'vxe-date-panel--picker-header'
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--picker-type-wrapper'
+              },
+              [
+                datePanelType === 'year'
+                  ? h(
+                    'span',
+                    {
+                      class: 'vxe-date-panel--picker-label'
+                    },
+                    selectDatePanelObj.y
+                  )
+                  : h(
+                    'span',
+                    {
+                      class: 'vxe-date-panel--picker-btns'
+                    },
+                    [
+                      h(
+                        'span',
+                        {
+                          class: 'vxe-date-panel--picker-btn',
+                          on: {
+                            click: $xeDatePanel.dateToggleYearTypeEvent
+                          }
+                        },
+                        selectDatePanelObj.y
+                      ),
+                      selectDatePanelObj.m
+                        ? h(
+                          'span',
+                          {
+                            class: 'vxe-date-panel--picker-btn',
+                            on: {
+                              click: $xeDatePanel.dateToggleMonthTypeEvent
+                            }
+                          },
+                          selectDatePanelObj.m
+                        )
+                        : renderEmptyElement($xeDatePanel)
+                    ]
+                  )
+              ]
+            ),
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--picker-btn-wrapper'
+              },
+              [
+                h(
+                  'span',
+                  {
+                    class: [
+                      'vxe-date-panel--picker-btn vxe-date-panel--picker-prev-btn',
+                      {
+                        'is--disabled': isDisabledPrevDateBtn
+                      }
+                    ],
                     on: {
-                      click: $xeDatePanel.dateToggleMonthTypeEvent
+                      click: $xeDatePanel.datePrevEvent
                     }
-                  }, selectDatePanelObj.m)
-                  : renderEmptyElement($xeDatePanel)
-              ])
-          ]),
-          h('div', {
-            class: 'vxe-date-panel--picker-btn-wrapper'
-          }, [
-            h('span', {
-              class: ['vxe-date-panel--picker-btn vxe-date-panel--picker-prev-btn', {
-                'is--disabled': isDisabledPrevDateBtn
-              }],
-              on: {
-                click: $xeDatePanel.datePrevEvent
-              }
-            }, [
-              h('i', {
-                class: 'vxe-icon-caret-left'
-              })
-            ]),
-            h('span', {
-              class: 'vxe-date-panel--picker-btn vxe-date-panel--picker-current-btn',
-              on: {
-                click: $xeDatePanel.dateTodayMonthEvent
-              }
-            }, [
-              h('i', {
-                class: 'vxe-icon-dot'
-              })
-            ]),
-            h('span', {
-              class: ['vxe-date-panel--picker-btn vxe-date-panel--picker-next-btn', {
-                'is--disabled': isDisabledNextDateBtn
-              }],
-              on: {
-                click: $xeDatePanel.dateNextEvent
-              }
-            }, [
-              h('i', {
-                class: 'vxe-icon-caret-right'
-              })
-            ])
-          ])
-        ]),
-        h('div', {
-          class: 'vxe-date-panel--picker-body'
-        }, $xeDatePanel.renderDateTable(h))
+                  },
+                  [
+                    h('i', {
+                      class: 'vxe-icon-caret-left'
+                    })
+                  ]
+                ),
+                h(
+                  'span',
+                  {
+                    class: 'vxe-date-panel--picker-btn vxe-date-panel--picker-current-btn',
+                    on: {
+                      click: $xeDatePanel.dateTodayMonthEvent
+                    }
+                  },
+                  [
+                    h('i', {
+                      class: 'vxe-icon-dot'
+                    })
+                  ]
+                ),
+                h(
+                  'span',
+                  {
+                    class: [
+                      'vxe-date-panel--picker-btn vxe-date-panel--picker-next-btn',
+                      {
+                        'is--disabled': isDisabledNextDateBtn
+                      }
+                    ],
+                    on: {
+                      click: $xeDatePanel.dateNextEvent
+                    }
+                  },
+                  [
+                    h('i', {
+                      class: 'vxe-icon-caret-right'
+                    })
+                  ]
+                )
+              ]
+            )
+          ]
+        ),
+        h(
+          'div',
+          {
+            class: 'vxe-date-panel--picker-body'
+          },
+          $xeDatePanel.renderDateTable(h)
+        )
       ]
     },
-    renderTimePanel (h: CreateElement) {
+    renderTimePanel(h: CreateElement) {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -1931,44 +2176,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return [
         type === 'time'
           ? renderEmptyElement($xeDatePanel)
-          : h('div', {
-            class: 'vxe-date-panel--time-header'
-          }, [
-            h('div', {
-              class: 'vxe-date-panel--time-title'
-            }, dateTimeLabel)
-          ]),
-        h('div', {
-          ref: 'refInputTimeBody',
-          class: 'vxe-date-panel--time-body'
-        }, [
-          h(VxeScrollbarComponent, {
-            class: 'vxe-date-panel--time-hour-list',
-            props: {
-              autoHide: true,
-              viewClassName: 'vxe-date-panel--time-list-view',
-              viewInnerClassName: 'vxe-date-panel--time-list-inner'
+          : h(
+            'div',
+            {
+              class: 'vxe-date-panel--time-header'
             },
-            scopedSlots: {
-              default: () => {
-                return hourList.map((item, index) => {
-                  return h('div', {
-                    key: index,
-                    class: ['vxe-date-panel--time-item', {
-                      'is--disabled': item.disabled,
-                      'is--selected': datetimePanelValue && datetimePanelValue.getHours() === item.value
-                    }],
-                    on: {
-                      click: (evnt: MouseEvent) => $xeDatePanel.dateHourEvent(evnt, item)
-                    }
-                  }, item.label)
-                })
-              }
-            }
-          }),
-          hasTimeMinute
-            ? h(VxeScrollbarComponent, {
-              class: 'vxe-date-panel--time-minute-list',
+            [
+              h(
+                'div',
+                {
+                  class: 'vxe-date-panel--time-title'
+                },
+                dateTimeLabel
+              )
+            ]
+          ),
+        h(
+          'div',
+          {
+            ref: 'refInputTimeBody',
+            class: 'vxe-date-panel--time-body'
+          },
+          [
+            h(VxeScrollbarComponent, {
+              class: 'vxe-date-panel--time-hour-list',
               props: {
                 autoHide: true,
                 viewClassName: 'vxe-date-panel--time-list-view',
@@ -1976,105 +2207,178 @@ export default /* define-vxe-component start */ defineVxeComponent({
               },
               scopedSlots: {
                 default: () => {
-                  return minuteList.map((item, index) => {
-                    return h('div', {
-                      key: index,
-                      class: ['vxe-date-panel--time-item', {
-                        'is--disabled': item.disabled,
-                        'is--selected': datetimePanelValue && datetimePanelValue.getMinutes() === item.value
-                      }],
-                      on: {
-                        click: (evnt: MouseEvent) => $xeDatePanel.dateMinuteEvent(evnt, item)
-                      }
-                    }, item.label)
+                  return hourList.map((item, index) => {
+                    return h(
+                      'div',
+                      {
+                        key: index,
+                        class: [
+                          'vxe-date-panel--time-item',
+                          {
+                            'is--disabled': item.disabled,
+                            'is--selected': datetimePanelValue && datetimePanelValue.getHours() === item.value
+                          }
+                        ],
+                        on: {
+                          click: (evnt: MouseEvent) => $xeDatePanel.dateHourEvent(evnt, item)
+                        }
+                      },
+                      item.label
+                    )
                   })
                 }
               }
-            })
-            : renderEmptyElement($xeDatePanel),
-          hasTimeMinute && hasTimeSecond
-            ? h(VxeScrollbarComponent, {
-              class: 'vxe-date-panel--time-second-list',
-              props: {
-                autoHide: true,
-                viewClassName: 'vxe-date-panel--time-list-view',
-                viewInnerClassName: 'vxe-date-panel--time-list-inner'
-              },
-              scopedSlots: {
-                default: () => {
-                  return secondList.map((item, index) => {
-                    return h('div', {
-                      key: index,
-                      class: ['vxe-date-panel--time-item', {
-                        'is--disabled': item.disabled,
-                        'is--selected': datetimePanelValue && datetimePanelValue.getSeconds() === item.value
-                      }],
-                      on: {
-                        click: (evnt: MouseEvent) => $xeDatePanel.dateSecondEvent(evnt, item)
-                      }
-                    }, item.label)
-                  })
+            }),
+            hasTimeMinute
+              ? h(VxeScrollbarComponent, {
+                class: 'vxe-date-panel--time-minute-list',
+                props: {
+                  autoHide: true,
+                  viewClassName: 'vxe-date-panel--time-list-view',
+                  viewInnerClassName: 'vxe-date-panel--time-list-inner'
+                },
+                scopedSlots: {
+                  default: () => {
+                    return minuteList.map((item, index) => {
+                      return h(
+                        'div',
+                        {
+                          key: index,
+                          class: [
+                            'vxe-date-panel--time-item',
+                            {
+                              'is--disabled': item.disabled,
+                              'is--selected': datetimePanelValue && datetimePanelValue.getMinutes() === item.value
+                            }
+                          ],
+                          on: {
+                            click: (evnt: MouseEvent) => $xeDatePanel.dateMinuteEvent(evnt, item)
+                          }
+                        },
+                        item.label
+                      )
+                    })
+                  }
                 }
-              }
-            })
-            : renderEmptyElement($xeDatePanel)
-        ])
+              })
+              : renderEmptyElement($xeDatePanel),
+            hasTimeMinute && hasTimeSecond
+              ? h(VxeScrollbarComponent, {
+                class: 'vxe-date-panel--time-second-list',
+                props: {
+                  autoHide: true,
+                  viewClassName: 'vxe-date-panel--time-list-view',
+                  viewInnerClassName: 'vxe-date-panel--time-list-inner'
+                },
+                scopedSlots: {
+                  default: () => {
+                    return secondList.map((item, index) => {
+                      return h(
+                        'div',
+                        {
+                          key: index,
+                          class: [
+                            'vxe-date-panel--time-item',
+                            {
+                              'is--disabled': item.disabled,
+                              'is--selected': datetimePanelValue && datetimePanelValue.getSeconds() === item.value
+                            }
+                          ],
+                          on: {
+                            click: (evnt: MouseEvent) => $xeDatePanel.dateSecondEvent(evnt, item)
+                          }
+                        },
+                        item.label
+                      )
+                    })
+                  }
+                }
+              })
+              : renderEmptyElement($xeDatePanel)
+          ]
+        )
       ]
     },
-    renderPickerPanel (h: CreateElement) {
+    renderPickerPanel(h: CreateElement) {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       const { type } = props
       if (type === 'datetime') {
-        return h('div', {
-          key: type,
-          ref: 'refPanelWrapper',
-          class: 'vxe-date-panel--time-layout-wrapper'
-        }, [
-          h('div', {
-            class: 'vxe-date-panel--time-left-wrapper'
-          }, $xeDatePanel.renderDatePanel(h)),
-          h('div', {
-            class: 'vxe-date-panel--time-right-wrapper'
-          }, $xeDatePanel.renderTimePanel(h))
-        ])
+        return h(
+          'div',
+          {
+            key: type,
+            ref: 'refPanelWrapper',
+            class: 'vxe-date-panel--time-layout-wrapper'
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--time-left-wrapper'
+              },
+              $xeDatePanel.renderDatePanel(h)
+            ),
+            h(
+              'div',
+              {
+                class: 'vxe-date-panel--time-right-wrapper'
+              },
+              $xeDatePanel.renderTimePanel(h)
+            )
+          ]
+        )
       } else if (type === 'time') {
-        return h('div', {
-          key: type,
+        return h(
+          'div',
+          {
+            key: type,
+            ref: 'refPanelWrapper',
+            class: 'vxe-date-panel--wrapper'
+          },
+          $xeDatePanel.renderTimePanel(h)
+        )
+      }
+      return h(
+        'div',
+        {
+          key: type || 'default',
           ref: 'refPanelWrapper',
           class: 'vxe-date-panel--wrapper'
-        }, $xeDatePanel.renderTimePanel(h))
-      }
-      return h('div', {
-        key: type || 'default',
-        ref: 'refPanelWrapper',
-        class: 'vxe-date-panel--wrapper'
-      }, $xeDatePanel.renderDatePanel(h))
+        },
+        $xeDatePanel.renderDatePanel(h)
+      )
     },
-    renderVN (h: CreateElement) {
+    renderVN(h: CreateElement) {
       const $xeDatePanel = this
       const props = $xeDatePanel
 
       const { type } = props
       const vSize = $xeDatePanel.computeSize
-      return h('div', {
-        class: ['vxe-date-panel', `type--${type}`, {
-          [`size--${vSize}`]: vSize
-        }]
-      }, [
-        $xeDatePanel.renderPickerPanel(h)
-      ])
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-date-panel',
+            `type--${type}`,
+            {
+              [`size--${vSize}`]: vSize
+            }
+          ]
+        },
+        [$xeDatePanel.renderPickerPanel(h)]
+      )
     }
   },
   watch: {
-    value (val) {
+    value(val) {
       const $xeDatePanel = this
 
       $xeDatePanel.updateModelValue(val)
       $xeDatePanel.changeValue()
     },
-    type () {
+    type() {
       const $xeDatePanel = this
       const reactData = $xeDatePanel.reactData
 
@@ -2090,7 +2394,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       $xeDatePanel.initValue()
     },
-    computeDateLabelFormat () {
+    computeDateLabelFormat() {
       const $xeDatePanel = this
       const props = $xeDatePanel
       const reactData = $xeDatePanel.reactData
@@ -2102,7 +2406,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     }
   },
-  created () {
+  created() {
     const $xeDatePanel = this
     const props = $xeDatePanel
 
@@ -2113,7 +2417,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     $xeDatePanel.initValue()
     $xeDatePanel.dateOpenPanel()
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeTagComponent from './src/tag'
 
 export const VxeTag = Object.assign({}, VxeTagComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeTagComponent.name as string, VxeTagComponent)
   }
 })

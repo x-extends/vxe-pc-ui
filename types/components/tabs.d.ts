@@ -7,15 +7,19 @@ import { VxeScrollbarProps } from './scrollbar'
 export declare const VxeTabs: DefineVxeComponentApp<VxeTabsProps, VxeTabsEventProps, VxeTabsSlots, VxeTabsMethods>
 export type VxeTabsComponent = DefineVxeComponentOptions<VxeTabsProps>
 
-export type VxeTabsInstance = DefineVxeComponentInstance<{
-  reactData: TabsReactData
-}, VxeTabsProps, VxeTabsPrivateComputed, VxeTabsMethods>
+export type VxeTabsInstance = DefineVxeComponentInstance<
+  {
+    reactData: TabsReactData
+  },
+  VxeTabsProps,
+  VxeTabsPrivateComputed,
+  VxeTabsMethods
+>
 
 export type VxeTabsConstructor = VxeTabsInstance
 
-export interface TabsPrivateRef {
-}
-export interface VxeTabsPrivateRef extends TabsPrivateRef { }
+export interface TabsPrivateRef {}
+export interface VxeTabsPrivateRef extends TabsPrivateRef {}
 
 export namespace VxeTabsPropTypes {
   export type ModelValue = undefined | null | VxeTabPanePropTypes.Name
@@ -32,24 +36,12 @@ export namespace VxeTabsPropTypes {
   export type ShowBody = boolean
   export type Padding = boolean
   export type Trigger = '' | 'default' | 'click' | 'manual'
-  export type BeforeChangeMethod = (params: {
-    $tabs: VxeTabsConstructor
-    name: VxeTabsPropTypes.ModelValue
-    oldName: VxeTabsPropTypes.ModelValue
-    newName: VxeTabsPropTypes.ModelValue
-    option: Omit<VxeTabPaneProps, 'slots'>
-  }) => boolean | Promise<boolean>
+  export type BeforeChangeMethod = (params: { $tabs: VxeTabsConstructor; name: VxeTabsPropTypes.ModelValue; oldName: VxeTabsPropTypes.ModelValue; newName: VxeTabsPropTypes.ModelValue; option: Omit<VxeTabPaneProps, 'slots'> }) => boolean | Promise<boolean>
   /**
    * 请使用 closeConfig.beforeMethod
    * @deprecated
    */
-  export type BeforeCloseMethod = (params: {
-    $tabs: VxeTabsConstructor
-    value: VxeTabsPropTypes.ModelValue
-    name: VxeTabsPropTypes.ModelValue
-    nextName: VxeTabsPropTypes.ModelValue | null
-    option: Omit<VxeTabPaneProps, 'slots'>
-  }) => boolean
+  export type BeforeCloseMethod = (params: { $tabs: VxeTabsConstructor; value: VxeTabsPropTypes.ModelValue; name: VxeTabsPropTypes.ModelValue; nextName: VxeTabsPropTypes.ModelValue | null; option: Omit<VxeTabPaneProps, 'slots'> }) => boolean
   export interface CloseConfig {
     /**
      * 是否启用
@@ -59,23 +51,12 @@ export namespace VxeTabsPropTypes {
      * 页签关闭之前方法，该方法的返回值用来决定当前页签是否允许关闭
      * @returns boolean
      */
-    beforeMethod?: (params: {
-      $tabs: VxeTabsConstructor
-      value: VxeTabsPropTypes.ModelValue
-      name: VxeTabsPropTypes.ModelValue
-      nextName: VxeTabsPropTypes.ModelValue | null
-      option: Omit<VxeTabPaneProps, 'slots'>
-    }) => boolean | Promise<boolean>
+    beforeMethod?: (params: { $tabs: VxeTabsConstructor; value: VxeTabsPropTypes.ModelValue; name: VxeTabsPropTypes.ModelValue; nextName: VxeTabsPropTypes.ModelValue | null; option: Omit<VxeTabPaneProps, 'slots'> }) => boolean | Promise<boolean>
     /**
      * 显示关闭按钮方法，该方法的返回值用来决定当前页签的关闭按钮是否显示
      * @returns boolean
      */
-    visibleMethod?: (params: {
-      $tabs: VxeTabsConstructor
-      value: VxeTabsPropTypes.ModelValue
-      name: VxeTabsPropTypes.ModelValue
-      option: Omit<VxeTabPaneProps, 'slots'>
-    }) => boolean
+    visibleMethod?: (params: { $tabs: VxeTabsConstructor; value: VxeTabsPropTypes.ModelValue; name: VxeTabsPropTypes.ModelValue; option: Omit<VxeTabPaneProps, 'slots'> }) => boolean
   }
   export interface RefreshConfig {
     /**
@@ -89,22 +70,12 @@ export namespace VxeTabsPropTypes {
     /**
      * 查询方法
      */
-    queryMethod?: (params: {
-      $tabs: VxeTabsConstructor
-      value: VxeTabsPropTypes.ModelValue
-      name: VxeTabsPropTypes.ModelValue
-      option: Omit<VxeTabPaneProps, 'slots'>
-    }) => Promise<any> | void
+    queryMethod?: (params: { $tabs: VxeTabsConstructor; value: VxeTabsPropTypes.ModelValue; name: VxeTabsPropTypes.ModelValue; option: Omit<VxeTabPaneProps, 'slots'> }) => Promise<any> | void
     /**
      * 显示刷新按钮方法，该方法的返回值用来决定当前页签的刷新按钮是否显示
      * @returns boolean
      */
-    visibleMethod?: (params: {
-      $tabs: VxeTabsConstructor
-      value: VxeTabsPropTypes.ModelValue
-      name: VxeTabsPropTypes.ModelValue
-      option: Omit<VxeTabPaneProps, 'slots'>
-    }) => boolean
+    visibleMethod?: (params: { $tabs: VxeTabsConstructor; value: VxeTabsPropTypes.ModelValue; name: VxeTabsPropTypes.ModelValue; option: Omit<VxeTabPaneProps, 'slots'> }) => boolean
   }
   export type UseScrollbar = VxeComponentIsVScrollbar
   export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'fluentOverlay' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
@@ -159,9 +130,8 @@ export type VxeTabsProps = {
   beforeCloseMethod?: VxeTabsPropTypes.BeforeCloseMethod
 }
 
-export interface TabsPrivateComputed {
-}
-export interface VxeTabsPrivateComputed extends TabsPrivateComputed { }
+export interface TabsPrivateComputed {}
+export interface VxeTabsPrivateComputed extends TabsPrivateComputed {}
 
 export interface TabsReactData {
   staticTabs: VxeTabPaneDefines.TabConfig[]
@@ -175,9 +145,12 @@ export interface TabsReactData {
   scrollbarHeight: number
   isTabOver: boolean
   resizeFlag: number
-  cacheTabMaps: Record<string, {
-    loading: boolean
-  }>
+  cacheTabMaps: Record<
+    string,
+    {
+      loading: boolean
+    }
+  >
 }
 
 export interface TabsInternalData {
@@ -209,23 +182,12 @@ export interface TabsMethods {
    */
   nextTab(): Promise<any>
 }
-export interface VxeTabsMethods extends TabsMethods { }
+export interface VxeTabsMethods extends TabsMethods {}
 
-export interface TabsPrivateMethods { }
-export interface VxeTabsPrivateMethods extends TabsPrivateMethods { }
+export interface TabsPrivateMethods {}
+export interface VxeTabsPrivateMethods extends TabsPrivateMethods {}
 
-export type VxeTabsEmits = [
-  'model-value',
-  'modelValue',
-  'input',
-  'change',
-  'tab-change',
-  'tab-change-fail',
-  'tab-close',
-  'tab-close-fail',
-  'tab-click',
-  'tab-load'
-]
+export type VxeTabsEmits = ['model-value', 'modelValue', 'input', 'change', 'tab-change', 'tab-change-fail', 'tab-close', 'tab-close-fail', 'tab-click', 'tab-load']
 
 export namespace VxeTabsDefines {
   export interface TabsEventParams extends VxeComponentEventParams {
@@ -313,11 +275,13 @@ export interface VxeTabsSlots {
   /**
    * 自定义插槽模板
    */
-  [key: string]: ((params: {
-    name: VxeTabsPropTypes.ModelValue
+  [key: string]:
+    | ((params: {
+        name: VxeTabsPropTypes.ModelValue
 
-    [key: string]: any
-  }) => any) | undefined
+        [key: string]: any
+      }) => any)
+    | undefined
 
   default?: (params: VxeTabsSlotTypes.DefaultSlotParams) => any
   'tab-prefix'?: (params: VxeTabsSlotTypes.TabPrefixSlotParams) => any

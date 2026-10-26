@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeDivider: DefineVxeComponentApp<VxeDividerProps, VxeDividerEventProps, VxeDividerSlots, VxeDividerMethods>
 export type VxeDividerComponent = DefineVxeComponentOptions<VxeDividerProps>
 
-export type VxeDividerInstance = DefineVxeComponentInstance<{
-  reactData: DividerReactData
-}, VxeDividerProps, VxeDividerPrivateComputed, VxeDividerMethods>
+export type VxeDividerInstance = DefineVxeComponentInstance<
+  {
+    reactData: DividerReactData
+  },
+  VxeDividerProps,
+  VxeDividerPrivateComputed,
+  VxeDividerMethods
+>
 
 export type VxeDividerConstructor = VxeDividerInstance
 
-export interface DividerPrivateRef {
-}
-export interface VxeDividerPrivateRef extends DividerPrivateRef { }
+export interface DividerPrivateRef {}
+export interface VxeDividerPrivateRef extends DividerPrivateRef {}
 
 export namespace VxeDividerPropTypes {
   export type Size = VxeComponentSizeType
@@ -29,19 +33,16 @@ export interface VxeDividerProps {
   titleAlign?: VxeDividerPropTypes.TitleAlign
 }
 
-export interface DividerPrivateComputed {
-}
-export interface VxeDividerPrivateComputed extends DividerPrivateComputed { }
+export interface DividerPrivateComputed {}
+export interface VxeDividerPrivateComputed extends DividerPrivateComputed {}
 
-export interface DividerReactData {
-}
+export interface DividerReactData {}
 
-export interface DividerMethods {
-}
-export interface VxeDividerMethods extends DividerMethods { }
+export interface DividerMethods {}
+export interface VxeDividerMethods extends DividerMethods {}
 
-export interface DividerPrivateMethods { }
-export interface VxeDividerPrivateMethods extends DividerPrivateMethods { }
+export interface DividerPrivateMethods {}
+export interface VxeDividerPrivateMethods extends DividerPrivateMethods {}
 
 export type VxeDividerEmits = []
 
@@ -53,9 +54,9 @@ export namespace VxeDividerDefines {
 
 export type VxeDividerEventProps = {}
 
-export interface VxeDividerListeners { }
+export interface VxeDividerListeners {}
 
-export namespace VxeDividerEvents { }
+export namespace VxeDividerEvents {}
 
 export namespace VxeDividerSlotTypes {
   export interface DefaultSlotParams {}

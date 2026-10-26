@@ -1,15 +1,15 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { BadgeReactData, VxeBadgeEmits, VxeBadgePropTypes, ValueOf, VxeComponentSizeType } from '../../../types'
 
+const { getConfig, createEvent, globalMixins, renderEmptyElement } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBadge',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     count: [String, Number] as PropType<VxeBadgePropTypes.Count>,
     text: [String, Number] as PropType<VxeBadgePropTypes.Text>,
@@ -24,10 +24,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().badge.size || getConfig().size
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: BadgeReactData = {
-    }
+    const reactData: BadgeReactData = {}
     return {
       xID,
       reactData
@@ -37,14 +36,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeCountNum () {
+    computeCountNum() {
       const $xeAvatar = this
       const props = $xeAvatar
 
       const { count } = props
       return count ? XEUtils.toNumber(count) : 0
     },
-    computeLabel () {
+    computeLabel() {
       const $xeAvatar = this
       const props = $xeAvatar
 
@@ -64,7 +63,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeBadgeEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeBadgeEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeBadge = this
       $xeBadge.$emit(type, createEvent(evnt, { $badge: $xeBadge }, params))
     },
@@ -72,7 +71,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeBadge = this
       const props = $xeBadge
       const slots = $xeBadge.$scopedSlots
@@ -81,27 +80,42 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const vSize = $xeBadge.computeSize
       const label = $xeBadge.computeLabel
       const defaultSlot = slots.default
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-badge', {
-          [`size--${vSize}`]: vSize,
-          'is--dot': dot
-        }]
-      }, [
-        defaultSlot || content
-          ? h('div', {
-            class: 'vxe-badge--content'
-          }, defaultSlot ? defaultSlot({}) : `${content || ''}`)
-          : [],
-        label
-          ? h('span', {
-            class: 'vxe-badge--label'
-          }, label)
-          : renderEmptyElement($xeBadge)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-badge',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--dot': dot
+            }
+          ]
+        },
+        [
+          defaultSlot || content
+            ? h(
+              'div',
+              {
+                class: 'vxe-badge--content'
+              },
+              defaultSlot ? defaultSlot({}) : `${content || ''}`
+            )
+            : [],
+          label
+            ? h(
+              'span',
+              {
+                class: 'vxe-badge--label'
+              },
+              label
+            )
+            : renderEmptyElement($xeBadge)
+        ]
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

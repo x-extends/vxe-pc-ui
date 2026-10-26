@@ -10,16 +10,20 @@ import { VxeTooltipPropTypes, VxeTooltipProps } from './tooltip'
 export declare const VxeGantt: DefineVxeComponentApp<VxeGanttProps, VxeGanttEventProps, VxeGanttSlots, VxeGanttMethods>
 export type VxeGanttComponent = DefineVxeComponentOptions<VxeGanttProps>
 
-export type VxeGanttInstance<D = any> = DefineVxeComponentInstance<{
-  reactData: GanttReactData<D>
-  internalData: GanttInternalData
-}, VxeGanttProps<D>, VxeGanttPrivateComputed<D>, VxeGanttMethods<D>>
+export type VxeGanttInstance<D = any> = DefineVxeComponentInstance<
+  {
+    reactData: GanttReactData<D>
+    internalData: GanttInternalData
+  },
+  VxeGanttProps<D>,
+  VxeGanttPrivateComputed<D>,
+  VxeGanttMethods<D>
+>
 
 export type VxeGanttConstructor<D = any> = VxeGanttInstance<D>
 
-export interface GanttPrivateRef<D = any> extends GridPrivateRef<D> {
-}
-export interface VxeGanttPrivateRef<D = any> extends GanttPrivateRef<D> { }
+export interface GanttPrivateRef<D = any> extends GridPrivateRef<D> {}
+export interface VxeGanttPrivateRef<D = any> extends GanttPrivateRef<D> {}
 
 export namespace VxeGanttPropTypes {
   export type Size = VxeGridPropTypes.Size
@@ -184,59 +188,47 @@ export namespace VxeGanttPropTypes {
       /**
        * 给行附加 className
        */
-      rowClassName?: string | ((params: {
-        source: string
-        type: string
-        scaleType: VxeGanttDefines.ColumnScaleType
-        row: D
-        rowIndex: number
-        $rowIndex: number
-        _rowIndex: number
-      }) => void | null | string | { [key: string]: boolean | null | undefined })
+      rowClassName?: string | ((params: { source: string; type: string; scaleType: VxeGanttDefines.ColumnScaleType; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number }) => void | null | string | { [key: string]: boolean | null | undefined })
       /**
        * 行样式
        */
-      rowStyle?: Partial<CSSStyleDeclaration> | ((params: {
-        source: string
-        type: string
-        scaleType: VxeGanttDefines.ColumnScaleType
-        row: D
-        rowIndex: number
-        $rowIndex: number
-        _rowIndex: number
-      }) => void | null | Partial<CSSStyleDeclaration>)
+      rowStyle?: Partial<CSSStyleDeclaration> | ((params: { source: string; type: string; scaleType: VxeGanttDefines.ColumnScaleType; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number }) => void | null | Partial<CSSStyleDeclaration>)
       /**
        * 给单元格附加 className
        */
-      cellClassName?: string | ((params: {
-        source: string
-        type: string
-        scaleType: VxeGanttDefines.ColumnScaleType
-        dateObj: VxeGanttDefines.ScaleDateObj
-        startDateObj: VxeGanttDefines.ScaleDateObj
-        endDateObj: VxeGanttDefines.ScaleDateObj
-        column?: VxeGanttDefines.ViewColumn<D>
-        row: D
-        rowIndex: number
-        $rowIndex: number
-        _rowIndex: number
-      }) => void | null | string | { [key: string]: boolean | null | undefined })
+      cellClassName?:
+        | string
+        | ((params: {
+            source: string
+            type: string
+            scaleType: VxeGanttDefines.ColumnScaleType
+            dateObj: VxeGanttDefines.ScaleDateObj
+            startDateObj: VxeGanttDefines.ScaleDateObj
+            endDateObj: VxeGanttDefines.ScaleDateObj
+            column?: VxeGanttDefines.ViewColumn<D>
+            row: D
+            rowIndex: number
+            $rowIndex: number
+            _rowIndex: number
+          }) => void | null | string | { [key: string]: boolean | null | undefined })
       /**
        * 单元格样式
        */
-      cellStyle?: Partial<CSSStyleDeclaration> | ((params: {
-        source: string
-        type: string
-        scaleType: VxeGanttDefines.ColumnScaleType
-        dateObj: VxeGanttDefines.ScaleDateObj
-        startDateObj: VxeGanttDefines.ScaleDateObj
-        endDateObj: VxeGanttDefines.ScaleDateObj
-        column?: VxeGanttDefines.ViewColumn<D>
-        row: D
-        rowIndex: number
-        $rowIndex: number
-        _rowIndex: number
-      }) => void | null | Partial<CSSStyleDeclaration>)
+      cellStyle?:
+        | Partial<CSSStyleDeclaration>
+        | ((params: {
+            source: string
+            type: string
+            scaleType: VxeGanttDefines.ColumnScaleType
+            dateObj: VxeGanttDefines.ScaleDateObj
+            startDateObj: VxeGanttDefines.ScaleDateObj
+            endDateObj: VxeGanttDefines.ScaleDateObj
+            column?: VxeGanttDefines.ViewColumn<D>
+            row: D
+            rowIndex: number
+            $rowIndex: number
+            _rowIndex: number
+          }) => void | null | Partial<CSSStyleDeclaration>)
     }
   }
 
@@ -287,39 +279,19 @@ export namespace VxeGanttPropTypes {
     /**
      * 依赖线被删除之前的方法，可以通过返回 false 阻止删除
      */
-    beforeRemoveMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      linkItem: VxeGanttDefines.LinkConfObj
-      fromRow: D
-      toRow: D
-    }): Promise<boolean> | boolean
+    beforeRemoveMethod?(params: { $gantt: VxeGanttConstructor<D>; linkItem: VxeGanttDefines.LinkConfObj; fromRow: D; toRow: D }): Promise<boolean> | boolean
     /**
      * 依赖线删除之后的方法
      */
-    afterRemoveMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      linkItem: VxeGanttDefines.LinkConfObj
-      fromRow: D
-      toRow: D
-    }): void
+    afterRemoveMethod?(params: { $gantt: VxeGanttConstructor<D>; linkItem: VxeGanttDefines.LinkConfObj; fromRow: D; toRow: D }): void
     /**
      * 拖拽开始时是否允许依赖线创建的方法，该方法的返回值用来决定是否允许被拖拽
      */
-    createStartMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      fromRow: D
-      fromPoint: 'start' | 'end'
-    }): boolean
+    createStartMethod?(params: { $gantt: VxeGanttConstructor<D>; fromRow: D; fromPoint: 'start' | 'end' }): boolean
     /**
      * 拖拽依赖线创建结束时的方法，该方法的返回值用来决定是否允依赖线许被创建
      */
-    createEndMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      fromRow: D
-      fromPoint: 'start' | 'end'
-      toRow: D
-      toPoint: 'start' | 'end'
-    }): Promise<boolean> | boolean
+    createEndMethod?(params: { $gantt: VxeGanttConstructor<D>; fromRow: D; fromPoint: 'start' | 'end'; toRow: D; toPoint: 'start' | 'end' }): Promise<boolean> | boolean
     /**
      * 自定义拖拽结束时依赖线创建被赋值的方法
      */
@@ -357,25 +329,13 @@ export namespace VxeGanttPropTypes {
     /**
      * 自定义任务条内容方法
      */
-    contentMethod?(params: {
-      scaleType: VxeGanttDefines.ColumnScaleType
-      title: string
-      progress?: string | number
-      row: D
-    }): string | number
+    contentMethod?(params: { scaleType: VxeGanttDefines.ColumnScaleType; title: string; progress?: string | number; row: D }): string | number
     /**
      * 任务条样式
      */
-    barStyle?: VxeGanttDefines.DefaultBarStyleConfig | ((params: {
-      source: string
-      type: string
-      scaleType: VxeGanttDefines.ColumnScaleType
-      $gantt: VxeGanttConstructor<D>
-      row: D
-      rowIndex: number
-      $rowIndex: number
-      _rowIndex: number
-    }) => void | null | undefined | VxeGanttDefines.DefaultBarStyleConfig)
+    barStyle?:
+      | VxeGanttDefines.DefaultBarStyleConfig
+      | ((params: { source: string; type: string; scaleType: VxeGanttDefines.ColumnScaleType; $gantt: VxeGanttConstructor<D>; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number }) => void | null | undefined | VxeGanttDefines.DefaultBarStyleConfig)
     /**
      * 是否启用拖拽移动日期
      */
@@ -420,24 +380,15 @@ export namespace VxeGanttPropTypes {
     /**
      * 自定义图标
      */
-    icon?: string | ((params: {
-      $gantt: VxeGanttConstructor<D>
-      row: D
-    }) => string)
+    icon?: string | ((params: { $gantt: VxeGanttConstructor<D>; row: D }) => string)
     /**
      * 图标状态颜色
      */
-    iconStatus?: VxeComponentStatusType | ((params: {
-      $gantt: VxeGanttConstructor<D>
-      row: D
-    }) => VxeComponentStatusType)
+    iconStatus?: VxeComponentStatusType | ((params: { $gantt: VxeGanttConstructor<D>; row: D }) => VxeComponentStatusType)
     /**
      * 自定义图标样式
      */
-    iconStyle?: CSSStyleDeclaration | ((params: {
-      $gantt: VxeGanttConstructor<D>
-      row: D
-    }) => void | null | Partial<CSSStyleDeclaration>)
+    iconStyle?: CSSStyleDeclaration | ((params: { $gantt: VxeGanttConstructor<D>; row: D }) => void | null | Partial<CSSStyleDeclaration>)
     /**
      * 是否显示图标
      */
@@ -445,15 +396,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 里程碑任务条样式
      */
-    barStyle?: VxeGanttDefines.MilestoneBarStyleConfig | ((params: {
-      source: string
-      type: string
-      scaleType: VxeGanttDefines.ColumnScaleType
-      row: D
-      rowIndex: number
-      $rowIndex: number
-      _rowIndex: number
-    }) => void | null | undefined | VxeGanttDefines.MilestoneBarStyleConfig)
+    barStyle?: VxeGanttDefines.MilestoneBarStyleConfig | ((params: { source: string; type: string; scaleType: VxeGanttDefines.ColumnScaleType; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number }) => void | null | undefined | VxeGanttDefines.MilestoneBarStyleConfig)
   }
 
   /**
@@ -471,15 +414,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 子视图任务条样式
      */
-    barStyle?: VxeGanttDefines.SubviewBarStyleConfig | ((params: {
-      source: string
-      type: string
-      scaleType: VxeGanttDefines.ColumnScaleType
-      row: D
-      rowIndex: number
-      $rowIndex: number
-      _rowIndex: number
-    }) => void | null | undefined | VxeGanttDefines.SubviewBarStyleConfig)
+    barStyle?: VxeGanttDefines.SubviewBarStyleConfig | ((params: { source: string; type: string; scaleType: VxeGanttDefines.ColumnScaleType; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number }) => void | null | undefined | VxeGanttDefines.SubviewBarStyleConfig)
   }
 
   export interface TaskBarTooltipConfig<D = any> {
@@ -494,14 +429,7 @@ export namespace VxeGanttPropTypes {
     maxWidth?: VxeTooltipPropTypes.MaxWidth
     maxHeight?: VxeTooltipPropTypes.MaxHeight
     useHtml?: VxeTooltipPropTypes.UseHtml
-    contentMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      scaleType: VxeGanttDefines.ColumnScaleType
-      row: D
-      rowIndex: number
-      $rowIndex: number
-      _rowIndex: number
-    }): string | null | void
+    contentMethod?(params: { $gantt: VxeGanttConstructor<D>; scaleType: VxeGanttDefines.ColumnScaleType; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number }): string | null | void
     /**
      * 已废弃，请使用 useHtml
      * @deprecated
@@ -541,61 +469,22 @@ export namespace VxeGanttPropTypes {
     /**
      * 拖拽开始时是否允许行拖拽调整任务日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
-    resizeStartMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      resizeType: 'start' | 'end'
-      row: D
-      startDate: Date
-      endDate: Date
-      linkInfo: VxeGanttDefines.LinkInfoObj<D>
-    }): boolean
+    resizeStartMethod?(params: { $gantt: VxeGanttConstructor<D>; resizeType: 'start' | 'end'; row: D; startDate: Date; endDate: Date; linkInfo: VxeGanttDefines.LinkInfoObj<D> }): boolean
     /**
      * 拖拽结束时是否允许行拖拽调整任务日期的方法，该方法的返回值用来决定是否允许被拖拽调整日期范围
      */
-    resizeEndMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      resizeType: 'start' | 'end'
-      row: D
-      startDate: Date
-      endDate: Date
-      targetStartDate: Date
-      targetEndDate: Date
-      offsetSize: number
-      linkInfo: VxeGanttDefines.LinkInfoObj<D>
-    }): Promise<boolean> | boolean
+    resizeEndMethod?(params: { $gantt: VxeGanttConstructor<D>; resizeType: 'start' | 'end'; row: D; startDate: Date; endDate: Date; targetStartDate: Date; targetEndDate: Date; offsetSize: number; linkInfo: VxeGanttDefines.LinkInfoObj<D> }): Promise<boolean> | boolean
     /**
      * 自定义拖拽结束时赋值的方法
      */
-    resizeSetMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      resizeType: 'start' | 'end'
-      row: D
-      startDate: Date
-      endDate: Date
-      targetStartDate: Date
-      targetEndDate: Date
-      startValue: any
-      endValue: any
-      offsetSize: number
-      linkInfo: VxeGanttDefines.LinkInfoObj<D>
-    }): void
+    resizeSetMethod?(params: { $gantt: VxeGanttConstructor<D>; resizeType: 'start' | 'end'; row: D; startDate: Date; endDate: Date; targetStartDate: Date; targetEndDate: Date; startValue: any; endValue: any; offsetSize: number; linkInfo: VxeGanttDefines.LinkInfoObj<D> }): void
   }
 
   export interface TaskBarResizeTooltipConfig<D = any> extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
     /**
      * 自定义内容
      */
-    contentMethod?: (params: {
-      $gantt: VxeGanttConstructor<D>
-      resizeType: 'start' | 'end'
-      row: D
-      startDate: Date
-      endDate: Date
-      targetStartDate: Date
-      targetEndDate: Date
-      offsetSize: number
-      linkInfo: VxeGanttDefines.LinkInfoObj<D>
-    }) => string | number | null | undefined
+    contentMethod?: (params: { $gantt: VxeGanttConstructor<D>; resizeType: 'start' | 'end'; row: D; startDate: Date; endDate: Date; targetStartDate: Date; targetEndDate: Date; offsetSize: number; linkInfo: VxeGanttDefines.LinkInfoObj<D> }) => string | number | null | undefined
   }
 
   export interface TaskBarMoveConfig<D = any> {
@@ -618,57 +507,22 @@ export namespace VxeGanttPropTypes {
     /**
      * 拖拽开始时是否允许行拖拽移动任务日期的方法，该方法的返回值用来决定是否允许被拖拽
      */
-    moveStartMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      row: D
-      startDate: Date
-      endDate: Date
-      linkInfo: VxeGanttDefines.LinkInfoObj<D>
-    }): boolean
+    moveStartMethod?(params: { $gantt: VxeGanttConstructor<D>; row: D; startDate: Date; endDate: Date; linkInfo: VxeGanttDefines.LinkInfoObj<D> }): boolean
     /**
      * 拖拽移动任务日期结束时的方法，该方法的返回值用来决定是否允许被拖拽移动到指定日期
      */
-    moveEndMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      row: D
-      startDate: Date
-      endDate: Date
-      targetStartDate: Date
-      targetEndDate: Date
-      offsetSize: number
-      linkInfo: VxeGanttDefines.LinkInfoObj<D>
-    }): Promise<boolean> | boolean
+    moveEndMethod?(params: { $gantt: VxeGanttConstructor<D>; row: D; startDate: Date; endDate: Date; targetStartDate: Date; targetEndDate: Date; offsetSize: number; linkInfo: VxeGanttDefines.LinkInfoObj<D> }): Promise<boolean> | boolean
     /**
      * 自定义拖拽结束时任务日期被赋值的方法
      */
-    moveSetMethod?(params: {
-      $gantt: VxeGanttConstructor<D>
-      row: D
-      startDate: Date
-      endDate: Date
-      targetStartDate: Date
-      targetEndDate: Date
-      startValue: any
-      endValue: any
-      offsetSize: number
-      linkInfo: VxeGanttDefines.LinkInfoObj<D>
-    }): void
+    moveSetMethod?(params: { $gantt: VxeGanttConstructor<D>; row: D; startDate: Date; endDate: Date; targetStartDate: Date; targetEndDate: Date; startValue: any; endValue: any; offsetSize: number; linkInfo: VxeGanttDefines.LinkInfoObj<D> }): void
   }
 
   export interface TaskBarMoveTooltipConfig<D = any> extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
     /**
      * 自定义内容
      */
-    contentMethod?: (params: {
-      $gantt: VxeGanttConstructor<D>
-      row: D
-      startDate: Date
-      endDate: Date
-      targetStartDate: Date
-      targetEndDate: Date
-      offsetSize: number
-      linkInfo: VxeGanttDefines.LinkInfoObj<D>
-    }) => string | number | null | undefined
+    contentMethod?: (params: { $gantt: VxeGanttConstructor<D>; row: D; startDate: Date; endDate: Date; targetStartDate: Date; targetEndDate: Date; offsetSize: number; linkInfo: VxeGanttDefines.LinkInfoObj<D> }) => string | number | null | undefined
   }
 }
 
@@ -728,7 +582,7 @@ export interface GanttPrivateComputed<D = any> extends GridPrivateComputed<D> {
   computeScrollbarXToTop: boolean
   computeScrollbarYToLeft: boolean
 }
-export interface VxeGanttPrivateComputed<D = any> extends GanttPrivateComputed<D> { }
+export interface VxeGanttPrivateComputed<D = any> extends GanttPrivateComputed<D> {}
 
 export interface GanttReactData<D = any> extends GridReactData<D> {
   showLeftView: boolean
@@ -854,7 +708,7 @@ export interface GanttMethods<D = any> extends Omit<GridMethods<D>, 'dispatchEve
     links: VxeGanttPropTypes.Links
   }
 }
-export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridMethods<D>, 'dispatchEvent'> { }
+export interface VxeGanttMethods<D = any> extends GanttMethods<D>, Omit<VxeGridMethods<D>, 'dispatchEvent'> {}
 
 export interface GanttPrivateMethods<D = any> extends GridPrivateMethods<D> {
   callSlot<T = any>(slotFunc: NormalizedScopedSlot | ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
@@ -901,9 +755,12 @@ export interface GanttPrivateMethods<D = any> extends GridPrivateMethods<D> {
   handleTaskBarTooltipLeaveEvent(evnt: MouseEvent, params: VxeGanttDefines.TaskBarMouseoverParams): void
 }
 export interface VxeGanttPrivateMethods<D = any> extends GanttPrivateMethods<D> {
-  handleTaskClickEvent(evnt: MouseEvent, params: {
-    row: any
-  }): void
+  handleTaskClickEvent(
+    evnt: MouseEvent,
+    params: {
+      row: any
+    }
+  ): void
 }
 
 export type VxeGanttEmits = [
@@ -1157,7 +1014,7 @@ export namespace VxeGanttDefines {
    */
   export type ColumnScaleType = 'second' | 'minute' | 'hour' | 'date' | 'day' | 'week' | 'month' | 'quarter' | 'year'
 
-   export interface ColumnScaleConfig extends ScaleDefaultOptions, ScaleWeekOptions {
+  export interface ColumnScaleConfig extends ScaleDefaultOptions, ScaleWeekOptions {
     type: ColumnScaleType
     align?: VxeComponentAlignType
   }
@@ -1373,8 +1230,7 @@ export namespace VxeGanttSlotTypes {
     tooltipContent: string
   }
 
-  export interface TaskTaskNowLineSlotParams {
-  }
+  export interface TaskTaskNowLineSlotParams {}
 }
 
 export interface VxeGanttSlots<D = any> extends VxeGridSlots<D> {

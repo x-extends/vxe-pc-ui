@@ -5,64 +5,59 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeTimelineItem: DefineVxeComponentApp<VxeTimelineItemProps, VxeTimelineItemEventProps, VxeTimelineItemSlots, VxeTimelineItemMethods>
 export type VxeTimelineItemComponent = DefineVxeComponentOptions<VxeTimelineItemProps>
 
-export type VxeTimelineItemInstance = DefineVxeComponentInstance<{
-  reactData: TimelineItemReactData
-}, VxeTimelineItemProps, VxeTimelineItemPrivateComputed, VxeTimelineItemMethods>
+export type VxeTimelineItemInstance = DefineVxeComponentInstance<
+  {
+    reactData: TimelineItemReactData
+  },
+  VxeTimelineItemProps,
+  VxeTimelineItemPrivateComputed,
+  VxeTimelineItemMethods
+>
 
 export type VxeTimelineItemConstructor = VxeTimelineItemInstance
 
-export interface TimelineItemPrivateRef {
-}
-export interface VxeTimelineItemPrivateRef extends TimelineItemPrivateRef { }
+export interface TimelineItemPrivateRef {}
+export interface VxeTimelineItemPrivateRef extends TimelineItemPrivateRef {}
 
-export namespace VxeTimelineItemPropTypes {
-}
+export namespace VxeTimelineItemPropTypes {}
 
-export type VxeTimelineItemProps = {
-}
+export type VxeTimelineItemProps = {}
 
-export interface TimelineItemPrivateComputed {
-}
-export interface VxeTimelineItemPrivateComputed extends TimelineItemPrivateComputed { }
+export interface TimelineItemPrivateComputed {}
+export interface VxeTimelineItemPrivateComputed extends TimelineItemPrivateComputed {}
 
-export interface TimelineItemReactData {
-}
+export interface TimelineItemReactData {}
 
 export interface TimelineItemMethods {
   dispatchEvent(type: ValueOf<VxeTimelineItemEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeTimelineItemMethods extends TimelineItemMethods { }
+export interface VxeTimelineItemMethods extends TimelineItemMethods {}
 
-export interface TimelineItemPrivateMethods { }
-export interface VxeTimelineItemPrivateMethods extends TimelineItemPrivateMethods { }
+export interface TimelineItemPrivateMethods {}
+export interface VxeTimelineItemPrivateMethods extends TimelineItemPrivateMethods {}
 
-export type VxeTimelineItemEmits = [
-]
+export type VxeTimelineItemEmits = []
 
 export namespace VxeTimelineItemDefines {
   export interface TimelineItemEventParams extends VxeComponentEventParams {
     $timelineItem: VxeTimelineItemConstructor
   }
 
-  export interface ClickEventParams extends TimelineItemEventParams { }
-  export interface CloseEventParams extends TimelineItemEventParams { }
+  export interface ClickEventParams extends TimelineItemEventParams {}
+  export interface CloseEventParams extends TimelineItemEventParams {}
 }
 
-export type VxeTimelineItemEventProps = {
-}
+export type VxeTimelineItemEventProps = {}
 
-export interface VxeTimelineItemListeners {
-}
+export interface VxeTimelineItemListeners {}
 
-export namespace VxeTimelineItemEvents {
-}
+export namespace VxeTimelineItemEvents {}
 
 export namespace VxeTimelineItemSlotTypes {
   export interface DefaultSlotParams {}
 }
 
-export interface VxeTimelineItemSlots {
-}
+export interface VxeTimelineItemSlots {}
 
 export const TimelineItem: typeof VxeTimelineItem
 export default VxeTimelineItem

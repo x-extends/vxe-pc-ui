@@ -9,16 +9,20 @@ import { VxeScrollbarProps } from './scrollbar'
 export declare const VxeMenu: DefineVxeComponentApp<VxeMenuProps, VxeMenuEventProps, VxeMenuSlots, VxeMenuMethods>
 export type VxeMenuComponent = DefineVxeComponentOptions<VxeMenuProps>
 
-export type VxeMenuInstance = DefineVxeComponentInstance<{
-  internalData: MenuInternalData
-  reactData: MenuReactData
-}, VxeMenuProps, VxeMenuPrivateComputed, VxeMenuMethods>
+export type VxeMenuInstance = DefineVxeComponentInstance<
+  {
+    internalData: MenuInternalData
+    reactData: MenuReactData
+  },
+  VxeMenuProps,
+  VxeMenuPrivateComputed,
+  VxeMenuMethods
+>
 
 export type VxeMenuConstructor = VxeMenuInstance
 
-export interface MenuPrivateRef {
-}
-export interface VxeMenuPrivateRef extends MenuPrivateRef { }
+export interface MenuPrivateRef {}
+export interface VxeMenuPrivateRef extends MenuPrivateRef {}
 
 export namespace VxeMenuPropTypes {
   export type ModelValue = string | number | null
@@ -27,13 +31,13 @@ export namespace VxeMenuPropTypes {
   export type Border = boolean | 'first' | 'first-group' | 'group' | 'all'
   export type Accordion = boolean
   export interface OptionProps {
-   name?: string
-   title?: string
-   icon?: string
-   children?: string
-   linkUrl?: string
-   linkTarget?: string
-   routerLink?: string
+    name?: string
+    title?: string
+    icon?: string
+    children?: string
+    linkUrl?: string
+    linkTarget?: string
+    routerLink?: string
   }
 
   export interface MenuOption {
@@ -72,12 +76,7 @@ export namespace VxeMenuPropTypes {
     /**
      * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
      */
-    visibleMethod?(params: {
-      $menu: VxeMenuConstructor
-      options: VxeContextMenuPropTypes.Options
-      currentMenu: VxeMenuDefines.MenuItem
-      currentOption: VxeMenuPropTypes.MenuOption
-    }): boolean
+    visibleMethod?(params: { $menu: VxeMenuConstructor; options: VxeContextMenuPropTypes.Options; currentMenu: VxeMenuDefines.MenuItem; currentOption: VxeMenuPropTypes.MenuOption }): boolean
   }
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
   export type UseScrollbar = VxeComponentIsVScrollbar
@@ -126,9 +125,8 @@ export interface VxeMenuProps {
   appendTo?: VxeMenuPropTypes.AppendTo
 }
 
-export interface MenuPrivateComputed {
-}
-export interface VxeMenuPrivateComputed extends MenuPrivateComputed { }
+export interface MenuPrivateComputed {}
+export interface VxeMenuPrivateComputed extends MenuPrivateComputed {}
 
 export interface MenuInternalData {
   lastActiveTime: number
@@ -167,18 +165,12 @@ export interface MenuMethods {
    */
   scrollToActiveMenu(): Promise<any>
 }
-export interface VxeMenuMethods extends MenuMethods { }
+export interface VxeMenuMethods extends MenuMethods {}
 
-export interface MenuPrivateMethods { }
-export interface VxeMenuPrivateMethods extends MenuPrivateMethods { }
+export interface MenuPrivateMethods {}
+export interface VxeMenuPrivateMethods extends MenuPrivateMethods {}
 
-export type VxeMenuEmits = [
-  'model-value',
-  'modelValue',
-  'click',
-  'option-menu',
-  'menu-click'
-]
+export type VxeMenuEmits = ['model-value', 'modelValue', 'click', 'option-menu', 'menu-click']
 
 export namespace VxeMenuDefines {
   export interface MenuEventParams extends VxeComponentEventParams {
@@ -189,7 +181,7 @@ export namespace VxeMenuDefines {
     itemConf: VxeMenuPropTypes.MenuOption
     itemId: number
     itemKey: string | number
-    level: number,
+    level: number
     parentKey: string | number
     isExactActive: boolean
     isActive: boolean
@@ -209,7 +201,7 @@ export namespace VxeMenuDefines {
      */
     menu: VxeMenuDefines.MenuItem
   }
-  export interface ClickEventParams extends MenuEventParams, ClickParams { }
+  export interface ClickEventParams extends MenuEventParams, ClickParams {}
 
   export interface OptionMenuEventParams extends MenuEventParams {
     currentMenu: VxeMenuDefines.MenuItem

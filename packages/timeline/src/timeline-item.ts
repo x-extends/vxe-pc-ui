@@ -1,15 +1,16 @@
 import { CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { TimelineItemReactData, VxeTimelineItemEmits, ValueOf } from '../../../types'
 
+const { createEvent } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTimelineItem',
-  props: {
-  },
-  data () {
+  props: {},
+  data() {
     const reactData: TimelineItemReactData = {}
     return {
       xID: XEUtils.uniqueId(),
@@ -20,7 +21,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeTimelineItemEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeTimelineItemEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTimelineItem = this
       $xeTimelineItem.$emit(type, createEvent(evnt, { $timelineItem: $xeTimelineItem }, params))
     },
@@ -28,14 +29,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN  (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       return h('div', {
         ref: 'refElem',
         class: 'vxe-timeline-item'
       })
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

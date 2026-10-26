@@ -1,10 +1,12 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleCollapseItem, destroyCollapseItem } from './util'
 
 import type { CollapsePaneReactData, VxeCollapsePanePropTypes, VxeCollapsePaneEmits, VxeCollapsePrivateMethods, ValueOf, VxeCollapseConstructor, VxeCollapsePaneDefines } from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCollapsePane',
@@ -20,10 +22,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: CollapsePaneReactData = {
-    }
+    const reactData: CollapsePaneReactData = {}
     const collapseConfig: VxeCollapsePaneDefines.CollapseConfig = {
       id: xID,
       title: '',
@@ -42,14 +43,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   computed: {
     ...({} as {
-      $xeCollapse():(VxeCollapseConstructor & VxeCollapsePrivateMethods) | null
+      $xeCollapse(): (VxeCollapseConstructor & VxeCollapsePrivateMethods) | null
     })
   },
   methods: {
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeCollapsePaneEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeCollapsePaneEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeCollapsePane = this
       $xeCollapsePane.$emit(type, createEvent(evnt, { $collapsePane: $xeCollapsePane }, params))
     },
@@ -57,43 +58,47 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeCollapsePane = this
       const slots = $xeCollapsePane.$scopedSlots
 
       const defaultSlot = slots.default
-      return h('div', {
-        ref: 'refElem'
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'div',
+        {
+          ref: 'refElem'
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
   },
   watch: {
-    title (val) {
+    title(val) {
       const $xeCollapsePane = this
       const collapseConfig = $xeCollapsePane.collapseConfig
 
       collapseConfig.title = val
     },
-    name (val) {
+    name(val) {
       const $xeCollapsePane = this
       const collapseConfig = $xeCollapsePane.collapseConfig
 
       collapseConfig.name = val
     },
-    icon (val) {
+    icon(val) {
       const $xeCollapsePane = this
       const collapseConfig = $xeCollapsePane.collapseConfig
 
       collapseConfig.icon = val
     },
-    permissionCode (val) {
+    permissionCode(val) {
       const $xeCollapsePane = this
       const collapseConfig = $xeCollapsePane.collapseConfig
 
       collapseConfig.permissionCode = val
     }
   },
-  created () {
+  created() {
     const $xeCollapsePane = this
     const props = $xeCollapsePane
     const slots = $xeCollapsePane.$scopedSlots
@@ -108,7 +113,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       slots
     })
   },
-  mounted () {
+  mounted() {
     const $xeCollapsePane = this
     const $xeCollapse = $xeCollapsePane.$xeCollapse
     const slots = $xeCollapsePane.$scopedSlots
@@ -121,7 +126,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       assembleCollapseItem($xeCollapse, elem, collapseConfig)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeCollapsePane = this
     const $xeCollapse = $xeCollapsePane.$xeCollapse
     const collapseConfig = $xeCollapsePane.collapseConfig
@@ -130,7 +135,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       destroyCollapseItem($xeCollapse, collapseConfig)
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -1,19 +1,19 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { TransferReactData, TransferInternalData, VxeTransferPropTypes, VxeTransferEmits, ValueOf } from '../../../types'
 
-function createReactData (): TransferReactData {
-  return {
-  }
+const { getConfig, createEvent, renderEmptyElement } = VxeUI
+
+function createReactData(): TransferReactData {
+  return {}
 }
 
-function createInternalData (): TransferInternalData {
-  return {
-  }
+function createInternalData(): TransferInternalData {
+  return {}
 }
 
 export default /* define-vxe-component start */ defineVxeComponent({
@@ -26,7 +26,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().transfer.size || getConfig().size
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
     return {
@@ -41,11 +41,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeTransferEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeTransferEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTransfer = this
       $xeTransfer.$emit(type, createEvent(evnt, { $transfer: $xeTransfer }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeTransfer = this
 
       handleEmitModelVal($xeTransfer, value)
@@ -54,38 +54,50 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeTransfer = this
       const slots = $xeTransfer.$scopedSlots
 
       const headerSlot = slots.header
       const footerSlot = slots.footer
-      return h('div', {
-        ref: 'refElem',
-        class: 'vxe-transfer'
-      }, [
-        headerSlot
-          ? h('div', {
-            class: 'vxe-transfer--header'
-          }, headerSlot({ $transfer: $xeTransfer }))
-          : renderEmptyElement($xeTransfer),
-        h('div'),
-        h('div'),
-        h('div'),
-        footerSlot
-          ? h('div', {
-            class: 'vxe-transfer--footer'
-          }, footerSlot({ $transfer: $xeTransfer }))
-          : renderEmptyElement($xeTransfer)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: 'vxe-transfer'
+        },
+        [
+          headerSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-transfer--header'
+              },
+              headerSlot({ $transfer: $xeTransfer })
+            )
+            : renderEmptyElement($xeTransfer),
+          h('div'),
+          h('div'),
+          h('div'),
+          footerSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-transfer--footer'
+              },
+              footerSlot({ $transfer: $xeTransfer })
+            )
+            : renderEmptyElement($xeTransfer)
+        ]
+      )
     }
   },
-  created () {
+  created() {
     const $xeUpload = this
 
     $xeUpload.internalData = createInternalData()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeUpload = this
     const reactData = $xeUpload.reactData
     const internalData = $xeUpload.internalData
@@ -93,7 +105,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

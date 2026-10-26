@@ -1,24 +1,23 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeMentionPropTypes, MentionReactData, VxeMentionEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
+const { getConfig, createEvent, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeMention',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     size: {
       type: String as PropType<VxeMentionPropTypes.Size>,
       default: () => getConfig().mention.size || getConfig().size
     }
   },
-  data () {
-    const reactData: MentionReactData = {
-    }
+  data() {
+    const reactData: MentionReactData = {}
     return {
       xID: XEUtils.uniqueId(),
       reactData
@@ -33,7 +32,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeMentionEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeMentionEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeMention = this
       $xeMention.$emit(type, createEvent(evnt, { $mention: $xeMention }, params))
     },
@@ -41,14 +40,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN  (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       return h('div', {
         ref: 'refElem',
         class: 'vxe-mention'
       })
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -1,12 +1,14 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getOffsetPos } from '../../ui/src/dom'
 import { handleEmitModelVal } from '../../ui/src/vn'
 import VxeAnchorLinkComponent from './anchor-link'
 
 import type { VxeAnchorPropTypes, AnchorReactData, VxeAnchorLinkPropTypes, VxeAnchorEmits, ValueOf } from '../../../types'
+
+const { createEvent, renderEmptyElement } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAnchor',
@@ -19,13 +21,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: true
     }
   },
-  provide () {
+  provide() {
     const $xeAnchor = this
     return {
       $xeAnchor
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: AnchorReactData = {
       activeHref: null,
@@ -38,30 +40,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   computed: {
-    computeAllHrefList () {
+    computeAllHrefList() {
       const $xeAnchor = this
       const reactData = $xeAnchor.reactData
 
       const list: VxeAnchorPropTypes.ModelValue[] = []
-      XEUtils.eachTree(reactData.staticLinks, item => {
-        list.push(item.href || '')
-      }, { children: 'children' })
+      XEUtils.eachTree(
+        reactData.staticLinks,
+        (item) => {
+          list.push(item.href || '')
+        },
+        { children: 'children' }
+      )
       return list
     }
   },
   watch: {
-    value (val) {
+    value(val) {
       const $xeAnchor = this
       const reactData = $xeAnchor.reactData
 
       reactData.activeHref = val
     },
-    'reactData.activeHref' () {
+    'reactData.activeHref'() {
       const $xeAnchor = this
 
       $xeAnchor.updateMarkerPos()
     },
-    container () {
+    container() {
       const $xeAnchor = this
 
       $xeAnchor.removeContainerElemScroll()
@@ -72,17 +78,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeAnchorEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeAnchorEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeAnchor = this
       $xeAnchor.$emit(type, createEvent(evnt, { $anchor: $xeAnchor }, params))
     },
-    emitModel (value: any) {
+    emitModel(value: any) {
       const $xeAnchor = this
 
       $xeAnchor.$emit('input', value)
       handleEmitModelVal($xeAnchor, value)
     },
-    getContainerElem  () {
+    getContainerElem() {
       const $xeAnchor = this
       const props = $xeAnchor
 
@@ -100,7 +106,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    emitEvent  (value?: VxeAnchorPropTypes.ModelValue) {
+    emitEvent(value?: VxeAnchorPropTypes.ModelValue) {
       const $xeAnchor = this
       const reactData = $xeAnchor.reactData
 
@@ -113,14 +119,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeAnchor.$emit('model-value', value)
       }
     },
-    handleContainerScrollEvent  () {
+    handleContainerScrollEvent() {
       const $xeAnchor = this
       const reactData = $xeAnchor.reactData
 
       const allHrefList = $xeAnchor.computeAllHrefList
       const { containerElem } = reactData
       if (containerElem) {
-        const wrapperElList = containerElem.querySelectorAll(allHrefList.map(href => `${href}`).join(','))
+        const wrapperElList = containerElem.querySelectorAll(allHrefList.map((href) => `${href}`).join(','))
         for (let i = 0; i < wrapperElList.length; i++) {
           const wrapperEl = wrapperElList[i]
           const wrapperRect = wrapperEl.getBoundingClientRect()
@@ -132,7 +138,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    removeContainerElemScroll  () {
+    removeContainerElemScroll() {
       const $xeAnchor = this
       const reactData = $xeAnchor.reactData
 
@@ -141,7 +147,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         containerElem.removeEventListener('scroll', $xeAnchor.handleContainerScrollEvent)
       }
     },
-    updateContainerElem  () {
+    updateContainerElem() {
       const $xeAnchor = this
       const reactData = $xeAnchor.reactData
 
@@ -153,7 +159,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
     },
-    updateMarkerPos  () {
+    updateMarkerPos() {
       const $xeAnchor = this
       const reactData = $xeAnchor.reactData
 
@@ -172,7 +178,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    handleClickLink (evnt: KeyboardEvent, href?: VxeAnchorLinkPropTypes.Href) {
+    handleClickLink(evnt: KeyboardEvent, href?: VxeAnchorLinkPropTypes.Href) {
       const $xeAnchor = this
 
       evnt.preventDefault()
@@ -189,75 +195,90 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderSubItems  (h: CreateElement, options?: VxeAnchorPropTypes.Options) {
+    renderSubItems(h: CreateElement, options?: VxeAnchorPropTypes.Options) {
       const $xeAnchor = this
 
       const itemVNs: VNode[] = []
       if (options) {
-        options.forEach(item => {
+        options.forEach((item) => {
           const subItems = item.children
           if (subItems && subItems.length) {
-            itemVNs.push(h(VxeAnchorLinkComponent, {
-              props: {
-                content: item.content,
-                title: item.title,
-                href: item.href
-              },
-              scopedSlots: {
-                sub: () => $xeAnchor.renderSubItems(h, subItems)
-              }
-            }))
+            itemVNs.push(
+              h(VxeAnchorLinkComponent, {
+                props: {
+                  content: item.content,
+                  title: item.title,
+                  href: item.href
+                },
+                scopedSlots: {
+                  sub: () => $xeAnchor.renderSubItems(h, subItems)
+                }
+              })
+            )
           } else {
-            itemVNs.push(h(VxeAnchorLinkComponent, {
-              props: {
-                content: item.content,
-                title: item.title,
-                href: item.href
-              }
-            }))
+            itemVNs.push(
+              h(VxeAnchorLinkComponent, {
+                props: {
+                  content: item.content,
+                  title: item.title,
+                  href: item.href
+                }
+              })
+            )
           }
         })
       }
       return itemVNs
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeAnchor = this
       const props = $xeAnchor
       const slots = $xeAnchor.$scopedSlots
 
       const { options, showMarker } = props
       const defaultSlot = slots.default
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-anchor', {
-          'is--marker': showMarker
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-anchor--list'
-        }, defaultSlot ? defaultSlot({}) : $xeAnchor.renderSubItems(h, options)),
-        showMarker
-          ? h('div', {
-            ref: 'refMarkerElem',
-            class: 'vxe-anchor--marker'
-          })
-          : renderEmptyElement($xeAnchor)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-anchor',
+            {
+              'is--marker': showMarker
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-anchor--list'
+            },
+            defaultSlot ? defaultSlot({}) : $xeAnchor.renderSubItems(h, options)
+          ),
+          showMarker
+            ? h('div', {
+              ref: 'refMarkerElem',
+              class: 'vxe-anchor--marker'
+            })
+            : renderEmptyElement($xeAnchor)
+        ]
+      )
     }
   },
-  mounted () {
+  mounted() {
     const $xeAnchor = this
 
     $xeAnchor.$nextTick(() => {
       $xeAnchor.updateContainerElem()
     })
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeAnchor = this
 
     $xeAnchor.removeContainerElemScroll()
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

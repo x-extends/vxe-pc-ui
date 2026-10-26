@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeRow: DefineVxeComponentApp<VxeRowProps, VxeRowEventProps, VxeRowSlots, VxeRowMethods>
 export type VxeRowComponent = DefineVxeComponentOptions<VxeRowProps>
 
-export type VxeRowInstance = DefineVxeComponentInstance<{
-  reactData: RowReactData
-}, VxeRowProps, VxeRowPrivateComputed, VxeRowMethods>
+export type VxeRowInstance = DefineVxeComponentInstance<
+  {
+    reactData: RowReactData
+  },
+  VxeRowProps,
+  VxeRowPrivateComputed,
+  VxeRowMethods
+>
 
 export type VxeRowConstructor = VxeRowInstance
 
-export interface RowPrivateRef {
-}
-export interface VxeRowPrivateRef extends RowPrivateRef { }
+export interface RowPrivateRef {}
+export interface VxeRowPrivateRef extends RowPrivateRef {}
 
 export namespace VxeRowPropTypes {
   export type GridLayout = boolean
@@ -31,24 +35,20 @@ export type VxeRowProps = {
   size?: VxeRowPropTypes.Size
 }
 
-export interface RowPrivateComputed {
-}
-export interface VxeRowPrivateComputed extends RowPrivateComputed { }
+export interface RowPrivateComputed {}
+export interface VxeRowPrivateComputed extends RowPrivateComputed {}
 
-export interface RowReactData {
-}
+export interface RowReactData {}
 
 export interface RowMethods {
   dispatchEvent(type: ValueOf<VxeRowEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeRowMethods extends RowMethods { }
+export interface VxeRowMethods extends RowMethods {}
 
-export interface RowPrivateMethods { }
-export interface VxeRowPrivateMethods extends RowPrivateMethods { }
+export interface RowPrivateMethods {}
+export interface VxeRowPrivateMethods extends RowPrivateMethods {}
 
-export type VxeRowEmits = [
-  'click'
-]
+export type VxeRowEmits = ['click']
 
 export namespace VxeRowDefines {
   export interface RowEventParams extends VxeComponentEventParams {
@@ -58,9 +58,9 @@ export namespace VxeRowDefines {
 
 export type VxeRowEventProps = {}
 
-export interface VxeRowListeners { }
+export interface VxeRowListeners {}
 
-export namespace VxeRowEvents { }
+export namespace VxeRowEvents {}
 
 export namespace VxeRowSlotTypes {
   export interface DefaultSlotParams {}

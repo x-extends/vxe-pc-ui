@@ -8,17 +8,21 @@ export type VxeSplitPaneComponent = DefineVxeComponentOptions<VxeSplitPaneProps>
 /**
  * @deprecated
  */
-export type VxeSplitPaneInstance = DefineVxeComponentInstance<{
-  reactData: SplitItemReactData
-}, VxeSplitPaneProps, VxeSplitPanePrivateComputed, VxeSplitPaneMethods>
+export type VxeSplitPaneInstance = DefineVxeComponentInstance<
+  {
+    reactData: SplitItemReactData
+  },
+  VxeSplitPaneProps,
+  VxeSplitPanePrivateComputed,
+  VxeSplitPaneMethods
+>
 /**
  * @deprecated
  */
 export type VxeSplitPaneConstructor = VxeSplitPaneInstance
 
-export interface SplitItemPrivateRef {
-}
-export interface VxeSplitPanePrivateRef extends SplitItemPrivateRef { }
+export interface SplitItemPrivateRef {}
+export interface VxeSplitPanePrivateRef extends SplitItemPrivateRef {}
 
 /**
  * @deprecated
@@ -59,36 +63,32 @@ export interface VxeSplitPaneProps {
 /**
  * @deprecated
  */
-export interface SplitItemPrivateComputed {
-}
-export interface VxeSplitPanePrivateComputed extends SplitItemPrivateComputed { }
+export interface SplitItemPrivateComputed {}
+export interface VxeSplitPanePrivateComputed extends SplitItemPrivateComputed {}
 /**
  * @deprecated
  */
-export interface SplitItemReactData {
-}
+export interface SplitItemReactData {}
 /**
  * @deprecated
  */
-export interface SplitItemInternalData {
-}
+export interface SplitItemInternalData {}
 /**
  * @deprecated
  */
 export interface SplitItemMethods {
   dispatchEvent(type: ValueOf<VxeSplitPaneEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeSplitPaneMethods extends SplitItemMethods { }
+export interface VxeSplitPaneMethods extends SplitItemMethods {}
 /**
  * @deprecated
  */
-export interface SplitItemPrivateMethods { }
-export interface VxeSplitPanePrivateMethods extends SplitItemPrivateMethods { }
+export interface SplitItemPrivateMethods {}
+export interface VxeSplitPanePrivateMethods extends SplitItemPrivateMethods {}
 /**
  * @deprecated
  */
-export type VxeSplitPaneEmits = [
-]
+export type VxeSplitPaneEmits = []
 /**
  * @deprecated
  */
@@ -100,18 +100,15 @@ export namespace VxeSplitPaneDefines {
 /**
  * @deprecated
  */
-export type VxeSplitPaneEventProps = {
-}
+export type VxeSplitPaneEventProps = {}
 /**
  * @deprecated
  */
-export interface VxeSplitPaneListeners {
-}
+export interface VxeSplitPaneListeners {}
 /**
  * @deprecated
  */
-export namespace VxeSplitPaneEvents {
-}
+export namespace VxeSplitPaneEvents {}
 /**
  * @deprecated
  */

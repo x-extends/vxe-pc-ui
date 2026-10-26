@@ -1,20 +1,17 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, VxeLayoutContainerEmits, VxeComponentSizeType, ValueOf, VxeComponentIsVScrollbar } from '../../../types'
 
-const { getConfig, baseUtils, createEvent } = VxeUI
+const { getConfig, baseUtils, globalMixins, createEvent } = VxeUI
 
 const { getDefVal } = baseUtils
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutContainer',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.vScrollbarMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.vScrollbarMixin],
   props: {
     vertical: Boolean as PropType<VxeLayoutContainerPropTypes.Vertical>,
     useScrollbar: {
@@ -26,10 +23,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().layoutContainer.size || getConfig().size
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: LayoutContainerReactData = {
-    }
+    const reactData: LayoutContainerReactData = {}
     return {
       xID,
       reactData
@@ -45,14 +41,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeLayoutContainerEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeLayoutContainerEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLayoutContainer = this
       $xeLayoutContainer.$emit(type, createEvent(evnt, { $layoutContainer: $xeLayoutContainer }, params))
     },
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeLayoutContainer = this
       const props = $xeLayoutContainer
       const slots = $xeLayoutContainer.$scopedSlots
@@ -61,15 +57,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const vSize = $xeLayoutContainer.computeSize
       const defaultSlot = slots.default
 
-      return h('div', {
-        class: ['vxe-layout-container', {
-          [`size--${vSize}`]: vSize,
-          'is--vertical': vertical
-        }]
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-layout-container',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--vertical': vertical
+            }
+          ]
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -1,19 +1,19 @@
 import { CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { StepsReactData, VxeStepsEmits, ValueOf } from '../../../types'
 
+const { createEvent } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSteps',
-  props: {
-  },
-  data () {
+  props: {},
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: StepsReactData = {
-    }
+    const reactData: StepsReactData = {}
     return {
       xID,
       reactData
@@ -23,11 +23,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeStepsEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeStepsEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeSteps = this
       $xeSteps.$emit(type, createEvent(evnt, { $steps: $xeSteps }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeSteps = this
 
       handleEmitModelVal($xeSteps, value)
@@ -36,18 +36,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeSteps = this
       const slots = $xeSteps.$scopedSlots
 
       const defaultSlot = slots.default
-      return h('div', {
-        ref: 'refElem',
-        class: 'vxe-steps'
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: 'vxe-steps'
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

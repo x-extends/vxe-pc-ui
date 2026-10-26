@@ -1,13 +1,15 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, globalEvents, createEvent, globalMixins, ValueOf, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getEventTargetNode, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
-import type { PulldownInternalData, VxePulldownPropTypes, VxePulldownEmits, VxeComponentSizeType, PulldownReactData, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeModalMethods } from '../../../types'
+import type { PulldownInternalData, VxePulldownPropTypes, VxePulldownEmits, VxeComponentSizeType, PulldownReactData, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeModalMethods, ValueOf } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
+
+const { getConfig, globalEvents, createEvent, globalMixins, renderEmptyElement } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePulldown',
@@ -15,10 +17,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     prop: 'value',
     event: 'modelValue'
   },
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.permissionMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.permissionMixin],
   props: {
     value: Boolean as PropType<VxePulldownPropTypes.ModelValue>,
     disabled: Boolean as PropType<VxePulldownPropTypes.Disabled>,
@@ -75,7 +74,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: PulldownReactData = {
       initialized: false,
@@ -103,7 +102,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
     }),
-    computeBtnTransfer  () {
+    computeBtnTransfer() {
       const $xePulldown = this
       const props = $xePulldown
       const $xeModal = $xePulldown.$xeModal
@@ -127,7 +126,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return transfer
     },
-    computePopupOpts () {
+    computePopupOpts() {
       const $xePulldown = this
       const props = $xePulldown
 
@@ -138,16 +137,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxePulldownEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxePulldownEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xePulldown = this
       $xePulldown.$emit(type, createEvent(evnt, { $pulldown: $xePulldown }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xePulldown = this
 
       handleEmitModelVal($xePulldown, value)
     },
-    updateZindex () {
+    updateZindex() {
       const $xePulldown = this
       const props = $xePulldown
       const reactData = $xePulldown.reactData
@@ -160,7 +159,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.panelIndex = nextZIndex()
       }
     },
-    isPanelVisible () {
+    isPanelVisible() {
       const $xePulldown = this
       const reactData = $xePulldown.reactData
 
@@ -169,7 +168,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 手动更新位置
      */
-    updatePlacement  () {
+    updatePlacement() {
       const $xePulldown = this
       const props = $xePulldown
       const reactData = $xePulldown.reactData
@@ -199,7 +198,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 显示下拉面板
      */
-    showPanel () {
+    showPanel() {
       const $xePulldown = this
       const props = $xePulldown
       const reactData = $xePulldown.reactData
@@ -215,7 +214,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }
       }
-      return new Promise<void>(resolve => {
+      return new Promise<void>((resolve) => {
         if (!props.disabled) {
           if (internalData.hpTimeout) {
             clearTimeout(internalData.hpTimeout)
@@ -242,12 +241,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 隐藏下拉面板
      */
-    hidePanel () {
+    hidePanel() {
       const $xePulldown = this
 
       return $xePulldown.hideOptionPanel()
     },
-    hideOptionPanel () {
+    hideOptionPanel() {
       const $xePulldown = this
       const reactData = $xePulldown.reactData
       const internalData = $xePulldown.internalData
@@ -255,7 +254,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.visiblePanel = false
       $xePulldown.dispatchEvent('visible-change', { visible: false }, null)
       $xePulldown.emitModel(false)
-      return new Promise<void>(resolve => {
+      return new Promise<void>((resolve) => {
         if (reactData.isAniVisible) {
           internalData.hpTimeout = setTimeout(() => {
             reactData.isAniVisible = false
@@ -273,7 +272,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 切换下拉面板
      */
-    togglePanel () {
+    togglePanel() {
       const $xePulldown = this
       const reactData = $xePulldown.reactData
 
@@ -282,7 +281,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xePulldown.showPanel()
     },
-    handleOptionEvent (evnt: Event, option: VxePulldownPropTypes.Option) {
+    handleOptionEvent(evnt: Event, option: VxePulldownPropTypes.Option) {
       const $xePulldown = this
       const reactData = $xePulldown.reactData
 
@@ -294,7 +293,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePulldown.dispatchEvent('option-click', { option }, evnt)
       }
     },
-    clickTargetEvent  (evnt: MouseEvent) {
+    clickTargetEvent(evnt: MouseEvent) {
       const $xePulldown = this
       const props = $xePulldown
       const reactData = $xePulldown.reactData
@@ -313,7 +312,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xePulldown.dispatchEvent('click', { $pulldown: $xePulldown }, evnt)
     },
-    handleGlobalMousedownEvent  (evnt: Event) {
+    handleGlobalMousedownEvent(evnt: Event) {
       const $xePulldown = this
       const props = $xePulldown
       const reactData = $xePulldown.reactData
@@ -334,7 +333,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalBlurEvent  (evnt: Event) {
+    handleGlobalBlurEvent(evnt: Event) {
       const $xePulldown = this
       const props = $xePulldown
       const reactData = $xePulldown.reactData
@@ -353,7 +352,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isActivated = false
       }
     },
-    handleGlobalResizeEvent () {
+    handleGlobalResizeEvent() {
       const $xePulldown = this
       const reactData = $xePulldown.reactData
 
@@ -362,7 +361,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePulldown.updatePlacement()
       }
     },
-    handleGlobalScrollEvent () {
+    handleGlobalScrollEvent() {
       const $xePulldown = this
       const reactData = $xePulldown.reactData
 
@@ -375,28 +374,35 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderDefaultPanel  (h: CreateElement, options?: VxePulldownPropTypes.Options) {
+    renderDefaultPanel(h: CreateElement, options?: VxePulldownPropTypes.Options) {
       const $xePulldown = this
       const slots = $xePulldown.$scopedSlots
 
       const optionSlot = slots.option
-      return h('div', {
-        class: 'vxe-pulldown--panel-list'
-      }, options
-        ? options.map(item => {
-          return h('div', {
-            class: 'vxe-pulldown--panel-item',
-            on: {
-              click (evnt: Event) {
-                $xePulldown.handleOptionEvent(evnt, item)
-              }
-            }
-          }, optionSlot ? optionSlot({ $pulldown: $xePulldown, option: item }) : `${item.label || ''}`)
-        })
-        : []
+      return h(
+        'div',
+        {
+          class: 'vxe-pulldown--panel-list'
+        },
+        options
+          ? options.map((item) => {
+            return h(
+              'div',
+              {
+                class: 'vxe-pulldown--panel-item',
+                on: {
+                  click(evnt: Event) {
+                    $xePulldown.handleOptionEvent(evnt, item)
+                  }
+                }
+              },
+              optionSlot ? optionSlot({ $pulldown: $xePulldown, option: item }) : `${item.label || ''}`
+            )
+          })
+          : []
       )
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xePulldown = this
       const props = $xePulldown
       const slots = $xePulldown.$scopedSlots
@@ -413,68 +419,103 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dropdownSlot = slots.dropdown
       const ppClassName = popupOpts.className || props.popupClassName
 
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-pulldown', className ? (XEUtils.isFunction(className) ? className({ $pulldown: $xePulldown }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          'is--visible': visiblePanel,
-          'is--disabled': disabled,
-          'is--active': isActivated
-        }]
-      }, [
-        h('div', {
-          ref: 'refPulldownContent',
-          class: 'vxe-pulldown--content',
-          on: {
-            click: $xePulldown.clickTargetEvent
-          }
-        }, defaultSlot ? defaultSlot({ options, $pulldown: $xePulldown }) : []),
-        h('div', {
-          ref: 'refPulldownPanel',
-          class: ['vxe-table--ignore-clear vxe-pulldown--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $pulldown: $xePulldown }) : ppClassName) : '', {
-            [`size--${vSize}`]: vSize,
-            'is--transfer': btnTransfer,
-            'ani--leave': isAniVisible,
-            'ani--enter': visiblePanel
-          }],
-          attrs: {
-            placement: panelPlacement
-          },
-          style: panelStyle
-        }, initialized
-          ? [
-              h('div', {
-                class: ['vxe-pulldown--panel-wrapper', {
-                  'is--shadow': showPopupShadow
-                }]
-              }, initialized && (destroyOnClose ? (visiblePanel || isAniVisible) : true)
-                ? [
-                    headerSlot
-                      ? h('div', {
-                        class: 'vxe-pulldown--panel-header'
-                      }, headerSlot({ options, $pulldown: $xePulldown }))
-                      : renderEmptyElement($xePulldown),
-                    h('div', {
-                      class: 'vxe-pulldown--panel-body'
-                    }, dropdownSlot
-                      ? dropdownSlot({ options, $pulldown: $xePulldown })
-                      : [
-                          $xePulldown.renderDefaultPanel(h, options)
-                        ]),
-                    footerSlot
-                      ? h('div', {
-                        class: 'vxe-pulldown--panel-footer'
-                      }, footerSlot({ options, $pulldown: $xePulldown }))
-                      : renderEmptyElement($xePulldown)
-                  ]
-                : [])
-            ]
-          : [])
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-pulldown',
+            className ? (XEUtils.isFunction(className) ? className({ $pulldown: $xePulldown }) : className) : '',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--visible': visiblePanel,
+              'is--disabled': disabled,
+              'is--active': isActivated
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              ref: 'refPulldownContent',
+              class: 'vxe-pulldown--content',
+              on: {
+                click: $xePulldown.clickTargetEvent
+              }
+            },
+            defaultSlot ? defaultSlot({ options, $pulldown: $xePulldown }) : []
+          ),
+          h(
+            'div',
+            {
+              ref: 'refPulldownPanel',
+              class: [
+                'vxe-table--ignore-clear vxe-pulldown--panel',
+                ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $pulldown: $xePulldown }) : ppClassName) : '',
+                {
+                  [`size--${vSize}`]: vSize,
+                  'is--transfer': btnTransfer,
+                  'ani--leave': isAniVisible,
+                  'ani--enter': visiblePanel
+                }
+              ],
+              attrs: {
+                placement: panelPlacement
+              },
+              style: panelStyle
+            },
+            initialized
+              ? [
+                  h(
+                    'div',
+                    {
+                      class: [
+                        'vxe-pulldown--panel-wrapper',
+                        {
+                          'is--shadow': showPopupShadow
+                        }
+                      ]
+                    },
+                    initialized && (destroyOnClose ? visiblePanel || isAniVisible : true)
+                      ? [
+                          headerSlot
+                            ? h(
+                              'div',
+                              {
+                                class: 'vxe-pulldown--panel-header'
+                              },
+                              headerSlot({ options, $pulldown: $xePulldown })
+                            )
+                            : renderEmptyElement($xePulldown),
+                          h(
+                            'div',
+                            {
+                              class: 'vxe-pulldown--panel-body'
+                            },
+                            dropdownSlot ? dropdownSlot({ options, $pulldown: $xePulldown }) : [$xePulldown.renderDefaultPanel(h, options)]
+                          ),
+                          footerSlot
+                            ? h(
+                              'div',
+                              {
+                                class: 'vxe-pulldown--panel-footer'
+                              },
+                              footerSlot({ options, $pulldown: $xePulldown })
+                            )
+                            : renderEmptyElement($xePulldown)
+                        ]
+                      : []
+                  )
+                ]
+              : []
+          )
+        ]
+      )
     }
   },
   watch: {
-    value (val) {
+    value(val) {
       const $xePulldown = this
       const reactData = $xePulldown.reactData
 
@@ -486,7 +527,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     }
   },
-  created () {
+  created() {
     const $xePulldown = this
     const props = $xePulldown
 
@@ -498,7 +539,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xePulldown, 'resize', $xePulldown.handleGlobalResizeEvent)
     globalEvents.on($xePulldown, 'scroll', $xePulldown.handleGlobalScrollEvent)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xePulldown = this
 
     const panelElem = $xePulldown.$refs.refPulldownPanel as HTMLElement | undefined
@@ -510,7 +551,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xePulldown, 'resize')
     globalEvents.off($xePulldown, 'scroll')
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

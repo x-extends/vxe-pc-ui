@@ -4,7 +4,7 @@ import VxeCheckboxComponent from './src/checkbox'
 import { dynamicApp } from '../dynamics'
 
 export const VxeCheckbox = Object.assign(VxeCheckboxComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeCheckboxComponent.name as string, VxeCheckboxComponent)
   }
 })

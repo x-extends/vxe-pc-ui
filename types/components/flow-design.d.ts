@@ -5,36 +5,36 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeFlowDesign: DefineVxeComponentApp<VxeFlowDesignProps, VxeFlowDesignEventProps, VxeFlowDesignSlots, VxeFlowDesignMethods>
 export type VxeFlowDesignComponent = DefineVxeComponentOptions<VxeFlowDesignProps>
 
-export type VxeFlowDesignInstance = DefineVxeComponentInstance<{
-  reactData: FlowDesignReactData
-}, VxeFlowDesignProps, VxeFlowDesignPrivateComputed, VxeFlowDesignMethods>
+export type VxeFlowDesignInstance = DefineVxeComponentInstance<
+  {
+    reactData: FlowDesignReactData
+  },
+  VxeFlowDesignProps,
+  VxeFlowDesignPrivateComputed,
+  VxeFlowDesignMethods
+>
 
 export type VxeFlowDesignConstructor = VxeFlowDesignInstance
 
-export interface FlowDesignPrivateRef {
-}
-export interface VxeFlowDesignPrivateRef extends FlowDesignPrivateRef { }
+export interface FlowDesignPrivateRef {}
+export interface VxeFlowDesignPrivateRef extends FlowDesignPrivateRef {}
 
-export namespace VxeFlowDesignPropTypes {
-}
+export namespace VxeFlowDesignPropTypes {}
 
-export interface VxeFlowDesignProps {
-}
+export interface VxeFlowDesignProps {}
 
-export interface FlowDesignPrivateComputed {
-}
-export interface VxeFlowDesignPrivateComputed extends FlowDesignPrivateComputed { }
+export interface FlowDesignPrivateComputed {}
+export interface VxeFlowDesignPrivateComputed extends FlowDesignPrivateComputed {}
 
-export interface FlowDesignReactData {
-}
+export interface FlowDesignReactData {}
 
 export interface FlowDesignMethods {
   dispatchEvent(type: ValueOf<VxeFlowDesignEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeFlowDesignMethods extends FlowDesignMethods { }
+export interface VxeFlowDesignMethods extends FlowDesignMethods {}
 
-export interface FlowDesignPrivateMethods { }
-export interface VxeFlowDesignPrivateMethods extends FlowDesignPrivateMethods { }
+export interface FlowDesignPrivateMethods {}
+export interface VxeFlowDesignPrivateMethods extends FlowDesignPrivateMethods {}
 
 export type VxeFlowDesignEmits = []
 
@@ -43,17 +43,9 @@ export namespace VxeFlowDesignDefines {
     $flowDesign: VxeFlowDesignConstructor
   }
 
-  export type SaveFileFunction = (options: {
-    filename: string
-    type: string
-    content: string | Blob
-  }) => Promise<any>
+  export type SaveFileFunction = (options: { filename: string; type: string; content: string | Blob }) => Promise<any>
 
-  export type ReadFileFunction = (options?: {
-    multiple?: boolean
-    types?: string[]
-    message?: boolean
-  }) => Promise<{
+  export type ReadFileFunction = (options?: { multiple?: boolean; types?: string[]; message?: boolean }) => Promise<{
     status: boolean
     files: FileList
     file: File
@@ -62,9 +54,9 @@ export namespace VxeFlowDesignDefines {
 
 export type VxeFlowDesignEventProps = {}
 
-export interface VxeFlowDesignListeners { }
+export interface VxeFlowDesignListeners {}
 
-export namespace VxeFlowDesignEvents { }
+export namespace VxeFlowDesignEvents {}
 
 export namespace VxeFlowDesignSlotTypes {
   export interface DefaultSlotParams {}

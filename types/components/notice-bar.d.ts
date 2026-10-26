@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeNoticeBar: DefineVxeComponentApp<VxeNoticeBarProps, VxeNoticeBarEventProps, VxeNoticeBarSlots, VxeNoticeBarMethods>
 export type VxeNoticeBarComponent = DefineVxeComponentOptions<VxeNoticeBarProps>
 
-export type VxeNoticeBarInstance = DefineVxeComponentInstance<{
-  reactData: NoticeBarReactData
-}, VxeNoticeBarProps, VxeNoticeBarPrivateComputed, VxeNoticeBarMethods>
+export type VxeNoticeBarInstance = DefineVxeComponentInstance<
+  {
+    reactData: NoticeBarReactData
+  },
+  VxeNoticeBarProps,
+  VxeNoticeBarPrivateComputed,
+  VxeNoticeBarMethods
+>
 
 export type VxeNoticeBarConstructor = VxeNoticeBarInstance
 
-export interface NoticeBarPrivateRef {
-}
-export interface VxeNoticeBarPrivateRef extends NoticeBarPrivateRef { }
+export interface NoticeBarPrivateRef {}
+export interface VxeNoticeBarPrivateRef extends NoticeBarPrivateRef {}
 
 export namespace VxeNoticeBarPropTypes {
   export type Size = VxeComponentSizeType
@@ -35,9 +39,8 @@ export type VxeNoticeBarProps = {
   vertical?: VxeNoticeBarPropTypes.Vertical
 }
 
-export interface NoticeBarPrivateComputed {
-}
-export interface VxeNoticeBarPrivateComputed extends NoticeBarPrivateComputed { }
+export interface NoticeBarPrivateComputed {}
+export interface VxeNoticeBarPrivateComputed extends NoticeBarPrivateComputed {}
 
 export interface NoticeBarReactData {
   animationStatus: boolean
@@ -47,15 +50,12 @@ export interface NoticeBarReactData {
 export interface NoticeBarMethods {
   dispatchEvent(type: ValueOf<VxeNoticeBarEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeNoticeBarMethods extends NoticeBarMethods { }
+export interface VxeNoticeBarMethods extends NoticeBarMethods {}
 
-export interface NoticeBarPrivateMethods { }
-export interface VxeNoticeBarPrivateMethods extends NoticeBarPrivateMethods { }
+export interface NoticeBarPrivateMethods {}
+export interface VxeNoticeBarPrivateMethods extends NoticeBarPrivateMethods {}
 
-export type VxeNoticeBarEmits = [
-  'start',
-  'end'
-]
+export type VxeNoticeBarEmits = ['start', 'end']
 
 export namespace VxeNoticeBarDefines {
   export interface NoticeBarEventParams extends VxeComponentEventParams {

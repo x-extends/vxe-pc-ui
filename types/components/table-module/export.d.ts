@@ -66,28 +66,20 @@ export interface TableExportMethods<D = any> {
   closePrint(): Promise<any>
 }
 
-export interface TableExportPrivateMethods<D = any> { }
+export interface TableExportPrivateMethods<D = any> {}
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableExportMethods<D> { }
+  export interface VxeGridMethods<D = any> extends TableExportMethods<D> {}
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableExportMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableExportPrivateMethods<D> { }
+  export interface VxeTableMethods<D = any> extends TableExportMethods<D> {}
+  export interface VxeTablePrivateMethods<D = any> extends TableExportPrivateMethods<D> {}
 }
 
-export type SaveFileFunction = (options: {
-  filename: string
-  type: string
-  content: string | Blob
-}) => Promise<any>
+export type SaveFileFunction = (options: { filename: string; type: string; content: string | Blob }) => Promise<any>
 
-export type ReadFileFunction = (options?: {
-  multiple?: boolean
-  types?: string[]
-  message?: boolean
-}) => Promise<{
+export type ReadFileFunction = (options?: { multiple?: boolean; types?: string[]; message?: boolean }) => Promise<{
   status: boolean
   files: File[]
   file: File

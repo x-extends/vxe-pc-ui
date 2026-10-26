@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { getDefaultConfig } from '../../ui/src/utils'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -10,12 +10,11 @@ import VxeScrollbarComponent from '../../scrollbar'
 
 import type { CardReactData, VxeCardEmits, VxeCardPropTypes, ValueOf, VxeComponentSizeType, VxeComponentIsVScrollbar } from '../../../types'
 
+const { getConfig, createEvent, globalMixins, renderEmptyElement } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCard',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.vScrollbarMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.vScrollbarMixin],
   props: {
     title: String as PropType<VxeCardPropTypes.Title>,
     showTitleOverflow: {
@@ -47,10 +46,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     scrollbarConfig: Object as PropType<VxeCardPropTypes.ScrollbarConfig>
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: CardReactData = {
-    }
+    const reactData: CardReactData = {}
     return {
       xID,
       reactData
@@ -61,7 +59,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       computeSize(): VxeComponentSizeType
       computeIsVScrollbar(): VxeComponentIsVScrollbar
     }),
-    computeCardStyle () {
+    computeCardStyle() {
       const $xeCard = this
       const props = $xeCard
 
@@ -75,13 +73,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computeScrollbarOpts () {
+    computeScrollbarOpts() {
       const $xeCard = this
       const props = $xeCard
 
       return Object.assign({}, getConfig().card.scrollbarConfig, props.scrollbarConfig)
     },
-    computeScrollbarProps () {
+    computeScrollbarProps() {
       const $xeCard = this
 
       const scrollbarOpts = $xeCard.computeScrollbarOpts as VxeCardPropTypes.ScrollbarConfig
@@ -101,14 +99,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeCardEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeCardEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeCard = this
       $xeCard.$emit(type, createEvent(evnt, { $card: $xeCard }, params))
     },
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeCard = this
       const props = $xeCard
       const slots = $xeCard.$scopedSlots
@@ -127,40 +125,63 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollbarProps = $xeCard.computeScrollbarProps
       const { viewClassName, viewInnerClassName } = scrollbarOpts
 
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-card', {
-          [`size--${vSize}`]: vSize,
-          'is--border': border,
-          'is--shadow': shadow,
-          'is--padding': padding
-        }],
-        style: cardStyle
-      }, [
-        title || titleSlot || headerSlot
-          ? h('div', {
-            class: 'vxe-card--header'
-          }, headerSlot
-            ? getSlotVNs(headerSlot({}))
-            : [
-                h('div', {
-                  class: ['vxe-card--header-title', {
-                    'is--ellipsis': showTitleOverflow
-                  }]
-                }, titleSlot ? getSlotVNs(titleSlot({})) : `${title || ''}`),
-                extraSlot
-                  ? h('div', {
-                    class: 'vxe-card--header-extra'
-                  }, getSlotVNs(extraSlot({})))
-                  : renderEmptyElement($xeCard)
-              ])
-          : renderEmptyElement($xeCard),
-        h('div', {
-          class: 'vxe-card--body'
-        }, [
-          leftSlot
-            ? (
-                useScrollbar
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-card',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--border': border,
+              'is--shadow': shadow,
+              'is--padding': padding
+            }
+          ],
+          style: cardStyle
+        },
+        [
+          title || titleSlot || headerSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-card--header'
+              },
+              headerSlot
+                ? getSlotVNs(headerSlot({}))
+                : [
+                    h(
+                      'div',
+                      {
+                        class: [
+                          'vxe-card--header-title',
+                          {
+                            'is--ellipsis': showTitleOverflow
+                          }
+                        ]
+                      },
+                      titleSlot ? getSlotVNs(titleSlot({})) : `${title || ''}`
+                    ),
+                    extraSlot
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-card--header-extra'
+                        },
+                        getSlotVNs(extraSlot({}))
+                      )
+                      : renderEmptyElement($xeCard)
+                  ]
+            )
+            : renderEmptyElement($xeCard),
+          h(
+            'div',
+            {
+              class: 'vxe-card--body'
+            },
+            [
+              leftSlot
+                ? useScrollbar
                   ? h(VxeScrollbarComponent, {
                     class: 'vxe-card--body-scrollbar-left',
                     props: {
@@ -172,29 +193,35 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       default: () => getSlotVNs(leftSlot({}))
                     }
                   })
-                  : h('div', {
-                    class: 'vxe-card--body-left'
-                  }, getSlotVNs(leftSlot({})))
-              )
-            : renderEmptyElement($xeCard),
-          useScrollbar
-            ? h(VxeScrollbarComponent, {
-              class: 'vxe-card--body-scrollbar-content',
-              props: {
-                ...scrollbarProps,
-                viewClassName: 'vxe-card--body-scrollbar-content-view' + (viewClassName ? (' ' + viewClassName) : ''),
-                viewInnerClassName: 'vxe-card--body-scrollbar-content-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
-              },
-              scopedSlots: {
-                default: () => defaultSlot ? getSlotVNs(defaultSlot({})) : []
-              }
-            })
-            : h('div', {
-              class: 'vxe-card--body-content'
-            }, defaultSlot ? getSlotVNs(defaultSlot({})) : []),
-          rightSlot
-            ? (
-                useScrollbar
+                  : h(
+                    'div',
+                    {
+                      class: 'vxe-card--body-left'
+                    },
+                    getSlotVNs(leftSlot({}))
+                  )
+                : renderEmptyElement($xeCard),
+              useScrollbar
+                ? h(VxeScrollbarComponent, {
+                  class: 'vxe-card--body-scrollbar-content',
+                  props: {
+                    ...scrollbarProps,
+                    viewClassName: 'vxe-card--body-scrollbar-content-view' + (viewClassName ? ' ' + viewClassName : ''),
+                    viewInnerClassName: 'vxe-card--body-scrollbar-content-inner' + (viewClassName ? ' ' + viewInnerClassName : '')
+                  },
+                  scopedSlots: {
+                    default: () => (defaultSlot ? getSlotVNs(defaultSlot({})) : [])
+                  }
+                })
+                : h(
+                  'div',
+                  {
+                    class: 'vxe-card--body-content'
+                  },
+                  defaultSlot ? getSlotVNs(defaultSlot({})) : []
+                ),
+              rightSlot
+                ? useScrollbar
                   ? h(VxeScrollbarComponent, {
                     class: 'vxe-card--body-scrollbar-right',
                     props: {
@@ -206,30 +233,39 @@ export default /* define-vxe-component start */ defineVxeComponent({
                       default: () => getSlotVNs(rightSlot({}))
                     }
                   })
-                  : h('div', {
-                    class: 'vxe-card--body-right'
-                  }, getSlotVNs(rightSlot({})))
-              )
-            : renderEmptyElement($xeCard)
-        ]),
-        footerSlot
-          ? h('div', {
-            class: 'vxe-card--footer'
-          }, getSlotVNs(footerSlot({})))
-          : renderEmptyElement($xeCard),
-        /**
-         * 加载中
-         */
-        h(VxeLoadingComponent, {
-          class: 'vxe-card--loading',
-          props: {
-            value: loading
-          }
-        })
-      ])
+                  : h(
+                    'div',
+                    {
+                      class: 'vxe-card--body-right'
+                    },
+                    getSlotVNs(rightSlot({}))
+                  )
+                : renderEmptyElement($xeCard)
+            ]
+          ),
+          footerSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-card--footer'
+              },
+              getSlotVNs(footerSlot({}))
+            )
+            : renderEmptyElement($xeCard),
+          /**
+           * 加载中
+           */
+          h(VxeLoadingComponent, {
+            class: 'vxe-card--loading',
+            props: {
+              value: loading
+            }
+          })
+        ]
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

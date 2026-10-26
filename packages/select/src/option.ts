@@ -1,17 +1,17 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
-import { createEvent, globalMixins } from '../../ui'
 import { XEOptionProvide, createOption, watchOption, destroyOption, assembleOption } from './util'
 import { OptionInfo } from './option-info'
 
 import type { VxeSelectConstructor, VxeOptionEmits, VxeOptionPropTypes, OptionReactData, VxeComponentSizeType, ValueOf } from '../../../types'
 
+const { createEvent, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeOption',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     value: [String, Number, Boolean] as PropType<VxeOptionPropTypes.Value>,
     label: {
@@ -33,10 +33,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: OptionReactData = {
-    }
+    const reactData: OptionReactData = {}
     const optionConfig = {} as OptionInfo
     return {
       xID,
@@ -55,7 +54,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeOptionEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeOptionEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeOption = this
       $xeOption.$emit(type, createEvent(evnt, { $option: $xeOption }, params))
     },
@@ -63,13 +62,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       return h('div', {
         ref: 'elem'
       })
     }
   },
-  created () {
+  created() {
     const $xeOption = this
     const props = $xeOption
     const $xeSelect = $xeOption.$xeSelect
@@ -79,7 +78,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     watchOption($xeOption, optionConfig)
   },
-  mounted () {
+  mounted() {
     const $xeOption = this
     const slots = $xeOption.$scopedSlots
     const optionConfig = $xeOption.optionConfig
@@ -90,14 +89,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const el = $xeOption.$refs.elem as HTMLDivElement
     assembleOption($xeSelect, el, optionConfig, $xeOptgroup)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeOption = this
     const optionConfig = $xeOption.optionConfig
     const $xeSelect = $xeOption.$xeSelect
 
     destroyOption($xeSelect, optionConfig)
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

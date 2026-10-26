@@ -4,7 +4,7 @@ import VxeCountdownComponent from './src/countdown'
 import { dynamicApp } from '../dynamics'
 
 export const VxeCountdown = Object.assign({}, VxeCountdownComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeCountdownComponent.name as string, VxeCountdownComponent)
   }
 })

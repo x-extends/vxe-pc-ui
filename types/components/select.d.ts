@@ -9,16 +9,20 @@ import { VxeBadgePropTypes } from './badge'
 export declare const VxeSelect: DefineVxeComponentApp<VxeSelectProps, VxeSelectEventProps, VxeSelectSlots, VxeSelectMethods>
 export type VxeSelectComponent = DefineVxeComponentOptions<VxeSelectProps>
 
-export type VxeSelectInstance = DefineVxeComponentInstance<{
-  reactData: SelectReactData
-  internalData: SelectInternalData
-}, VxeSelectProps, VxeSelectPrivateComputed, VxeSelectMethods>
+export type VxeSelectInstance = DefineVxeComponentInstance<
+  {
+    reactData: SelectReactData
+    internalData: SelectInternalData
+  },
+  VxeSelectProps,
+  VxeSelectPrivateComputed,
+  VxeSelectMethods
+>
 
 export type VxeSelectConstructor = VxeSelectInstance
 
-export interface SelectPrivateRef {
-}
-export interface VxeSelectPrivateRef extends SelectPrivateRef { }
+export interface SelectPrivateRef {}
+export interface VxeSelectPrivateRef extends SelectPrivateRef {}
 
 export namespace VxeSelectPropTypes {
   export type Size = VxeComponentSizeType
@@ -134,11 +138,7 @@ export namespace VxeSelectPropTypes {
     /**
      * 远程方法
      */
-    queryMethod?(params: {
-      $select: VxeSelectConstructor
-      searchValue: string
-      value: ModelValue | undefined
-    }): Promise<void> | void
+    queryMethod?(params: { $select: VxeSelectConstructor; searchValue: string; value: ModelValue | undefined }): Promise<void> | void
   }
   export type ShowBadge = boolean
 
@@ -347,9 +347,8 @@ export interface VxeSelectProps {
   scrollY?: VxeSelectPropTypes.ScrollY
 }
 
-export interface SelectPrivateComputed {
-}
-export interface VxeSelectPrivateComputed extends SelectPrivateComputed { }
+export interface SelectPrivateComputed {}
+export interface VxeSelectPrivateComputed extends SelectPrivateComputed {}
 
 export interface SelectReactData extends VxeUseInitVScrollbarReactData {
   initialized: boolean
@@ -448,25 +447,12 @@ export interface SelectMethods {
    */
   blur(): Promise<any>
 }
-export interface VxeSelectMethods extends SelectMethods { }
+export interface VxeSelectMethods extends SelectMethods {}
 
-export interface SelectPrivateMethods { }
-export interface VxeSelectPrivateMethods extends SelectPrivateMethods { }
+export interface SelectPrivateMethods {}
+export interface VxeSelectPrivateMethods extends SelectPrivateMethods {}
 
-export type VxeSelectEmits = [
-  'input',
-  'model-value',
-  'modelValue',
-  'change',
-  'default-change',
-  'all-change',
-  'clear',
-  'blur',
-  'focus',
-  'click',
-  'scroll',
-  'visible-change'
-]
+export type VxeSelectEmits = ['input', 'model-value', 'modelValue', 'change', 'default-change', 'all-change', 'clear', 'blur', 'focus', 'click', 'scroll', 'visible-change']
 
 export namespace VxeSelectDefines {
   export class OptionInfo {
@@ -514,13 +500,13 @@ export namespace VxeSelectDefines {
     value: any
   }
 
-  export interface FocusEventParams extends SelectEventParams { }
-  export interface BlurEventParams extends SelectEventParams { }
+  export interface FocusEventParams extends SelectEventParams {}
+  export interface BlurEventParams extends SelectEventParams {}
   export interface ClickEventParams extends SelectEventParams {
     triggerButton: boolean
     visible: boolean
   }
-  export interface ScrollEventParams extends SelectEventParams { }
+  export interface ScrollEventParams extends SelectEventParams {}
   export interface VisibleChangeEventParams extends SelectEventParams {
     visible: boolean
   }
@@ -570,38 +556,24 @@ export interface VxeSelectSlots {
   /**
    * 自定义插槽模板
    */
-  [key: string]: ((params: {
-    option: any
-    group: any
-    [key: string]: any
-  }) => any) | undefined
+  [key: string]: ((params: { option: any; group: any; [key: string]: any }) => any) | undefined
 
   /**
    * 自定义前缀图标模板
    */
-  prefix?: (params: {
-    [key: string]: any
-  }) => any
+  prefix?: (params: { [key: string]: any }) => any
   /**
    * 自定义弹窗容器头部模板
    */
-  header?: (params: {
-    [key: string]: any
-  }) => any
+  header?: (params: { [key: string]: any }) => any
   /**
    * 自定义弹窗容器选项模板
    */
-  option?: ((params: {
-    option: any
-    group: any
-    [key: string]: any
-  }) => any) | undefined
+  option?: ((params: { option: any; group: any; [key: string]: any }) => any) | undefined
   /**
    * 自定义弹窗容器底部模板
    */
-  footer?: ((params: {
-    [key: string]: any
-  }) => any) | undefined
+  footer?: ((params: { [key: string]: any }) => any) | undefined
 }
 
 export const Select: typeof VxeSelect

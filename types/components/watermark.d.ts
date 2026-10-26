@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeWatermark: DefineVxeComponentApp<VxeWatermarkProps, VxeWatermarkEventProps, VxeWatermarkSlots, VxeWatermarkMethods>
 export type VxeWatermarkComponent = DefineVxeComponentOptions<VxeWatermarkProps>
 
-export type VxeWatermarkInstance = DefineVxeComponentInstance<{
-  reactData: WatermarkReactData
-}, VxeWatermarkProps, VxeWatermarkPrivateComputed, VxeWatermarkMethods>
+export type VxeWatermarkInstance = DefineVxeComponentInstance<
+  {
+    reactData: WatermarkReactData
+  },
+  VxeWatermarkProps,
+  VxeWatermarkPrivateComputed,
+  VxeWatermarkMethods
+>
 
 export type VxeWatermarkConstructor = VxeWatermarkInstance
 
-export interface WatermarkPrivateRef {
-}
-export interface VxeWatermarkPrivateRef extends WatermarkPrivateRef { }
+export interface WatermarkPrivateRef {}
+export interface VxeWatermarkPrivateRef extends WatermarkPrivateRef {}
 
 export namespace VxeWatermarkPropTypes {
   export type Width = number | string
@@ -46,20 +50,18 @@ export interface VxeWatermarkProps {
   zIndex?: VxeWatermarkPropTypes.ZIndex
 }
 
-export interface WatermarkPrivateComputed {
-}
-export interface VxeWatermarkPrivateComputed extends WatermarkPrivateComputed { }
+export interface WatermarkPrivateComputed {}
+export interface VxeWatermarkPrivateComputed extends WatermarkPrivateComputed {}
 
 export interface WatermarkReactData {
   markUrl: string
 }
 
-export interface WatermarkMethods {
-}
-export interface VxeWatermarkMethods extends WatermarkMethods { }
+export interface WatermarkMethods {}
+export interface VxeWatermarkMethods extends WatermarkMethods {}
 
-export interface WatermarkPrivateMethods { }
-export interface VxeWatermarkPrivateMethods extends WatermarkPrivateMethods { }
+export interface WatermarkPrivateMethods {}
+export interface VxeWatermarkPrivateMethods extends WatermarkPrivateMethods {}
 
 export type VxeWatermarkEmits = []
 
@@ -84,19 +86,17 @@ export namespace VxeWatermarkDefines {
 
 export type VxeWatermarkEventProps = {}
 
-export interface VxeWatermarkListeners { }
+export interface VxeWatermarkListeners {}
 
-export namespace VxeWatermarkEvents { }
+export namespace VxeWatermarkEvents {}
 
-export namespace VxeWatermarkSlotTypes {
-}
+export namespace VxeWatermarkSlotTypes {}
 
-export interface VxeWatermarkSlots {
-}
+export interface VxeWatermarkSlots {}
 
 /**
-   * 全局水印控制器
-   */
+ * 全局水印控制器
+ */
 export interface WatermarkController {
   /**
    * 加载水印

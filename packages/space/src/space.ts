@@ -1,18 +1,17 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getPropClass, toCssUnit } from '../../ui/src/dom'
 import { eqEmptyValue } from '../../ui/src/utils'
 
 import type { SpaceReactData, VxeSpaceEmits, VxeSpacePropTypes, ValueOf, VxeComponentSizeType, VxeComponentPermissionInfo, VxeComponentStyleType } from '../../../types'
 
+const { getConfig, createEvent, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSpace',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.permissionMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.permissionMixin],
   props: {
     size: {
       type: String as PropType<VxeSpacePropTypes.Size>,
@@ -68,7 +67,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().space.separatorWidth
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: SpaceReactData = {
       activeValue: null
@@ -83,7 +82,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       computePermissionInfo(): VxeComponentPermissionInfo
       computeSize(): VxeComponentSizeType
     }),
-    computeCurrStyle () {
+    computeCurrStyle() {
       const $xeSpace = this
       const props = $xeSpace
 
@@ -122,7 +121,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeSpaceEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeSpaceEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeSpace = this
       $xeSpace.$emit(type, createEvent(evnt, { $space: $xeSpace }, params))
     },
@@ -130,7 +129,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderItems (h: CreateElement) {
+    renderItems(h: CreateElement) {
       const $xeSpace = this
       const props = $xeSpace
       const slots = $xeSpace.$scopedSlots
@@ -156,44 +155,60 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (defaultSlot) {
         XEUtils.each(defaultSlot({}), (itemVN, index, items) => {
           itemVNs.push(
-            h('div', {
-              key: 'i' + index,
-              class: ['vxe-space--item', getPropClass(itemClassName, { index })]
-            }, [itemVN])
+            h(
+              'div',
+              {
+                key: 'i' + index,
+                class: ['vxe-space--item', getPropClass(itemClassName, { index })]
+              },
+              [itemVN]
+            )
           )
           if ((separator || separatorSlot) && index < items.length - 1) {
             itemVNs.push(
-              h('div', {
-                key: 's' + index,
-                class: 'vxe-space--separator'
-              }, separatorSlot ? separatorSlot({}) : ('' + separator))
+              h(
+                'div',
+                {
+                  key: 's' + index,
+                  class: 'vxe-space--separator'
+                },
+                separatorSlot ? separatorSlot({}) : '' + separator
+              )
             )
           }
         })
       }
       return itemVNs
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeSpace = this
       const props = $xeSpace
 
       const { vertical, wrap, className, fill, itemWidth, itemMinWidth, itemMaxWidth } = props
       const currStyle = $xeSpace.computeCurrStyle
       const vSize = $xeSpace.computeSize
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-space', getPropClass(className, {}), {
-          [`size--${vSize}`]: vSize,
-          'is--wrap': wrap,
-          'is--vertical': vertical,
-          'is--fill': fill,
-          'is--width': itemWidth || itemMinWidth || itemMaxWidth
-        }],
-        style: currStyle
-      }, $xeSpace.renderItems(h))
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-space',
+            getPropClass(className, {}),
+            {
+              [`size--${vSize}`]: vSize,
+              'is--wrap': wrap,
+              'is--vertical': vertical,
+              'is--fill': fill,
+              'is--width': itemWidth || itemMinWidth || itemMaxWidth
+            }
+          ],
+          style: currStyle
+        },
+        $xeSpace.renderItems(h)
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

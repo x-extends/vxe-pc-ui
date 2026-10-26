@@ -4,7 +4,7 @@ import VxeEmptyComponent from './src/empty'
 import { dynamicApp } from '../dynamics'
 
 export const VxeEmpty = Object.assign({}, VxeEmptyComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeEmptyComponent.name as string, VxeEmptyComponent)
   }
 })

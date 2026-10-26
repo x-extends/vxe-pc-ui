@@ -6,34 +6,34 @@ import { VxeFormItemProps } from './form-item'
 export declare const VxeFormGroup: DefineVxeComponentApp<VxeFormGroupProps, VxeFormGroupEventProps, VxeFormGroupSlots, VxeFormGroupMethods>
 export type VxeFormGroupComponent = DefineVxeComponentOptions<VxeFormGroupProps>
 
-export type VxeFormGroupInstance = DefineVxeComponentInstance<{
-  reactData: FormGroupReactData
-}, VxeFormGroupProps, VxeFormGroupPrivateComputed, VxeFormGroupMethods>
+export type VxeFormGroupInstance = DefineVxeComponentInstance<
+  {
+    reactData: FormGroupReactData
+  },
+  VxeFormGroupProps,
+  VxeFormGroupPrivateComputed,
+  VxeFormGroupMethods
+>
 
 export type VxeFormGroupConstructor = VxeFormGroupInstance
 
-export interface FormGroupPrivateRef {
-}
-export interface VxeFormGroupPrivateRef extends FormGroupPrivateRef { }
+export interface FormGroupPrivateRef {}
+export interface VxeFormGroupPrivateRef extends FormGroupPrivateRef {}
 
-export namespace VxeFormGroupPropTypes {
-}
+export namespace VxeFormGroupPropTypes {}
 
 export interface VxeFormGroupProps extends VxeFormItemProps {}
 
-export interface FormGroupPrivateComputed {
-}
-export interface VxeFormGroupPrivateComputed extends FormGroupPrivateComputed { }
+export interface FormGroupPrivateComputed {}
+export interface VxeFormGroupPrivateComputed extends FormGroupPrivateComputed {}
 
-export interface FormGroupReactData {
-}
+export interface FormGroupReactData {}
 
-export interface FormGroupMethods {
-}
-export interface VxeFormGroupMethods extends FormGroupMethods { }
+export interface FormGroupMethods {}
+export interface VxeFormGroupMethods extends FormGroupMethods {}
 
-export interface FormGroupPrivateMethods { }
-export interface VxeFormGroupPrivateMethods extends FormGroupPrivateMethods { }
+export interface FormGroupPrivateMethods {}
+export interface VxeFormGroupPrivateMethods extends FormGroupPrivateMethods {}
 
 export type VxeFormGroupEmits = []
 
@@ -45,9 +45,9 @@ export namespace VxeFormGroupDefines {
 
 export type VxeFormGroupEventProps = {}
 
-export interface VxeFormGroupListeners { }
+export interface VxeFormGroupListeners {}
 
-export namespace VxeFormGroupEvents { }
+export namespace VxeFormGroupEvents {}
 
 export namespace VxeFormGroupSlotTypes {
   export interface DefaultSlotParams {

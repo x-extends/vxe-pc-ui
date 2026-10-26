@@ -1,15 +1,15 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeIconPropTypes, VxeComponentSizeType, IconReactData, VxeIconEmits, ValueOf } from '../../../types'
 
+const { getConfig, createEvent, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeIcon',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     name: String as PropType<VxeIconPropTypes.Name>,
     className: String as PropType<VxeIconPropTypes.ClassName>,
@@ -20,9 +20,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().icon.size || getConfig().size
     }
   },
-  data () {
-    const reactData: IconReactData = {
-    }
+  data() {
+    const reactData: IconReactData = {}
     return {
       xID: XEUtils.uniqueId(),
       reactData
@@ -37,11 +36,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeIconEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeIconEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeIcon = this
       $xeIcon.$emit(type, createEvent(evnt, { $icon: $xeIcon }, params))
     },
-    clickEvent  (evnt: KeyboardEvent) {
+    clickEvent(evnt: KeyboardEvent) {
       const $xeIcon = this
 
       $xeIcon.dispatchEvent('click', {}, evnt)
@@ -50,7 +49,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeIcon = this
       const props = $xeIcon
 
@@ -58,18 +57,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const vSize = $xeIcon.computeSize
 
       return h('i', {
-        class: ['vxe-icon', `vxe-icon-${name}`, `${className || ''}`, {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          roll: roll
-        }],
+        class: [
+          'vxe-icon',
+          `vxe-icon-${name}`,
+          `${className || ''}`,
+          {
+            [`size--${vSize}`]: vSize,
+            [`theme--${status}`]: status,
+            roll: roll
+          }
+        ],
         on: {
           click: $xeIcon.clickEvent
         }
       })
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

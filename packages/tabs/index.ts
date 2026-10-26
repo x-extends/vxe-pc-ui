@@ -4,7 +4,7 @@ import VxeTabsComponent from './src/tabs'
 import { dynamicApp } from '../dynamics'
 
 export const VxeTabs = Object.assign({}, VxeTabsComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeTabsComponent.name as string, VxeTabsComponent)
   }
 })

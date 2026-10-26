@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeBadge: DefineVxeComponentApp<VxeBadgeProps, VxeBadgeEventProps, VxeBadgeSlots, VxeBadgeMethods>
 export type VxeBadgeComponent = DefineVxeComponentOptions<VxeBadgeProps>
 
-export type VxeBadgeInstance = DefineVxeComponentInstance<{
-  reactData: BadgeReactData
-}, VxeBadgeProps, VxeBadgePrivateComputed, VxeBadgeMethods>
+export type VxeBadgeInstance = DefineVxeComponentInstance<
+  {
+    reactData: BadgeReactData
+  },
+  VxeBadgeProps,
+  VxeBadgePrivateComputed,
+  VxeBadgeMethods
+>
 
 export type VxeBadgeConstructor = VxeBadgeInstance
 
-export interface BadgePrivateRef {
-}
-export interface VxeBadgePrivateRef extends BadgePrivateRef { }
+export interface BadgePrivateRef {}
+export interface VxeBadgePrivateRef extends BadgePrivateRef {}
 
 export namespace VxeBadgePropTypes {
   export type Count = string | number
@@ -33,19 +37,16 @@ export interface VxeBadgeProps {
   size?: VxeBadgePropTypes.Size
 }
 
-export interface BadgePrivateComputed {
-}
-export interface VxeBadgePrivateComputed extends BadgePrivateComputed { }
+export interface BadgePrivateComputed {}
+export interface VxeBadgePrivateComputed extends BadgePrivateComputed {}
 
-export interface BadgeReactData {
-}
+export interface BadgeReactData {}
 
-export interface BadgeMethods {
-}
-export interface VxeBadgeMethods extends BadgeMethods { }
+export interface BadgeMethods {}
+export interface VxeBadgeMethods extends BadgeMethods {}
 
-export interface BadgePrivateMethods { }
-export interface VxeBadgePrivateMethods extends BadgePrivateMethods { }
+export interface BadgePrivateMethods {}
+export interface VxeBadgePrivateMethods extends BadgePrivateMethods {}
 
 export type VxeBadgeEmits = []
 
@@ -57,9 +58,9 @@ export namespace VxeBadgeDefines {
 
 export type VxeBadgeEventProps = {}
 
-export interface VxeBadgeListeners { }
+export interface VxeBadgeListeners {}
 
-export namespace VxeBadgeEvents { }
+export namespace VxeBadgeEvents {}
 
 export namespace VxeBadgeSlotTypes {
   export interface DefaultSlotParams {}

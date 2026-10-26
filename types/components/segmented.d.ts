@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeSegmented: DefineVxeComponentApp<VxeSegmentedProps, VxeSegmentedEventProps, VxeSegmentedSlots, VxeSegmentedMethods>
 export type VxeSegmentedComponent = DefineVxeComponentOptions<VxeSegmentedProps>
 
-export type VxeSegmentedInstance = DefineVxeComponentInstance<{
-  reactData: SegmentedReactData
-}, VxeSegmentedProps, VxeSegmentedPrivateComputed, VxeSegmentedMethods>
+export type VxeSegmentedInstance = DefineVxeComponentInstance<
+  {
+    reactData: SegmentedReactData
+  },
+  VxeSegmentedProps,
+  VxeSegmentedPrivateComputed,
+  VxeSegmentedMethods
+>
 
 export type VxeSegmentedConstructor = VxeSegmentedInstance
 
-export interface SegmentedPrivateRef {
-}
-export interface VxeSegmentedPrivateRef extends SegmentedPrivateRef { }
+export interface SegmentedPrivateRef {}
+export interface VxeSegmentedPrivateRef extends SegmentedPrivateRef {}
 
 export namespace VxeSegmentedPropTypes {
   export type ModelValue = undefined | null | string | number
@@ -51,9 +55,8 @@ export interface VxeSegmentedProps {
   optionConfig?: VxeSegmentedPropTypes.OptionConfig
 }
 
-export interface SegmentedPrivateComputed {
-}
-export interface VxeSegmentedPrivateComputed extends SegmentedPrivateComputed { }
+export interface SegmentedPrivateComputed {}
+export interface VxeSegmentedPrivateComputed extends SegmentedPrivateComputed {}
 
 export interface SegmentedReactData {
   groupName: string
@@ -67,14 +70,12 @@ export interface SegmentedReactData {
 export interface SegmentedMethods {
   dispatchEvent(type: ValueOf<VxeSegmentedEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeSegmentedMethods extends SegmentedMethods { }
+export interface VxeSegmentedMethods extends SegmentedMethods {}
 
-export interface SegmentedPrivateMethods { }
-export interface VxeSegmentedPrivateMethods extends SegmentedPrivateMethods { }
+export interface SegmentedPrivateMethods {}
+export interface VxeSegmentedPrivateMethods extends SegmentedPrivateMethods {}
 
-export type VxeSegmentedEmits = [
-  'change'
-]
+export type VxeSegmentedEmits = ['change']
 
 export namespace VxeSegmentedDefines {
   export interface SegmentedEventParams extends VxeComponentEventParams {

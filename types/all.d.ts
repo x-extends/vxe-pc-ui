@@ -117,11 +117,11 @@ import VxeGantt from './components/gantt'
 
 declare global {
   interface Window {
-    VxeUI: VxeUIExport;
+    VxeUI: VxeUIExport
   }
 }
 
-export function install (app: VueConstructor, options?: VxeGlobalConfig): void
+export function install(app: VueConstructor, options?: VxeGlobalConfig): void
 
 interface UIComponents {
   /**

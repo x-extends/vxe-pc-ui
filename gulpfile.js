@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 const gulp = require('gulp')
 const XEUtils = require('xe-utils')
 const del = require('del')
@@ -23,7 +22,7 @@ const tsSettings = {
   target: 'es2015'
 }
 
-const exportModuleName = 'VxeUI'
+// const exportModuleName = 'VxeUI'
 const esmOutDir = 'es'
 const commOutDir = 'lib'
 

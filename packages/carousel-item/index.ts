@@ -4,7 +4,7 @@ import VxeCarouselItemComponent from '../carousel/src/carousel-item'
 import { dynamicApp } from '../dynamics'
 
 export const VxeCarouselItem = Object.assign({}, VxeCarouselItemComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeCarouselItemComponent.name as string, VxeCarouselItemComponent)
   }
 })

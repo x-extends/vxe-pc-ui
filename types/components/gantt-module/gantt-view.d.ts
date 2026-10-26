@@ -5,17 +5,21 @@ import { VxeScrollbarPropTypes } from '../scrollbar'
 
 /* eslint-disable no-use-before-define */
 
-export type VxeGanttViewInstance = DefineVxeComponentInstance<{
-  reactData: GanttViewReactData
-  internalData: GanttViewInternalData
+export type VxeGanttViewInstance = DefineVxeComponentInstance<
+  {
+    reactData: GanttViewReactData
+    internalData: GanttViewInternalData
 
-  $xeGantt: VxeGanttConstructor
-}, VxeGanttViewProps, GanttViewPrivateComputed, VxeGanttViewMethods>
+    $xeGantt: VxeGanttConstructor
+  },
+  VxeGanttViewProps,
+  GanttViewPrivateComputed,
+  VxeGanttViewMethods
+>
 
 export type VxeGanttViewConstructor = VxeGanttViewInstance
 
-interface VxeGanttViewProps {
-}
+interface VxeGanttViewProps {}
 
 export interface GanttViewReactData extends VxeUseInitVScrollbarReactData {
   // 是否启用了横向 X 可视渲染方式加载
@@ -102,8 +106,7 @@ export interface GanttViewInternalData extends VxeUseInitVScrollbarInternalData 
   lyTimeout?: undefined | number
 }
 
-export interface GanttViewPrivateRef {
-}
+export interface GanttViewPrivateRef {}
 
 export interface GanttViewPrivateComputed {
   computeScrollXHeight: number | undefined
@@ -138,9 +141,7 @@ export interface VxeGanttViewPrivateMethods {
   /**
    * @private
    */
-  handleSyncScrollTop(params: {
-    scrollTop: number
-  }): void
+  handleSyncScrollTop(params: { scrollTop: number }): void
   /**
    * @private
    */
@@ -186,9 +187,7 @@ export interface VxeGanttViewMethods extends VxeUseInitVScrollbarResult {
   getScrollViewElem(): HTMLElement | null | undefined
   refreshData(): Promise<void>
   updateViewData(force?: boolean): Promise<void>
-  connectUpdate(params: {
-    $table: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods
-  }): Promise<void>
+  connectUpdate(params: { $table: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods }): Promise<void>
 }
 
 type VxeGanttViewEmits = []

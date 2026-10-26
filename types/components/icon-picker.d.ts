@@ -7,15 +7,19 @@ import { VxeScrollbarProps } from './scrollbar'
 export declare const VxeIconPicker: DefineVxeComponentApp<VxeIconPickerProps, VxeIconPickerEventProps, VxeIconPickerSlots, VxeIconPickerMethods>
 export type VxeIconPickerComponent = DefineVxeComponentOptions<VxeIconPickerProps>
 
-export type VxeIconPickerInstance = DefineVxeComponentInstance<{
-  reactData: IconPickerReactData
-}, VxeIconPickerProps, VxeIconPickerPrivateComputed, VxeIconPickerMethods>
+export type VxeIconPickerInstance = DefineVxeComponentInstance<
+  {
+    reactData: IconPickerReactData
+  },
+  VxeIconPickerProps,
+  VxeIconPickerPrivateComputed,
+  VxeIconPickerMethods
+>
 
 export type VxeIconPickerConstructor = VxeIconPickerInstance
 
-export interface IconPickerPrivateRef {
-}
-export interface VxeIconPickerPrivateRef extends IconPickerPrivateRef { }
+export interface IconPickerPrivateRef {}
+export interface VxeIconPickerPrivateRef extends IconPickerPrivateRef {}
 
 export namespace VxeIconPickerPropTypes {
   export type ModelValue = string | null
@@ -27,7 +31,7 @@ export namespace VxeIconPickerPropTypes {
    * 已废弃，请使用 PopupConfig.className
    * @deprecated
    */
-  export type PopupClassName = string | ((params: {$iconPicker: VxeIconPickerConstructor }) => string)
+  export type PopupClassName = string | ((params: { $iconPicker: VxeIconPickerConstructor }) => string)
   export type Readonly = boolean
   export type Disabled = boolean
   export type Option = {
@@ -39,13 +43,8 @@ export namespace VxeIconPickerPropTypes {
   export type Clearable = boolean
   export type ShowIconTitle = boolean
   export type Filterable = boolean
-   export interface FilterConfig {
-    filterMethod?:(params: {
-      $iconPicker: VxeIconPickerConstructor
-      option: VxeIconPickerDefines.IconItemObj
-      searchValue: string
-      value: ModelValue | undefined
-    }) => boolean
+  export interface FilterConfig {
+    filterMethod?: (params: { $iconPicker: VxeIconPickerConstructor; option: VxeIconPickerDefines.IconItemObj; searchValue: string; value: ModelValue | undefined }) => boolean
   }
   export type Placement = 'top' | 'bottom' | '' | null
   export interface PopupConfig {
@@ -134,9 +133,8 @@ export interface VxeIconPickerProps {
   scrollbarConfig?: VxeIconPickerPropTypes.ScrollbarConfig
 }
 
-export interface IconPickerPrivateComputed {
-}
-export interface VxeIconPickerPrivateComputed extends IconPickerPrivateComputed { }
+export interface IconPickerPrivateComputed {}
+export interface VxeIconPickerPrivateComputed extends IconPickerPrivateComputed {}
 
 export interface IconPickerReactData {
   initialized: boolean
@@ -183,19 +181,12 @@ export interface IconPickerMethods {
    */
   blur(): Promise<any>
 }
-export interface VxeIconPickerMethods extends IconPickerMethods { }
+export interface VxeIconPickerMethods extends IconPickerMethods {}
 
-export interface IconPickerPrivateMethods { }
-export interface VxeIconPickerPrivateMethods extends IconPickerPrivateMethods { }
+export interface IconPickerPrivateMethods {}
+export interface VxeIconPickerPrivateMethods extends IconPickerPrivateMethods {}
 
-export type VxeIconPickerEmits = [
-  'model-value',
-  'modelValue',
-  'input',
-  'change',
-  'clear',
-  'click'
-]
+export type VxeIconPickerEmits = ['model-value', 'modelValue', 'input', 'change', 'clear', 'click']
 
 export namespace VxeIconPickerDefines {
   export interface IconPickerEventParams extends VxeComponentEventParams {
@@ -226,9 +217,9 @@ export namespace VxeIconPickerDefines {
 
 export type VxeIconPickerEventProps = {}
 
-export interface VxeIconPickerListeners { }
+export interface VxeIconPickerListeners {}
 
-export namespace VxeIconPickerEvents { }
+export namespace VxeIconPickerEvents {}
 
 export namespace VxeIconPickerSlotTypes {
   export interface DefaultSlotParams {}

@@ -1,7 +1,7 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { getDefaultConfig } from '../../ui/src/utils'
 
@@ -9,16 +9,16 @@ import VxeLoadingComponent from '../../loading'
 
 import type { ScrollbarReactData, ScrollbarInternalData, VxeScrollbarEmits, ValueOf, VxeScrollbarPropTypes, VxeComponentStyleType, VxeUseSizeComputed, VxeUseInitVScrollbarComputed } from '../../../types'
 
-const { getConfig, createEvent, domUtils, globalResize, globalEvents, renderEmptyElement } = VxeUI
+const { getConfig, globalMixins, createEvent, domUtils, globalResize, globalEvents, renderEmptyElement } = VxeUI
 
-function createReactData (): ScrollbarReactData {
+function createReactData(): ScrollbarReactData {
   return {
     yThumbHeight: 0,
     xThumbWidth: 0
   }
 }
 
-function createInternalData (): ScrollbarInternalData {
+function createInternalData(): ScrollbarInternalData {
   return {
     // scrollObserver: undefined,
     // isThumbDrag: false,
@@ -32,10 +32,7 @@ function createInternalData (): ScrollbarInternalData {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeScrollbar',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.initVScrollbarMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.initVScrollbarMixin],
   props: {
     id: [String, Number] as PropType<VxeScrollbarPropTypes.Id>,
     viewId: [String, Number] as PropType<VxeScrollbarPropTypes.ViewId>,
@@ -110,7 +107,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
      */
     syncResize: [Boolean, String, Number] as PropType<VxeScrollbarPropTypes.SyncResize>
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
 
@@ -126,7 +123,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   computed: {
     ...({} as VxeUseSizeComputed & VxeUseInitVScrollbarComputed),
-    computeWrapperStyle () {
+    computeWrapperStyle() {
       const $xeScrollbar = this
       const props = $xeScrollbar
 
@@ -158,19 +155,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computeXHeight () {
+    computeXHeight() {
       const $xeScrollbar = this
 
       const xOpts = ($xeScrollbar as any).computeXOpts as VxeScrollbarPropTypes.XConfig
       return xOpts.height
     },
-    computeYWidth () {
+    computeYWidth() {
       const $xeScrollbar = this
 
       const yOpts = ($xeScrollbar as any).computeYOpts as VxeScrollbarPropTypes.YConfig
       return yOpts.width
     },
-    computeXVisible () {
+    computeXVisible() {
       const $xeScrollbar = this
       const props = $xeScrollbar
 
@@ -178,7 +175,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const xOpts = ($xeScrollbar as any).computeXOpts as VxeScrollbarPropTypes.XConfig
       return getDefaultConfig(xOpts.visible, visible)
     },
-    computeYVisible () {
+    computeYVisible() {
       const $xeScrollbar = this
       const props = $xeScrollbar
 
@@ -186,7 +183,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const yOpts = ($xeScrollbar as any).computeYOpts as VxeScrollbarPropTypes.YConfig
       return getDefaultConfig(yOpts.visible, visible)
     },
-    computeXAutoHide () {
+    computeXAutoHide() {
       const $xeScrollbar = this
       const props = $xeScrollbar
 
@@ -194,7 +191,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const xOpts = ($xeScrollbar as any).computeXOpts as VxeScrollbarPropTypes.XConfig
       return getDefaultConfig(xOpts.autoHide, autoHide)
     },
-    computeYAutoHide () {
+    computeYAutoHide() {
       const $xeScrollbar = this
       const props = $xeScrollbar
 
@@ -202,7 +199,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const yOpts = ($xeScrollbar as any).computeYOpts as VxeScrollbarPropTypes.YConfig
       return getDefaultConfig(yOpts.autoHide, autoHide)
     },
-    computeWrapperClss () {
+    computeWrapperClss() {
       const $xeScrollbar = this
       const props = $xeScrollbar
       const reactData = $xeScrollbar.reactData
@@ -216,64 +213,61 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const yVisible = ($xeScrollbar as any).computeYVisible
       const xAutoHide = ($xeScrollbar as any).computeXAutoHide
       const yAutoHide = ($xeScrollbar as any).computeYAutoHide
-      return domUtils.buildClass([
-        'vxe-scrollbar',
-        vSize ? `size--${vSize}` : '',
-        theme ? `theme--${theme}` : '',
-        fluentOverlay ? 'is--fluent-overlay' : 'is--default-mode',
-        `ov-x--${xVisible === false ? 'hidden' : 'visible'}`,
-        `ov-y--${yVisible === false ? 'hidden' : 'visible'}`,
-        `sx-pos--${xToTop ? 'top' : 'bottom'}`,
-        `sy-pos--${yToLeft ? 'left' : 'right'}`,
-        native ? 'is--native' : 'is--virtual',
-        className
-      ], {
-        'is--padding': padding,
-        'ov-x--auto-hide': xAutoHide,
-        'ov-y--auto-hide': yAutoHide,
-        'overflow-y': yThumbHeight,
-        'overflow-x': xThumbWidth
-      })
+      return domUtils.buildClass(
+        [
+          'vxe-scrollbar',
+          vSize ? `size--${vSize}` : '',
+          theme ? `theme--${theme}` : '',
+          fluentOverlay ? 'is--fluent-overlay' : 'is--default-mode',
+          `ov-x--${xVisible === false ? 'hidden' : 'visible'}`,
+          `ov-y--${yVisible === false ? 'hidden' : 'visible'}`,
+          `sx-pos--${xToTop ? 'top' : 'bottom'}`,
+          `sy-pos--${yToLeft ? 'left' : 'right'}`,
+          native ? 'is--native' : 'is--virtual',
+          className
+        ],
+        {
+          'is--padding': padding,
+          'ov-x--auto-hide': xAutoHide,
+          'ov-y--auto-hide': yAutoHide,
+          'overflow-y': yThumbHeight,
+          'overflow-x': xThumbWidth
+        }
+      )
     },
-    computeViewClss () {
+    computeViewClss() {
       const $xeScrollbar = this
       const props = $xeScrollbar
 
       const { viewClassName } = props
-      return domUtils.buildClass([
-        'vxe-scrollbar--view',
-        viewClassName
-      ])
+      return domUtils.buildClass(['vxe-scrollbar--view', viewClassName])
     },
-    computeViewInnerClss () {
+    computeViewInnerClss() {
       const $xeScrollbar = this
       const props = $xeScrollbar
 
       const { viewInnerClassName } = props
-      return domUtils.buildClass([
-        'vxe-scrollbar--view-inner',
-        viewInnerClassName
-      ])
+      return domUtils.buildClass(['vxe-scrollbar--view-inner', viewInnerClassName])
     },
-    computeXOpts () {
+    computeXOpts() {
       const $xeScrollbar = this
       const props = $xeScrollbar
 
       return Object.assign({}, getConfig().scrollbar.xConfig, props.xConfig)
     },
-    computeYOpts () {
+    computeYOpts() {
       const $xeScrollbar = this
       const props = $xeScrollbar
 
       return Object.assign({}, getConfig().scrollbar.yConfig, props.yConfig)
     },
-    computeXToTop () {
+    computeXToTop() {
       const $xeScrollbar = this
 
       const xOpts = $xeScrollbar.computeXOpts as VxeScrollbarPropTypes.XConfig
       return xOpts.position === 'top'
     },
-    computeYToLeft () {
+    computeYToLeft() {
       const $xeScrollbar = this
 
       const yOpts = $xeScrollbar.computeYOpts as VxeScrollbarPropTypes.YConfig
@@ -284,23 +278,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeScrollbarEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeScrollbarEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeScrollbar = this
       $xeScrollbar.$emit(type, createEvent(evnt, { $scrollbar: $xeScrollbar }, params))
     },
-    getScrollViewElem () {
+    getScrollViewElem() {
       const $xeScrollbar = this
 
       const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
       return viewEl || null
     },
-    getScrollViewInnerElem () {
+    getScrollViewInnerElem() {
       const $xeScrollbar = this
 
       const viewInnerEl = $xeScrollbar.$refs.refViewInnerElem as HTMLDivElement
       return viewInnerEl || null
     },
-    scrollTo (left: ScrollToOptions | number, top?: number) {
+    scrollTo(left: ScrollToOptions | number, top?: number) {
       const $xeScrollbar = this
 
       const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
@@ -312,7 +306,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    scrollIntoView () {
+    scrollIntoView() {
       const $xeScrollbar = this
 
       const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
@@ -320,7 +314,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         viewEl.scrollIntoView()
       }
     },
-    setScrollTop (top: number) {
+    setScrollTop(top: number) {
       const $xeScrollbar = this
 
       const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
@@ -328,7 +322,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         viewEl.scrollTop = top
       }
     },
-    setScrollLeft (left: number) {
+    setScrollLeft(left: number) {
       const $xeScrollbar = this
 
       const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
@@ -336,7 +330,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         viewEl.scrollLeft = left
       }
     },
-    getScrollTop () {
+    getScrollTop() {
       const $xeScrollbar = this
 
       const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
@@ -345,7 +339,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return 0
     },
-    getScrollLeft () {
+    getScrollLeft() {
       const $xeScrollbar = this
 
       const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
@@ -354,7 +348,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return 0
     },
-    clearScroll () {
+    clearScroll() {
       const $xeScrollbar = this
 
       const viewEl = $xeScrollbar.$refs.refViewElem as HTMLDivElement
@@ -363,14 +357,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         viewEl.scrollLeft = 0
       }
     },
-    recalculate () {
+    recalculate() {
       const $xeScrollbar = this
 
       $xeScrollbar.updateThumbSize()
       $xeScrollbar.updateThumbOffset()
       return $xeScrollbar.$nextTick()
     },
-    scrollEvent (evnt: Event) {
+    scrollEvent(evnt: Event) {
       const $xeScrollbar = this
       const reactData = $xeScrollbar.reactData
       const internalData = $xeScrollbar.internalData
@@ -418,39 +412,47 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.lastScrollTop = scrollTop
       internalData.lastScrollLeft = scrollLeft
       if (isBottomBoundary || isTopBoundary || isRightBoundary || isLeftBoundary) {
-        $xeScrollbar.dispatchEvent('scroll-boundary', {
+        $xeScrollbar.dispatchEvent(
+          'scroll-boundary',
+          {
+            direction: direction,
+            isTop: isTopBoundary,
+            isBottom: isBottomBoundary,
+            isLeft: isLeftBoundary,
+            isRight: isRightBoundary,
+            scrollTop: scrollTop,
+            scrollLeft: scrollLeft,
+            clientWidth: clientWidth,
+            clientHeight: clientHeight,
+            scrollHeight: scrollHeight,
+            scrollWidth: scrollWidth
+          },
+          evnt
+        )
+      }
+      $xeScrollbar.dispatchEvent(
+        'scroll',
+        {
           direction: direction,
-          isTop: isTopBoundary,
-          isBottom: isBottomBoundary,
-          isLeft: isLeftBoundary,
-          isRight: isRightBoundary,
+          isTop: yThumbHeight > 0 && scrollTop <= 0,
+          isBottom: yThumbHeight > 0 && scrollTop + clientHeight >= scrollHeight,
+          isLeft: xThumbWidth > 0 && scrollLeft <= 0,
+          isRight: xThumbWidth > 0 && scrollLeft + clientWidth >= scrollWidth,
           scrollTop: scrollTop,
           scrollLeft: scrollLeft,
           clientWidth: clientWidth,
           clientHeight: clientHeight,
           scrollHeight: scrollHeight,
           scrollWidth: scrollWidth
-        }, evnt)
-      }
-      $xeScrollbar.dispatchEvent('scroll', {
-        direction: direction,
-        isTop: yThumbHeight > 0 && scrollTop <= 0,
-        isBottom: yThumbHeight > 0 && scrollTop + clientHeight >= scrollHeight,
-        isLeft: xThumbWidth > 0 && scrollLeft <= 0,
-        isRight: xThumbWidth > 0 && scrollLeft + clientWidth >= scrollWidth,
-        scrollTop: scrollTop,
-        scrollLeft: scrollLeft,
-        clientWidth: clientWidth,
-        clientHeight: clientHeight,
-        scrollHeight: scrollHeight,
-        scrollWidth: scrollWidth
-      }, evnt)
+        },
+        evnt
+      )
     },
 
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeScrollbar = this
       const props = $xeScrollbar
       const slots = $xeScrollbar.$scopedSlots
@@ -463,149 +465,169 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const xVisible = $xeScrollbar.computeXVisible
       const yVisible = $xeScrollbar.computeYVisible
       const defaultSlot = slots.default
-      return h('div', {
-        ref: 'refElem',
-        attrs: {
-          id: id || null
-        },
-        class: wrapperClss,
-        style: wrapperStyle
-      }, [
-        h('div', {
-          ref: 'refViewElem',
-          class: viewClss,
-          style: viewStyle,
+      return h(
+        'div',
+        {
+          ref: 'refElem',
           attrs: {
-            id: viewId || null,
-            ...viewAttrs
+            id: id || null
           },
-          on: {
-            scroll: $xeScrollbar.scrollEvent
-          }
-        }, [
-          h('div', {
-            key: 'vi',
-            ref: 'refViewInnerElem',
-            class: viewInnerClss
-          }, defaultSlot ? defaultSlot({}) : [])
-        ]),
-        native || xVisible === false
-          ? renderEmptyElement($xeScrollbar)
-          : h('div', {
-            ref: 'refTrackXElem',
-            class: 'vxe-scrollbar--track-x',
-            on: {
-              click: $xeScrollbar.clickTrackXEvent
-            }
-          }, [
-            h('div', {
-              ref: 'refThumbXElem',
-              class: 'vxe-scrollbar--thumb-x',
+          class: wrapperClss,
+          style: wrapperStyle
+        },
+        [
+          h(
+            'div',
+            {
+              ref: 'refViewElem',
+              class: viewClss,
+              style: viewStyle,
+              attrs: {
+                id: viewId || null,
+                ...viewAttrs
+              },
               on: {
-                pointerdown: $xeScrollbar.pointerdownThumbXEvent,
-                pointermove: $xeScrollbar.pointermoveThumbXEvent,
-                pointerup: $xeScrollbar.cleatPointerThumbEvent,
-                pointercancel: $xeScrollbar.cleatPointerThumbEvent,
-                lostpointercapture: $xeScrollbar.cleatPointerThumbEvent
+                scroll: $xeScrollbar.scrollEvent
               }
-            })
-          ]),
-        native || yVisible === false
-          ? renderEmptyElement($xeScrollbar)
-          : h('div', {
-            ref: 'refTrackYElem',
-            class: 'vxe-scrollbar--track-y',
-            on: {
-              click: $xeScrollbar.clickTrackYEvent
+            },
+            [
+              h(
+                'div',
+                {
+                  key: 'vi',
+                  ref: 'refViewInnerElem',
+                  class: viewInnerClss
+                },
+                defaultSlot ? defaultSlot({}) : []
+              )
+            ]
+          ),
+          native || xVisible === false
+            ? renderEmptyElement($xeScrollbar)
+            : h(
+              'div',
+              {
+                ref: 'refTrackXElem',
+                class: 'vxe-scrollbar--track-x',
+                on: {
+                  click: $xeScrollbar.clickTrackXEvent
+                }
+              },
+              [
+                h('div', {
+                  ref: 'refThumbXElem',
+                  class: 'vxe-scrollbar--thumb-x',
+                  on: {
+                    pointerdown: $xeScrollbar.pointerdownThumbXEvent,
+                    pointermove: $xeScrollbar.pointermoveThumbXEvent,
+                    pointerup: $xeScrollbar.cleatPointerThumbEvent,
+                    pointercancel: $xeScrollbar.cleatPointerThumbEvent,
+                    lostpointercapture: $xeScrollbar.cleatPointerThumbEvent
+                  }
+                })
+              ]
+            ),
+          native || yVisible === false
+            ? renderEmptyElement($xeScrollbar)
+            : h(
+              'div',
+              {
+                ref: 'refTrackYElem',
+                class: 'vxe-scrollbar--track-y',
+                on: {
+                  click: $xeScrollbar.clickTrackYEvent
+                }
+              },
+              [
+                h('div', {
+                  ref: 'refThumbYElem',
+                  class: 'vxe-scrollbar--thumb-y',
+                  on: {
+                    pointerdown: $xeScrollbar.pointerdownThumbYEvent,
+                    pointermove: $xeScrollbar.pointermoveThumbYEvent,
+                    pointerup: $xeScrollbar.cleatPointerThumbEvent,
+                    pointercancel: $xeScrollbar.cleatPointerThumbEvent,
+                    lostpointercapture: $xeScrollbar.cleatPointerThumbEvent
+                  }
+                })
+              ]
+            ),
+          h(VxeLoadingComponent, {
+            class: 'vxe-scrollbar--loading',
+            props: {
+              value: loading
             }
-          }, [
-            h('div', {
-              ref: 'refThumbYElem',
-              class: 'vxe-scrollbar--thumb-y',
-              on: {
-                pointerdown: $xeScrollbar.pointerdownThumbYEvent,
-                pointermove: $xeScrollbar.pointermoveThumbYEvent,
-                pointerup: $xeScrollbar.cleatPointerThumbEvent,
-                pointercancel: $xeScrollbar.cleatPointerThumbEvent,
-                lostpointercapture: $xeScrollbar.cleatPointerThumbEvent
-              }
-            })
-          ]),
-        h(VxeLoadingComponent, {
-          class: 'vxe-scrollbar--loading',
-          props: {
-            value: loading
-          }
-        })
-      ])
+          })
+        ]
+      )
     }
   },
   watch: {
-    height () {
+    height() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    width () {
+    width() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    minHeight () {
+    minHeight() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    minWidth () {
+    minWidth() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    maxHeight () {
+    maxHeight() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    maxWidth () {
+    maxWidth() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    native () {
+    native() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    syncResize () {
+    syncResize() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    computeYWidth () {
+    computeYWidth() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    computeXHeight () {
+    computeXHeight() {
       const $xeScrollbar = this
 
       $xeScrollbar.reFlag++
     },
-    computeXVisible () {
+    computeXVisible() {
       const $xeScrollbar = this
 
       $xeScrollbar.$nextTick(() => {
         $xeScrollbar.reFlag++
       })
     },
-    computeYVisible () {
+    computeYVisible() {
       const $xeScrollbar = this
 
       $xeScrollbar.$nextTick(() => {
         $xeScrollbar.reFlag++
       })
     },
-    reFlag () {
+    reFlag() {
       const $xeScrollbar = this
 
       $xeScrollbar.recalculate().then(() => {
@@ -613,12 +635,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
     }
   },
-  created () {
+  created() {
     const $xeScrollbar = this
 
     $xeScrollbar.internalData = createInternalData()
   },
-  mounted () {
+  mounted() {
     const $xeScrollbar = this
     const props = $xeScrollbar
     const internalData = $xeScrollbar.internalData
@@ -646,7 +668,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeScrollbar.reFlag++
     })
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeScrollbar = this
     const internalData = $xeScrollbar.internalData
 
@@ -656,7 +678,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     globalEvents.off($xeScrollbar, 'resize')
   },
-  destroyed () {
+  destroyed() {
     const $xeScrollbar = this
     const reactData = $xeScrollbar.reactData
     const internalData = $xeScrollbar.internalData
@@ -664,7 +686,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

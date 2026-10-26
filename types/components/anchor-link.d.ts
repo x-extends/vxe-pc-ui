@@ -6,15 +6,19 @@ import { VxeAnchorPropTypes } from './anchor'
 export declare const VxeAnchorLink: DefineVxeComponentApp<VxeAnchorLinkProps, VxeAnchorLinkEventProps, VxeAnchorLinkSlots, VxeAnchorLinkMethods>
 export type VxeAnchorLinkComponent = DefineVxeComponentOptions<VxeAnchorLinkProps>
 
-export type VxeAnchorLinkInstance = DefineVxeComponentInstance<{
-  linkConfig: VxeAnchorLinkDefines.LinkConfig
-  reactData: AnchorLinkReactData
-}, VxeAnchorLinkProps, VxeAnchorLinkPrivateComputed, VxeAnchorLinkMethods>
+export type VxeAnchorLinkInstance = DefineVxeComponentInstance<
+  {
+    linkConfig: VxeAnchorLinkDefines.LinkConfig
+    reactData: AnchorLinkReactData
+  },
+  VxeAnchorLinkProps,
+  VxeAnchorLinkPrivateComputed,
+  VxeAnchorLinkMethods
+>
 
 export type VxeAnchorLinkConstructor = VxeAnchorLinkInstance
 
-export interface AnchorLinkPrivateRef {
-}
+export interface AnchorLinkPrivateRef {}
 export type VxeAnchorLinkPrivateRef = AnchorLinkPrivateRef
 
 export namespace VxeAnchorLinkPropTypes {
@@ -31,18 +35,15 @@ export interface VxeAnchorLinkProps {
   children?: VxeAnchorLinkProps[]
 }
 
-export interface AnchorLinkPrivateComputed {
-}
+export interface AnchorLinkPrivateComputed {}
 export type VxeAnchorLinkPrivateComputed = AnchorLinkPrivateComputed
 
-export interface AnchorLinkReactData {
-}
+export interface AnchorLinkReactData {}
 
-export interface AnchorLinkMethods {
-}
+export interface AnchorLinkMethods {}
 export type VxeAnchorLinkMethods = AnchorLinkMethods
 
-export interface AnchorLinkPrivateMethods { }
+export interface AnchorLinkPrivateMethods {}
 export type VxeAnchorLinkPrivateMethods = AnchorLinkPrivateMethods
 
 export type VxeAnchorLinkEmits = []
@@ -61,9 +62,9 @@ export namespace VxeAnchorLinkDefines {
 
 export type VxeAnchorLinkEventProps = {}
 
-export interface VxeAnchorLinkListeners { }
+export interface VxeAnchorLinkListeners {}
 
-export namespace VxeAnchorLinkEvents { }
+export namespace VxeAnchorLinkEvents {}
 
 export namespace VxeAnchorLinkSlotTypes {
   export interface DefaultSlotParams {}

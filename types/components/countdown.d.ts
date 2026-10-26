@@ -6,15 +6,19 @@ import { DateDiffResult } from 'xe-utils'
 export declare const VxeCountdown: DefineVxeComponentApp<VxeCountdownProps, VxeCountdownEventProps, VxeCountdownSlots, VxeCountdownMethods>
 export type VxeCountdownComponent = DefineVxeComponentOptions<VxeCountdownProps>
 
-export type VxeCountdownInstance = DefineVxeComponentInstance<{
-  reactData: CountdownReactData
-}, VxeCountdownProps, VxeCountdownPrivateComputed, VxeCountdownMethods>
+export type VxeCountdownInstance = DefineVxeComponentInstance<
+  {
+    reactData: CountdownReactData
+  },
+  VxeCountdownProps,
+  VxeCountdownPrivateComputed,
+  VxeCountdownMethods
+>
 
 export type VxeCountdownConstructor = VxeCountdownInstance
 
-export interface CountdownPrivateRef {
-}
-export interface VxeCountdownPrivateRef extends CountdownPrivateRef { }
+export interface CountdownPrivateRef {}
+export interface VxeCountdownPrivateRef extends CountdownPrivateRef {}
 
 export namespace VxeCountdownPropTypes {
   export type ModelValue = number | string
@@ -39,7 +43,7 @@ export interface VxeCountdownProps {
 export interface CountdownPrivateComputed {
   computeSize: VxeCountdownPropTypes.Size
 }
-export interface VxeCountdownPrivateComputed extends CountdownPrivateComputed { }
+export interface VxeCountdownPrivateComputed extends CountdownPrivateComputed {}
 
 export interface CountdownReactData {
   currNum: number
@@ -53,16 +57,12 @@ export interface CountdownInternalData {
 export interface CountdownMethods {
   dispatchEvent(type: ValueOf<VxeCountdownEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCountdownMethods extends CountdownMethods { }
+export interface VxeCountdownMethods extends CountdownMethods {}
 
-export interface CountdownPrivateMethods { }
-export interface VxeCountdownPrivateMethods extends CountdownPrivateMethods { }
+export interface CountdownPrivateMethods {}
+export interface VxeCountdownPrivateMethods extends CountdownPrivateMethods {}
 
-export type VxeCountdownEmits = [
-  'input',
-  'start',
-  'end'
-]
+export type VxeCountdownEmits = ['input', 'start', 'end']
 
 export namespace VxeCountdownDefines {
   export interface CountdownEventParams extends VxeComponentEventParams {
@@ -72,9 +72,9 @@ export namespace VxeCountdownDefines {
 
 export type VxeCountdownEventProps = {}
 
-export interface VxeCountdownListeners { }
+export interface VxeCountdownListeners {}
 
-export namespace VxeCountdownEvents { }
+export namespace VxeCountdownEvents {}
 
 export namespace VxeCountdownSlotTypes {
   export interface DefaultSlotParams {

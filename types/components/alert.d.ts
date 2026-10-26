@@ -5,14 +5,18 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeAlert: DefineVxeComponentApp<VxeAlertProps, VxeAlertEventProps, VxeAlertSlots, VxeAlertMethods>
 export type VxeAlertComponent = DefineVxeComponentOptions<VxeAlertProps>
 
-export type VxeAlertInstance = DefineVxeComponentInstance<{
-  reactData: AlertReactData
-}, VxeAlertProps, VxeAlertPrivateComputed, VxeAlertMethods>
+export type VxeAlertInstance = DefineVxeComponentInstance<
+  {
+    reactData: AlertReactData
+  },
+  VxeAlertProps,
+  VxeAlertPrivateComputed,
+  VxeAlertMethods
+>
 
 export type VxeAlertConstructor = VxeAlertInstance
 
-export interface AlertPrivateRef {
-}
+export interface AlertPrivateRef {}
 export type VxeAlertPrivateRef = AlertPrivateRef
 
 export namespace VxeAlertPropTypes {
@@ -35,24 +39,20 @@ export interface VxeAlertProps {
   size?: VxeAlertPropTypes.Size
 }
 
-export interface AlertPrivateComputed {
-}
+export interface AlertPrivateComputed {}
 export type VxeAlertPrivateComputed = AlertPrivateComputed
 
-export interface AlertReactData {
-}
+export interface AlertReactData {}
 
 export interface AlertMethods {
   dispatchEvent(type: ValueOf<VxeAlertEmits>, params: Record<string, any>, evnt: Event | null): void
 }
 export type VxeAlertMethods = AlertMethods
 
-export interface AlertPrivateMethods { }
+export interface AlertPrivateMethods {}
 export type VxeAlertPrivateMethods = AlertPrivateMethods
 
-export type VxeAlertEmits = [
-  'close'
-]
+export type VxeAlertEmits = ['close']
 
 export namespace VxeAlertDefines {
   export interface AlertEventParams extends VxeComponentEventParams {
@@ -62,9 +62,9 @@ export namespace VxeAlertDefines {
 
 export type VxeAlertEventProps = {}
 
-export interface VxeAlertListeners { }
+export interface VxeAlertListeners {}
 
-export namespace VxeAlertEvents { }
+export namespace VxeAlertEvents {}
 
 export namespace VxeAlertSlotTypes {
   export interface DefaultSlotParams {}

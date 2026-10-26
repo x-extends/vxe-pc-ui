@@ -7,15 +7,19 @@ import { VxeScrollbarProps } from './scrollbar'
 export declare const VxeModal: DefineVxeComponentApp<VxeModalProps, VxeModalEventProps, VxeModalSlots, VxeModalMethods>
 export type VxeModalComponent = DefineVxeComponentOptions<VxeModalProps>
 
-export type VxeModalInstance = DefineVxeComponentInstance<{
-  reactData: ModalReactData
-}, VxeModalProps, VxeModalPrivateComputed, VxeModalMethods>
+export type VxeModalInstance = DefineVxeComponentInstance<
+  {
+    reactData: ModalReactData
+  },
+  VxeModalProps,
+  VxeModalPrivateComputed,
+  VxeModalMethods
+>
 
 export type VxeModalConstructor = VxeModalInstance
 
-export interface ModalPrivateRef {
-}
-export interface VxeModalPrivateRef extends ModalPrivateRef { }
+export interface ModalPrivateRef {}
+export interface VxeModalPrivateRef extends ModalPrivateRef {}
 
 /**
  * 窗口类型
@@ -78,11 +82,7 @@ export namespace VxeModalPropTypes {
   export interface ZoomConfig {
     minimizeLayout?: null | '' | 'vertical' | 'horizontal'
     minimizeMaxSize?: number
-    minimizeOffsetMethod?(params: {
-      $modal: VxeModalConstructor,
-      top: number
-      left: number
-    }): {
+    minimizeOffsetMethod?(params: { $modal: VxeModalConstructor; top: number; left: number }): {
       top: number
       left: number
     }
@@ -117,9 +117,7 @@ export namespace VxeModalPropTypes {
   export type StorageKey = string
   export type Animat = boolean
   export type Padding = boolean
-  export type BeforeHideMethod = (params: {
-    type: ModalEventTypes
-  }) => Promise<any>
+  export type BeforeHideMethod = (params: { type: ModalEventTypes }) => Promise<any>
   export type Slots = VxeModalSlots
   export type UseScrollbar = VxeComponentIsVScrollbar
   export interface ScrollbarConfig extends Pick<VxeScrollbarProps, 'xConfig' | 'yConfig' | 'padding' | 'autoHide' | 'fluentOverlay' | 'visible' | 'className' | 'viewAttrs' | 'viewClassName' | 'viewInnerClassName'> {
@@ -218,7 +216,7 @@ export interface VxeModalProps {
 export interface ModalPrivateComputed {
   computeZoomOpts: VxeModalPropTypes.ZoomConfig
 }
-export interface VxeModalPrivateComputed extends ModalPrivateComputed { }
+export interface VxeModalPrivateComputed extends ModalPrivateComputed {}
 
 export interface ModalReactData {
   initialized: boolean
@@ -304,27 +302,14 @@ export interface ModalMethods {
     status: boolean
   }>
 }
-export interface VxeModalMethods extends ModalMethods { }
+export interface VxeModalMethods extends ModalMethods {}
 
-export interface ModalPrivateMethods { }
+export interface ModalPrivateMethods {}
 export interface VxeModalPrivateMethods extends ModalPrivateMethods {
   callSlot<T>(slotFunc: ((params: T) => VxeComponentSlotType | VxeComponentSlotType[]) | string | null, params: T, h: CreateElement): VxeComponentSlotType[]
 }
 
-export type VxeModalEmits = [
-  'model-value',
-  'modelValue',
-  'input',
-  'show',
-  'hide',
-  'before-hide',
-  'close',
-  'confirm',
-  'cancel',
-  'zoom',
-  'resize',
-  'move'
-]
+export type VxeModalEmits = ['model-value', 'modelValue', 'input', 'show', 'hide', 'before-hide', 'close', 'confirm', 'cancel', 'zoom', 'resize', 'move']
 
 export namespace VxeModalDefines {
   export interface ModalOptions extends VxeModalProps, VxeModalEventProps {
@@ -360,32 +345,32 @@ export namespace VxeModalDefines {
     type: ModalEventTypes
   }
 
-  export interface ShowParams extends ModalBaseParams { }
-  export interface ShowEventParams extends ModalEventParams, ShowParams { }
+  export interface ShowParams extends ModalBaseParams {}
+  export interface ShowEventParams extends ModalEventParams, ShowParams {}
 
-  export interface HideParams extends ModalBaseParams { }
-  export interface HideEventParams extends ModalEventParams, HideParams { }
+  export interface HideParams extends ModalBaseParams {}
+  export interface HideEventParams extends ModalEventParams, HideParams {}
 
-  export interface BeforeHideParams extends ModalBaseParams { }
-  export interface BeforeHideEventParams extends ModalEventParams, BeforeHideParams { }
+  export interface BeforeHideParams extends ModalBaseParams {}
+  export interface BeforeHideEventParams extends ModalEventParams, BeforeHideParams {}
 
-  export interface ConfirmParams extends ModalBaseParams { }
-  export interface ConfirmEventParams extends ModalEventParams, ConfirmParams { }
+  export interface ConfirmParams extends ModalBaseParams {}
+  export interface ConfirmEventParams extends ModalEventParams, ConfirmParams {}
 
-  export interface CancelParams extends ModalBaseParams { }
-  export interface CancelEventParams extends ModalEventParams, CancelParams { }
+  export interface CancelParams extends ModalBaseParams {}
+  export interface CancelEventParams extends ModalEventParams, CancelParams {}
 
-  export interface CloseParams extends ModalBaseParams { }
-  export interface CloseEventParams extends ModalEventParams, CloseParams { }
+  export interface CloseParams extends ModalBaseParams {}
+  export interface CloseEventParams extends ModalEventParams, CloseParams {}
 
-  export interface ZoomParams extends ModalBaseParams { }
-  export interface ZoomEventParams extends ModalEventParams, ZoomParams { }
+  export interface ZoomParams extends ModalBaseParams {}
+  export interface ZoomEventParams extends ModalEventParams, ZoomParams {}
 
-  export interface ResizeParams extends ModalBaseParams { }
-  export interface ResizeEventParams extends ModalEventParams, ResizeParams { }
+  export interface ResizeParams extends ModalBaseParams {}
+  export interface ResizeEventParams extends ModalEventParams, ResizeParams {}
 
-  export interface MoveParams extends ModalBaseParams { }
-  export interface MoveEventParams extends ModalEventParams, MoveParams { }
+  export interface MoveParams extends ModalBaseParams {}
+  export interface MoveEventParams extends ModalEventParams, MoveParams {}
 }
 
 export type VxeModalEventProps = {
@@ -490,15 +475,15 @@ export interface ModalDefaultSlotParams {
 /**
  * @deprecated
  */
-export interface ModalHeaderSlotParams extends ModalDefaultSlotParams { }
+export interface ModalHeaderSlotParams extends ModalDefaultSlotParams {}
 /**
  * @deprecated
  */
-export interface ModalTitleSlotParams extends ModalDefaultSlotParams { }
+export interface ModalTitleSlotParams extends ModalDefaultSlotParams {}
 /**
  * @deprecated
  */
-export interface ModalFooterSlotParams extends ModalDefaultSlotParams { }
+export interface ModalFooterSlotParams extends ModalDefaultSlotParams {}
 
 interface ModalVisibleParams {
   type: ModalEventTypes
@@ -521,18 +506,18 @@ export namespace VxeModalSlotTypes {
     $modal: VxeModalConstructor
   }
 
-  export interface LeftSlotParams extends DefaultSlotParams { }
-  export interface RightSlotParams extends DefaultSlotParams { }
-  export interface AsideSlotParams extends DefaultSlotParams { }
-  export interface HeaderSlotParams extends DefaultSlotParams { }
+  export interface LeftSlotParams extends DefaultSlotParams {}
+  export interface RightSlotParams extends DefaultSlotParams {}
+  export interface AsideSlotParams extends DefaultSlotParams {}
+  export interface HeaderSlotParams extends DefaultSlotParams {}
   export interface TitleSlotParams extends DefaultSlotParams {
     minimized: boolean
     maximized: boolean
   }
-  export interface CornerSlotParams extends DefaultSlotParams { }
-  export interface FooterSlotParams extends DefaultSlotParams { }
-  export interface LeftfootSlotParams extends DefaultSlotParams { }
-  export interface RightfootSlotParams extends DefaultSlotParams { }
+  export interface CornerSlotParams extends DefaultSlotParams {}
+  export interface FooterSlotParams extends DefaultSlotParams {}
+  export interface LeftfootSlotParams extends DefaultSlotParams {}
+  export interface RightfootSlotParams extends DefaultSlotParams {}
 }
 
 export interface VxeModalSlots {

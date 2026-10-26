@@ -4,7 +4,7 @@ import VxeStepsComponent from './src/steps'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSteps = Object.assign({}, VxeStepsComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeStepsComponent.name as string, VxeStepsComponent)
   }
 })

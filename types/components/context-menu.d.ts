@@ -5,16 +5,20 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeContextMenu: DefineVxeComponentApp<VxeContextMenuProps, VxeContextMenuEventProps, VxeContextMenuSlots, VxeContextMenuMethods>
 export type VxeContextMenuComponent = DefineVxeComponentOptions<VxeContextMenuProps>
 
-export type VxeContextMenuInstance = DefineVxeComponentInstance<{
-  internalData: ContextMenuInternalData
-  reactData: ContextMenuReactData
-}, VxeContextMenuProps, VxeContextMenuPrivateComputed, VxeContextMenuMethods>
+export type VxeContextMenuInstance = DefineVxeComponentInstance<
+  {
+    internalData: ContextMenuInternalData
+    reactData: ContextMenuReactData
+  },
+  VxeContextMenuProps,
+  VxeContextMenuPrivateComputed,
+  VxeContextMenuMethods
+>
 
 export type VxeContextMenuConstructor = VxeContextMenuInstance
 
-export interface ContextMenuPrivateRef {
-}
-export interface VxeContextMenuPrivateRef extends ContextMenuPrivateRef { }
+export interface ContextMenuPrivateRef {}
+export interface VxeContextMenuPrivateRef extends ContextMenuPrivateRef {}
 
 export namespace VxeContextMenuPropTypes {
   export type ModelValue = boolean
@@ -44,9 +48,8 @@ export type VxeContextMenuProps = {
   transfer?: VxeContextMenuPropTypes.Transfer
 }
 
-export interface ContextMenuPrivateComputed {
-}
-export interface VxeContextMenuPrivateComputed extends ContextMenuPrivateComputed { }
+export interface ContextMenuPrivateComputed {}
+export interface VxeContextMenuPrivateComputed extends ContextMenuPrivateComputed {}
 
 export interface ContextMenuInternalData {
   leaveTime?: any
@@ -89,15 +92,9 @@ export interface ContextMenuPrivateMethods {
    */
   updateZindex(): void
 }
-export interface VxeContextMenuPrivateMethods extends ContextMenuPrivateMethods { }
+export interface VxeContextMenuPrivateMethods extends ContextMenuPrivateMethods {}
 
-export type VxeContextMenuEmits = [
-  'modelValue',
-  'option-click',
-  'change',
-  'show',
-  'hide'
-]
+export type VxeContextMenuEmits = ['modelValue', 'option-click', 'change', 'show', 'hide']
 
 export namespace VxeContextMenuDefines {
   export type ContextMenuOpenOptions = Pick<VxeContextMenuProps, 'options' | 'x' | 'y' | 'className' | 'size' | 'zIndex'> & {

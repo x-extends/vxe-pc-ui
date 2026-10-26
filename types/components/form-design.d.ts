@@ -7,15 +7,19 @@ import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 export declare const VxeFormDesign: DefineVxeComponentApp<VxeFormDesignProps, VxeFormDesignEventProps, VxeFormDesignSlots, VxeFormDesignMethods>
 export type VxeFormDesignComponent = DefineVxeComponentOptions<VxeFormDesignProps>
 
-export type VxeFormDesignInstance = DefineVxeComponentInstance<{
-  reactData: FormDesignReactData
-}, VxeFormDesignProps, VxeFormDesignPrivateComputed, VxeFormDesignMethods>
+export type VxeFormDesignInstance = DefineVxeComponentInstance<
+  {
+    reactData: FormDesignReactData
+  },
+  VxeFormDesignProps,
+  VxeFormDesignPrivateComputed,
+  VxeFormDesignMethods
+>
 
 export type VxeFormDesignConstructor = VxeFormDesignInstance
 
-export interface FormDesignPrivateRef {
-}
-export interface VxeFormDesignPrivateRef extends FormDesignPrivateRef { }
+export interface FormDesignPrivateRef {}
+export interface VxeFormDesignPrivateRef extends FormDesignPrivateRef {}
 
 export namespace VxeFormDesignPropTypes {
   export type Size = VxeComponentSizeType
@@ -50,11 +54,7 @@ export namespace VxeFormDesignPropTypes {
     /**
      * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
      */
-    visibleMethod?(params: {
-      $formDesign: VxeFormDesignConstructor
-      options: VxeContextMenuPropTypes.Options
-      widget: VxeFormDesignDefines.WidgetObjItem<D>
-    }): boolean
+    visibleMethod?(params: { $formDesign: VxeFormDesignConstructor; options: VxeContextMenuPropTypes.Options; widget: VxeFormDesignDefines.WidgetObjItem<D> }): boolean
   }
 }
 
@@ -75,10 +75,10 @@ export interface VxeFormDesignProps {
 export interface FormDesignPrivateComputed {
   computeSize: VxeFormDesignPropTypes.Size
 }
-export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed { }
+export interface VxeFormDesignPrivateComputed extends FormDesignPrivateComputed {}
 
 export interface FormDesignReactData<D = VxeFormDesignDefines.DefaultSettingFormDataObjVO> {
-  formData: D,
+  formData: D
   widgetConfigs: VxeFormDesignDefines.WidgetConfigGroup[]
   widgetObjList: VxeFormDesignDefines.WidgetObjItem[]
   dragWidget: VxeFormDesignDefines.WidgetObjItem | null
@@ -95,27 +95,27 @@ export interface FormDesignMethods {
   /**
    * 创建一个指定类型的控件
    */
-  createWidget (name: string): VxeFormDesignDefines.WidgetObjItem
+  createWidget(name: string): VxeFormDesignDefines.WidgetObjItem
   /**
    * 创建一个空的占位控件
    */
-  createEmptyWidget (): VxeFormDesignDefines.WidgetObjItem
+  createEmptyWidget(): VxeFormDesignDefines.WidgetObjItem
   /**
    * 获取所有配置
    */
-  getConfig (): VxeFormDesignDefines.FormDesignConfig
+  getConfig(): VxeFormDesignDefines.FormDesignConfig
   /**
    * 清除所有配置
    */
-  clearConfig (): Promise<any>
+  clearConfig(): Promise<any>
   /**
    * 加载配置
    */
-  loadConfig (config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
+  loadConfig(config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
   /**
    * 清空并重新加载配置
    */
-  reloadConfig (config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
+  reloadConfig(config: Partial<VxeFormDesignDefines.FormDesignConfig>): Promise<any>
   /**
    * 获取表单配置
    */
@@ -123,7 +123,7 @@ export interface FormDesignMethods {
   /**
    * 加载表单配置
    */
-  loadFormConfig (formData: VxeFormDesignPropTypes.FormData): Promise<any>
+  loadFormConfig(formData: VxeFormDesignPropTypes.FormData): Promise<any>
   /**
    * 根据控件 ID 获取控件对象
    * @param widgetId
@@ -136,11 +136,11 @@ export interface FormDesignMethods {
   /**
    * 获取控件配置列表
    */
-  getWidgetData (): VxeFormDesignDefines.WidgetObjItem[]
+  getWidgetData(): VxeFormDesignDefines.WidgetObjItem[]
   /**
    * 加载控件配置
    */
-  loadWidgetData (widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
+  loadWidgetData(widgetData: VxeFormDesignDefines.WidgetObjItem[]): Promise<any>
   /**
    * 刷新控件预览视图
    */
@@ -150,16 +150,16 @@ export interface FormDesignMethods {
    */
   openStyleSetting(): Promise<any>
 }
-export interface VxeFormDesignMethods extends FormDesignMethods { }
+export interface VxeFormDesignMethods extends FormDesignMethods {}
 
 export interface FormDesignPrivateMethods {
   validWidgetUnique(widgetName: string): boolean
-  handleContextmenuWidget (evnt: MouseEvent, item: VxeFormDesignDefines.WidgetObjItem): void
-  handleClickWidget (evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
-  handleCopyWidget (evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
-  handleRemoveWidget (evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
+  handleContextmenuWidget(evnt: MouseEvent, item: VxeFormDesignDefines.WidgetObjItem): void
+  handleClickWidget(evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
+  handleCopyWidget(evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
+  handleRemoveWidget(evnt: Event, item: VxeFormDesignDefines.WidgetObjItem): void
 }
-export interface VxeFormDesignPrivateMethods extends FormDesignPrivateMethods { }
+export interface VxeFormDesignPrivateMethods extends FormDesignPrivateMethods {}
 
 export type VxeFormDesignEmits = [
   'widget-click',
@@ -177,19 +177,16 @@ export type VxeFormDesignEmits = [
   'drag-widget'
 ]
 
-export interface VxeFormDesignLayoutStyle {
-}
+export interface VxeFormDesignLayoutStyle {}
 
 export namespace VxeFormDesignDefines {
-
   export interface FormDesignDefaultParams {
     $formDesign: VxeFormDesignConstructor
   }
 
   export type WidgetGroup = null | '' | 'base' | 'layout' | 'system' | 'module' | 'chart' | 'advanced'
 
-  export interface FormDesignEventParams extends FormDesignDefaultParams, VxeComponentEventParams {
-  }
+  export interface FormDesignEventParams extends FormDesignDefaultParams, VxeComponentEventParams {}
 
   export interface FormDesignConfig {
     formConfig?: VxeFormDesignPropTypes.FormData
@@ -240,7 +237,7 @@ export namespace VxeFormDesignDefines {
   export interface WidgetClickParams<D = any> {
     widget: VxeFormDesignDefines.WidgetObjItem<D>
   }
-  export interface WidgetClickEventParams<D = any> extends FormDesignEventParams, WidgetClickParams<D> { }
+  export interface WidgetClickEventParams<D = any> extends FormDesignEventParams, WidgetClickParams<D> {}
 
   export interface WidgetAddEventParams<D = any> extends FormDesignEventParams {
     newWidget: VxeFormDesignDefines.WidgetObjItem<D>
@@ -336,7 +333,7 @@ export namespace VxeFormDesignEvents {
   export type WidgetDrag<D = any> = (params: VxeFormDesignDefines.WidgetDragEventParams<D>) => void
   export type WidgetMenu = (params: VxeFormDesignDefines.WidgetMenuEventParams) => void
   export type MenuClick = (params: VxeFormDesignDefines.MenuClickEventParams) => void
- }
+}
 
 export namespace VxeFormDesignSlotTypes {
   export interface DefaultSlotParams {}

@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeSwitch: DefineVxeComponentApp<VxeSwitchProps, VxeSwitchEventProps, VxeSwitchSlots, VxeSwitchMethods>
 export type VxeSwitchComponent = DefineVxeComponentOptions<VxeSwitchProps>
 
-export type VxeSwitchInstance = DefineVxeComponentInstance<{
-  reactData: SwitchReactData
-}, VxeSwitchProps, VxeSwitchPrivateComputed, VxeSwitchMethods>
+export type VxeSwitchInstance = DefineVxeComponentInstance<
+  {
+    reactData: SwitchReactData
+  },
+  VxeSwitchProps,
+  VxeSwitchPrivateComputed,
+  VxeSwitchMethods
+>
 
 export type VxeSwitchConstructor = VxeSwitchInstance
 
-export interface SwitchPrivateRef {
-}
-export interface VxeSwitchPrivateRef extends SwitchPrivateRef { }
+export interface SwitchPrivateRef {}
+export interface VxeSwitchPrivateRef extends SwitchPrivateRef {}
 
 export namespace VxeSwitchPropTypes {
   export type Size = VxeComponentSizeType
@@ -45,9 +49,8 @@ export interface VxeSwitchProps {
   closeActiveIcon?: VxeSwitchPropTypes.CloseActiveIcon
 }
 
-export interface SwitchPrivateComputed {
-}
-export interface VxeSwitchPrivateComputed extends SwitchPrivateComputed { }
+export interface SwitchPrivateComputed {}
+export interface VxeSwitchPrivateComputed extends SwitchPrivateComputed {}
 
 export interface SwitchReactData {
   isActivated: boolean
@@ -70,28 +73,21 @@ export interface SwitchMethods {
    */
   blur(): Promise<any>
 }
-export interface VxeSwitchMethods extends SwitchMethods { }
+export interface VxeSwitchMethods extends SwitchMethods {}
 
-export interface SwitchPrivateMethods { }
-export interface VxeSwitchPrivateMethods extends SwitchPrivateMethods { }
+export interface SwitchPrivateMethods {}
+export interface VxeSwitchPrivateMethods extends SwitchPrivateMethods {}
 
-export type VxeSwitchEmits = [
-  'model-value',
-  'modelValue',
-  'input',
-  'change',
-  'focus',
-  'blur'
-]
+export type VxeSwitchEmits = ['model-value', 'modelValue', 'input', 'change', 'focus', 'blur']
 
 export namespace VxeSwitchDefines {
   interface SwitchEventParams extends VxeComponentEventParams {
     $switch: VxeSwitchConstructor
   }
 
-  export interface ChangeEventParams extends SwitchEventParams { }
-  export interface FocusEventParams extends SwitchEventParams { }
-  export interface BlurEventParams extends SwitchEventParams { }
+  export interface ChangeEventParams extends SwitchEventParams {}
+  export interface FocusEventParams extends SwitchEventParams {}
+  export interface BlurEventParams extends SwitchEventParams {}
 }
 
 export type VxeSwitchEventProps = {

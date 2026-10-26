@@ -6,16 +6,20 @@ import { VxeTooltipProps } from './tooltip'
 export declare const VxeSlider: DefineVxeComponentApp<VxeSliderProps, VxeSliderEventProps, VxeSliderSlots, VxeSliderMethods>
 export type VxeSliderComponent = DefineVxeComponentOptions<VxeSliderProps>
 
-export type VxeSliderInstance = DefineVxeComponentInstance<{
-  reactData: SliderReactData
-  internalData: SliderInternalData
-}, VxeSliderProps, VxeSliderPrivateComputed, VxeSliderMethods>
+export type VxeSliderInstance = DefineVxeComponentInstance<
+  {
+    reactData: SliderReactData
+    internalData: SliderInternalData
+  },
+  VxeSliderProps,
+  VxeSliderPrivateComputed,
+  VxeSliderMethods
+>
 
 export type VxeSliderConstructor = VxeSliderInstance
 
-export interface SliderPrivateRef {
-}
-export interface VxeSliderPrivateRef extends SliderPrivateRef { }
+export interface SliderPrivateRef {}
+export interface VxeSliderPrivateRef extends SliderPrivateRef {}
 
 export namespace VxeSliderPropTypes {
   export type Size = VxeComponentSizeType
@@ -33,10 +37,7 @@ export namespace VxeSliderPropTypes {
   export type Immediate = boolean
   export type ShowTooltip = boolean
   export interface TooltipConfig extends Omit<VxeTooltipProps, 'content' | 'transfer' | 'appendTo'> {
-    contentMethod?: (params: {
-      $slider: VxeSliderConstructor
-      value: number
-    }) => string | number | null | undefined
+    contentMethod?: (params: { $slider: VxeSliderConstructor; value: number }) => string | number | null | undefined
   }
 }
 
@@ -58,12 +59,10 @@ export interface VxeSliderProps {
   tooltipConfig?: VxeSliderPropTypes.TooltipConfig
 }
 
-export interface SliderPrivateComputed {
-}
-export interface VxeSliderPrivateComputed extends SliderPrivateComputed { }
+export interface SliderPrivateComputed {}
+export interface VxeSliderPrivateComputed extends SliderPrivateComputed {}
 
-export interface SliderReactData {
-}
+export interface SliderReactData {}
 export interface SliderInternalData {
   _isUp?: boolean
   isDragStatus: boolean
@@ -73,22 +72,13 @@ export interface SliderInternalData {
   endValue: number
 }
 
-export interface SliderMethods {
-}
-export interface VxeSliderMethods extends SliderMethods { }
+export interface SliderMethods {}
+export interface VxeSliderMethods extends SliderMethods {}
 
-export interface SliderPrivateMethods { }
-export interface VxeSliderPrivateMethods extends SliderPrivateMethods { }
+export interface SliderPrivateMethods {}
+export interface VxeSliderPrivateMethods extends SliderPrivateMethods {}
 
-export type VxeSliderEmits = [
-  'modelValue',
-  'update:startValue',
-  'update:endValue',
-  'change',
-  'track-dragstart',
-  'track-dragover',
-  'track-dragend'
-]
+export type VxeSliderEmits = ['modelValue', 'update:startValue', 'update:endValue', 'change', 'track-dragstart', 'track-dragover', 'track-dragend']
 
 export namespace VxeSliderDefines {
   export interface SliderEventParams extends VxeComponentEventParams {

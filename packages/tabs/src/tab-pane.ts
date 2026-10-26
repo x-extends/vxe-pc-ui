@@ -1,10 +1,12 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleTabItem, destroyTabItem } from './util'
 
 import type { VxeTabPanePropTypes, TabPaneReactData, VxeComponentSizeType, VxeTabPaneEmits, ValueOf, VxeTabPaneDefines, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTabPane',
@@ -22,10 +24,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: TabPaneReactData = {
-    }
+    const reactData: TabPaneReactData = {}
     const tabConfig: VxeTabPaneDefines.TabConfig = {
       id: xID,
       title: '',
@@ -53,46 +54,50 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeTabPaneEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeTabPaneEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTabPane = this
       $xeTabPane.$emit(type, createEvent(evnt, { $tabPane: $xeTabPane }, params))
     },
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
-      return h('div', {
-        ref: 'refElem'
-      }, [])
+    renderVN(h: CreateElement): VNode {
+      return h(
+        'div',
+        {
+          ref: 'refElem'
+        },
+        []
+      )
     }
   },
   watch: {
-    title (val) {
+    title(val) {
       const $xeTabPane = this
       const tabConfig = $xeTabPane.tabConfig
 
       tabConfig.title = val
     },
-    name (val) {
+    name(val) {
       const $xeTabPane = this
       const tabConfig = $xeTabPane.tabConfig
 
       tabConfig.name = val
     },
-    icon (val) {
+    icon(val) {
       const $xeTabPane = this
       const tabConfig = $xeTabPane.tabConfig
 
       tabConfig.icon = val
     },
-    permissionCode (val) {
+    permissionCode(val) {
       const $xeTabPane = this
       const tabConfig = $xeTabPane.tabConfig
 
       tabConfig.permissionCode = val
     }
   },
-  created () {
+  created() {
     const $xeTabPane = this
     const props = $xeTabPane
     const slots = $xeTabPane.$scopedSlots
@@ -109,7 +114,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       slots
     })
   },
-  mounted () {
+  mounted() {
     const $xeTabPane = this
     const slots = $xeTabPane.$scopedSlots
     const $xeTabs = $xeTabPane.$xeTabs
@@ -122,7 +127,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       assembleTabItem($xeTabs, elem, tabConfig)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeTabPane = this
     const tabConfig = $xeTabPane.tabConfig
     const $xeTabs = $xeTabPane.$xeTabs
@@ -131,7 +136,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       destroyTabItem($xeTabs, tabConfig)
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

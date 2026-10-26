@@ -6,15 +6,19 @@ import { VxeSplitterPanelProps, VxeSplitterPanelPropTypes } from './splitter-pan
 export declare const VxeSplitter: DefineVxeComponentApp<VxeSplitterProps, VxeSplitterEventProps, VxeSplitterSlots, VxeSplitterMethods>
 export type VxeSplitterComponent = DefineVxeComponentOptions<VxeSplitterProps>
 
-export type VxeSplitterInstance = DefineVxeComponentInstance<{
-  reactData: SplitterReactData
-}, VxeSplitterProps, VxeSplitterPrivateComputed, VxeSplitterMethods>
+export type VxeSplitterInstance = DefineVxeComponentInstance<
+  {
+    reactData: SplitterReactData
+  },
+  VxeSplitterProps,
+  VxeSplitterPrivateComputed,
+  VxeSplitterMethods
+>
 
 export type VxeSplitterConstructor = VxeSplitterInstance
 
-export interface SplitterPrivateRef {
-}
-export interface VxeSplitterPrivateRef extends SplitterPrivateRef { }
+export interface SplitterPrivateRef {}
+export interface VxeSplitterPrivateRef extends SplitterPrivateRef {}
 
 export namespace VxeSplitterPropTypes {
   export type Size = VxeComponentSizeType
@@ -144,7 +148,7 @@ export interface SplitterPrivateComputed {
   computeActionOpts: VxeSplitterPropTypes.ActionConfig
   computeIsFoldNext: boolean
 }
-export interface VxeSplitterPrivateComputed extends SplitterPrivateComputed { }
+export interface VxeSplitterPrivateComputed extends SplitterPrivateComputed {}
 
 export interface SplitterReactData {
   staticItems: VxeSplitterDefines.PaneConfig[]
@@ -190,19 +194,12 @@ export interface SplitterMethods {
    */
   reloadItem(list: VxeSplitterPanelProps[]): Promise<void>
 }
-export interface VxeSplitterMethods extends SplitterMethods { }
+export interface VxeSplitterMethods extends SplitterMethods {}
 
-export interface SplitterPrivateMethods { }
-export interface VxeSplitterPrivateMethods extends SplitterPrivateMethods { }
+export interface SplitterPrivateMethods {}
+export interface VxeSplitterPrivateMethods extends SplitterPrivateMethods {}
 
-export type VxeSplitterEmits = [
-  'action-dblclick',
-  'action-click',
-  'toggle-expand',
-  'resize-start',
-  'resize-drag',
-  'resize-end'
-]
+export type VxeSplitterEmits = ['action-dblclick', 'action-click', 'toggle-expand', 'resize-start', 'resize-drag', 'resize-end']
 
 export namespace VxeSplitterDefines {
   export interface SplitterEventParams extends VxeComponentEventParams {
@@ -275,19 +272,14 @@ export namespace VxeSplitterEvents {
 }
 
 export namespace VxeSplitterSlotTypes {
-  export interface DefaultSlotParams {
-  }
+  export interface DefaultSlotParams {}
 }
 
 export interface VxeSplitterSlots {
   /**
    * 自定义插槽模板
    */
-  [key: string]: ((params: {
-    name: VxeSplitterPanelPropTypes.Name
-    isVisible: boolean
-    isExpand: boolean
-  }) => any) | undefined
+  [key: string]: ((params: { name: VxeSplitterPanelPropTypes.Name; isVisible: boolean; isExpand: boolean }) => any) | undefined
 
   default?: (params: VxeSplitterSlotTypes.DefaultSlotParams) => any
 }

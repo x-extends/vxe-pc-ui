@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxePulldown: DefineVxeComponentApp<VxePulldownProps, VxePulldownEventProps, VxePulldownSlots, VxePulldownMethods>
 export type VxePulldownComponent = DefineVxeComponentOptions<VxePulldownProps>
 
-export type VxePulldownInstance = DefineVxeComponentInstance<{
-  reactData: PulldownReactData
-}, VxePulldownProps, VxePulldownPrivateComputed, VxePulldownMethods>
+export type VxePulldownInstance = DefineVxeComponentInstance<
+  {
+    reactData: PulldownReactData
+  },
+  VxePulldownProps,
+  VxePulldownPrivateComputed,
+  VxePulldownMethods
+>
 
 export type VxePulldownConstructor = VxePulldownInstance
 
-export interface PulldownPrivateRef {
-}
-export interface VxePulldownPrivateRef extends PulldownPrivateRef { }
+export interface PulldownPrivateRef {}
+export interface VxePulldownPrivateRef extends PulldownPrivateRef {}
 
 export namespace VxePulldownPropTypes {
   export type ModelValue = boolean
@@ -114,9 +118,8 @@ export interface VxePulldownProps {
   transfer?: VxePulldownPropTypes.Transfer
 }
 
-export interface PulldownPrivateComputed {
-}
-export interface VxePulldownPrivateComputed extends PulldownPrivateComputed { }
+export interface PulldownPrivateComputed {}
+export interface VxePulldownPrivateComputed extends PulldownPrivateComputed {}
 
 export interface PulldownReactData {
   initialized: boolean
@@ -154,21 +157,12 @@ export interface PulldownMethods {
    */
   hidePanel(): Promise<void>
 }
-export interface VxePulldownMethods extends PulldownMethods { }
+export interface VxePulldownMethods extends PulldownMethods {}
 
-export interface PulldownPrivateMethods { }
-export interface VxePulldownPrivateMethods extends PulldownPrivateMethods { }
+export interface PulldownPrivateMethods {}
+export interface VxePulldownPrivateMethods extends PulldownPrivateMethods {}
 
-export type VxePulldownEmits = [
-  'model-value',
-  'modelValue',
-  'input',
-  'click',
-  'option-click',
-  'show-panel',
-  'hide-panel',
-  'visible-change'
-]
+export type VxePulldownEmits = ['model-value', 'modelValue', 'input', 'click', 'option-click', 'show-panel', 'hide-panel', 'visible-change']
 
 export namespace VxePulldownDefines {
   export interface PulldownEventParams extends VxeComponentEventParams {

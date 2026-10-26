@@ -6,7 +6,6 @@ import { VxeTableDefines } from '../components/table'
 declare module '@vxe-ui/core' {
   export namespace VxeGlobalValidatorsHandles {
     export interface ValidatorsOptions {
-
       /**
        * 表单 - 自定义表单项校验方法
        */

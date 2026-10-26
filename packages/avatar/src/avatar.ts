@@ -1,16 +1,16 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, renderEmptyElement, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { AvatarReactData, VxeAvatarEmits, VxeAvatarPropTypes, ValueOf, VxeComponentStyleType, VxeComponentSizeType } from '../../../types'
 
+const { getConfig, createEvent, renderEmptyElement, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAvatar',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     count: [String, Number] as PropType<VxeAvatarPropTypes.Count>,
     dot: Boolean as PropType<VxeAvatarPropTypes.Dot>,
@@ -32,10 +32,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().avatar.size || getConfig().size
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: AvatarReactData = {
-    }
+    const reactData: AvatarReactData = {}
     return {
       xID,
       reactData
@@ -45,7 +44,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeAvatarStyle () {
+    computeAvatarStyle() {
       const $xeAvatar = this
       const props = $xeAvatar
 
@@ -59,7 +58,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computeCountNum () {
+    computeCountNum() {
       const $xeAvatar = this
       const props = $xeAvatar
 
@@ -71,7 +70,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeAvatarEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeAvatarEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeAvatar = this
       $xeAvatar.$emit(type, createEvent(evnt, { $avatar: $xeAvatar }, params))
     },
@@ -79,24 +78,32 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderContent (h: CreateElement) {
+    renderContent(h: CreateElement) {
       const $xeAvatar = this
       const props = $xeAvatar
 
       const { icon, content, src } = props
       if (icon) {
-        return h('span', {
-          class: 'vxe-avatar--icon'
-        }, [
-          h('i', {
-            class: icon
-          })
-        ])
+        return h(
+          'span',
+          {
+            class: 'vxe-avatar--icon'
+          },
+          [
+            h('i', {
+              class: icon
+            })
+          ]
+        )
       }
       if (content) {
-        return h('span', {
-          class: 'vxe-avatar--content'
-        }, `${content}`)
+        return h(
+          'span',
+          {
+            class: 'vxe-avatar--content'
+          },
+          `${content}`
+        )
       }
       if (src) {
         return h('img', {
@@ -108,7 +115,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return renderEmptyElement($xeAvatar)
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeAvatar = this
       const props = $xeAvatar
 
@@ -116,26 +123,37 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const vSize = $xeAvatar.computeSize
       const countNum = $xeAvatar.computeCountNum
       const avatarStyle = $xeAvatar.computeAvatarStyle
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-avatar', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--circle': circle,
-          'is--dot': dot
-        }],
-        style: avatarStyle
-      }, [
-        $xeAvatar.renderContent(h),
-        countNum
-          ? h('span', {
-            class: 'vxe-avatar--count'
-          }, countNum > 99 ? '99+' : `${countNum}`)
-          : renderEmptyElement($xeAvatar)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-avatar',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--circle': circle,
+              'is--dot': dot
+            }
+          ],
+          style: avatarStyle
+        },
+        [
+          $xeAvatar.renderContent(h),
+          countNum
+            ? h(
+              'span',
+              {
+                class: 'vxe-avatar--count'
+              },
+              countNum > 99 ? '99+' : `${countNum}`
+            )
+            : renderEmptyElement($xeAvatar)
+        ]
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

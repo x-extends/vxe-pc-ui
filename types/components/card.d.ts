@@ -6,15 +6,19 @@ import { VxeScrollbarProps } from './scrollbar'
 export declare const VxeCard: DefineVxeComponentApp<VxeCardProps, VxeCardEventProps, VxeCardSlots, VxeCardMethods>
 export type VxeCardComponent = DefineVxeComponentOptions<VxeCardProps>
 
-export type VxeCardInstance = DefineVxeComponentInstance<{
-  reactData: CardReactData
-}, VxeCardProps, VxeCardPrivateComputed, VxeCardMethods>
+export type VxeCardInstance = DefineVxeComponentInstance<
+  {
+    reactData: CardReactData
+  },
+  VxeCardProps,
+  VxeCardPrivateComputed,
+  VxeCardMethods
+>
 
 export type VxeCardConstructor = VxeCardInstance
 
-export interface CardPrivateRef {
-}
-export interface VxeCardPrivateRef extends CardPrivateRef { }
+export interface CardPrivateRef {}
+export interface VxeCardPrivateRef extends CardPrivateRef {}
 
 export namespace VxeCardPropTypes {
   export type Title = string | number
@@ -59,20 +63,18 @@ export type VxeCardProps = {
   scrollbarConfig?: VxeCardPropTypes.ScrollbarConfig
 }
 
-export interface CardPrivateComputed {
-}
-export interface VxeCardPrivateComputed extends CardPrivateComputed { }
+export interface CardPrivateComputed {}
+export interface VxeCardPrivateComputed extends CardPrivateComputed {}
 
-export interface CardReactData {
-}
+export interface CardReactData {}
 
 export interface CardMethods {
   dispatchEvent(type: ValueOf<VxeCardEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCardMethods extends CardMethods { }
+export interface VxeCardMethods extends CardMethods {}
 
-export interface CardPrivateMethods { }
-export interface VxeCardPrivateMethods extends CardPrivateMethods { }
+export interface CardPrivateMethods {}
+export interface VxeCardPrivateMethods extends CardPrivateMethods {}
 
 export type VxeCardEmits = []
 
@@ -84,9 +86,9 @@ export namespace VxeCardDefines {
 
 export type VxeCardEventProps = {}
 
-export interface VxeCardListeners { }
+export interface VxeCardListeners {}
 
-export namespace VxeCardEvents { }
+export namespace VxeCardEvents {}
 
 export namespace VxeCardSlotTypes {
   export interface DefaultSlotParams {}

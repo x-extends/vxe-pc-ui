@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeText: DefineVxeComponentApp<VxeTextProps, VxeTextEventProps, VxeTextSlots, VxeTextMethods>
 export type VxeTextComponent = DefineVxeComponentOptions<VxeTextProps>
 
-export type VxeTextInstance = DefineVxeComponentInstance<{
-  reactData: TextReactData
-}, VxeTextProps, VxeTextPrivateComputed, VxeTextMethods>
+export type VxeTextInstance = DefineVxeComponentInstance<
+  {
+    reactData: TextReactData
+  },
+  VxeTextProps,
+  VxeTextPrivateComputed,
+  VxeTextMethods
+>
 
 export type VxeTextConstructor = VxeTextInstance
 
-export interface TextPrivateRef {
-}
-export interface VxeTextPrivateRef extends TextPrivateRef { }
+export interface TextPrivateRef {}
+export interface VxeTextPrivateRef extends TextPrivateRef {}
 
 export namespace VxeTextPropTypes {
   export type Status = VxeComponentStatusType
@@ -56,38 +60,28 @@ export type VxeTextProps = {
   size?: VxeTextPropTypes.Size
 }
 
-export interface TextPrivateComputed {
-}
-export interface VxeTextPrivateComputed extends TextPrivateComputed { }
+export interface TextPrivateComputed {}
+export interface VxeTextPrivateComputed extends TextPrivateComputed {}
 
-export interface TextReactData {
-}
+export interface TextReactData {}
 
 export interface TextMethods {
   dispatchEvent(type: ValueOf<VxeTextEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeTextMethods extends TextMethods { }
+export interface VxeTextMethods extends TextMethods {}
 
-export interface TextPrivateMethods { }
-export interface VxeTextPrivateMethods extends TextPrivateMethods { }
+export interface TextPrivateMethods {}
+export interface VxeTextPrivateMethods extends TextPrivateMethods {}
 
-export type VxeTextEmits = [
-  'click',
-  'dblclick',
-  'prefix-click',
-  'suffix-click',
-  'copy-success',
-  'copy-error'
-]
+export type VxeTextEmits = ['click', 'dblclick', 'prefix-click', 'suffix-click', 'copy-success', 'copy-error']
 
 export namespace VxeTextDefines {
   export interface TextEventParams extends VxeComponentEventParams {
     $text: VxeTextConstructor
   }
 
-  export interface ClickParams {
-  }
-  export interface ClickEventParams extends TextEventParams, ClickParams { }
+  export interface ClickParams {}
+  export interface ClickEventParams extends TextEventParams, ClickParams {}
 }
 
 export type VxeTextEventProps = {

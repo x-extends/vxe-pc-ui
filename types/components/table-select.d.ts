@@ -6,15 +6,19 @@ import { VxeGridProps, VxeGridPropTypes, VxeGridDefines } from './grid'
 export declare const VxeTableSelect: DefineVxeComponentApp<VxeTableSelectProps, VxeTableSelectEventProps, VxeTableSelectSlots, VxeTableSelectMethods>
 export type VxeTableSelectComponent = DefineVxeComponentOptions<VxeTableSelectProps>
 
-export type VxeTableSelectInstance = DefineVxeComponentInstance<{
-  reactData: TableSelectReactData
-}, VxeTableSelectProps, VxeTableSelectPrivateComputed, VxeTableSelectMethods>
+export type VxeTableSelectInstance = DefineVxeComponentInstance<
+  {
+    reactData: TableSelectReactData
+  },
+  VxeTableSelectProps,
+  VxeTableSelectPrivateComputed,
+  VxeTableSelectMethods
+>
 
 export type VxeTableSelectConstructor = VxeTableSelectInstance
 
-export interface TableSelectPrivateRef {
-}
-export interface VxeTableSelectPrivateRef extends TableSelectPrivateRef { }
+export interface TableSelectPrivateRef {}
+export interface VxeTableSelectPrivateRef extends TableSelectPrivateRef {}
 
 export namespace VxeTableSelectPropTypes {
   export type Size = VxeComponentSizeType
@@ -55,12 +59,7 @@ export namespace VxeTableSelectPropTypes {
     /**
      * 自定义过滤方法
      */
-    filterMethod?: (params: {
-      $tableSelect: VxeTableSelectConstructor
-      row: D
-      filterValue: string
-      value: ModelValue | undefined
-    }) => boolean
+    filterMethod?: (params: { $tableSelect: VxeTableSelectConstructor; row: D; filterValue: string; value: ModelValue | undefined }) => boolean
   }
   export type Remote = boolean
   export interface RemoteConfig {
@@ -75,11 +74,7 @@ export namespace VxeTableSelectPropTypes {
     /**
      * 远程查询方法
      */
-    queryMethod?(params: {
-      $tableSelect: VxeTableSelectConstructor
-      searchValue: string
-      value: ModelValue | undefined
-    }): Promise<void> | void
+    queryMethod?(params: { $tableSelect: VxeTableSelectConstructor; searchValue: string; value: ModelValue | undefined }): Promise<void> | void
   }
   export type Transfer = boolean
   export interface PopupConfig {
@@ -142,9 +137,8 @@ export interface VxeTableSelectProps<D = any> {
   zIndex?: VxeTableSelectPropTypes.ZIndex
 }
 
-export interface TableSelectPrivateComputed {
-}
-export interface VxeTableSelectPrivateComputed extends TableSelectPrivateComputed { }
+export interface TableSelectPrivateComputed {}
+export interface VxeTableSelectPrivateComputed extends TableSelectPrivateComputed {}
 
 export interface TableSelectReactData {
   initialized: boolean
@@ -163,24 +157,26 @@ export interface TableSelectReactData {
 export interface TableSelectInternalData {
   fullData: any[]
   afterVisibleList: any[]
-  fullValMaps: Record<string, {
-    item: any
-    index: number
-    _index: number
-    items: any[]
-    parent: any
-    nodes: any[]
-  }>
+  fullValMaps: Record<
+    string,
+    {
+      item: any
+      index: number
+      _index: number
+      items: any[]
+      parent: any
+      nodes: any[]
+    }
+  >
   hpTimeout?: undefined | number
   vpTimeout?: undefined | number
 }
 
-export interface TableSelectMethods {
-}
-export interface VxeTableSelectMethods extends TableSelectMethods { }
+export interface TableSelectMethods {}
+export interface VxeTableSelectMethods extends TableSelectMethods {}
 
-export interface TableSelectPrivateMethods { }
-export interface VxeTableSelectPrivateMethods extends TableSelectPrivateMethods { }
+export interface TableSelectPrivateMethods {}
+export interface VxeTableSelectPrivateMethods extends TableSelectPrivateMethods {}
 
 export type VxeTableSelectEmits = [
   'update:modelValue',
@@ -210,9 +206,9 @@ export namespace VxeTableSelectDefines {
     value: any
   }
 
-  export interface FocusEventParams extends TableSelectEventParams { }
-  export interface BlurEventParams extends TableSelectEventParams { }
-  export interface ClickEventParams extends TableSelectEventParams { }
+  export interface FocusEventParams extends TableSelectEventParams {}
+  export interface BlurEventParams extends TableSelectEventParams {}
+  export interface ClickEventParams extends TableSelectEventParams {}
 
   export interface FormSubmitEventParams<D = any> extends TableSelectEventParams, VxeGridDefines.FormSubmitEventParams<D> {}
   export interface FormResetEventParams<D = any> extends TableSelectEventParams, VxeGridDefines.FormResetEventParams<D> {}

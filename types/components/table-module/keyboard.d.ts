@@ -14,13 +14,13 @@ export interface TableKeyboardPrivateMethods<D = any> {
    * @deprecated
    */
   moveSelected(args: any, isLeftArrow: boolean, isUpArrow: boolean, isRightArrow: boolean, isDwArrow: boolean, evnt: any): void
- }
+}
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableKeyboardMethods<D> { }
+  export interface VxeGridMethods<D = any> extends TableKeyboardMethods<D> {}
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableKeyboardMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableKeyboardPrivateMethods<D> { }
+  export interface VxeTableMethods<D = any> extends TableKeyboardMethods<D> {}
+  export interface VxeTablePrivateMethods<D = any> extends TableKeyboardPrivateMethods<D> {}
 }

@@ -1,18 +1,20 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { handleEmitModelVal } from '../../ui/src/vn'
 import VxeRadioComponent from '../../radio'
 import VxeRadioButtonComponent from '../../radio-button'
 
 import type { VxeRadioGroupPropTypes, RadioGroupInternalData, VxeRadioGroupEmits, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentPermissionInfo, VxeComponentSizeType, RadioGroupReactData, ValueOf } from '../../../types'
 
-function createReactData (): RadioGroupReactData {
+const { getConfig, createEvent, globalMixins } = VxeUI
+
+function createReactData(): RadioGroupReactData {
   return {}
 }
 
-function createInternalData (): RadioGroupInternalData {
+function createInternalData(): RadioGroupInternalData {
   return {
     // isLoaded: false
   }
@@ -20,10 +22,7 @@ function createInternalData (): RadioGroupInternalData {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeRadioGroup',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.permissionMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.permissionMixin],
   props: {
     value: [String, Number, Boolean] as PropType<VxeRadioGroupPropTypes.ModelValue>,
     disabled: {
@@ -60,13 +59,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  provide () {
+  provide() {
     const $xeRadioGroup = this
     return {
       $xeRadioGroup
     }
   },
-  data () {
+  data() {
     const reactData: RadioGroupReactData = createReactData()
     return {
       ...({} as {
@@ -84,7 +83,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
-    computeIsReadonly () {
+    computeIsReadonly() {
       const $xeRadioGroup = this
       const props = $xeRadioGroup
       const $xeForm = $xeRadioGroup.$xeForm
@@ -98,7 +97,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return readonly
     },
-    computeIsDisabled () {
+    computeIsDisabled() {
       const $xeRadioGroup = this
       const props = $xeRadioGroup
       const $xeForm = $xeRadioGroup.$xeForm
@@ -112,43 +111,43 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return disabled
     },
-    computePropsOpts () {
+    computePropsOpts() {
       const $xeRadioGroup = this
       const props = $xeRadioGroup
 
       return Object.assign({}, props.optionProps)
     },
-    computeDefaultOpts () {
+    computeDefaultOpts() {
       const $xeRadioGroup = this
       const props = $xeRadioGroup
 
       return Object.assign({}, props.defaultConfig)
     },
-    computeLabelField  () {
+    computeLabelField() {
       const $xeRadioGroup = this
 
       const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
       return propsOpts.label || 'label'
     },
-    computeValueField  () {
+    computeValueField() {
       const $xeRadioGroup = this
 
       const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
       return propsOpts.value || 'value'
     },
-    computeDisabledField  () {
+    computeDisabledField() {
       const $xeRadioGroup = this
 
       const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
       return propsOpts.disabled || 'disabled'
     },
-    computeIconField () {
+    computeIconField() {
       const $xeRadioGroup = this
 
       const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
       return propsOpts.icon || 'icon'
     },
-    computeTitleField () {
+    computeTitleField() {
       const $xeRadioGroup = this
 
       const propsOpts = $xeRadioGroup.computePropsOpts as VxeRadioGroupPropTypes.OptionProps
@@ -159,24 +158,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeRadioGroupEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeRadioGroupEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeRadioGroup = this
 
       $xeRadioGroup.$emit(type, createEvent(evnt, { $radioGroup: $xeRadioGroup }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeRadioGroup = this
 
       $xeRadioGroup.$emit('input', value)
       handleEmitModelVal($xeRadioGroup, value)
     },
-    emitDefaultValue (value: any) {
+    emitDefaultValue(value: any) {
       const $xeRadioGroup = this
 
       $xeRadioGroup.emitModel(value)
       $xeRadioGroup.dispatchEvent('default-change', { value }, null)
     },
-    loadData (datas: any[]) {
+    loadData(datas: any[]) {
       const $xeRadioGroup = this
       const props = $xeRadioGroup
       const internalData = $xeRadioGroup.internalData
@@ -202,10 +201,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeRadioGroup.$nextTick()
     },
-    handleChecked (params: {
-      checkedValue: any
-      checkedLabel: any
-    }, evnt: Event) {
+    handleChecked(
+      params: {
+        checkedValue: any
+        checkedLabel: any
+      },
+      evnt: Event
+    ) {
       const $xeRadioGroup = this
       const $xeForm = $xeRadioGroup.$xeForm
       const formItemInfo = $xeRadioGroup.formItemInfo
@@ -223,7 +225,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeRadioGroup = this
       const props = $xeRadioGroup
       const slots = $xeRadioGroup.$scopedSlots
@@ -238,15 +240,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const titleField = $xeRadioGroup.computeTitleField
       const btnComp = type === 'button' ? VxeRadioButtonComponent : VxeRadioComponent
 
-      return h('div', {
-        class: ['vxe-radio-group', `type--${type === 'button' ? type : ''}`, {
-          [`theme--${status}`]: status,
-          [`size--${vSize}`]: vSize
-        }]
-      }, defaultSlot
-        ? defaultSlot({})
-        : (options
-            ? options.map(item => {
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-radio-group',
+            `type--${type === 'button' ? type : ''}`,
+            {
+              [`theme--${status}`]: status,
+              [`size--${vSize}`]: vSize
+            }
+          ]
+        },
+        defaultSlot
+          ? defaultSlot({})
+          : options
+            ? options.map((item) => {
               return h(btnComp, {
                 key: item[valueField],
                 props: {
@@ -258,22 +267,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 }
               })
             })
-            : []))
+            : []
+      )
     }
   },
   watch: {
-    options (val) {
+    options(val) {
       const $xeRadioGroup = this
 
       $xeRadioGroup.loadData(val)
     }
   },
-  created () {
+  created() {
     const $xeRadioGroup = this
 
     $xeRadioGroup.internalData = createInternalData()
   },
-  mounted () {
+  mounted() {
     const $xeRadioGroup = this
     const props = $xeRadioGroup
 
@@ -284,7 +294,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     })
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeRadioGroup = this
     const reactData = $xeRadioGroup.reactData
     const internalData = $xeRadioGroup.internalData
@@ -292,7 +302,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(internalData, createInternalData())
     XEUtils.assign(reactData, createReactData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

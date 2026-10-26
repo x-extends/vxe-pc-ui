@@ -4,7 +4,7 @@ import VxeTableTransferComponent from './src/table-transfer'
 import { dynamicApp } from '../dynamics'
 
 export const VxeTableTransfer = Object.assign({}, VxeTableTransferComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeTableTransferComponent.name as string, VxeTableTransferComponent)
   }
 })

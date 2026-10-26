@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeTourComponent from './src/tour'
 
 export const VxeTour = Object.assign({}, VxeTourComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeTourComponent.name as string, VxeTourComponent)
   }
 })

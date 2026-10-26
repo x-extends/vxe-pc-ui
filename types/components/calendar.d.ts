@@ -6,15 +6,19 @@ import { VxeContextMenuPropTypes, VxeContextMenuDefines } from './context-menu'
 export declare const VxeCalendar: DefineVxeComponentApp<VxeCalendarProps, VxeCalendarEventProps, VxeCalendarSlots, VxeCalendarMethods>
 export type VxeCalendarComponent = DefineVxeComponentOptions<VxeCalendarProps>
 
-export type VxeCalendarInstance = DefineVxeComponentInstance<{
-  reactData: CalendarReactData
-}, VxeCalendarProps, VxeCalendarPrivateComputed, VxeCalendarMethods>
+export type VxeCalendarInstance = DefineVxeComponentInstance<
+  {
+    reactData: CalendarReactData
+  },
+  VxeCalendarProps,
+  VxeCalendarPrivateComputed,
+  VxeCalendarMethods
+>
 
 export type VxeCalendarConstructor = VxeCalendarInstance
 
-export interface CalendarPrivateRef {
-}
-export interface VxeCalendarPrivateRef extends CalendarPrivateRef { }
+export interface CalendarPrivateRef {}
+export interface VxeCalendarPrivateRef extends CalendarPrivateRef {}
 
 export namespace VxeCalendarPropTypes {
   export type Size = VxeComponentSizeType
@@ -46,13 +50,7 @@ export namespace VxeCalendarPropTypes {
     /**
      * 该函数的返回值用来决定是否允许显示右键菜单（对于需要对菜单进行权限控制时可能会用到）
      */
-    visibleMethod?(params: {
-      $calendar: VxeCalendarConstructor
-      options: VxeContextMenuPropTypes.Options
-      date: Date
-      type: string
-      viewType: VxeCalendarDefines.DatePanelType
-    }): boolean
+    visibleMethod?(params: { $calendar: VxeCalendarConstructor; options: VxeContextMenuPropTypes.Options; date: Date; type: string; viewType: VxeCalendarDefines.DatePanelType }): boolean
   }
 }
 
@@ -76,9 +74,8 @@ export type VxeCalendarProps = {
   menuConfig?: VxeCalendarPropTypes.MenuConfig
 }
 
-export interface CalendarPrivateComputed {
-}
-export interface VxeCalendarPrivateComputed extends CalendarPrivateComputed { }
+export interface CalendarPrivateComputed {}
+export interface VxeCalendarPrivateComputed extends CalendarPrivateComputed {}
 
 export interface CalendarReactData {
   selectValue: VxeCalendarPropTypes.ModelValue | undefined
@@ -99,22 +96,12 @@ export interface CalendarInternalData {
 export interface CalendarMethods {
   dispatchEvent(type: ValueOf<VxeCalendarEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCalendarMethods extends CalendarMethods { }
+export interface VxeCalendarMethods extends CalendarMethods {}
 
-export interface CalendarPrivateMethods { }
-export interface VxeCalendarPrivateMethods extends CalendarPrivateMethods { }
+export interface CalendarPrivateMethods {}
+export interface VxeCalendarPrivateMethods extends CalendarPrivateMethods {}
 
-export type VxeCalendarEmits = [
-  'input',
-  'change',
-  'cell-click',
-  'date-prev',
-  'date-today',
-  'date-next',
-  'view-change',
-  'cell-menu',
-  'menu-click'
-]
+export type VxeCalendarEmits = ['input', 'change', 'cell-click', 'date-prev', 'date-today', 'date-next', 'view-change', 'cell-menu', 'menu-click']
 
 export namespace VxeCalendarDefines {
   export interface CalendarEventParams extends VxeComponentEventParams {
@@ -184,7 +171,7 @@ export namespace VxeCalendarDefines {
   }
   export interface DatePrevEventParams extends CalendarEventParams {
     type: DatePanelType
-   }
+  }
   export interface DateTodayEventParams extends CalendarEventParams {
     type: DatePanelType
   }

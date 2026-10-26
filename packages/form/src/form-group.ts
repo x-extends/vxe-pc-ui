@@ -1,7 +1,7 @@
 import { CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { renderer, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { isEnableConf } from '../../ui/src/utils'
 import { createItem, watchItem, destroyItem, assembleItem, XEFormItemProvide } from './util'
 import { formItemProps } from './form-item'
@@ -9,13 +9,13 @@ import { renderTitle, getItemClass, getItemContentClass } from './render'
 
 import type { VxeFormConstructor, FormGroupReactData, VxeFormPrivateMethods, VxeComponentSizeType } from '../../../types'
 
+const { renderer, globalMixins, renderEmptyElement } = VxeUI
+
 const formItemPropKeys = Object.keys(formItemProps)
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeFormGroup',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: formItemProps,
   inject: {
     $xeForm: {
@@ -26,7 +26,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const formItem: any = {}
     const reactData: FormGroupReactData = {}
@@ -44,7 +44,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     })
   },
   methods: {
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeFormGroup = this
       const slots = $xeFormGroup.$scopedSlots
       const formItem = $xeFormGroup.formItem
@@ -56,31 +56,39 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { data, readonly, disabled } = formProps
       const { visible, field, itemRender, contentStyle } = item
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-      const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
-      const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
+      const itemStyle = compConf ? compConf.formItemStyle || compConf.itemStyle : null
+      const itemContentStyle = compConf ? compConf.formItemContentStyle || compConf.itemContentStyle : null
       const defaultSlot = slots ? slots.default : null
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeGrid }
       if (visible === false) {
         return renderEmptyElement($xeFormGroup)
       }
-      return h('div', {
-        ref: 'refElem',
-        key: item.id,
-        class: getItemClass($xeForm, item, true),
-        style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : (itemStyle || {}),
-        attrs: {
-          itemid: item.id
-        }
-      }, [
-        renderTitle(h, $xeForm, item, true),
-        h('div', {
-          class: getItemContentClass($xeForm, item, true),
-          style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
-        }, defaultSlot ? defaultSlot({}) : [])
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          key: item.id,
+          class: getItemClass($xeForm, item, true),
+          style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : itemStyle || {},
+          attrs: {
+            itemid: item.id
+          }
+        },
+        [
+          renderTitle(h, $xeForm, item, true),
+          h(
+            'div',
+            {
+              class: getItemContentClass($xeForm, item, true),
+              style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
+            },
+            defaultSlot ? defaultSlot({}) : []
+          )
+        ]
+      )
     }
   },
-  provide (this: any) {
+  provide(this: any) {
     const $xeFormGroup = this
     const formItem = $xeFormGroup.formItem
     return {
@@ -91,7 +99,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     }
   },
-  created (this: any) {
+  created(this: any) {
     const $xeFormGroup = this
     const props = $xeFormGroup
     const $xeForm = $xeFormGroup.$xeForm
@@ -103,7 +111,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     watchItem($xeFormGroup, formItemPropKeys, formItem)
   },
-  mounted (this: any) {
+  mounted(this: any) {
     const $xeFormGroup = this
     const formItem = $xeFormGroup.formItem
     const $xeForm = $xeFormGroup.$xeForm
@@ -112,14 +120,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const elem = $xeFormGroup.$refs.refElem as HTMLDivElement
     assembleItem($xeForm, elem, formItem, $xeParentFormGroup)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeFormGroup = this
     const formItem = $xeFormGroup.formItem
     const $xeForm = $xeFormGroup.$xeForm
 
     destroyItem($xeForm, formItem)
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

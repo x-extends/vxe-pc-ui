@@ -1,19 +1,19 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { TableTransferReactData, TableTransferInternalData, VxeTableTransferEmits, VxeTableTransferPropTypes, ValueOf } from '../../../types'
 
-function createReactData (): TableTransferReactData {
-  return {
-  }
+const { getConfig, createEvent } = VxeUI
+
+function createReactData(): TableTransferReactData {
+  return {}
 }
 
-function createInternalData (): TableTransferInternalData {
-  return {
-  }
+function createInternalData(): TableTransferInternalData {
+  return {}
 }
 
 export default /* define-vxe-component start */ defineVxeComponent({
@@ -26,7 +26,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().tableTransfer.size || getConfig().size
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
     return {
@@ -41,11 +41,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeTableTransferEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeTableTransferEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTableTransfer = this
       $xeTableTransfer.$emit(type, createEvent(evnt, { $tableTransfer: $xeTableTransfer }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeTableTransfer = this
 
       handleEmitModelVal($xeTableTransfer, value)
@@ -54,23 +54,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeTableTransfer = this
       const slots = $xeTableTransfer.$scopedSlots
 
       const defaultSlot = slots.default
-      return h('div', {
-        ref: 'refElem',
-        class: 'vxe-table-transfer'
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: 'vxe-table-transfer'
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
   },
-  created () {
+  created() {
     const $xeUpload = this
 
     $xeUpload.internalData = createInternalData()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeUpload = this
     const reactData = $xeUpload.reactData
     const internalData = $xeUpload.internalData
@@ -78,7 +82,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -4,7 +4,7 @@ import VxeSplitterComponent from './src/splitter'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSplitter = Object.assign({}, VxeSplitterComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeSplitterComponent.name as string, VxeSplitterComponent)
   }
 })

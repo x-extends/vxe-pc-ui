@@ -215,7 +215,7 @@ declare module '@vxe-ui/core' {
     ALERT_WARNING?: string
     ALERT_ERROR?: string
 
-     // tree
+    // tree
     TREE_NODE_OPEN?: string
     TREE_NODE_CLOSE?: string
     TREE_NODE_LOADED?: string

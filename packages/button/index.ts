@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeButtonComponent from './src/button'
 
 export const VxeButton = Object.assign({}, VxeButtonComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeButtonComponent.name, VxeButtonComponent)
   }
 })

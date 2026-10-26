@@ -5,16 +5,20 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeTransfer: DefineVxeComponentApp<VxeTransferProps, VxeTransferEventProps, VxeTransferSlots, VxeTransferMethods>
 export type VxeTransferComponent = DefineVxeComponentOptions<VxeTransferProps>
 
-export type VxeTransferInstance = DefineVxeComponentInstance<{
-  reactData: TransferReactData
-  internalData: TransferInternalData
-}, VxeTransferProps, VxeTransferPrivateComputed, VxeTransferMethods>
+export type VxeTransferInstance = DefineVxeComponentInstance<
+  {
+    reactData: TransferReactData
+    internalData: TransferInternalData
+  },
+  VxeTransferProps,
+  VxeTransferPrivateComputed,
+  VxeTransferMethods
+>
 
 export type VxeTransferConstructor = VxeTransferInstance
 
-export interface TransferPrivateRef {
-}
-export interface VxeTransferPrivateRef extends TransferPrivateRef { }
+export interface TransferPrivateRef {}
+export interface VxeTransferPrivateRef extends TransferPrivateRef {}
 
 export namespace VxeTransferPropTypes {
   export type Size = VxeComponentSizeType
@@ -35,21 +39,17 @@ export interface VxeTransferProps {
   options?: VxeTransferPropTypes.Options
 }
 
-export interface TransferPrivateComputed {
-}
-export interface VxeTransferPrivateComputed extends TransferPrivateComputed { }
+export interface TransferPrivateComputed {}
+export interface VxeTransferPrivateComputed extends TransferPrivateComputed {}
 
-export interface TransferReactData {
-}
-export interface TransferInternalData {
-}
+export interface TransferReactData {}
+export interface TransferInternalData {}
 
-export interface TransferMethods {
-}
-export interface VxeTransferMethods extends TransferMethods { }
+export interface TransferMethods {}
+export interface VxeTransferMethods extends TransferMethods {}
 
-export interface TransferPrivateMethods { }
-export interface VxeTransferPrivateMethods extends TransferPrivateMethods { }
+export interface TransferPrivateMethods {}
+export interface VxeTransferPrivateMethods extends TransferPrivateMethods {}
 
 export type VxeTransferEmits = []
 
@@ -61,9 +61,9 @@ export namespace VxeTransferDefines {
 
 export type VxeTransferEventProps = {}
 
-export interface VxeTransferListeners { }
+export interface VxeTransferListeners {}
 
-export namespace VxeTransferEvents { }
+export namespace VxeTransferEvents {}
 
 export namespace VxeTransferSlotTypes {
   export interface DefaultSlotParams {}

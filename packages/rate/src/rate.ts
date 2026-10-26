@@ -1,17 +1,16 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { RateReactData, VxeRateEmits, VxeRatePropTypes, ValueOf, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentSizeType, VxeComponentPermissionInfo } from '../../../types'
 
+const { getConfig, getIcon, createEvent, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeRate',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.permissionMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.permissionMixin],
   props: {
     value: [Number, String] as PropType<VxeRatePropTypes.ModelValue>,
     disabled: {
@@ -28,7 +27,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     status: String as PropType<VxeRatePropTypes.Status>
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: RateReactData = {
       activeValue: null
@@ -45,7 +44,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
-    computeIsDisabled () {
+    computeIsDisabled() {
       const $xeRate = this
       const props = $xeRate
       const $xeForm = $xeRate.$xeForm
@@ -59,7 +58,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return disabled
     },
-    computeIsReadonly () {
+    computeIsReadonly() {
       const $xeRate = this
       const props = $xeRate
       const $xeForm = $xeRate.$xeForm
@@ -73,7 +72,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return readonly
     },
-    computeNumVal () {
+    computeNumVal() {
       const $xeRate = this
       const props = $xeRate
       const reactData = ($xeRate as any).reactData as RateReactData
@@ -82,8 +81,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { activeValue } = reactData
       return XEUtils.toNumber(activeValue === null ? value : activeValue)
     },
-    computeItemList () {
-      return [1, 2, 3, 4, 5].map(num => {
+    computeItemList() {
+      return [1, 2, 3, 4, 5].map((num) => {
         return {
           value: num,
           label: num
@@ -95,17 +94,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeRateEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeRateEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeRate = this
       $xeRate.$emit(type, createEvent(evnt, { $rate: $xeRate }, params))
     },
-    emitModel (value: any) {
+    emitModel(value: any) {
       const $xeRate = this
 
       $xeRate.$emit('input', value)
       handleEmitModelVal($xeRate, value)
     },
-    mouseenterEvent (evnt: MouseEvent, item: any) {
+    mouseenterEvent(evnt: MouseEvent, item: any) {
       const $xeRate = this
       const reactData = $xeRate.reactData
 
@@ -116,13 +115,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.activeValue = value
       }
     },
-    mouseleaveEvent () {
+    mouseleaveEvent() {
       const $xeRate = this
       const reactData = $xeRate.reactData
 
       reactData.activeValue = null
     },
-    clickEvent (evnt: Event, item: any) {
+    clickEvent(evnt: Event, item: any) {
       const $xeRate = this
       const $xeForm = $xeRate.$xeForm
       const formItemInfo = $xeRate.formItemInfo
@@ -143,7 +142,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeRate = this
       const props = $xeRate
 
@@ -154,42 +153,56 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const vSize = $xeRate.computeSize
       const numVal = $xeRate.computeNumVal
 
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-rate', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--disabled': isDisabled,
-          'is--readonly': isReadonly
-        }]
-      }, itemList.map(item => {
-        const isChecked = numVal >= item.value
-        return h('div', {
-          class: ['vxe-rte--item', {
-            'is--checked': isChecked
-          }],
-          on: {
-            mouseenter (evnt: MouseEvent) {
-              if (!(isDisabled || isReadonly)) {
-                $xeRate.mouseenterEvent(evnt, item)
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-rate',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--disabled': isDisabled,
+              'is--readonly': isReadonly
+            }
+          ]
+        },
+        itemList.map((item) => {
+          const isChecked = numVal >= item.value
+          return h(
+            'div',
+            {
+              class: [
+                'vxe-rte--item',
+                {
+                  'is--checked': isChecked
+                }
+              ],
+              on: {
+                mouseenter(evnt: MouseEvent) {
+                  if (!(isDisabled || isReadonly)) {
+                    $xeRate.mouseenterEvent(evnt, item)
+                  }
+                },
+                mouseleave: $xeRate.mouseleaveEvent,
+                click(evnt: MouseEvent) {
+                  if (!(isDisabled || isReadonly)) {
+                    $xeRate.clickEvent(evnt, item)
+                  }
+                }
               }
             },
-            mouseleave: $xeRate.mouseleaveEvent,
-            click (evnt: MouseEvent) {
-              if (!(isDisabled || isReadonly)) {
-                $xeRate.clickEvent(evnt, item)
-              }
-            }
-          }
-        }, [
-          h('i', {
-            class: isChecked ? getIcon().RATE_CHECKED : getIcon().RATE_UNCHECKED
-          })
-        ])
-      }))
+            [
+              h('i', {
+                class: isChecked ? getIcon().RATE_CHECKED : getIcon().RATE_UNCHECKED
+              })
+            ]
+          )
+        })
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeLayoutHeaderComponent from './src/layout-header'
 
 export const VxeLayoutHeader = Object.assign({}, VxeLayoutHeaderComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeLayoutHeaderComponent.name as string, VxeLayoutHeaderComponent)
   }
 })

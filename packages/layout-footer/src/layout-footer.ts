@@ -1,9 +1,11 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
 import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, VxeLayoutFooterEmits, ValueOf } from '../../../types'
+
+const { createEvent } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutFooter',
@@ -11,10 +13,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     fixed: Boolean as PropType<VxeLayoutFooterPropTypes.Fixed>,
     align: String as PropType<VxeLayoutFooterPropTypes.Align>
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: LayoutFooterReactData = {
-    }
+    const reactData: LayoutFooterReactData = {}
     return {
       xID,
       reactData
@@ -24,7 +25,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeLayoutFooterEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeLayoutFooterEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLayoutFooter = this
       $xeLayoutFooter.$emit(type, createEvent(evnt, { $layoutFooter: $xeLayoutFooter }, params))
     },
@@ -32,7 +33,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeLayoutFooter = this
       const props = $xeLayoutFooter
       const slots = $xeLayoutFooter.$scopedSlots
@@ -40,14 +41,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { fixed, align } = props
       const defaultSlot = slots.default
 
-      return h('footer', {
-        class: ['vxe-layout-footer', align ? `align--${align}` : '', {
-          'is--fixed': fixed
-        }]
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'footer',
+        {
+          class: [
+            'vxe-layout-footer',
+            align ? `align--${align}` : '',
+            {
+              'is--fixed': fixed
+            }
+          ]
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

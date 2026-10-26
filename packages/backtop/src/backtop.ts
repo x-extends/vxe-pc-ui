@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { createComponentLog } from '../../ui/src/log'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { toCssUnit } from '../../ui/src/dom'
@@ -9,15 +9,17 @@ import VxeButtonComponent from '../../button'
 
 import type { BacktopInternalData, VxeBacktopPropTypes, BacktopReactData, VxeBacktopEmits, VxeComponentSizeType, ValueOf, VxeComponentStyleType } from '../../../types'
 
+const { getConfig, getIcon, createEvent, globalMixins, renderEmptyElement } = VxeUI
+
 const { errLog } = createComponentLog('backtop')
 
-function createInternalData (): BacktopInternalData {
+function createInternalData(): BacktopInternalData {
   return {
     targetEl: null
   }
 }
 
-function createReactData (): BacktopReactData {
+function createReactData(): BacktopReactData {
   return {
     showBtn: false,
     backtopZindex: 0
@@ -26,9 +28,7 @@ function createReactData (): BacktopReactData {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBacktop',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     target: String as PropType<VxeBacktopPropTypes.Target>,
     size: {
@@ -92,7 +92,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().backtop.position
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
     return {
@@ -107,7 +107,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeWrapperStyle () {
+    computeWrapperStyle() {
       const $xeBacktop = this
       const props = $xeBacktop
       const reactData = $xeBacktop.reactData
@@ -128,12 +128,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   watch: {
-    position () {
+    position() {
       const $xeBacktop = this
 
       $xeBacktop.updateZIndex()
     },
-    target () {
+    target() {
       const $xeBacktop = this
 
       $xeBacktop.handleTargetElement()
@@ -143,11 +143,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeBacktopEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeBacktopEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeBacktop = this
       $xeBacktop.$emit(type, createEvent(evnt, { $backtop: $xeBacktop }, params))
     },
-    updateZIndex () {
+    updateZIndex() {
       const $xeBacktop = this
       const props = $xeBacktop
       const reactData = $xeBacktop.reactData
@@ -162,20 +162,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    showBacktop () {
+    showBacktop() {
       const $xeBacktop = this
       const reactData = $xeBacktop.reactData
 
       $xeBacktop.updateZIndex()
       reactData.showBtn = true
     },
-    hideBacktop () {
+    hideBacktop() {
       const $xeBacktop = this
       const reactData = $xeBacktop.reactData
 
       reactData.showBtn = false
     },
-    handleScrollEvent (evnt: Event) {
+    handleScrollEvent(evnt: Event) {
       const $xeBacktop = this
       const props = $xeBacktop
       const reactData = $xeBacktop.reactData
@@ -185,7 +185,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollTop = currentEl.scrollTop
       reactData.showBtn = scrollTop > Math.max(1, XEUtils.toNumber(threshold))
     },
-    handleToTop () {
+    handleToTop() {
       const $xeBacktop = this
       const internalData = $xeBacktop.internalData
 
@@ -200,7 +200,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         targetEl.scrollTop = currScrollTop > 10 ? currScrollTop : 0
       }
     },
-    removeScrollEvent () {
+    removeScrollEvent() {
       const $xeBacktop = this
       const internalData = $xeBacktop.internalData
 
@@ -209,7 +209,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         targetEl.removeEventListener('scroll', $xeBacktop.handleScrollEvent)
       }
     },
-    addScrollEvent () {
+    addScrollEvent() {
       const $xeBacktop = this
       const internalData = $xeBacktop.internalData
 
@@ -218,7 +218,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         targetEl.addEventListener('scroll', $xeBacktop.handleScrollEvent, { passive: true })
       }
     },
-    handleTargetElement () {
+    handleTargetElement() {
       const $xeBacktop = this
       const props = $xeBacktop
       const internalData = $xeBacktop.internalData
@@ -241,7 +241,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    clickEvent (evnt: MouseEvent) {
+    clickEvent(evnt: MouseEvent) {
       const $xeBacktop = this
 
       $xeBacktop.handleToTop()
@@ -251,7 +251,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN  (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeBacktop = this
       const props = $xeBacktop
       const slots = $xeBacktop.$scopedSlots
@@ -264,53 +264,73 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const defaultSlot = slots.default
       const topSlot = slots.top
       const bottomSlot = slots.bottom
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-backtop', position === 'fixed' ? ('is--' + position) : 'is--absolute', {
-          [`size--${vSize}`]: vSize,
-          'is--visible': showBtn
-        }],
-        style: wrapperStyle
-      }, [
-        showTop && topSlot
-          ? h('div', {
-            class: 'vxe-backtop--top-wrapper'
-          }, topSlot({}))
-          : renderEmptyElement($xeBacktop),
-        h('div', {
-          class: 'vxe-backtop--content-wrapper',
-          on: {
-            click: $xeBacktop.clickEvent
-          }
-        }, [
-          defaultSlot
-            ? defaultSlot({})
-            : [
-                h(VxeButtonComponent, {
-                  props: {
-                    circle,
-                    status,
-                    shadow,
-                    icon: showIcon ? (icon || getIcon().BACKTOP_TOP) : '',
-                    content: showContent ? content : ''
-                  }
-                })
-              ]
-        ]),
-        showBottom && bottomSlot
-          ? h('div', {
-            class: 'vxe-backtop--bottom-wrapper'
-          }, bottomSlot({}))
-          : renderEmptyElement($xeBacktop)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-backtop',
+            position === 'fixed' ? 'is--' + position : 'is--absolute',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--visible': showBtn
+            }
+          ],
+          style: wrapperStyle
+        },
+        [
+          showTop && topSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-backtop--top-wrapper'
+              },
+              topSlot({})
+            )
+            : renderEmptyElement($xeBacktop),
+          h(
+            'div',
+            {
+              class: 'vxe-backtop--content-wrapper',
+              on: {
+                click: $xeBacktop.clickEvent
+              }
+            },
+            [
+              defaultSlot
+                ? defaultSlot({})
+                : [
+                    h(VxeButtonComponent, {
+                      props: {
+                        circle,
+                        status,
+                        shadow,
+                        icon: showIcon ? icon || getIcon().BACKTOP_TOP : '',
+                        content: showContent ? content : ''
+                      }
+                    })
+                  ]
+            ]
+          ),
+          showBottom && bottomSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-backtop--bottom-wrapper'
+              },
+              bottomSlot({})
+            )
+            : renderEmptyElement($xeBacktop)
+        ]
+      )
     }
   },
-  created () {
+  created() {
     const $xeBacktop = this
 
     $xeBacktop.internalData = createInternalData()
   },
-  mounted () {
+  mounted() {
     const $xeBacktop = this
     const props = $xeBacktop
 
@@ -320,7 +340,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     $xeBacktop.handleTargetElement()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeBacktop = this
     const reactData = $xeBacktop.reactData
     const internalData = $xeBacktop.internalData
@@ -329,7 +349,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

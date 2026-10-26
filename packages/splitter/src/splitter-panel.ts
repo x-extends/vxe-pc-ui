@@ -1,16 +1,16 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { globalMixins, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleSplitterItem, destroySplitterItem } from './util'
 import XEUtils from 'xe-utils'
 
 import type { SplitterItemReactData, VxeSplitterPanelPropTypes, VxeSplitterPanelEmits, VxeComponentSizeType, ValueOf, VxeSplitterConstructor, VxeSplitterPrivateMethods, VxeSplitterDefines } from '../../../types'
 
+const { globalMixins, createEvent } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSplitterPanel',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     name: [Number, String] as PropType<VxeSplitterPanelPropTypes.Name>,
     width: [Number, String] as PropType<VxeSplitterPanelPropTypes.Width>,
@@ -40,16 +40,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  provide () {
+  provide() {
     const $xeSplitterItem = this
     return {
       $xeSplitterItem
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: SplitterItemReactData = {
-    }
+    const reactData: SplitterItemReactData = {}
     const paneConfig: VxeSplitterDefines.PaneConfig = {
       id: xID,
       name: '',
@@ -83,49 +82,49 @@ export default /* define-vxe-component start */ defineVxeComponent({
     })
   },
   watch: {
-    name (val) {
+    name(val) {
       const $xeSplitterItem = this
       const paneConfig = $xeSplitterItem.paneConfig
 
       paneConfig.name = val
     },
-    width (val) {
+    width(val) {
       const $xeSplitterItem = this
       const paneConfig = $xeSplitterItem.paneConfig
 
       paneConfig.width = val
     },
-    height (val) {
+    height(val) {
       const $xeSplitterItem = this
       const paneConfig = $xeSplitterItem.paneConfig
 
       paneConfig.height = val
     },
-    minWidth (val) {
+    minWidth(val) {
       const $xeSplitterItem = this
       const paneConfig = $xeSplitterItem.paneConfig
 
       paneConfig.minWidth = val
     },
-    minHeight (val) {
+    minHeight(val) {
       const $xeSplitterItem = this
       const paneConfig = $xeSplitterItem.paneConfig
 
       paneConfig.minHeight = val
     },
-    maxWidth (val) {
+    maxWidth(val) {
       const $xeSplitterItem = this
       const paneConfig = $xeSplitterItem.paneConfig
 
       paneConfig.maxWidth = val
     },
-    maxHeight (val) {
+    maxHeight(val) {
       const $xeSplitterItem = this
       const paneConfig = $xeSplitterItem.paneConfig
 
       paneConfig.maxHeight = val
     },
-    showAction (val) {
+    showAction(val) {
       const $xeSplitterItem = this
       const paneConfig = $xeSplitterItem.paneConfig
 
@@ -136,20 +135,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeSplitterPanelEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeSplitterPanelEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeSplitterItem = this
       $xeSplitterItem.$emit(type, createEvent(evnt, { $splitterPanel: $xeSplitterItem }, params))
     },
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       return h('div', {
         ref: 'refElem'
       })
     }
   },
-  created () {
+  created() {
     const $xeSplitterItem = this
     const props = $xeSplitterItem
     const slots = $xeSplitterItem.$scopedSlots
@@ -167,7 +166,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       slots
     })
   },
-  mounted () {
+  mounted() {
     const $xeSplitterItem = this
     const slots = $xeSplitterItem.$scopedSlots
     const paneConfig = $xeSplitterItem.paneConfig
@@ -180,7 +179,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       assembleSplitterItem($xeSplitter, elem, paneConfig)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeSplitterItem = this
     const paneConfig = $xeSplitterItem.paneConfig
     const $xeSplitter = $xeSplitterItem.$xeSplitter
@@ -189,7 +188,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       destroySplitterItem($xeSplitter, paneConfig)
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

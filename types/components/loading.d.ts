@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeLoading: DefineVxeComponentApp<VxeLoadingProps, VxeLoadingEventProps, VxeLoadingSlots, VxeLoadingMethods>
 export type VxeLoadingComponent = DefineVxeComponentOptions<VxeLoadingProps>
 
-export type VxeLoadingInstance = DefineVxeComponentInstance<{
-  reactData: LoadingReactData
-}, VxeLoadingProps, VxeLoadingPrivateComputed, VxeLoadingMethods>
+export type VxeLoadingInstance = DefineVxeComponentInstance<
+  {
+    reactData: LoadingReactData
+  },
+  VxeLoadingProps,
+  VxeLoadingPrivateComputed,
+  VxeLoadingMethods
+>
 
 export type VxeLoadingConstructor = VxeLoadingInstance
 
-export interface LoadingPrivateRef {
-}
-export interface VxeLoadingPrivateRef extends LoadingPrivateRef { }
+export interface LoadingPrivateRef {}
+export interface VxeLoadingPrivateRef extends LoadingPrivateRef {}
 
 export namespace VxeLoadingPropTypes {
   export type ModelValue = boolean
@@ -35,20 +39,18 @@ export interface VxeLoadingProps {
   size?: VxeLoadingPropTypes.Size
 }
 
-export interface LoadingPrivateComputed {
-}
-export interface VxeLoadingPrivateComputed extends LoadingPrivateComputed { }
+export interface LoadingPrivateComputed {}
+export interface VxeLoadingPrivateComputed extends LoadingPrivateComputed {}
 
 export interface LoadingReactData {
   initialized: boolean
 }
 
-export interface LoadingMethods {
-}
-export interface VxeLoadingMethods extends LoadingMethods { }
+export interface LoadingMethods {}
+export interface VxeLoadingMethods extends LoadingMethods {}
 
-export interface LoadingPrivateMethods { }
-export interface VxeLoadingPrivateMethods extends LoadingPrivateMethods { }
+export interface LoadingPrivateMethods {}
+export interface VxeLoadingPrivateMethods extends LoadingPrivateMethods {}
 
 export type VxeLoadingEmits = []
 
@@ -60,9 +62,9 @@ export namespace VxeLoadingDefines {
 
 export type VxeLoadingEventProps = {}
 
-export interface VxeLoadingListeners { }
+export interface VxeLoadingListeners {}
 
-export namespace VxeLoadingEvents { }
+export namespace VxeLoadingEvents {}
 
 export namespace VxeLoadingSlotTypes {
   export interface DefaultSlotParams {}
@@ -82,10 +84,7 @@ export interface LoadingController {
    * 打开
    * @param options 参数
    */
-  open(options?: {
-    icon?: VxeLoadingPropTypes.Icon
-    text?: VxeLoadingPropTypes.Text
-  }): Promise<void>
+  open(options?: { icon?: VxeLoadingPropTypes.Icon; text?: VxeLoadingPropTypes.Text }): Promise<void>
   /**
    * 关闭
    */

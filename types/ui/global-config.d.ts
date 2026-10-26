@@ -204,7 +204,7 @@ declare module '@vxe-ui/core' {
     timelineItem?: VxeTimelineItemProps
     tip?: VxeTipProps
     tooltip?: VxeTooltipProps
-    tour?: VxeTourProps,
+    tour?: VxeTourProps
     transfer?: VxeTransferProps
     tree?: VxeTreeProps
     treeSelect?: VxeTreeSelectProps

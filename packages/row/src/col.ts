@@ -1,19 +1,19 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { createComponentLog } from '../../ui/src/log'
 
 import type { ColReactData, VxeColPropTypes, VxeColEmits, VxeRowConstructor, VxeRowPrivateMethods, VxeComponentSizeType, ValueOf } from '../../../types'
 
+const { getConfig, createEvent, globalMixins } = VxeUI
+
 const { errLog } = createComponentLog('col')
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCol',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     span: [Number, String] as PropType<VxeColPropTypes.Span>,
     align: String as PropType<VxeColPropTypes.Align>,
@@ -30,9 +30,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
-    const reactData: ColReactData = {
-    }
+  data() {
+    const reactData: ColReactData = {}
     return {
       xID: XEUtils.uniqueId(),
       reactData
@@ -43,7 +42,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       computeSize(): VxeComponentSizeType
       $xeRow(): VxeRowConstructor & VxeRowPrivateMethods
     }),
-    computeRowGutter () {
+    computeRowGutter() {
       const $xeCol = this
       const $xeRow = $xeCol.$xeRow
 
@@ -52,7 +51,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    computeRowVertical () {
+    computeRowVertical() {
       const $xeCol = this
       const $xeRow = $xeCol.$xeRow
 
@@ -61,7 +60,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    computeColStyle () {
+    computeColStyle() {
       const $xeCol = this
       const props = $xeCol
       const $xeRow = $xeCol.$xeRow
@@ -103,14 +102,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeColEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeColEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeCol = this
       $xeCol.$emit(type, createEvent(evnt, { $col: $xeCol }, params))
     },
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeCol = this
       const props = $xeCol
       const slots = $xeCol.$scopedSlots
@@ -118,23 +117,36 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { span, fill, align, width, ellipsis } = props
       const colStyle = $xeCol.computeColStyle
       const defaultSlot = slots.default
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-col', span ? `span${span}` : '', align ? `align--${align}` : '', {
-          'is--span': !!span,
-          'is--width': !!width,
-          'is--fill': fill,
-          'is--ellipsis': ellipsis
-        }],
-        style: colStyle
-      }, [
-        h('div', {
-          class: 'vxe-col--inner'
-        }, defaultSlot ? defaultSlot({}) : [])
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-col',
+            span ? `span${span}` : '',
+            align ? `align--${align}` : '',
+            {
+              'is--span': !!span,
+              'is--width': !!width,
+              'is--fill': fill,
+              'is--ellipsis': ellipsis
+            }
+          ],
+          style: colStyle
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-col--inner'
+            },
+            defaultSlot ? defaultSlot({}) : []
+          )
+        ]
+      )
     }
   },
-  mounted () {
+  mounted() {
     const $xeCol = this
     const props = $xeCol
     const $xeRow = $xeCol.$xeRow
@@ -151,7 +163,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

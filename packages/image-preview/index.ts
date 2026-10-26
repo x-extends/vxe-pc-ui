@@ -5,7 +5,7 @@ import { dynamicApp } from '../dynamics'
 import { openPreviewImage } from '../image/src/util'
 
 export const VxeImagePreview = Object.assign(VxeImagePreviewComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeImagePreviewComponent.name as string, VxeImagePreviewComponent)
   }
 })

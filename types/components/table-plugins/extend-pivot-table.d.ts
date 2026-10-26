@@ -4,8 +4,7 @@ import { VxeTableConstructor, VxeTablePrivateMethods, VxeTableDefines } from '..
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/no-unused-vars */
 
-export interface VxeTableExtendPivotTableMethods<D = any> {
-}
+export interface VxeTableExtendPivotTableMethods<D = any> {}
 
 export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
   /**
@@ -22,11 +21,7 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  getPivotTableAggregateCellAggValue(params: {
-    $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
-    row: any
-    column: VxeTableDefines.ColumnInfo
-  }): string
+  getPivotTableAggregateCellAggValue(params: { $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>; row: any; column: VxeTableDefines.ColumnInfo }): string
   /**
    * 内部方法
    * @private
@@ -49,8 +44,8 @@ export interface VxeTableExtendPivotTablePrivateMethods<D = any> {
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends VxeTableExtendPivotTableMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends VxeTableExtendPivotTablePrivateMethods<D> { }
+  export interface VxeTableMethods<D = any> extends VxeTableExtendPivotTableMethods<D> {}
+  export interface VxeTablePrivateMethods<D = any> extends VxeTableExtendPivotTablePrivateMethods<D> {}
   export interface TablePrivateComputed<D = any> {
     omputeAggFnObj: {
       afList: {
@@ -63,6 +58,6 @@ declare module '../table' {
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends VxeTableExtendPivotTableMethods<D> { }
-  export interface VxeGridPrivateMethods<D = any> extends VxeTableExtendPivotTablePrivateMethods<D> { }
+  export interface VxeGridMethods<D = any> extends VxeTableExtendPivotTableMethods<D> {}
+  export interface VxeGridPrivateMethods<D = any> extends VxeTableExtendPivotTablePrivateMethods<D> {}
 }

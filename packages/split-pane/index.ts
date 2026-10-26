@@ -4,7 +4,7 @@ import VxeSplitPaneComponent from '../splitter/src/splitter-panel'
 import { dynamicApp } from '../dynamics'
 
 export const VxeSplitPane = Object.assign({}, VxeSplitPaneComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component('VxeSplitPane', VxeSplitPaneComponent)
     app.component('VxeSplitItem', VxeSplitPaneComponent)
   }

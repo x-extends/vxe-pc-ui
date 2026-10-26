@@ -4,7 +4,7 @@ import VxeTreeComponent from './src/tree'
 import { dynamicApp } from '../dynamics'
 
 export const VxeTree = Object.assign({}, VxeTreeComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeTreeComponent.name as string, VxeTreeComponent)
   }
 })

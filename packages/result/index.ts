@@ -4,7 +4,7 @@ import VxeResultComponent from './src/result'
 import { dynamicApp } from '../dynamics'
 
 export const VxeResult = Object.assign({}, VxeResultComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeResultComponent.name as string, VxeResultComponent)
   }
 })

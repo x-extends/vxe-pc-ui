@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeEmpty: DefineVxeComponentApp<VxeEmptyProps, VxeEmptyEventProps, VxeEmptySlots, VxeEmptyMethods>
 export type VxeEmptyComponent = DefineVxeComponentOptions<VxeEmptyProps>
 
-export type VxeEmptyInstance = DefineVxeComponentInstance<{
-  reactData: EmptyReactData
-}, VxeEmptyProps, VxeEmptyPrivateComputed, VxeEmptyMethods>
+export type VxeEmptyInstance = DefineVxeComponentInstance<
+  {
+    reactData: EmptyReactData
+  },
+  VxeEmptyProps,
+  VxeEmptyPrivateComputed,
+  VxeEmptyMethods
+>
 
 export type VxeEmptyConstructor = VxeEmptyInstance
 
-export interface EmptyPrivateRef {
-}
-export interface VxeEmptyPrivateRef extends EmptyPrivateRef { }
+export interface EmptyPrivateRef {}
+export interface VxeEmptyPrivateRef extends EmptyPrivateRef {}
 
 export namespace VxeEmptyPropTypes {
   export type ImageUrl = string
@@ -31,19 +35,16 @@ export interface VxeEmptyProps {
   content?: VxeEmptyPropTypes.Content
 }
 
-export interface EmptyPrivateComputed {
-}
-export interface VxeEmptyPrivateComputed extends EmptyPrivateComputed { }
+export interface EmptyPrivateComputed {}
+export interface VxeEmptyPrivateComputed extends EmptyPrivateComputed {}
 
-export interface EmptyReactData {
-}
+export interface EmptyReactData {}
 
-export interface EmptyMethods {
-}
-export interface VxeEmptyMethods extends EmptyMethods { }
+export interface EmptyMethods {}
+export interface VxeEmptyMethods extends EmptyMethods {}
 
-export interface EmptyPrivateMethods { }
-export interface VxeEmptyPrivateMethods extends EmptyPrivateMethods { }
+export interface EmptyPrivateMethods {}
+export interface VxeEmptyPrivateMethods extends EmptyPrivateMethods {}
 
 export type VxeEmptyEmits = []
 
@@ -55,9 +56,9 @@ export namespace VxeEmptyDefines {
 
 export type VxeEmptyEventProps = {}
 
-export interface VxeEmptyListeners { }
+export interface VxeEmptyListeners {}
 
-export namespace VxeEmptyEvents { }
+export namespace VxeEmptyEvents {}
 
 export namespace VxeEmptySlotTypes {
   export interface DefaultSlotParams {}

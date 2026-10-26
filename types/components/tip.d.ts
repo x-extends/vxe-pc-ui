@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeTip: DefineVxeComponentApp<VxeTipProps, VxeTipEventProps, VxeTipSlots, VxeTipMethods>
 export type VxeTipComponent = DefineVxeComponentOptions<VxeTipProps>
 
-export type VxeTipInstance = DefineVxeComponentInstance<{
-  reactData: TipReactData
-}, VxeTipProps, VxeTipPrivateComputed, VxeTipMethods>
+export type VxeTipInstance = DefineVxeComponentInstance<
+  {
+    reactData: TipReactData
+  },
+  VxeTipProps,
+  VxeTipPrivateComputed,
+  VxeTipMethods
+>
 
 export type VxeTipConstructor = VxeTipInstance
 
-export interface TipPrivateRef {
-}
-export interface VxeTipPrivateRef extends TipPrivateRef { }
+export interface TipPrivateRef {}
+export interface VxeTipPrivateRef extends TipPrivateRef {}
 
 export namespace VxeTipPropTypes {
   export type Title = string | number
@@ -33,20 +37,18 @@ export interface VxeTipProps {
   permissionCode?: VxeTipPropTypes.PermissionCode
 }
 
-export interface TipPrivateComputed {
-}
-export interface VxeTipPrivateComputed extends TipPrivateComputed { }
+export interface TipPrivateComputed {}
+export interface VxeTipPrivateComputed extends TipPrivateComputed {}
 
-export interface TipReactData {
-}
+export interface TipReactData {}
 
 export interface TipMethods {
   dispatchEvent(type: ValueOf<VxeTipEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeTipMethods extends TipMethods { }
+export interface VxeTipMethods extends TipMethods {}
 
-export interface TipPrivateMethods { }
-export interface VxeTipPrivateMethods extends TipPrivateMethods { }
+export interface TipPrivateMethods {}
+export interface VxeTipPrivateMethods extends TipPrivateMethods {}
 
 export type VxeTipEmits = []
 
@@ -58,9 +60,9 @@ export namespace VxeTipDefines {
 
 export type VxeTipEventProps = {}
 
-export interface VxeTipListeners { }
+export interface VxeTipListeners {}
 
-export namespace VxeTipEvents { }
+export namespace VxeTipEvents {}
 
 export namespace VxeTipSlotTypes {
   export interface DefaultSlotParams {}

@@ -7,7 +7,7 @@ import type { VxeUploadDefines } from '../../../types'
 let fileForm: HTMLFormElement | null = null
 let fileInput: HTMLInputElement | null = null
 
-export function parseFile (file: File) {
+export function parseFile(file: File) {
   const name = file.name
   const tIndex = XEUtils.lastIndexOf(name, '.')
   const type = name.substring(tIndex + 1, name.length).toLowerCase()
@@ -38,7 +38,7 @@ export const readLocalFile: VxeUploadDefines.ReadFileFunction = (options) => {
     fileInput.multiple = !!opts.multiple
     fileInput.accept = isAllType ? '' : `.${types.join(', .')}`
     fileInput.onchange = (evnt) => {
-      const eventTarget = evnt.target as (EventTarget & { files: FileList })
+      const eventTarget = evnt.target as EventTarget & { files: FileList }
       const files = Array.from(eventTarget.files || [])
       const file = files[0]
       let errType = ''
@@ -72,7 +72,7 @@ export const readLocalFile: VxeUploadDefines.ReadFileFunction = (options) => {
   })
 }
 
-export function getExportBlobByContent (content: string, options: { type: string }) {
+export function getExportBlobByContent(content: string, options: { type: string }) {
   return new Blob([content], { type: `text/${options.type};charset=utf-8;` })
 }
 

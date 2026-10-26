@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeCheckbox: DefineVxeComponentApp<VxeCheckboxProps, VxeCheckboxEventProps, VxeCheckboxSlots, VxeCheckboxMethods>
 export type VxeCheckboxComponent = DefineVxeComponentOptions<VxeCheckboxProps>
 
-export type VxeCheckboxInstance = DefineVxeComponentInstance<{
-  reactData: CheckboxReactData
-}, VxeCheckboxProps, VxeCheckboxPrivateComputed, VxeCheckboxMethods>
+export type VxeCheckboxInstance = DefineVxeComponentInstance<
+  {
+    reactData: CheckboxReactData
+  },
+  VxeCheckboxProps,
+  VxeCheckboxPrivateComputed,
+  VxeCheckboxMethods
+>
 
 export type VxeCheckboxConstructor = VxeCheckboxInstance
 
-export interface CheckboxPrivateRef {
-}
-export interface VxeCheckboxPrivateRef extends CheckboxPrivateRef { }
+export interface CheckboxPrivateRef {}
+export interface VxeCheckboxPrivateRef extends CheckboxPrivateRef {}
 
 export namespace VxeCheckboxPropTypes {
   export type Size = VxeComponentSizeType
@@ -62,27 +66,20 @@ export type VxeCheckboxProps = {
   disabled?: VxeCheckboxPropTypes.Disabled
 }
 
-export interface CheckboxPrivateComputed {
-}
-export interface VxeCheckboxPrivateComputed extends CheckboxPrivateComputed { }
+export interface CheckboxPrivateComputed {}
+export interface VxeCheckboxPrivateComputed extends CheckboxPrivateComputed {}
 
-export interface CheckboxReactData {
-}
+export interface CheckboxReactData {}
 
 export interface CheckboxMethods {
   dispatchEvent(type: ValueOf<VxeCheckboxEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeCheckboxMethods extends CheckboxMethods { }
+export interface VxeCheckboxMethods extends CheckboxMethods {}
 
-export interface CheckboxPrivateMethods { }
-export interface VxeCheckboxPrivateMethods extends CheckboxPrivateMethods { }
+export interface CheckboxPrivateMethods {}
+export interface VxeCheckboxPrivateMethods extends CheckboxPrivateMethods {}
 
-export type VxeCheckboxEmits = [
-  'model-value',
-  'modelValue',
-  'input',
-  'change'
-]
+export type VxeCheckboxEmits = ['model-value', 'modelValue', 'input', 'change']
 
 export namespace VxeCheckboxDefines {
   export interface CheckboxEventParams extends VxeComponentEventParams {
@@ -93,7 +90,7 @@ export namespace VxeCheckboxDefines {
     checked: boolean
     label: any
   }
-  export interface ChangeEventParams extends CheckboxEventParams, ChangeParams { }
+  export interface ChangeEventParams extends CheckboxEventParams, ChangeParams {}
 }
 
 export type VxeCheckboxEventProps = {

@@ -6,15 +6,19 @@ import { VxeBreadcrumbItemProps } from './breadcrumb-item'
 export declare const VxeBreadcrumb: DefineVxeComponentApp<VxeBreadcrumbProps, VxeBreadcrumbEventProps, VxeBreadcrumbSlots, VxeBreadcrumbMethods>
 export type VxeBreadcrumbComponent = DefineVxeComponentOptions<VxeBreadcrumbProps>
 
-export type VxeBreadcrumbInstance = DefineVxeComponentInstance<{
-  reactData: BreadcrumbReactData
-}, VxeBreadcrumbProps, VxeBreadcrumbPrivateComputed, VxeBreadcrumbMethods>
+export type VxeBreadcrumbInstance = DefineVxeComponentInstance<
+  {
+    reactData: BreadcrumbReactData
+  },
+  VxeBreadcrumbProps,
+  VxeBreadcrumbPrivateComputed,
+  VxeBreadcrumbMethods
+>
 
 export type VxeBreadcrumbConstructor = VxeBreadcrumbInstance
 
-export interface BreadcrumbPrivateRef {
-}
-export interface VxeBreadcrumbPrivateRef extends BreadcrumbPrivateRef { }
+export interface BreadcrumbPrivateRef {}
+export interface VxeBreadcrumbPrivateRef extends BreadcrumbPrivateRef {}
 
 export namespace VxeBreadcrumbPropTypes {
   export type Separator = string
@@ -25,26 +29,22 @@ export interface VxeBreadcrumbProps {
   separator?: VxeBreadcrumbPropTypes.Separator
 }
 
-export interface BreadcrumbPrivateComputed {
-}
-export interface VxeBreadcrumbPrivateComputed extends BreadcrumbPrivateComputed { }
+export interface BreadcrumbPrivateComputed {}
+export interface VxeBreadcrumbPrivateComputed extends BreadcrumbPrivateComputed {}
 
-export interface BreadcrumbReactData {
-}
+export interface BreadcrumbReactData {}
 
 export interface BreadcrumbMethods {
   dispatchEvent(type: ValueOf<VxeBreadcrumbEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeBreadcrumbMethods extends BreadcrumbMethods { }
+export interface VxeBreadcrumbMethods extends BreadcrumbMethods {}
 
 export interface BreadcrumbPrivateMethods {
   handleClickLink(evnt: MouseEvent, item?: VxeBreadcrumbItemProps): void
- }
-export interface VxeBreadcrumbPrivateMethods extends BreadcrumbPrivateMethods { }
+}
+export interface VxeBreadcrumbPrivateMethods extends BreadcrumbPrivateMethods {}
 
-export type VxeBreadcrumbEmits = [
-  'click'
-]
+export type VxeBreadcrumbEmits = ['click']
 
 export namespace VxeBreadcrumbDefines {
   export interface BreadcrumbEventParams extends VxeComponentEventParams {

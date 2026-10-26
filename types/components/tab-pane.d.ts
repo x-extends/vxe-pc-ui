@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeTabPane: DefineVxeComponentApp<VxeTabPaneProps, VxeTabPaneEventProps, VxeTabPaneSlots, VxeTabPaneMethods>
 export type VxeTabPaneComponent = DefineVxeComponentOptions<VxeTabPaneProps>
 
-export type VxeTabPaneInstance = DefineVxeComponentInstance<{
-  reactData: TabPaneReactData
-}, VxeTabPaneProps, VxeTabPanePrivateComputed, VxeTabPaneMethods>
+export type VxeTabPaneInstance = DefineVxeComponentInstance<
+  {
+    reactData: TabPaneReactData
+  },
+  VxeTabPaneProps,
+  VxeTabPanePrivateComputed,
+  VxeTabPaneMethods
+>
 
 export type VxeTabPaneConstructor = VxeTabPaneInstance
 
-export interface TabPanePrivateRef {
-}
-export interface VxeTabPanePrivateRef extends TabPanePrivateRef { }
+export interface TabPanePrivateRef {}
+export interface VxeTabPanePrivateRef extends TabPanePrivateRef {}
 
 export namespace VxeTabPanePropTypes {
   export type Title = string | number
@@ -48,19 +52,16 @@ export interface VxeTabPaneProps {
   }
 }
 
-export interface TabPanePrivateComputed {
-}
-export interface VxeTabPanePrivateComputed extends TabPanePrivateComputed { }
+export interface TabPanePrivateComputed {}
+export interface VxeTabPanePrivateComputed extends TabPanePrivateComputed {}
 
-export interface TabPaneReactData {
-}
+export interface TabPaneReactData {}
 
-export interface TabPaneMethods {
-}
-export interface VxeTabPaneMethods extends TabPaneMethods { }
+export interface TabPaneMethods {}
+export interface VxeTabPaneMethods extends TabPaneMethods {}
 
-export interface TabPanePrivateMethods { }
-export interface VxeTabPanePrivateMethods extends TabPanePrivateMethods { }
+export interface TabPanePrivateMethods {}
+export interface VxeTabPanePrivateMethods extends TabPanePrivateMethods {}
 
 export type VxeTabPaneEmits = []
 
@@ -76,9 +77,9 @@ export namespace VxeTabPaneDefines {
 
 export type VxeTabPaneEventProps = {}
 
-export interface VxeTabPaneListeners { }
+export interface VxeTabPaneListeners {}
 
-export namespace VxeTabPaneEvents { }
+export namespace VxeTabPaneEvents {}
 
 export namespace VxeTabPaneSlotTypes {
   export interface DefaultSlotParams {

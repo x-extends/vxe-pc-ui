@@ -4,7 +4,7 @@ import VxeDateRangePickerComponent from './src/date-range-picker'
 import { dynamicApp } from '../dynamics'
 
 export const VxeDateRangePicker = Object.assign({}, VxeDateRangePickerComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeDateRangePickerComponent.name as string, VxeDateRangePickerComponent)
   }
 })

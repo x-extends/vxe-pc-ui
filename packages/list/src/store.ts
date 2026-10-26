@@ -5,7 +5,7 @@ export const crossListDragRowGlobal = {
   row: null as any
 }
 
-export function getCrossListDragRowInfo ($xeList: VxeListConstructor & VxeListPrivateMethods) {
+export function getCrossListDragRowInfo($xeList: VxeListConstructor & VxeListPrivateMethods) {
   const crossListDragRowInfo = ($xeList as any).crossListDragRowInfo as typeof crossListDragRowGlobal
   return crossListDragRowInfo
 }

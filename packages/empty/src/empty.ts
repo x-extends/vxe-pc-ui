@@ -1,9 +1,11 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, getIcon, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { EmptyReactData, VxeEmptyEmits, ValueOf, VxeEmptyPropTypes } from '../../../types'
+
+const { getConfig, getI18n, getIcon, createEvent } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeEmpty',
@@ -17,10 +19,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     content: [String, Number] as PropType<VxeEmptyPropTypes.Content>
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: EmptyReactData = {
-    }
+    const reactData: EmptyReactData = {}
     return {
       xID,
       reactData
@@ -30,7 +31,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeEmptyEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeEmptyEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeEmpty = this
       $xeEmpty.$emit(type, createEvent(evnt, { $empty: $xeEmpty }, params))
     },
@@ -38,46 +39,69 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeEmpty = this
       const props = $xeEmpty
 
       const { imageUrl, imageStyle, icon, status, content } = props
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-empty', {
-          [`theme--${status}`]: status
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-empty--inner'
-        }, [
-          imageUrl
-            ? h('div', {
-              class: 'vxe-empty--img-wrapper'
-            }, [
-              h('img', {
-                attrs: {
-                  src: imageUrl
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-empty',
+            {
+              [`theme--${status}`]: status
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-empty--inner'
+            },
+            [
+              imageUrl
+                ? h(
+                  'div',
+                  {
+                    class: 'vxe-empty--img-wrapper'
+                  },
+                  [
+                    h('img', {
+                      attrs: {
+                        src: imageUrl
+                      },
+                      style: imageStyle
+                    })
+                  ]
+                )
+                : h(
+                  'div',
+                  {
+                    class: 'vxe-empty--icon-wrapper'
+                  },
+                  [
+                    h('i', {
+                      class: icon || getIcon().EMPTY_DEFAULT
+                    })
+                  ]
+                ),
+              h(
+                'div',
+                {
+                  class: 'vxe-empty--content-wrapper'
                 },
-                style: imageStyle
-              })
-            ])
-            : h('div', {
-              class: 'vxe-empty--icon-wrapper'
-            }, [
-              h('i', {
-                class: icon || getIcon().EMPTY_DEFAULT
-              })
-            ]),
-          h('div', {
-            class: 'vxe-empty--content-wrapper'
-          }, `${content || getI18n('vxe.empty.defText')}`)
-        ])
-      ])
+                `${content || getI18n('vxe.empty.defText')}`
+              )
+            ]
+          )
+        ]
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -5,35 +5,34 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeSteps: DefineVxeComponentApp<VxeStepsProps, VxeStepsEventProps, VxeStepsSlots, VxeStepsMethods>
 export type VxeStepsComponent = DefineVxeComponentOptions<VxeStepsProps>
 
-export type VxeStepsInstance = DefineVxeComponentInstance<{
-  reactData: StepsReactData
-}, VxeStepsProps, VxeStepsPrivateComputed, VxeStepsMethods>
+export type VxeStepsInstance = DefineVxeComponentInstance<
+  {
+    reactData: StepsReactData
+  },
+  VxeStepsProps,
+  VxeStepsPrivateComputed,
+  VxeStepsMethods
+>
 
 export type VxeStepsConstructor = VxeStepsInstance
 
-export interface StepsPrivateRef {
-}
-export interface VxeStepsPrivateRef extends StepsPrivateRef { }
+export interface StepsPrivateRef {}
+export interface VxeStepsPrivateRef extends StepsPrivateRef {}
 
-export namespace VxeStepsPropTypes {
-}
+export namespace VxeStepsPropTypes {}
 
-export interface VxeStepsProps {
-}
+export interface VxeStepsProps {}
 
-export interface StepsPrivateComputed {
-}
-export interface VxeStepsPrivateComputed extends StepsPrivateComputed { }
+export interface StepsPrivateComputed {}
+export interface VxeStepsPrivateComputed extends StepsPrivateComputed {}
 
-export interface StepsReactData {
-}
+export interface StepsReactData {}
 
-export interface StepsMethods {
-}
-export interface VxeStepsMethods extends StepsMethods { }
+export interface StepsMethods {}
+export interface VxeStepsMethods extends StepsMethods {}
 
-export interface StepsPrivateMethods { }
-export interface VxeStepsPrivateMethods extends StepsPrivateMethods { }
+export interface StepsPrivateMethods {}
+export interface VxeStepsPrivateMethods extends StepsPrivateMethods {}
 
 export type VxeStepsEmits = []
 
@@ -45,9 +44,9 @@ export namespace VxeStepsDefines {
 
 export type VxeStepsEventProps = {}
 
-export interface VxeStepsListeners { }
+export interface VxeStepsListeners {}
 
-export namespace VxeStepsEvents { }
+export namespace VxeStepsEvents {}
 
 export namespace VxeStepsSlotTypes {
   export interface DefaultSlotParams {}

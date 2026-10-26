@@ -1,17 +1,17 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { renderer, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { isEnableConf } from '../../ui/src/utils'
 import { renderTitle, getItemClass, getItemContentClass, renderItemContent, renderItemErrorIcon } from './render'
 
 import type { VxeFormConstructor, VxeFormDefines, VxeFormPrivateMethods, VxeComponentSizeType } from '../../../types'
 
+const { renderer, globalMixins, renderEmptyElement } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeFormConfigItem',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     itemConfig: Object as PropType<VxeFormDefines.ItemInfo>
   },
@@ -20,7 +20,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  provide () {
+  provide() {
     const xeFormItemInfo = this
     return {
       xeFormItemInfo,
@@ -34,43 +34,46 @@ export default /* define-vxe-component start */ defineVxeComponent({
     })
   },
   methods: {
-    renderItem (h: CreateElement, $xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo): VNode {
+    renderItem(h: CreateElement, $xeForm: VxeFormConstructor & VxeFormPrivateMethods, item: VxeFormDefines.ItemInfo): VNode {
       const $xeFormConfigItem = this
 
       const formProps = $xeForm
       const { data, readonly, disabled } = formProps
       const { visible, field, itemRender, contentStyle, children, showContent } = item
       const compConf = isEnableConf(itemRender) ? renderer.get(itemRender.name) : null
-      const itemStyle = compConf ? (compConf.formItemStyle || compConf.itemStyle) : null
-      const itemContentStyle = compConf ? (compConf.formItemContentStyle || compConf.itemContentStyle) : null
+      const itemStyle = compConf ? compConf.formItemStyle || compConf.itemStyle : null
+      const itemContentStyle = compConf ? compConf.formItemContentStyle || compConf.itemContentStyle : null
       const params = { data, disabled, readonly, field, property: field, item, $form: $xeForm, $grid: $xeForm.$xeGrid }
       const hasGroup = children && children.length > 0
       if (visible === false) {
         return renderEmptyElement($xeFormConfigItem)
       }
-      return h('div', {
-        key: item.id,
-        class: getItemClass($xeForm, item),
-        style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : (itemStyle || {}),
-        attrs: {
-          itemid: item.id
-        }
-      }, [
-        renderTitle(h, $xeForm, item),
-        showContent === false
-          ? renderEmptyElement($xeFormConfigItem)
-          : h('div', {
-            class: getItemContentClass($xeForm, item),
-            style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
-          }, hasGroup
-            ? children.map((childItem) => $xeFormConfigItem.renderItem(h, $xeForm, childItem))
-            : [
-                renderItemContent(h, $xeForm, item),
-                renderItemErrorIcon(h, $xeForm, item)
-              ])
-      ])
+      return h(
+        'div',
+        {
+          key: item.id,
+          class: getItemClass($xeForm, item),
+          style: XEUtils.isFunction(itemStyle) ? itemStyle(params) : itemStyle || {},
+          attrs: {
+            itemid: item.id
+          }
+        },
+        [
+          renderTitle(h, $xeForm, item),
+          showContent === false
+            ? renderEmptyElement($xeFormConfigItem)
+            : h(
+              'div',
+              {
+                class: getItemContentClass($xeForm, item),
+                style: Object.assign({}, XEUtils.isFunction(itemContentStyle) ? itemContentStyle(params) : itemContentStyle, XEUtils.isFunction(contentStyle) ? contentStyle(params) : contentStyle)
+              },
+              hasGroup ? children.map((childItem) => $xeFormConfigItem.renderItem(h, $xeForm, childItem)) : [renderItemContent(h, $xeForm, item), renderItemErrorIcon(h, $xeForm, item)]
+            )
+        ]
+      )
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeFormConfigItem = this
       const props = $xeFormConfigItem
       const $xeForm = $xeFormConfigItem.$xeForm
@@ -78,7 +81,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return $xeFormConfigItem.renderItem(h, $xeForm, props.itemConfig)
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

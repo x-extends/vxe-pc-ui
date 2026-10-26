@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, createEvent, permission, globalMixins, globalEvents, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getPopupAppendElement, scrollToView, toCssUnit } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, isEnableConf, getDefaultConfig } from '../../ui/src/utils'
 import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
@@ -13,9 +13,9 @@ import type { VxeMenuDefines, MenuInternalData, MenuReactData, VxeMenuPropTypes,
 
 const { errLog } = createComponentLog('menu')
 
-const { menus, getConfig, getIcon } = VxeUI
+const { createEvent, permission, globalMixins, globalEvents, renderEmptyElement, menus, getConfig, getIcon } = VxeUI
 
-function createInternalData (): MenuInternalData {
+function createInternalData(): MenuInternalData {
   return {
     lastActiveTime: 0,
     menuInitMaps: {},
@@ -25,7 +25,7 @@ function createInternalData (): MenuInternalData {
   }
 }
 
-function createReactData (): MenuReactData {
+function createReactData(): MenuReactData {
   return {
     initialized: false,
     isEnterCollapse: false,
@@ -41,11 +41,7 @@ let nemuUniqueKey = 100000000
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeMenu',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.vScrollbarMixin,
-    globalMixins.permissionMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.vScrollbarMixin, globalMixins.permissionMixin],
   props: {
     value: [String, Number] as PropType<VxeMenuPropTypes.ModelValue>,
     expandAll: Boolean as PropType<VxeMenuPropTypes.ExpandAll>,
@@ -92,11 +88,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const reactData = createReactData()
     return {
       ...({} as {
-        internalData: MenuInternalData,
+        internalData: MenuInternalData
       }),
       xID: XEUtils.uniqueId(),
       reactData
@@ -109,49 +105,49 @@ export default /* define-vxe-component start */ defineVxeComponent({
       computeIsVScrollbar(): VxeComponentIsVScrollbar
       $xeLayoutAside(): VxeLayoutAsideConstructor | null
     }),
-    computePropsOpts () {
+    computePropsOpts() {
       const $xeMenu = this
       const props = $xeMenu
 
       return Object.assign({}, getConfig().menu.optionProps, props.optionProps)
     },
-    computeTitleField () {
+    computeTitleField() {
       const $xeMenu = this
 
       const propsOpts = $xeMenu.computePropsOpts as VxeMenuPropTypes.OptionProps
       return propsOpts.title || 'title'
     },
-    computeKeyField () {
+    computeKeyField() {
       const $xeMenu = this
 
       const propsOpts = $xeMenu.computePropsOpts as VxeMenuPropTypes.OptionProps
       return propsOpts.name || 'name'
     },
-    computeChildrenField () {
+    computeChildrenField() {
       const $xeMenu = this
 
       const propsOpts = $xeMenu.computePropsOpts as VxeMenuPropTypes.OptionProps
       return propsOpts.children || 'children'
     },
-    computeLinkUrlField () {
+    computeLinkUrlField() {
       const $xeMenu = this
 
       const propsOpts = $xeMenu.computePropsOpts as VxeMenuPropTypes.OptionProps
       return propsOpts.linkUrl || 'linkUrl'
     },
-    computeRouterLinkField () {
+    computeRouterLinkField() {
       const $xeMenu = this
 
       const propsOpts = $xeMenu.computePropsOpts as VxeMenuPropTypes.OptionProps
       return propsOpts.routerLink || 'routerLink'
     },
-    computeScrollbarOpts () {
+    computeScrollbarOpts() {
       const $xeMenu = this
       const props = $xeMenu
 
       return Object.assign({}, getConfig().menu.scrollbarConfig, props.scrollbarConfig)
     },
-    computeCurrBorder () {
+    computeCurrBorder() {
       const $xeMenu = this
       const props = $xeMenu
 
@@ -161,13 +157,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return ''
     },
-    computeMenuOpts () {
+    computeMenuOpts() {
       const $xeMenu = this
       const props = $xeMenu
 
       return Object.assign({}, getConfig().tree.menuConfig, props.menuConfig)
     },
-    computeIsCollapsed  () {
+    computeIsCollapsed() {
       const $xeMenu = this
       const $xeLayoutAside = $xeMenu.$xeLayoutAside
       const { collapsed } = $xeMenu
@@ -179,7 +175,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    computeVarStyle () {
+    computeVarStyle() {
       const $xeMenu = this
       const $xeLayoutAside = $xeMenu.$xeLayoutAside
 
@@ -189,7 +185,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return {}
     },
-    computeCollapseEnterWidth () {
+    computeCollapseEnterWidth() {
       const $xeMenu = this
       const $xeLayoutAside = $xeMenu.$xeLayoutAside
 
@@ -204,11 +200,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeMenuEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeMenuEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeMenu = this
       $xeMenu.$emit(type, createEvent(evnt, { $menu: $xeMenu }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
 
@@ -216,7 +212,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeMenu.$emit('input', value)
       handleEmitModelVal($xeMenu, value)
     },
-    callSlot (slotFunc: any, params: any, h: CreateElement) {
+    callSlot(slotFunc: any, params: any, h: CreateElement) {
       const $xeMenu = this
       const slots = $xeMenu.$scopedSlots
 
@@ -230,7 +226,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return []
     },
-    setExpandByMenuKey (menuKeys: string | number | (string | number)[], expanded: boolean) {
+    setExpandByMenuKey(menuKeys: string | number | (string | number)[], expanded: boolean) {
       const $xeMenu = this
       const internalData = $xeMenu.internalData
 
@@ -251,19 +247,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeMenu.$nextTick()
     },
-    clearAllExpandMenu () {
+    clearAllExpandMenu() {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
       const internalData = $xeMenu.internalData
 
       const { menuList } = reactData
-      XEUtils.eachTree(menuList, (item) => {
-        item.isExpand = false
-      }, { children: 'childList' })
+      XEUtils.eachTree(
+        menuList,
+        (item) => {
+          item.isExpand = false
+        },
+        { children: 'childList' }
+      )
       internalData.menuInitMaps = {}
       return $xeMenu.$nextTick()
     },
-    handleScrollToView (itemId: number) {
+    handleScrollToView(itemId: number) {
       const $xeMenu = this
 
       const el = $xeMenu.$refs.refElem as HTMLDivElement
@@ -274,7 +274,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    scrollToMenuKey (menuKey: string | number) {
+    scrollToMenuKey(menuKey: string | number) {
       const $xeMenu = this
       const internalData = $xeMenu.internalData
 
@@ -291,7 +291,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeMenu.handleScrollToView(itemId)
       })
     },
-    scrollToActiveMenu () {
+    scrollToActiveMenu() {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
 
@@ -306,10 +306,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    getMenuTitle  (item: VxeMenuPropTypes.MenuOption) {
+    getMenuTitle(item: VxeMenuPropTypes.MenuOption) {
       return `${item.title || item.name}`
     },
-    updateZindex  () {
+    updateZindex() {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
 
@@ -317,30 +317,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.collapseZindex = nextZIndex()
       }
     },
-    updateActiveMenu  (isDefExpand?: boolean) {
+    updateActiveMenu(isDefExpand?: boolean) {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
       const internalData = $xeMenu.internalData
 
       const { activeName } = reactData
       const { menuInitMaps } = internalData
-      XEUtils.eachTree(reactData.menuList, (item, index, items, path, parent, nodes) => {
-        if (item.itemKey === activeName) {
-          nodes.forEach(obj => {
-            obj.isActive = true
-            if (isDefExpand) {
-              obj.isExpand = true
-              menuInitMaps[obj.itemId] = true
-            }
-          })
-          item.isExactActive = true
-        } else {
-          item.isExactActive = false
-          item.isActive = false
-        }
-      }, { children: 'childList' })
+      XEUtils.eachTree(
+        reactData.menuList,
+        (item, index, items, path, parent, nodes) => {
+          if (item.itemKey === activeName) {
+            nodes.forEach((obj) => {
+              obj.isActive = true
+              if (isDefExpand) {
+                obj.isExpand = true
+                menuInitMaps[obj.itemId] = true
+              }
+            })
+            item.isExactActive = true
+          } else {
+            item.isExactActive = false
+            item.isActive = false
+          }
+        },
+        { children: 'childList' }
+      )
     },
-    updateMenuConfig  () {
+    updateMenuConfig() {
       const $xeMenu = this
       const props = $xeMenu
       const reactData = $xeMenu.reactData
@@ -355,54 +359,58 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const routerLinkField = $xeMenu.computeRouterLinkField
       const defaultExpandMaps: Record<string, boolean> = {}
       if (expandKeys) {
-        expandKeys.forEach(key => {
+        expandKeys.forEach((key) => {
           defaultExpandMaps[key] = true
         })
       }
       const muCacheMaps: Record<string, VxeMenuDefines.MenuItem> = {}
       const muKeyMaps: Record<string, VxeMenuDefines.MenuItem> = {}
-      reactData.menuList = XEUtils.mapTree(options, (item, index, items, path, parentItem) => {
-        const itemId = ++nemuUniqueKey
-        const itemKey = item[keyField] || path.join(',')
-        const childList = item[childrenField]
-        const hasChild = childList && childList.length > 0
-        const isExpand = hasChild ? (XEUtils.isBoolean(item.expanded) ? item.expanded : (defaultExpandMaps[itemKey] || !!expandAll)) : false
-        if (isExpand) {
-          muInitMaps[itemId] = true
-        }
-        const objItem: VxeMenuDefines.MenuItem = {
-          itemConf: item,
-          title: item[titleField],
-          name: item[keyField],
-          icon: item.icon,
-          linkUrl: item[linkUrlField],
-          linkTarget: item.linkTarget,
-          routerLink: item[routerLinkField],
-          permissionCode: item.permissionCode,
-          children: childList,
-          slots: item.slots,
-          parentKey: parentItem ? (parentItem.name || path.slice(0, path.length - 1).join(',')) : '',
-          level: path.length,
-          itemId,
-          itemKey,
-          isExactActive: false,
-          isActive: false,
-          isExpand,
-          hasChild,
-          childList: []
-        }
-        if (muKeyMaps[itemKey]) {
-          errLog('vxe.error.repeatKey', [keyField, item[keyField]])
-        }
-        muCacheMaps[itemId] = objItem
-        muKeyMaps[itemKey] = objItem
-        return objItem
-      }, { children: 'children', mapChildren: 'childList' })
+      reactData.menuList = XEUtils.mapTree(
+        options,
+        (item, index, items, path, parentItem) => {
+          const itemId = ++nemuUniqueKey
+          const itemKey = item[keyField] || path.join(',')
+          const childList = item[childrenField]
+          const hasChild = childList && childList.length > 0
+          const isExpand = hasChild ? (XEUtils.isBoolean(item.expanded) ? item.expanded : defaultExpandMaps[itemKey] || !!expandAll) : false
+          if (isExpand) {
+            muInitMaps[itemId] = true
+          }
+          const objItem: VxeMenuDefines.MenuItem = {
+            itemConf: item,
+            title: item[titleField],
+            name: item[keyField],
+            icon: item.icon,
+            linkUrl: item[linkUrlField],
+            linkTarget: item.linkTarget,
+            routerLink: item[routerLinkField],
+            permissionCode: item.permissionCode,
+            children: childList,
+            slots: item.slots,
+            parentKey: parentItem ? parentItem.name || path.slice(0, path.length - 1).join(',') : '',
+            level: path.length,
+            itemId,
+            itemKey,
+            isExactActive: false,
+            isActive: false,
+            isExpand,
+            hasChild,
+            childList: []
+          }
+          if (muKeyMaps[itemKey]) {
+            errLog('vxe.error.repeatKey', [keyField, item[keyField]])
+          }
+          muCacheMaps[itemId] = objItem
+          muKeyMaps[itemKey] = objItem
+          return objItem
+        },
+        { children: 'children', mapChildren: 'childList' }
+      )
       internalData.menuInitMaps = muInitMaps
       internalData.menuCacheMaps = muCacheMaps
       internalData.menuKeyMaps = muKeyMaps
     },
-    updateCollapseStyle  () {
+    updateCollapseStyle() {
       const $xeMenu = this
       const props = $xeMenu
       const reactData = $xeMenu.reactData
@@ -432,7 +440,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
     },
-    handleCollapseMenu () {
+    handleCollapseMenu() {
       const $xeMenu = this
       const props = $xeMenu
       const reactData = $xeMenu.reactData
@@ -457,7 +465,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeMenu.updateCollapseStyle()
       }
     },
-    handleClickIconCollapse  (evnt: MouseEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
+    handleClickIconCollapse(evnt: MouseEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
       const $xeMenu = this
       const props = $xeMenu
       const internalData = $xeMenu.internalData
@@ -476,7 +484,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
 
         if (accordion) {
-          itemList.forEach(obj => {
+          itemList.forEach((obj) => {
             if (obj !== item) {
               obj.isExpand = false
             }
@@ -485,7 +493,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         item.isExpand = expanded
         menuInitMaps[itemId] = true
 
-        const wrapperEl = isCollapsed ? $xeMenu.$refs.refCollapseElem as HTMLDivElement : $xeMenu.$refs.refElem as HTMLDivElement
+        const wrapperEl = isCollapsed ? ($xeMenu.$refs.refCollapseElem as HTMLDivElement) : ($xeMenu.$refs.refElem as HTMLDivElement)
         if (wrapperEl) {
           const nemuEl = wrapperEl.querySelector<HTMLDivElement>(`.vxe-menu--item-wrapper[data-menu-id="${itemId}"]`)
           const groupEl = nemuEl ? nemuEl.querySelector<HTMLDivElement>('.vxe-menu--item-group') : null
@@ -512,7 +520,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleContextmenuEvent (evnt: MouseEvent, item: VxeMenuDefines.MenuItem) {
+    handleContextmenuEvent(evnt: MouseEvent, item: VxeMenuDefines.MenuItem) {
       const $xeMenu = this
       const props = $xeMenu
 
@@ -525,7 +533,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             VxeUI.contextMenu.openByEvent(evnt, {
               options,
               events: {
-                optionClick (eventParams) {
+                optionClick(eventParams) {
                   const { option } = eventParams
                   const gMenuOpts = menus.get(option.code)
                   const mmMethod = gMenuOpts ? gMenuOpts.menuMenuMethod : null
@@ -542,7 +550,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeMenu.dispatchEvent('option-menu', { currentMenu: item }, evnt)
     },
-    handleClickMenu (evnt: MouseEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
+    handleClickMenu(evnt: MouseEvent, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
       const internalData = $xeMenu.internalData
@@ -571,7 +579,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeMenu.dispatchEvent('click', params, evnt)
     },
-    handleMenuMouseenter  () {
+    handleMenuMouseenter() {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
       const internalData = $xeMenu.internalData
@@ -582,7 +590,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isEnterCollapse = true
       }
     },
-    handleMenuMouseleave  () {
+    handleMenuMouseleave() {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
 
@@ -601,7 +609,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderMenuTitle (h:CreateElement, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
+    renderMenuTitle(h: CreateElement, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]) {
       const $xeMenu = this
       const slots = $xeMenu.$scopedSlots
 
@@ -621,42 +629,60 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return [
         optionSlot
           ? renderEmptyElement($xeMenu)
-          : h('div', {
-            class: 'vxe-menu--item-link-icon'
-          }, iconSlot
-            ? $xeMenu.callSlot(iconSlot, params, h)
-            : (icon
-                ? [h('i', {
-                    class: icon
-                  })]
-                : [])),
+          : h(
+            'div',
+            {
+              class: 'vxe-menu--item-link-icon'
+            },
+            iconSlot
+              ? $xeMenu.callSlot(iconSlot, params, h)
+              : icon
+                ? [
+                    h('i', {
+                      class: icon
+                    })
+                  ]
+                : []
+          ),
         optionSlot
-          ? h('div', {
-            class: 'vxe-menu--item-custom-title'
-          }, $xeMenu.callSlot(optionSlot, params, h))
-          : h('div', {
-            class: 'vxe-menu--item-link-title',
-            attrs: {
-              title
-            }
-          }, titleSlot ? $xeMenu.callSlot(titleSlot, params, h) : title),
-        hasChild
-          ? h('div', {
-            class: 'vxe-menu--item-link-collapse',
-            on: {
-              click (evnt: MouseEvent) {
-                $xeMenu.handleClickIconCollapse(evnt, item, itemList)
+          ? h(
+            'div',
+            {
+              class: 'vxe-menu--item-custom-title'
+            },
+            $xeMenu.callSlot(optionSlot, params, h)
+          )
+          : h(
+            'div',
+            {
+              class: 'vxe-menu--item-link-title',
+              attrs: {
+                title
               }
-            }
-          }, [
-            h('i', {
-              class: isExpand ? getIcon().MENU_ITEM_EXPAND_OPEN : getIcon().MENU_ITEM_EXPAND_CLOSE
-            })
-          ])
+            },
+            titleSlot ? $xeMenu.callSlot(titleSlot, params, h) : title
+          ),
+        hasChild
+          ? h(
+            'div',
+            {
+              class: 'vxe-menu--item-link-collapse',
+              on: {
+                click(evnt: MouseEvent) {
+                  $xeMenu.handleClickIconCollapse(evnt, item, itemList)
+                }
+              }
+            },
+            [
+              h('i', {
+                class: isExpand ? getIcon().MENU_ITEM_EXPAND_OPEN : getIcon().MENU_ITEM_EXPAND_CLOSE
+              })
+            ]
+          )
           : renderEmptyElement($xeMenu)
       ]
     },
-    renderDefaultChildren  (h: CreateElement, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]): VNode {
+    renderDefaultChildren(h: CreateElement, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]): VNode {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
       const internalData = $xeMenu.internalData
@@ -672,37 +698,49 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       const isExpandChild = (!isCollapsed || isEnterCollapse) && isExpand
       const linkOns = {
-        contextmenu (evnt: MouseEvent) {
+        contextmenu(evnt: MouseEvent) {
           $xeMenu.handleContextmenuEvent(evnt, item)
         },
-        click (evnt: MouseEvent) {
+        click(evnt: MouseEvent) {
           $xeMenu.handleClickMenu(evnt, item, itemList)
         }
       }
-      return h('div', {
-        key: itemKey,
-        class: ['vxe-menu--item-wrapper', `vxe-menu--item-level${level}`, {
-          'has--child': hasChild,
-          'is--exact-active': isExactActive,
-          'is--active': isActive,
-          'is--expand': isExpandChild
-        }],
-        attrs: {
-          'data-menu-id': itemId
-        }
-      }, [
-        linkUrl
-          ? h('a', {
-            class: 'vxe-menu--item-link is--link',
-            attrs: {
-              href: linkUrl,
-              target: linkTarget
-            },
-            on: linkOns
-          }, $xeMenu.renderMenuTitle(h, item, itemList))
-          : (
-              routerLink
-                ? h('router-link', {
+      return h(
+        'div',
+        {
+          key: itemKey,
+          class: [
+            'vxe-menu--item-wrapper',
+            `vxe-menu--item-level${level}`,
+            {
+              'has--child': hasChild,
+              'is--exact-active': isExactActive,
+              'is--active': isActive,
+              'is--expand': isExpandChild
+            }
+          ],
+          attrs: {
+            'data-menu-id': itemId
+          }
+        },
+        [
+          linkUrl
+            ? h(
+              'a',
+              {
+                class: 'vxe-menu--item-link is--link',
+                attrs: {
+                  href: linkUrl,
+                  target: linkTarget
+                },
+                on: linkOns
+              },
+              $xeMenu.renderMenuTitle(h, item, itemList)
+            )
+            : routerLink
+              ? h(
+                'router-link',
+                {
                   class: 'vxe-menu--item-link is--router',
                   props: {
                     custom: true,
@@ -710,20 +748,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     target: linkTarget
                   },
                   nativeOn: linkOns
-                }, $xeMenu.renderMenuTitle(h, item, itemList))
-                : h('div', {
+                },
+                $xeMenu.renderMenuTitle(h, item, itemList)
+              )
+              : h(
+                'div',
+                {
                   class: 'vxe-menu--item-link is--default',
                   on: linkOns
-                }, $xeMenu.renderMenuTitle(h, item, itemList))
-            ),
-        hasChild
-          ? h('div', {
-            class: 'vxe-menu--item-group'
-          }, isExpandChild || menuInitMaps[itemId] ? childList.map(child => $xeMenu.renderDefaultChildren(h, child, childList)) : [])
-          : renderEmptyElement($xeMenu)
-      ])
+                },
+                $xeMenu.renderMenuTitle(h, item, itemList)
+              ),
+          hasChild
+            ? h(
+              'div',
+              {
+                class: 'vxe-menu--item-group'
+              },
+              isExpandChild || menuInitMaps[itemId] ? childList.map((child) => $xeMenu.renderDefaultChildren(h, child, childList)) : []
+            )
+            : renderEmptyElement($xeMenu)
+        ]
+      )
     },
-    renderCollapseChildren (h: CreateElement, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]): VNode {
+    renderCollapseChildren(h: CreateElement, item: VxeMenuDefines.MenuItem, itemList: VxeMenuDefines.MenuItem[]): VNode {
       const $xeMenu = this
 
       const { itemId, itemKey, level, hasChild, isActive, isExactActive, routerLink, linkUrl, linkTarget, childList } = item
@@ -733,36 +781,48 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
       const linkOns = {
-        contextmenu (evnt: MouseEvent) {
+        contextmenu(evnt: MouseEvent) {
           $xeMenu.handleContextmenuEvent(evnt, item)
         },
-        click (evnt: MouseEvent) {
+        click(evnt: MouseEvent) {
           $xeMenu.handleClickMenu(evnt, item, itemList)
         }
       }
-      return h('div', {
-        key: itemKey,
-        class: ['vxe-menu--item-wrapper', `vxe-menu--item-level${level}`, {
-          'has--child': hasChild,
-          'is--exact-active': isExactActive,
-          'is--active': isActive
-        }],
-        attrs: {
-          'data-menu-id': itemId
-        }
-      }, [
-        linkUrl
-          ? h('a', {
-            class: 'vxe-menu--item-link is--link',
-            attrs: {
-              href: linkUrl,
-              target: linkTarget
-            },
-            on: linkOns
-          }, $xeMenu.renderMenuTitle(h, item, itemList))
-          : (
-              routerLink
-                ? h('router-link', {
+      return h(
+        'div',
+        {
+          key: itemKey,
+          class: [
+            'vxe-menu--item-wrapper',
+            `vxe-menu--item-level${level}`,
+            {
+              'has--child': hasChild,
+              'is--exact-active': isExactActive,
+              'is--active': isActive
+            }
+          ],
+          attrs: {
+            'data-menu-id': itemId
+          }
+        },
+        [
+          linkUrl
+            ? h(
+              'a',
+              {
+                class: 'vxe-menu--item-link is--link',
+                attrs: {
+                  href: linkUrl,
+                  target: linkTarget
+                },
+                on: linkOns
+              },
+              $xeMenu.renderMenuTitle(h, item, itemList)
+            )
+            : routerLink
+              ? h(
+                'router-link',
+                {
                   class: 'vxe-menu--item-link is--router',
                   props: {
                     custom: true,
@@ -770,20 +830,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     target: linkTarget
                   },
                   nativeOn: linkOns
-                }, $xeMenu.renderMenuTitle(h, item, itemList))
-                : h('div', {
+                },
+                $xeMenu.renderMenuTitle(h, item, itemList)
+              )
+              : h(
+                'div',
+                {
                   class: 'vxe-menu--item-link is--default',
                   on: linkOns
-                }, $xeMenu.renderMenuTitle(h, item, itemList))
-            ),
-        hasChild
-          ? h('div', {
-            class: 'vxe-menu--item-group'
-          }, childList.map(child => $xeMenu.renderDefaultChildren(h, child, childList)))
-          : renderEmptyElement($xeMenu)
-      ])
+                },
+                $xeMenu.renderMenuTitle(h, item, itemList)
+              ),
+          hasChild
+            ? h(
+              'div',
+              {
+                class: 'vxe-menu--item-group'
+              },
+              childList.map((child) => $xeMenu.renderDefaultChildren(h, child, childList))
+            )
+            : renderEmptyElement($xeMenu)
+        ]
+      )
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeMenu = this
       const props = $xeMenu
       const slots = $xeMenu.$scopedSlots
@@ -807,90 +877,128 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
       const stParams = { collapsed: isCollapsed }
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-menu', {
-          [`border--${currBorder}`]: currBorder,
-          [`size--${vSize}`]: vSize,
-          'is--collapsed': isCollapsed,
-          'is--loading': loading
-        }]
-      }, [
-        headerSlot
-          ? h('div', {
-            class: 'vxe-menu--header'
-          }, headerSlot(stParams))
-          : renderEmptyElement($xeMenu),
-        h('div', {
-          class: 'vxe-menu--body'
-        }, menuList.map(child => isCollapsed ? $xeMenu.renderCollapseChildren(h, child, menuList) : $xeMenu.renderDefaultChildren(h, child, menuList))),
-        footerSlot
-          ? h('div', {
-            class: 'vxe-menu--footer'
-          }, footerSlot(stParams))
-          : renderEmptyElement($xeMenu),
-        initialized
-          ? h('div', {
-            ref: 'refCollapseElem',
-            class: ['vxe-menu--collapse-wrapper', {
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-menu',
+            {
+              [`border--${currBorder}`]: currBorder,
               [`size--${vSize}`]: vSize,
               'is--collapsed': isCollapsed,
-              'is--enter': isEnterCollapse,
               'is--loading': loading
-            }],
-            style: Object.assign({}, varStyle, collapseStyle),
-            on: ons
-          }, isCollapsed
-            ? [
-                headerSlot
-                  ? h('div', {
-                    class: 'vxe-menu--header'
-                  }, headerSlot(stParams))
-                  : renderEmptyElement($xeMenu),
-                useScrollbar && isEnterCollapse
-                  ? h(VxeScrollbarComponent, {
-                    ref: 'refCollapseBodyScrollbar',
-                    class: 'vxe-menu--scrollbar-body',
-                    props: {
-                      ...scrollbarOpts,
-                      viewClassName: 'vxe-menu--scrollbar-body-view' + (viewClassName ? (' ' + viewClassName) : ''),
-                      viewInnerClassName: 'vxe-menu--scrollbar-body-inner' + (viewClassName ? (' ' + viewInnerClassName) : '')
-                    },
-                    scopedSlots: {
-                      default: () => menuList.map(child => $xeMenu.renderDefaultChildren(h, child, menuList))
-                    }
-                  })
-                  : h('div', {
-                    ref: 'refCollapseBodyElem',
-                    class: 'vxe-menu--body'
-                  }, menuList.map(child => $xeMenu.renderDefaultChildren(h, child, menuList))),
-                footerSlot
-                  ? h('div', {
-                    class: 'vxe-menu--footer'
-                  }, footerSlot(stParams))
-                  : renderEmptyElement($xeMenu)
-              ]
-            : [])
-          : renderEmptyElement($xeMenu),
-        /**
-         * 加载中
-         */
-        h(VxeLoadingComponent, {
-          class: 'vxe-menu-view--loading',
-          props: {
-            value: loading
-          }
-        })
-      ])
+            }
+          ]
+        },
+        [
+          headerSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-menu--header'
+              },
+              headerSlot(stParams)
+            )
+            : renderEmptyElement($xeMenu),
+          h(
+            'div',
+            {
+              class: 'vxe-menu--body'
+            },
+            menuList.map((child) => (isCollapsed ? $xeMenu.renderCollapseChildren(h, child, menuList) : $xeMenu.renderDefaultChildren(h, child, menuList)))
+          ),
+          footerSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-menu--footer'
+              },
+              footerSlot(stParams)
+            )
+            : renderEmptyElement($xeMenu),
+          initialized
+            ? h(
+              'div',
+              {
+                ref: 'refCollapseElem',
+                class: [
+                  'vxe-menu--collapse-wrapper',
+                  {
+                    [`size--${vSize}`]: vSize,
+                    'is--collapsed': isCollapsed,
+                    'is--enter': isEnterCollapse,
+                    'is--loading': loading
+                  }
+                ],
+                style: Object.assign({}, varStyle, collapseStyle),
+                on: ons
+              },
+              isCollapsed
+                ? [
+                    headerSlot
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-menu--header'
+                        },
+                        headerSlot(stParams)
+                      )
+                      : renderEmptyElement($xeMenu),
+                    useScrollbar && isEnterCollapse
+                      ? h(VxeScrollbarComponent, {
+                        ref: 'refCollapseBodyScrollbar',
+                        class: 'vxe-menu--scrollbar-body',
+                        props: {
+                          ...scrollbarOpts,
+                          viewClassName: 'vxe-menu--scrollbar-body-view' + (viewClassName ? ' ' + viewClassName : ''),
+                          viewInnerClassName: 'vxe-menu--scrollbar-body-inner' + (viewClassName ? ' ' + viewInnerClassName : '')
+                        },
+                        scopedSlots: {
+                          default: () => menuList.map((child) => $xeMenu.renderDefaultChildren(h, child, menuList))
+                        }
+                      })
+                      : h(
+                        'div',
+                        {
+                          ref: 'refCollapseBodyElem',
+                          class: 'vxe-menu--body'
+                        },
+                        menuList.map((child) => $xeMenu.renderDefaultChildren(h, child, menuList))
+                      ),
+                    footerSlot
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-menu--footer'
+                        },
+                        footerSlot(stParams)
+                      )
+                      : renderEmptyElement($xeMenu)
+                  ]
+                : []
+            )
+            : renderEmptyElement($xeMenu),
+          /**
+           * 加载中
+           */
+          h(VxeLoadingComponent, {
+            class: 'vxe-menu-view--loading',
+            props: {
+              value: loading
+            }
+          })
+        ]
+      )
     }
   },
   watch: {
-    value (val) {
+    value(val) {
       const $xeMenu = this
       const reactData = $xeMenu.reactData
       reactData.activeName = val
     },
-    options () {
+    options() {
       const $xeMenu = this
       $xeMenu.updateMenuConfig()
       $xeMenu.updateActiveMenu(true)
@@ -898,17 +1006,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeMenu.scrollToActiveMenu()
       })
     },
-    'reactData.activeName' () {
+    'reactData.activeName'() {
       const $xeMenu = this
       $xeMenu.updateActiveMenu(true)
     },
-    computeIsCollapsed () {
+    computeIsCollapsed() {
       const $xeMenu = this
 
       $xeMenu.handleCollapseMenu()
     }
   },
-  created () {
+  created() {
     const $xeMenu = this
     const props = $xeMenu
 
@@ -920,7 +1028,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     $xeMenu.updateMenuConfig()
     $xeMenu.updateActiveMenu(true)
   },
-  mounted () {
+  mounted() {
     const $xeMenu = this
     const props = $xeMenu
 
@@ -935,7 +1043,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeMenu.scrollToActiveMenu()
     })
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeMenu = this
     const reactData = $xeMenu.reactData
     const internalData = $xeMenu.internalData
@@ -951,7 +1059,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

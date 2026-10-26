@@ -5,16 +5,20 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeScrollbar: DefineVxeComponentApp<VxeScrollbarProps, VxeScrollbarEventProps, VxeScrollbarSlots, VxeScrollbarMethods>
 export type VxeScrollbarComponent = DefineVxeComponentOptions<VxeScrollbarProps>
 
-export type VxeScrollbarInstance = DefineVxeComponentInstance<{
-  reactData: ScrollbarReactData
-  internalData: ScrollbarInternalData
-}, VxeScrollbarProps, VxeScrollbarPrivateComputed, VxeScrollbarMethods>
+export type VxeScrollbarInstance = DefineVxeComponentInstance<
+  {
+    reactData: ScrollbarReactData
+    internalData: ScrollbarInternalData
+  },
+  VxeScrollbarProps,
+  VxeScrollbarPrivateComputed,
+  VxeScrollbarMethods
+>
 
 export type VxeScrollbarConstructor = VxeScrollbarInstance
 
-export interface ScrollbarPrivateRef {
-}
-export interface VxeScrollbarPrivateRef extends ScrollbarPrivateRef { }
+export interface ScrollbarPrivateRef {}
+export interface VxeScrollbarPrivateRef extends ScrollbarPrivateRef {}
 
 export namespace VxeScrollbarPropTypes {
   export type Size = VxeComponentSizeType
@@ -186,14 +190,11 @@ export interface VxeScrollbarProps {
   syncResize?: VxeScrollbarPropTypes.SyncResize
 }
 
-export interface ScrollbarPrivateComputed {
-}
-export interface VxeScrollbarPrivateComputed extends ScrollbarPrivateComputed { }
+export interface ScrollbarPrivateComputed {}
+export interface VxeScrollbarPrivateComputed extends ScrollbarPrivateComputed {}
 
-export interface ScrollbarReactData extends VxeUseInitVScrollbarReactData {
-}
-export interface ScrollbarInternalData extends VxeUseInitVScrollbarInternalData {
-}
+export interface ScrollbarReactData extends VxeUseInitVScrollbarReactData {}
+export interface ScrollbarInternalData extends VxeUseInitVScrollbarInternalData {}
 
 export interface ScrollbarMethods {
   dispatchEvent(type: ValueOf<VxeScrollbarEmits>, params: Record<string, any>, evnt: Event | null): void
@@ -240,15 +241,12 @@ export interface ScrollbarMethods {
    */
   recalculate(): Promise<void>
 }
-export interface VxeScrollbarMethods extends ScrollbarMethods { }
+export interface VxeScrollbarMethods extends ScrollbarMethods {}
 
-export interface ScrollbarPrivateMethods { }
-export interface VxeScrollbarPrivateMethods extends ScrollbarPrivateMethods { }
+export interface ScrollbarPrivateMethods {}
+export interface VxeScrollbarPrivateMethods extends ScrollbarPrivateMethods {}
 
-export type VxeScrollbarEmits = [
-  'scroll',
-  'scroll-boundary'
-]
+export type VxeScrollbarEmits = ['scroll', 'scroll-boundary']
 
 export namespace VxeScrollbarDefines {
   export interface ScrollbarEventParams extends VxeComponentEventParams {

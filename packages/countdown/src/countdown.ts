@@ -1,17 +1,17 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 import VxeTextComponent from '../../text'
 
 import type { VxeCountdownPropTypes, CountdownReactData, CountdownInternalData, VxeCountdownEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
+const { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCountdown',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     value: [Number, String] as PropType<VxeCountdownPropTypes.ModelValue>,
     format: String as PropType<VxeCountdownPropTypes.Format>,
@@ -22,7 +22,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().countdown.size || getConfig().size
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: CountdownReactData = {
       currNum: 0,
@@ -41,7 +41,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeTimeFormats (): Array<'yyyy' | 'MM' | 'dd' | 'HH' | 'mm' | 'ss'> {
+    computeTimeFormats(): Array<'yyyy' | 'MM' | 'dd' | 'HH' | 'mm' | 'ss'> {
       const $xeCountdown = this
       const reactData = $xeCountdown.reactData
 
@@ -63,7 +63,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return ['ss']
     },
-    computeDiffConf (this: any) {
+    computeDiffConf(this: any) {
       const $xeCountdown = this
       const reactData = $xeCountdown.reactData
 
@@ -71,7 +71,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const diffRest = XEUtils.getDateDiff(Date.now(), Date.now() + currNum)
       return Object.assign(diffRest, { done: !(XEUtils.isBoolean(diffRest.status) ? diffRest.status : diffRest.done) })
     },
-    computeFormatLabel () {
+    computeFormatLabel() {
       const $xeCountdown = this
       const props = $xeCountdown
 
@@ -87,13 +87,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return rest
     },
-    computePrefixOpts () {
+    computePrefixOpts() {
       const $xeCountdown = this
       const props = $xeCountdown
 
       return Object.assign({}, props.prefixConfig, getConfig().countdown.prefixConfig)
     },
-    computeSuffixOpts () {
+    computeSuffixOpts() {
       const $xeCountdown = this
       const props = $xeCountdown
 
@@ -104,11 +104,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeCountdownEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeCountdownEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeCountdown = this
       $xeCountdown.$emit(type, createEvent(evnt, { $carousel: $xeCountdown }, params))
     },
-    updateCount () {
+    updateCount() {
       const $xeCountdown = this
       const props = $xeCountdown
       const reactData = $xeCountdown.reactData
@@ -117,7 +117,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.secondNum = secondNum
       reactData.currNum = secondNum
     },
-    handleTime () {
+    handleTime() {
       const $xeCountdown = this
       const reactData = $xeCountdown.reactData
       const internalData = $xeCountdown.internalData
@@ -133,13 +133,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeCountdown.handleStop()
       }
     },
-    handleStart () {
+    handleStart() {
       const $xeCountdown = this
 
       $xeCountdown.dispatchEvent('start', {}, null)
       $xeCountdown.handleTime()
     },
-    handleStop  () {
+    handleStop() {
       const $xeCountdown = this
       const internalData = $xeCountdown.internalData
 
@@ -154,7 +154,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderDefaultContentVNs  (h: CreateElement) {
+    renderDefaultContentVNs(h: CreateElement) {
       const $xeCountdown = this
       const props = $xeCountdown
 
@@ -165,27 +165,43 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       if (format) {
         return [
-          h('div', {
-            key: 'format',
-            class: 'vxe-countdown--content-format'
-          }, formatLabel)
+          h(
+            'div',
+            {
+              key: 'format',
+              class: 'vxe-countdown--content-format'
+            },
+            formatLabel
+          )
         ]
       }
       return timeFormats.map((key, index) => {
-        return h('div', {
-          key: index,
-          class: 'vxe-countdown--content-item'
-        }, [
-          h('div', {
-            class: 'vxe-countdown--content-num'
-          }, `${diffConf[key] || 0}`),
-          h('div', {
-            class: 'vxe-countdown--content-unit'
-          }, getI18n(`vxe.countdown.formats.${key}`))
-        ])
+        return h(
+          'div',
+          {
+            key: index,
+            class: 'vxe-countdown--content-item'
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-countdown--content-num'
+              },
+              `${diffConf[key] || 0}`
+            ),
+            h(
+              'div',
+              {
+                class: 'vxe-countdown--content-unit'
+              },
+              getI18n(`vxe.countdown.formats.${key}`)
+            )
+          ]
+        )
       })
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeCountdown = this
       const props = $xeCountdown
       const slots = $xeCountdown.$scopedSlots
@@ -201,53 +217,70 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const suffixSlot = slots.suffix
       const defaultSlot = slots.default
 
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-countdown', diffConf.done ? 'is--progress' : 'is-end', {
-          [`size--${vSize}`]: vSize
-        }]
-      }, [
-        prefixSlot || prefixConfig
-          ? h('div', {
-            class: 'vxe-countdown--prefix'
-          }, prefixSlot
-            ? getSlotVNs(prefixSlot({ currentValue: currNum, diffConf }))
-            : [
-                h(VxeTextComponent, {
-                  props: {
-                    content: prefixOpts.content,
-                    icon: prefixOpts.icon,
-                    status: prefixOpts.status
-                  }
-                })
-              ])
-          : renderEmptyElement($xeCountdown),
-        h('div', {
-          class: 'vxe-countdown--content'
-        }, defaultSlot
-          ? getSlotVNs(defaultSlot({ currentValue: currNum, diffConf }))
-          : $xeCountdown.renderDefaultContentVNs(h)
-        ),
-        suffixSlot || suffixConfig
-          ? h('div', {
-            class: 'vxe-countdown--suffix'
-          }, suffixSlot
-            ? getSlotVNs(suffixSlot({ currentValue: currNum, diffConf }))
-            : [
-                h(VxeTextComponent, {
-                  props: {
-                    content: suffixOpts.content,
-                    icon: suffixOpts.icon,
-                    status: suffixOpts.status
-                  }
-                })
-              ])
-          : renderEmptyElement($xeCountdown)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-countdown',
+            diffConf.done ? 'is--progress' : 'is-end',
+            {
+              [`size--${vSize}`]: vSize
+            }
+          ]
+        },
+        [
+          prefixSlot || prefixConfig
+            ? h(
+              'div',
+              {
+                class: 'vxe-countdown--prefix'
+              },
+              prefixSlot
+                ? getSlotVNs(prefixSlot({ currentValue: currNum, diffConf }))
+                : [
+                    h(VxeTextComponent, {
+                      props: {
+                        content: prefixOpts.content,
+                        icon: prefixOpts.icon,
+                        status: prefixOpts.status
+                      }
+                    })
+                  ]
+            )
+            : renderEmptyElement($xeCountdown),
+          h(
+            'div',
+            {
+              class: 'vxe-countdown--content'
+            },
+            defaultSlot ? getSlotVNs(defaultSlot({ currentValue: currNum, diffConf })) : $xeCountdown.renderDefaultContentVNs(h)
+          ),
+          suffixSlot || suffixConfig
+            ? h(
+              'div',
+              {
+                class: 'vxe-countdown--suffix'
+              },
+              suffixSlot
+                ? getSlotVNs(suffixSlot({ currentValue: currNum, diffConf }))
+                : [
+                    h(VxeTextComponent, {
+                      props: {
+                        content: suffixOpts.content,
+                        icon: suffixOpts.icon,
+                        status: suffixOpts.status
+                      }
+                    })
+                  ]
+            )
+            : renderEmptyElement($xeCountdown)
+        ]
+      )
     }
   },
   watch: {
-    value () {
+    value() {
       const $xeCountdown = this
 
       $xeCountdown.updateCount()
@@ -255,22 +288,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeCountdown.handleStart()
     }
   },
-  created () {
+  created() {
     const $xeCountdown = this
 
     $xeCountdown.updateCount()
   },
-  mounted () {
+  mounted() {
     const $xeCountdown = this
 
     $xeCountdown.handleStart()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeCountdown = this
 
     $xeCountdown.handleStop()
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

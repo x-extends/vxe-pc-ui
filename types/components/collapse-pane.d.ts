@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeCollapsePane: DefineVxeComponentApp<VxeCollapsePaneProps, VxeCollapsePaneEventProps, VxeCollapsePaneSlots, VxeCollapsePaneMethods>
 export type VxeCollapsePaneComponent = DefineVxeComponentOptions<VxeCollapsePaneProps>
 
-export type VxeCollapsePaneInstance = DefineVxeComponentInstance<{
-  reactData: CollapsePaneReactData
-}, VxeCollapsePaneProps, VxeCollapsePanePrivateComputed, VxeCollapsePaneMethods>
+export type VxeCollapsePaneInstance = DefineVxeComponentInstance<
+  {
+    reactData: CollapsePaneReactData
+  },
+  VxeCollapsePaneProps,
+  VxeCollapsePanePrivateComputed,
+  VxeCollapsePaneMethods
+>
 
 export type VxeCollapsePaneConstructor = VxeCollapsePaneInstance
 
-export interface CollapsePanePrivateRef {
-}
-export interface VxeCollapsePanePrivateRef extends CollapsePanePrivateRef { }
+export interface CollapsePanePrivateRef {}
+export interface VxeCollapsePanePrivateRef extends CollapsePanePrivateRef {}
 
 export namespace VxeCollapsePanePropTypes {
   export type Title = string | number
@@ -36,19 +40,16 @@ export interface VxeCollapsePaneProps {
   }
 }
 
-export interface CollapsePanePrivateComputed {
-}
-export interface VxeCollapsePanePrivateComputed extends CollapsePanePrivateComputed { }
+export interface CollapsePanePrivateComputed {}
+export interface VxeCollapsePanePrivateComputed extends CollapsePanePrivateComputed {}
 
-export interface CollapsePaneReactData {
-}
+export interface CollapsePaneReactData {}
 
-export interface CollapsePaneMethods {
-}
-export interface VxeCollapsePaneMethods extends CollapsePaneMethods { }
+export interface CollapsePaneMethods {}
+export interface VxeCollapsePaneMethods extends CollapsePaneMethods {}
 
-export interface CollapsePanePrivateMethods { }
-export interface VxeCollapsePanePrivateMethods extends CollapsePanePrivateMethods { }
+export interface CollapsePanePrivateMethods {}
+export interface VxeCollapsePanePrivateMethods extends CollapsePanePrivateMethods {}
 
 export type VxeCollapsePaneEmits = []
 
@@ -64,9 +65,9 @@ export namespace VxeCollapsePaneDefines {
 
 export type VxeCollapsePaneEventProps = {}
 
-export interface VxeCollapsePaneListeners { }
+export interface VxeCollapsePaneListeners {}
 
-export namespace VxeCollapsePaneEvents { }
+export namespace VxeCollapsePaneEvents {}
 
 export namespace VxeCollapsePaneSlotTypes {
   export interface DefaultSlotParams {}

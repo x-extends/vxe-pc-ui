@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { calcTreeLine, getItemCacheObj } from './util'
 import { createComponentLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
@@ -12,7 +12,22 @@ import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 import VxeTooltipComponent from '../../tooltip'
 
-import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, ValueOf, VxeTooltipInstance, VxeComponentStyleType, VxeScrollbarPropTypes, VxeUseSizeComputed, VxeUseVScrollbarComputed, VxeUseInitVScrollbarComputed } from '../../../types'
+import type {
+  TreeReactData,
+  VxeTreeEmits,
+  VxeTreeConstructor,
+  VxeTreePropTypes,
+  TreeInternalData,
+  VxeTreeDefines,
+  VxeTreePrivateMethods,
+  ValueOf,
+  VxeTooltipInstance,
+  VxeComponentStyleType,
+  VxeScrollbarPropTypes,
+  VxeUseSizeComputed,
+  VxeUseVScrollbarComputed,
+  VxeUseInitVScrollbarComputed
+} from '../../../types'
 
 const { warnLog, errLog } = createComponentLog('tree')
 
@@ -27,11 +42,11 @@ let crossTreeDragNodeObj: {
 /**
  * 生成节点的唯一主键
  */
-function getNodeUniqueId () {
+function getNodeUniqueId() {
   return XEUtils.uniqueId('node_')
 }
 
-function handleSetExpand (nodeid: string, expanded: boolean, expandedMaps: Record<string, boolean>) {
+function handleSetExpand(nodeid: string, expanded: boolean, expandedMaps: Record<string, boolean>) {
   if (expanded) {
     if (!expandedMaps[nodeid]) {
       expandedMaps[nodeid] = true
@@ -43,7 +58,7 @@ function handleSetExpand (nodeid: string, expanded: boolean, expandedMaps: Recor
   }
 }
 
-function handleScrollTo ($xeTree: VxeTreeConstructor, scrollLeft: { top?: number | null; left?: number | null; } | number | null | undefined, scrollTop?: number | null) {
+function handleScrollTo($xeTree: VxeTreeConstructor, scrollLeft: { top?: number | null; left?: number | null } | number | null | undefined, scrollTop?: number | null) {
   const reactData = $xeTree.reactData
 
   const scrollBodyElem = $xeTree.$refs.refVirtualWrapper as HTMLDivElement
@@ -62,7 +77,7 @@ function handleScrollTo ($xeTree: VxeTreeConstructor, scrollLeft: { top?: number
     }
   }
   if (reactData.scrollYLoad) {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       setTimeout(() => {
         $xeTree.$nextTick(() => {
           resolve()
@@ -73,24 +88,24 @@ function handleScrollTo ($xeTree: VxeTreeConstructor, scrollLeft: { top?: number
   return $xeTree.$nextTick()
 }
 
-function handleNodeDragEndClearStatus ($xeTree: VxeTreeConstructor) {
+function handleNodeDragEndClearStatus($xeTree: VxeTreeConstructor) {
   clearNodeDragData($xeTree)
   clearCrossTreeDragStatus($xeTree)
   $xeTree.recalculate()
 }
 
-function clearNodeDropOrigin ($xeTree: VxeTreeConstructor) {
+function clearNodeDropOrigin($xeTree: VxeTreeConstructor) {
   const el = $xeTree.$refs.refElem as HTMLDivElement
   if (el) {
     const clss = 'node--drag-origin'
     XEUtils.arrayEach(el.querySelectorAll(`.${clss}`), (elem) => {
-      (elem as HTMLTableCellElement).draggable = false
+      ;(elem as HTMLTableCellElement).draggable = false
       removeClass(elem, clss)
     })
   }
 }
 
-function updateNodeDropOrigin ($xeTree: VxeTreeConstructor, node: any) {
+function updateNodeDropOrigin($xeTree: VxeTreeConstructor, node: any) {
   const el = $xeTree.$refs.refElem as HTMLDivElement
   if (el) {
     const clss = 'node--drag-origin'
@@ -101,7 +116,7 @@ function updateNodeDropOrigin ($xeTree: VxeTreeConstructor, node: any) {
   }
 }
 
-function updateNodeDropTipContent ($xeTree: VxeTreeConstructor, itemEl: HTMLElement) {
+function updateNodeDropTipContent($xeTree: VxeTreeConstructor, itemEl: HTMLElement) {
   const reactData = $xeTree.reactData
 
   const { dragNode } = reactData
@@ -121,7 +136,7 @@ function updateNodeDropTipContent ($xeTree: VxeTreeConstructor, itemEl: HTMLElem
   reactData.dragTipText = tipContent
 }
 
-function hideDropTip ($xeTree: VxeTreeConstructor) {
+function hideDropTip($xeTree: VxeTreeConstructor) {
   const rdTipEl = $xeTree.$refs.refDragTipElem as HTMLDivElement
   const rdLineEl = $xeTree.$refs.refDragNodeLineElem as HTMLDivElement
   if (rdTipEl) {
@@ -132,14 +147,14 @@ function hideDropTip ($xeTree: VxeTreeConstructor) {
   }
 }
 
-function clearCrossTreeDragStatus ($xeTree: VxeTreeConstructor) {
+function clearCrossTreeDragStatus($xeTree: VxeTreeConstructor) {
   const crossTreeDragNodeInfo = getCrossTreeDragNodeInfo($xeTree as VxeTreeConstructor & VxeTreePrivateMethods)
 
   crossTreeDragNodeObj = null
   crossTreeDragNodeInfo.node = null
 }
 
-function clearDragStatus ($xeTree: VxeTreeConstructor) {
+function clearDragStatus($xeTree: VxeTreeConstructor) {
   const reactData = $xeTree.reactData
 
   const { dragNode } = reactData
@@ -151,7 +166,7 @@ function clearDragStatus ($xeTree: VxeTreeConstructor) {
   }
 }
 
-function showDropTip ($xeTree: VxeTreeConstructor, evnt: DragEvent | MouseEvent, itemEl: HTMLElement | null, showLine: boolean, dragPos: string) {
+function showDropTip($xeTree: VxeTreeConstructor, evnt: DragEvent | MouseEvent, itemEl: HTMLElement | null, showLine: boolean, dragPos: string) {
   const internalData = $xeTree.internalData
 
   const wrapperEl = $xeTree.$refs.refElem as HTMLDivElement
@@ -190,7 +205,7 @@ function showDropTip ($xeTree: VxeTreeConstructor, evnt: DragEvent | MouseEvent,
   }
 }
 
-function clearNodeDragData ($xeTree: VxeTreeConstructor) {
+function clearNodeDragData($xeTree: VxeTreeConstructor) {
   const reactData = $xeTree.reactData
   const internalData = $xeTree.internalData
 
@@ -203,7 +218,7 @@ function clearNodeDragData ($xeTree: VxeTreeConstructor) {
   reactData.dragNode = null
 }
 
-function handleNodeDragSwapEvent ($xeTree: VxeTreeConstructor & VxeTreePrivateMethods, evnt: DragEvent | null, dragNode: any, prevDragNode: any, prevDragPos: '' | 'top' | 'bottom' | undefined, prevDragToChild: boolean | undefined) {
+function handleNodeDragSwapEvent($xeTree: VxeTreeConstructor & VxeTreePrivateMethods, evnt: DragEvent | null, dragNode: any, prevDragNode: any, prevDragPos: '' | 'top' | 'bottom' | undefined, prevDragToChild: boolean | undefined) {
   const props = $xeTree
   const reactData = $xeTree.reactData
   const internalData = $xeTree.internalData
@@ -267,9 +282,13 @@ function handleNodeDragSwapEvent ($xeTree: VxeTreeConstructor & VxeTreePrivateMe
         const { level: oldLevel } = oldRest
         const { level: newLevel } = newRest
 
-        XEUtils.eachTree([dragNode], item => {
-          oldAllMaps[$xeTree.getNodeId(item)] = item
-        }, { children: mapChildrenField })
+        XEUtils.eachTree(
+          [dragNode],
+          (item) => {
+            oldAllMaps[$xeTree.getNodeId(item)] = item
+          },
+          { children: mapChildrenField }
+        )
 
         if (oldLevel && newLevel) {
           // 子到子
@@ -332,162 +351,172 @@ function handleNodeDragSwapEvent ($xeTree: VxeTreeConstructor & VxeTreePrivateMe
       }
     }
     const isDragToChildFlag = isSelfToChildDrag && dragToChildMethod ? dragToChildMethod(dragParams) : prevDragToChild
-    return Promise.resolve(dEndMethod ? dEndMethod(dragParams) : true).then((status) => {
-      if (!status) {
-        return errRest
-      }
+    return Promise.resolve(dEndMethod ? dEndMethod(dragParams) : true)
+      .then((status) => {
+        if (!status) {
+          return errRest
+        }
 
-      if (transform) {
-        // 移出源位置
-        if (oldRest && newRest) {
-          const fullList = XEUtils.toTreeArray(internalData.afterTreeList, {
-            updated: false,
-            key: keyField,
-            parentKey: parentField,
-            children: mapChildrenField
-          })
+        if (transform) {
+          // 移出源位置
+          if (oldRest && newRest) {
+            const fullList = XEUtils.toTreeArray(internalData.afterTreeList, {
+              updated: false,
+              key: keyField,
+              parentKey: parentField,
+              children: mapChildrenField
+            })
 
-          // 移出
-          const otfIndex = $xeTree.findNodeIndexOf(fullList, dragNode)
-          fullList.splice(otfIndex, 1)
+            // 移出
+            const otfIndex = $xeTree.findNodeIndexOf(fullList, dragNode)
+            fullList.splice(otfIndex, 1)
 
-          // 插入
-          const ptfIndex = $xeTree.findNodeIndexOf(fullList, prevDragNode)
-          const ntfIndex = ptfIndex + dragOffsetIndex
-          fullList.splice(ntfIndex, 0, dragNode)
+            // 插入
+            const ptfIndex = $xeTree.findNodeIndexOf(fullList, prevDragNode)
+            const ntfIndex = ptfIndex + dragOffsetIndex
+            fullList.splice(ntfIndex, 0, dragNode)
 
-          // 改变层级
-          if (isSelfToChildStatus && (isCrossDrag && isSelfToChildDrag)) {
-            XEUtils.each(dragNode[childrenField], childNode => {
-              childNode[parentField] = dragNode[parentField]
+            // 改变层级
+            if (isSelfToChildStatus && isCrossDrag && isSelfToChildDrag) {
+              XEUtils.each(dragNode[childrenField], (childNode) => {
+                childNode[parentField] = dragNode[parentField]
+              })
+            }
+            dragNode[parentField] = isDragToChildFlag ? prevDragNode[keyField] : prevDragNode[parentField]
+
+            internalData.treeFullData = XEUtils.toArrayTree(fullList, {
+              key: keyField,
+              parentKey: parentField,
+              children: childrenField,
+              mapChildren: mapChildrenField
             })
           }
-          dragNode[parentField] = isDragToChildFlag ? prevDragNode[keyField] : prevDragNode[parentField]
-
-          internalData.treeFullData = XEUtils.toArrayTree(fullList, {
-            key: keyField,
-            parentKey: parentField,
-            children: childrenField,
-            mapChildren: mapChildrenField
-          })
+        } else {
+          // 移出
+          oafIndex = $xeTree.findNodeIndexOf(afterVisibleList, dragNode)
+          const otfIndex = $xeTree.findNodeIndexOf(treeFullData, dragNode)
+          afterVisibleList.splice(oafIndex, 1)
+          treeFullData.splice(otfIndex, 1)
+          // 插入
+          const pafIndex = $xeTree.findNodeIndexOf(afterVisibleList, prevDragNode)
+          const ptfIndex = $xeTree.findNodeIndexOf(treeFullData, prevDragNode)
+          nafIndex = pafIndex + dragOffsetIndex
+          const ntfIndex = ptfIndex + dragOffsetIndex
+          afterVisibleList.splice(nafIndex, 0, dragNode)
+          treeFullData.splice(ntfIndex, 0, dragNode)
         }
-      } else {
-        // 移出
-        oafIndex = $xeTree.findNodeIndexOf(afterVisibleList, dragNode)
-        const otfIndex = $xeTree.findNodeIndexOf(treeFullData, dragNode)
-        afterVisibleList.splice(oafIndex, 1)
-        treeFullData.splice(otfIndex, 1)
-        // 插入
-        const pafIndex = $xeTree.findNodeIndexOf(afterVisibleList, prevDragNode)
-        const ptfIndex = $xeTree.findNodeIndexOf(treeFullData, prevDragNode)
-        nafIndex = pafIndex + dragOffsetIndex
-        const ntfIndex = ptfIndex + dragOffsetIndex
-        afterVisibleList.splice(nafIndex, 0, dragNode)
-        treeFullData.splice(ntfIndex, 0, dragNode)
-      }
 
-      $xeTree.cacheNodeMap()
-      $xeTree.handleData(transform)
-      if (!(transform)) {
-        $xeTree.updateAfterDataIndex()
-      }
-      $xeTree.updateCheckboxStatus()
-      if (reactData.scrollYLoad) {
-        $xeTree.updateYSpace()
-      }
+        $xeTree.cacheNodeMap()
+        $xeTree.handleData(transform)
+        if (!transform) {
+          $xeTree.updateAfterDataIndex()
+        }
+        $xeTree.updateCheckboxStatus()
+        if (reactData.scrollYLoad) {
+          $xeTree.updateYSpace()
+        }
 
-      if (evnt) {
-        $xeTree.dispatchEvent('node-dragend', {
-          oldNode: dragNode,
-          newNode: prevDragNode,
-          dragNode,
-          dragPos: prevDragPos as any,
-          dragToChild: isDragToChildFlag,
-          offsetIndex: dragOffsetIndex,
-          _index: {
-            newIndex: nafIndex,
-            oldIndex: oafIndex
-          }
-        }, evnt)
-      }
+        if (evnt) {
+          $xeTree.dispatchEvent(
+            'node-dragend',
+            {
+              oldNode: dragNode,
+              newNode: prevDragNode,
+              dragNode,
+              dragPos: prevDragPos as any,
+              dragToChild: isDragToChildFlag,
+              offsetIndex: dragOffsetIndex,
+              _index: {
+                newIndex: nafIndex,
+                oldIndex: oafIndex
+              }
+            },
+            evnt
+          )
+        }
 
-      return $xeTree.$nextTick().then(() => {
-        if (animation) {
-          const { treeList } = reactData
-          const { nodeMaps } = internalData
-          const dragNodeRest = nodeMaps[dragNodeid]
-          const _newNodeIndex = dragNodeRest._index
-          const firstNode = treeList[0]
-          const firstNodeRest = nodeMaps[$xeTree.getNodeId(firstNode)]
-          const wrapperEl = el
-          if (firstNodeRest) {
-            const _firstNodeIndex = firstNodeRest._index
-            const _lastNodeIndex = _firstNodeIndex + treeList.length
+        return $xeTree
+          .$nextTick()
+          .then(() => {
+            if (animation) {
+              const { treeList } = reactData
+              const { nodeMaps } = internalData
+              const dragNodeRest = nodeMaps[dragNodeid]
+              const _newNodeIndex = dragNodeRest._index
+              const firstNode = treeList[0]
+              const firstNodeRest = nodeMaps[$xeTree.getNodeId(firstNode)]
+              const wrapperEl = el
+              if (firstNodeRest) {
+                const _firstNodeIndex = firstNodeRest._index
+                const _lastNodeIndex = _firstNodeIndex + treeList.length
 
-            let rsIndex = -1
-            let reIndex = -1
-            let offsetRate = 1
-            if (_dragNodeIndex < _firstNodeIndex) {
-              // 从上往下虚拟拖拽
-              rsIndex = 0
-              reIndex = _newNodeIndex - _firstNodeIndex
-            } else if (_dragNodeIndex > _lastNodeIndex) {
-              // 从下往上虚拟拖拽
-              const $newNodeIndex = dragNodeRest.$index
-              rsIndex = $newNodeIndex + 1
-              reIndex = treeList.length
-              offsetRate = -1
-            } else {
-              if (_newNodeIndex > _dragNodeIndex) {
-                // 从上往下拖拽
-                rsIndex = _dragNodeIndex - _firstNodeIndex
-                reIndex = rsIndex + _newNodeIndex - _dragNodeIndex
-              } else {
-                // 从下往上拖拽
-                rsIndex = _newNodeIndex - _firstNodeIndex
-                reIndex = rsIndex + _dragNodeIndex - _newNodeIndex + 1
-                offsetRate = -1
+                let rsIndex = -1
+                let reIndex = -1
+                let offsetRate = 1
+                if (_dragNodeIndex < _firstNodeIndex) {
+                  // 从上往下虚拟拖拽
+                  rsIndex = 0
+                  reIndex = _newNodeIndex - _firstNodeIndex
+                } else if (_dragNodeIndex > _lastNodeIndex) {
+                  // 从下往上虚拟拖拽
+                  const $newNodeIndex = dragNodeRest.$index
+                  rsIndex = $newNodeIndex + 1
+                  reIndex = treeList.length
+                  offsetRate = -1
+                } else {
+                  if (_newNodeIndex > _dragNodeIndex) {
+                    // 从上往下拖拽
+                    rsIndex = _dragNodeIndex - _firstNodeIndex
+                    reIndex = rsIndex + _newNodeIndex - _dragNodeIndex
+                  } else {
+                    // 从下往上拖拽
+                    rsIndex = _newNodeIndex - _firstNodeIndex
+                    reIndex = rsIndex + _dragNodeIndex - _newNodeIndex + 1
+                    offsetRate = -1
+                  }
+                }
+
+                const dragRangeList = treeList.slice(rsIndex, reIndex)
+                if (dragRangeList.length) {
+                  const dtClss: string[] = []
+                  dragRangeList.forEach((item) => {
+                    const nodeid = $xeTree.getNodeId(item)
+                    dtClss.push(`.vxe-tree--node-wrapper[nodeid="${nodeid}"]`)
+                  })
+                  const dtTrList = wrapperEl.querySelectorAll<HTMLElement>(dtClss.join(','))
+                  moveRowAnimateToTb(dtTrList, offsetRate * dragNodeHeight)
+                }
+              }
+
+              const drClss = [`.vxe-tree--node-wrapper[nodeid="${dragNodeid}"]`]
+              const newDtTrList = wrapperEl.querySelectorAll<HTMLElement>(drClss.join(','))
+              const newTrEl = newDtTrList[0]
+              if (dragOffsetTop > -1 && newTrEl) {
+                moveRowAnimateToTb(newDtTrList, dragOffsetTop - newTrEl.offsetTop)
               }
             }
 
-            const dragRangeList = treeList.slice(rsIndex, reIndex)
-            if (dragRangeList.length) {
-              const dtClss: string[] = []
-              dragRangeList.forEach(item => {
-                const nodeid = $xeTree.getNodeId(item)
-                dtClss.push(`.vxe-tree--node-wrapper[nodeid="${nodeid}"]`)
-              })
-              const dtTrList = wrapperEl.querySelectorAll<HTMLElement>(dtClss.join(','))
-              moveRowAnimateToTb(dtTrList, offsetRate * dragNodeHeight)
+            $xeTree.recalculate()
+          })
+          .then(() => {
+            return {
+              status: true
             }
-          }
-
-          const drClss = [`.vxe-tree--node-wrapper[nodeid="${dragNodeid}"]`]
-          const newDtTrList = wrapperEl.querySelectorAll<HTMLElement>(drClss.join(','))
-          const newTrEl = newDtTrList[0]
-          if (dragOffsetTop > -1 && newTrEl) {
-            moveRowAnimateToTb(newDtTrList, dragOffsetTop - newTrEl.offsetTop)
-          }
-        }
-
-        $xeTree.recalculate()
-      }).then(() => {
-        return {
-          status: true
-        }
+          })
       })
-    }).catch(() => {
-      return errRest
-    }).then((rest) => {
-      handleNodeDragEndClearStatus($xeTree)
-      return rest
-    })
+      .catch(() => {
+        return errRest
+      })
+      .then((rest) => {
+        handleNodeDragEndClearStatus($xeTree)
+        return rest
+      })
   }
   handleNodeDragEndClearStatus($xeTree)
   return Promise.resolve(errRest)
 }
 
-function handleVisibleOrCheckMode (mode: '' | 'all' | 'first' | 'last' | null | undefined, isExistChild: boolean, nLevel: number) {
+function handleVisibleOrCheckMode(mode: '' | 'all' | 'first' | 'last' | null | undefined, isExistChild: boolean, nLevel: number) {
   if (mode) {
     if (mode === 'first') {
       return !nLevel
@@ -499,7 +528,7 @@ function handleVisibleOrCheckMode (mode: '' | 'all' | 'first' | 'last' | null | 
   return true
 }
 
-function insertTreeNode ($xeTree: VxeTreeConstructor, newRecords: any[], isAppend: boolean) {
+function insertTreeNode($xeTree: VxeTreeConstructor, newRecords: any[], isAppend: boolean) {
   const internalData = $xeTree.internalData
 
   const { treeFullData, nodeMaps } = internalData
@@ -540,7 +569,7 @@ function insertTreeNode ($xeTree: VxeTreeConstructor, newRecords: any[], isAppen
   })
 }
 
-function createReactData ():TreeReactData {
+function createReactData(): TreeReactData {
   return {
     parentHeight: 0,
     customHeight: 0,
@@ -571,7 +600,7 @@ function createReactData ():TreeReactData {
   }
 }
 
-function createInternalData (): TreeInternalData {
+function createInternalData(): TreeInternalData {
   return {
     // initialized: false,
     // lastFilterValue: '',
@@ -617,11 +646,7 @@ function createInternalData (): TreeInternalData {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTree',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.vScrollbarMixin,
-    globalMixins.initVScrollbarMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.vScrollbarMixin, globalMixins.initVScrollbarMixin],
   props: {
     data: Array as PropType<VxeTreePropTypes.Data>,
     autoResize: {
@@ -756,13 +781,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     scrollbarConfig: Object as PropType<VxeTreePropTypes.ScrollbarConfig>
   },
-  provide () {
+  provide() {
     const $xeTree = this
     return {
       $xeTree
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
     return {
@@ -780,56 +805,56 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   computed: {
     ...({} as VxeUseSizeComputed & VxeUseVScrollbarComputed & VxeUseInitVScrollbarComputed),
-    computeTitleField () {
+    computeTitleField() {
       const $xeTree = this
       const props = $xeTree
 
       return props.titleField || 'title'
     },
-    computeKeyField () {
+    computeKeyField() {
       const $xeTree = this
       const props = $xeTree
 
       return props.keyField || 'id'
     },
-    computeValueField () {
+    computeValueField() {
       const $xeTree = this
       const props = $xeTree
 
       const keyField = $xeTree.computeKeyField as string
       return props.valueField || keyField
     },
-    computeParentField () {
+    computeParentField() {
       const $xeTree = this
       const props = $xeTree
 
       return props.parentField || 'parentId'
     },
-    computeChildrenField () {
+    computeChildrenField() {
       const $xeTree = this
       const props = $xeTree
 
       return props.childrenField || 'children'
     },
-    computeMapChildrenField () {
+    computeMapChildrenField() {
       const $xeTree = this
       const props = $xeTree
 
       return props.mapChildrenField || 'mapChildren'
     },
-    computeHasChildField () {
+    computeHasChildField() {
       const $xeTree = this
       const props = $xeTree
 
       return props.hasChildField || 'hasChild'
     },
-    computeVirtualYOpts () {
+    computeVirtualYOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({} as { gt: number }, getConfig().tree.virtualYConfig, props.virtualYConfig)
     },
-    computeIsNodeCurrent () {
+    computeIsNodeCurrent() {
       const $xeTree = this
       const props = $xeTree
 
@@ -840,7 +865,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return props.isCurrent
     },
-    computeIsNodeHover () {
+    computeIsNodeHover() {
       const $xeTree = this
       const props = $xeTree
 
@@ -851,49 +876,49 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return props.isHover
     },
-    computeRadioOpts () {
+    computeRadioOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({ showIcon: true }, getConfig().tree.radioConfig, props.radioConfig)
     },
-    computeCheckboxOpts () {
+    computeCheckboxOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({ showIcon: true }, getConfig().tree.checkboxConfig, props.checkboxConfig)
     },
-    computeNodeOpts () {
+    computeNodeOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.nodeConfig, props.nodeConfig)
     },
-    computeLoadingOpts () {
+    computeLoadingOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.loadingConfig, props.loadingConfig)
     },
-    computeDragOpts () {
+    computeDragOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.dragConfig, props.dragConfig)
     },
-    computeTooltipOpts () {
+    computeTooltipOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.tooltipConfig, props.tooltipConfig)
     },
-    computeMenuOpts () {
+    computeMenuOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.menuConfig, props.menuConfig)
     },
-    computeWrapperStyles () {
+    computeWrapperStyles() {
       const $xeTree = this
 
       const barWidth = $xeTree.computeScrollYWidth
@@ -905,7 +930,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computeTreeStyle () {
+    computeTreeStyle() {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -938,19 +963,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computeFilterOpts () {
+    computeFilterOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.filterConfig, props.filterConfig)
     },
-    computeScrollbarOpts () {
+    computeScrollbarOpts() {
       const $xeTree = this
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.scrollbarConfig, props.scrollbarConfig)
     },
-    computeScrollbarXOpts () {
+    computeScrollbarXOpts() {
       const $xeTree = this
 
       const scrollbarOpts = $xeTree.computeScrollbarOpts as VxeTreePropTypes.ScrollbarConfig
@@ -958,55 +983,55 @@ export default /* define-vxe-component start */ defineVxeComponent({
         visible: false
       })
     },
-    computeScrollbarYOpts () {
+    computeScrollbarYOpts() {
       const $xeTree = this
 
       const scrollbarOpts = $xeTree.computeScrollbarOpts as VxeTreePropTypes.ScrollbarConfig
       return Object.assign({}, getConfig().scrollbar.yConfig, scrollbarOpts.yConfig)
     },
-    computeScrollXHeight () {
+    computeScrollXHeight() {
       const $xeTree = this
 
       const scrollbarOpts = $xeTree.computeScrollbarOpts as VxeTreePropTypes.ScrollbarConfig
       const scrollbarXOpts = $xeTree.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
       return getDefVal(getDefVal(scrollbarXOpts.height, scrollbarOpts.height), getConfig().scrollbar.height)
     },
-    computeScrollYWidth () {
+    computeScrollYWidth() {
       const $xeTree = this
 
       const scrollbarOpts = $xeTree.computeScrollbarOpts as VxeTreePropTypes.ScrollbarConfig
       const scrollbarYOpts = $xeTree.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
       return getDefVal(getDefVal(scrollbarYOpts.width, scrollbarOpts.width), getConfig().scrollbar.width)
     },
-    computeScrollXVisible () {
+    computeScrollXVisible() {
       const $xeTree = this
 
       const scrollbarOpts = $xeTree.computeScrollbarOpts as VxeTreePropTypes.ScrollbarConfig
       const scrollbarXOpts = $xeTree.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
       return getDefVal(scrollbarXOpts.visible, scrollbarOpts.visible)
     },
-    computeScrollYVisible () {
+    computeScrollYVisible() {
       const $xeTree = this
 
       const scrollbarOpts = $xeTree.computeScrollbarOpts as VxeTreePropTypes.ScrollbarConfig
       const scrollbarYOpts = $xeTree.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
       return getDefVal(scrollbarYOpts.visible, scrollbarOpts.visible)
     },
-    computeScrollXAutoHide () {
+    computeScrollXAutoHide() {
       const $xeTree = this
 
       const scrollbarOpts = $xeTree.computeScrollbarOpts as VxeTreePropTypes.ScrollbarConfig
       const scrollbarXOpts = $xeTree.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
       return getDefVal(getDefVal(scrollbarXOpts.autoHide, scrollbarOpts.autoHide), getConfig().scrollbar.autoHide)
     },
-    computeScrollYAutoHide () {
+    computeScrollYAutoHide() {
       const $xeTree = this
 
       const scrollbarOpts = $xeTree.computeScrollbarOpts as VxeTreePropTypes.ScrollbarConfig
       const scrollbarYOpts = $xeTree.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
       return getDefVal(getDefVal(scrollbarYOpts.autoHide, scrollbarOpts.autoHide), getConfig().scrollbar.autoHide)
     },
-    computeScrollbarWrapperClss () {
+    computeScrollbarWrapperClss() {
       const $xeTree = this
       const reactData = ($xeTree as any).reactData as TreeReactData
 
@@ -1016,25 +1041,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollbarYToLeft = $xeTree.computeScrollbarYToLeft
       const scrollXVisible = $xeTree.computeScrollXVisible
       const scrollYVisible = $xeTree.computeScrollYVisible
-      return domUtils.buildClass([
-        'vxe-scrollbar is--virtual',
-        scrollbarOpts.fluentOverlay ? 'is--fluent-overlay' : 'is--default-mode',
-        `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
-        `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}`,
-        `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
-        `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
-      ], {
-        'overflow-y': yThumbHeight,
-        'overflow-x': xThumbWidth
-      })
+      return domUtils.buildClass(
+        [
+          'vxe-scrollbar is--virtual',
+          scrollbarOpts.fluentOverlay ? 'is--fluent-overlay' : 'is--default-mode',
+          `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
+          `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}`,
+          `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
+          `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
+        ],
+        {
+          'overflow-y': yThumbHeight,
+          'overflow-x': xThumbWidth
+        }
+      )
     },
-    computeScrollbarXToTop () {
+    computeScrollbarXToTop() {
       const $xeTree = this
 
       const scrollbarXOpts = $xeTree.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
       return scrollbarXOpts.position === 'top'
     },
-    computeScrollbarYToLeft () {
+    computeScrollbarYToLeft() {
       const $xeTree = this
 
       const scrollbarYOpts = $xeTree.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
@@ -1045,17 +1073,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeTreeEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTree = this
       $xeTree.$emit(type, createEvent(evnt, { $tree: $xeTree }, params))
     },
-    getScrollViewElem () {
+    getScrollViewElem() {
       const $xeTree = this
 
       const viewEl = $xeTree.$refs.refVirtualWrapper as HTMLDivElement
       return viewEl || null
     },
-    getNodeId (node: any) {
+    getNodeId(node: any) {
       const $xeTree = this
 
       if (!node) {
@@ -1065,7 +1093,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nodeKey = XEUtils.get(node, valueField)
       return enModelValue(nodeKey)
     },
-    getNodeById (nodeid: string) {
+    getNodeById(nodeid: string) {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -1078,7 +1106,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    isExpandByNode (node: any) {
+    isExpandByNode(node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1088,19 +1116,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nodeid = $xeTree.getNodeId(node)
       return !!(updateExpandedFlag && treeExpandedMaps[nodeid])
     },
-    isCheckedByRadioNodeId (nodeid: any) {
+    isCheckedByRadioNodeId(nodeid: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
       const { selectRadioKey } = reactData
       return selectRadioKey === nodeid
     },
-    isCheckedByRadioNode (node: any) {
+    isCheckedByRadioNode(node: any) {
       const $xeTree = this
 
       return $xeTree.isCheckedByRadioNodeId($xeTree.getNodeId(node))
     },
-    isCheckedByCheckboxNodeId (nodeid: any) {
+    isCheckedByCheckboxNodeId(nodeid: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1109,12 +1137,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { selectCheckboxMaps } = internalData
       return !!(updateCheckboxFlag && selectCheckboxMaps[nodeid])
     },
-    isCheckedByCheckboxNode (node: any) {
+    isCheckedByCheckboxNode(node: any) {
       const $xeTree = this
 
       return $xeTree.isCheckedByCheckboxNodeId($xeTree.getNodeId(node))
     },
-    isIndeterminateByCheckboxNodeid (nodeid: any) {
+    isIndeterminateByCheckboxNodeid(nodeid: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1123,22 +1151,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { indeterminateNodeMaps } = internalData
       return !!(updateCheckboxFlag && indeterminateNodeMaps[nodeid])
     },
-    isIndeterminateByCheckboxNode (node: any) {
+    isIndeterminateByCheckboxNode(node: any) {
       const $xeTree = this
 
       return $xeTree.isIndeterminateByCheckboxNodeid($xeTree.getNodeId(node))
     },
-    emitCheckboxMode (value: VxeTreePropTypes.CheckNodeKeys) {
+    emitCheckboxMode(value: VxeTreePropTypes.CheckNodeKeys) {
       const $xeTree = this
 
       $xeTree.$emit('update:checkNodeKeys', value)
     },
-    emitRadioMode (value: VxeTreePropTypes.CheckNodeKey) {
+    emitRadioMode(value: VxeTreePropTypes.CheckNodeKey) {
       const $xeTree = this
 
       $xeTree.$emit('update:checkNodeKey', value)
     },
-    setRadioNode (node: any) {
+    setRadioNode(node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
@@ -1151,7 +1179,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeTree.$nextTick()
     },
-    setCheckboxNode (nodeList: any | any[], checked: boolean) {
+    setCheckboxNode(nodeList: any | any[], checked: boolean) {
       const $xeTree = this
 
       if (nodeList) {
@@ -1163,14 +1191,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.emitCheckboxMode($xeTree.getCheckboxNodeIds())
       return $xeTree.$nextTick()
     },
-    setCheckboxByNodeId (nodeKeys: any | any[], checked: boolean) {
+    setCheckboxByNodeId(nodeKeys: any | any[], checked: boolean) {
       const $xeTree = this
 
       $xeTree.handleSetCheckboxByNodeId(nodeKeys, checked)
       $xeTree.emitCheckboxMode($xeTree.getCheckboxNodeIds())
       return $xeTree.$nextTick()
     },
-    handleSetCheckboxByNodeId (nodeKeys: any | any[], checked: boolean) {
+    handleSetCheckboxByNodeId(nodeKeys: any | any[], checked: boolean) {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -1191,7 +1219,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeTree.$nextTick()
     },
-    handleCheckedCheckboxNode (nodeList: any[], checked: boolean) {
+    handleCheckedCheckboxNode(nodeList: any[], checked: boolean) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -1223,14 +1251,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.updateCheckboxFlag++
       $xeTree.updateCheckboxStatus()
     },
-    updateCheckboxChecked (nodeKeys: VxeTreePropTypes.CheckNodeKeys) {
+    updateCheckboxChecked(nodeKeys: VxeTreePropTypes.CheckNodeKeys) {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
       internalData.selectCheckboxMaps = {}
       $xeTree.handleSetCheckboxByNodeId(nodeKeys, true)
     },
-    handleSetExpand (nodeid: string, expanded: boolean, expandedMaps: Record<string, boolean>) {
+    handleSetExpand(nodeid: string, expanded: boolean, expandedMaps: Record<string, boolean>) {
       if (expanded) {
         if (!expandedMaps[nodeid]) {
           expandedMaps[nodeid] = true
@@ -1241,13 +1269,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    getParentElem () {
+    getParentElem() {
       const $xeTree = this
 
       const el = $xeTree.$refs.refElem as HTMLDivElement
       return el ? el.parentElement : null
     },
-    calcTreeHeight (key: 'height' | 'minHeight' | 'maxHeight') {
+    calcTreeHeight(key: 'height' | 'minHeight' | 'maxHeight') {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -1260,7 +1288,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           num = parentHeight
         } else {
           if (isScale(val)) {
-            num = Math.floor((XEUtils.toInteger(val) || 1) / 100 * parentHeight)
+            num = Math.floor(((XEUtils.toInteger(val) || 1) / 100) * parentHeight)
           } else {
             num = XEUtils.toNumber(val)
           }
@@ -1269,7 +1297,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return num
     },
-    updateHeight () {
+    updateHeight() {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
@@ -1282,12 +1310,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.customHeight = 300
       }
     },
-    createNode (records: any[]) {
+    createNode(records: any[]) {
       const $xeTree = this
 
       const valueField = $xeTree.computeValueField
       return Promise.resolve(
-        records.map(obj => {
+        records.map((obj) => {
           const item = { ...obj }
           let nodeid = $xeTree.getNodeId(item)
           if (!nodeid) {
@@ -1298,7 +1326,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       )
     },
-    cacheNodeMap () {
+    cacheNodeMap() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -1306,29 +1334,33 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const valueField = $xeTree.computeValueField
       const childrenField = $xeTree.computeChildrenField
       const keyMaps: Record<string, VxeTreeDefines.NodeCacheItem> = {}
-      XEUtils.eachTree(treeFullData, (item, index, items, path, parenItem, nodes) => {
-        let nodeid = $xeTree.getNodeId(item)
-        if (!nodeid) {
-          nodeid = getNodeUniqueId()
-          XEUtils.set(item, valueField, nodeid)
-        }
-        keyMaps[nodeid] = {
-          item,
-          index,
-          $index: -1,
-          _index: -1,
-          items,
-          parent: parenItem,
-          nodes,
-          level: nodes.length - 1,
-          treeIndex: index,
-          lineCount: 0,
-          treeLoaded: false
-        }
-      }, { children: childrenField })
+      XEUtils.eachTree(
+        treeFullData,
+        (item, index, items, path, parenItem, nodes) => {
+          let nodeid = $xeTree.getNodeId(item)
+          if (!nodeid) {
+            nodeid = getNodeUniqueId()
+            XEUtils.set(item, valueField, nodeid)
+          }
+          keyMaps[nodeid] = {
+            item,
+            index,
+            $index: -1,
+            _index: -1,
+            items,
+            parent: parenItem,
+            nodes,
+            level: nodes.length - 1,
+            treeIndex: index,
+            lineCount: 0,
+            treeLoaded: false
+          }
+        },
+        { children: childrenField }
+      )
       internalData.nodeMaps = keyMaps
     },
-    updateAfterDataIndex () {
+    updateAfterDataIndex() {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -1338,33 +1370,37 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const childrenField = $xeTree.computeChildrenField
       const mapChildrenField = $xeTree.computeMapChildrenField
       let vtIndex = 0
-      XEUtils.eachTree(afterTreeList, (item, index, items, path, parenItem, nodes) => {
-        const nodeid = $xeTree.getNodeId(item)
-        const nodeItem = nodeMaps[nodeid]
-        if (nodeItem) {
-          nodeItem.items = items
-          nodeItem.treeIndex = index
-          nodeItem._index = vtIndex
-        } else {
-          const rest = {
-            item,
-            index,
-            $index: -1,
-            _index: vtIndex,
-            items,
-            parent: parenItem,
-            nodes,
-            level: nodes.length - 1,
-            treeIndex: index,
-            lineCount: 0,
-            treeLoaded: false
+      XEUtils.eachTree(
+        afterTreeList,
+        (item, index, items, path, parenItem, nodes) => {
+          const nodeid = $xeTree.getNodeId(item)
+          const nodeItem = nodeMaps[nodeid]
+          if (nodeItem) {
+            nodeItem.items = items
+            nodeItem.treeIndex = index
+            nodeItem._index = vtIndex
+          } else {
+            const rest = {
+              item,
+              index,
+              $index: -1,
+              _index: vtIndex,
+              items,
+              parent: parenItem,
+              nodes,
+              level: nodes.length - 1,
+              treeIndex: index,
+              lineCount: 0,
+              treeLoaded: false
+            }
+            nodeMaps[nodeid] = rest
           }
-          nodeMaps[nodeid] = rest
-        }
-        vtIndex++
-      }, { children: transform ? mapChildrenField : childrenField })
+          vtIndex++
+        },
+        { children: transform ? mapChildrenField : childrenField }
+      )
     },
-    updateAfterFullData () {
+    updateAfterFullData() {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -1461,7 +1497,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 如果为虚拟树、则将树结构拍平
      */
-    handleTreeToList () {
+    handleTreeToList() {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -1474,21 +1510,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } = {}
       if (transform) {
         const fullData: any[] = []
-        XEUtils.eachTree(afterTreeList, (item, index, items, path, parentNode) => {
-          const nodeid = $xeTree.getNodeId(item)
-          const parentNodeid = $xeTree.getNodeId(parentNode)
-          if (!parentNode || (expandMaps[parentNodeid] && treeExpandedMaps[parentNodeid])) {
-            expandMaps[nodeid] = 1
-            fullData.push(item)
-          }
-        }, { children: mapChildrenField })
+        XEUtils.eachTree(
+          afterTreeList,
+          (item, index, items, path, parentNode) => {
+            const nodeid = $xeTree.getNodeId(item)
+            const parentNodeid = $xeTree.getNodeId(parentNode)
+            if (!parentNode || (expandMaps[parentNodeid] && treeExpandedMaps[parentNodeid])) {
+              expandMaps[nodeid] = 1
+              fullData.push(item)
+            }
+          },
+          { children: mapChildrenField }
+        )
         $xeTree.updateScrollYStatus(fullData)
         internalData.afterVisibleList = fullData
         return fullData
       }
       return internalData.afterVisibleList
     },
-    handleData (force?: boolean) {
+    handleData(force?: boolean) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1512,12 +1552,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       reactData.treeList = treeList
     },
-    triggerSearchEvent: XEUtils.debounce(function (this: any) {
-      const $xeSelect = this
+    triggerSearchEvent: XEUtils.debounce(
+      function (this: any) {
+        const $xeSelect = this
 
-      $xeSelect.handleData(true)
-    }, 350, { trailing: true }),
-    loadData (list: any[]) {
+        $xeSelect.handleData(true)
+      },
+      350,
+      { trailing: true }
+    ),
+    loadData(list: any[]) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -1536,7 +1580,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
           rootParentValue,
           rootValues
         })
-        : list ? list.slice(0) : []
+        : list
+          ? list.slice(0)
+          : []
       internalData.treeFullData = fullData
       internalData.insertNodeMaps = {}
       reactData.insertNodeFlag++
@@ -1571,7 +1617,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeTree.refreshScroll()
       })
     },
-    updateScrollYStatus (fullData?: any[]) {
+    updateScrollYStatus(fullData?: any[]) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -1585,7 +1631,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.scrollYLoad = scrollYLoad
       return scrollYLoad
     },
-    updateYSpace () {
+    updateYSpace() {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1595,13 +1641,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.bodyHeight = scrollYLoad ? afterVisibleList.length * scrollYStore.rowHeight : 0
       reactData.topSpaceHeight = scrollYLoad ? Math.max(scrollYStore.startIndex * scrollYStore.rowHeight, 0) : 0
     },
-    updateYData () {
+    updateYData() {
       const $xeTree = this
 
       $xeTree.handleData()
       $xeTree.updateYSpace()
     },
-    computeScrollLoad () {
+    computeScrollLoad() {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1640,17 +1686,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 如果有滚动条，则滚动到对应的位置
      */
-    scrollTo (scrollLeft: { top?: number | null; left?: number | null; } | number | null | undefined, scrollTop?: number | null) {
+    scrollTo(scrollLeft: { top?: number | null; left?: number | null } | number | null | undefined, scrollTop?: number | null) {
       const $xeTree = this
 
       return handleScrollTo($xeTree, scrollLeft, scrollTop)
     },
-    scrollToNode (node: any) {
+    scrollToNode(node: any) {
       const $xeTree = this
 
       return $xeTree.scrollToNodeId($xeTree.getNodeId(node))
     },
-    scrollToNodeId (nodeid: string | number | null) {
+    scrollToNodeId(nodeid: string | number | null) {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -1662,10 +1708,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollBodyElem = $xeTree.$refs.refVirtualWrapper as HTMLDivElement
       if (nodeid && scrollBodyElem) {
         if (transform) {
-          const matchObj = XEUtils.findTree(afterTreeList, item => $xeTree.getNodeId(item) === nodeid, { children: transform ? mapChildrenField : childrenField })
+          const matchObj = XEUtils.findTree(afterTreeList, (item) => $xeTree.getNodeId(item) === nodeid, { children: transform ? mapChildrenField : childrenField })
           if (matchObj) {
             return $xeTree.setExpandNode(matchObj.nodes, true).then(() => {
-              const itemIndex = XEUtils.findIndexOf(internalData.afterVisibleList, item => $xeTree.getNodeId(item) === nodeid)
+              const itemIndex = XEUtils.findIndexOf(internalData.afterVisibleList, (item) => $xeTree.getNodeId(item) === nodeid)
               if (itemIndex > -1) {
                 const targetTop = Math.max(0, (itemIndex - 1) * scrollYStore.rowHeight)
                 return handleScrollTo($xeTree, scrollBodyElem.scrollLeft, targetTop)
@@ -1684,7 +1730,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 刷新滚动条
      */
-    refreshScroll () {
+    refreshScroll() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -1697,7 +1743,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    updateScrollbar () {
+    updateScrollbar() {
       const $xeTree = this
 
       const isVScrollbar = $xeTree.computeIsVScrollbar
@@ -1712,7 +1758,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 重新计算列表
      */
-    recalculate () {
+    recalculate() {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1743,14 +1789,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeTree.$nextTick()
     },
-    getFullData () {
+    getFullData() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
       const { treeFullData } = internalData
       return treeFullData.slice(0)
     },
-    loadYData () {
+    loadYData() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -1772,7 +1818,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    scrollEvent (evnt: Event) {
+    scrollEvent(evnt: Event) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -1794,7 +1840,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.lastScrollTime = Date.now()
       $xeTree.dispatchEvent('scroll', { scrollLeft, scrollTop, isX, isY }, evnt)
     },
-    clearScroll () {
+    clearScroll() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -1807,7 +1853,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.lastScrollLeft = 0
       return $xeTree.$nextTick()
     },
-    handleInsertNodeAt (records: any[], targetNodeOrNodeid: any, isInsertNextNode?: any) {
+    handleInsertNodeAt(records: any[], targetNodeOrNodeid: any, isInsertNextNode?: any) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -1836,7 +1882,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!records.length) {
         return Promise.resolve({ node: null, nodes: [] })
       }
-      const newRecords = records.map(record => XEUtils.assign({ [mapChildrenField]: [], [childrenField]: [] }, record))
+      const newRecords = records.map((record) => XEUtils.assign({ [mapChildrenField]: [], [childrenField]: [] }, record))
       const treeRecords = XEUtils.toArrayTree(newRecords, { key: keyField, parentKey: parentField, children: childrenField })
 
       if (XEUtils.eqNull(targetNode)) {
@@ -1845,7 +1891,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (targetNode === -1) {
           insertTreeNode($xeTree, newRecords, true)
         } else {
-          const matchMapObj = XEUtils.findTree(treeFullData, item => targetNode[keyField] === item[keyField], { children: mapChildrenField })
+          const matchMapObj = XEUtils.findTree(treeFullData, (item) => targetNode[keyField] === item[keyField], { children: mapChildrenField })
           if (matchMapObj) {
             const { parent: parentNode } = matchMapObj
             const parentMapChilds = parentNode ? parentNode[mapChildrenField] : treeFullData
@@ -1871,18 +1917,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
               }
               parentMapChilds.splice(targetIndex, 0, item)
             })
-            XEUtils.eachTree(treeRecords, (item) => {
-              const nodeid = $xeTree.getNodeId(item)
-              const nodeRest = getItemCacheObj(item)
-              nodeRest.level = parentLevel
-              if (item[childrenField]) {
-                item[mapChildrenField] = item[childrenField]
-              }
-              nodeMaps[nodeid] = nodeRest
-            }, { children: childrenField })
+            XEUtils.eachTree(
+              treeRecords,
+              (item) => {
+                const nodeid = $xeTree.getNodeId(item)
+                const nodeRest = getItemCacheObj(item)
+                nodeRest.level = parentLevel
+                if (item[childrenField]) {
+                  item[mapChildrenField] = item[childrenField]
+                }
+                nodeMaps[nodeid] = nodeRest
+              },
+              { children: childrenField }
+            )
             // 源
             if (parentNode) {
-              const matchObj = XEUtils.findTree(treeFullData, item => targetNode[keyField] === item[keyField], { children: childrenField })
+              const matchObj = XEUtils.findTree(treeFullData, (item) => targetNode[keyField] === item[keyField], { children: childrenField })
               if (matchObj) {
                 const parentChilds = matchObj.items
                 let targetIndex = matchObj.index
@@ -1929,22 +1979,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    insert (records: any) {
+    insert(records: any) {
       const $xeTree = this
 
       return $xeTree.handleInsertNodeAt(records, null)
     },
-    insertAt (records: any, targetNodeOrNodeid?: any) {
+    insertAt(records: any, targetNodeOrNodeid?: any) {
       const $xeTree = this
 
       return $xeTree.handleInsertNodeAt(records, targetNodeOrNodeid)
     },
-    insertNextAt (records: any, targetNodeOrNodeid?: any) {
+    insertNextAt(records: any, targetNodeOrNodeid?: any) {
       const $xeTree = this
 
       return $xeTree.handleInsertNodeAt(records, targetNodeOrNodeid, true)
     },
-    handleInsertChildNodeAt (records: any, parentNodeOrParentId: any, targetNodeOrNodeid: any, isInsertNextNode?: boolean) {
+    handleInsertChildNodeAt(records: any, parentNodeOrParentId: any, targetNodeOrNodeid: any, isInsertNextNode?: boolean) {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -1967,24 +2017,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
           parentNode = nodeRest.item
         }
       }
-      return $xeTree.handleInsertNodeAt(records.map((item: any) => Object.assign({}, item, { [parentField]: parentNode[keyField] })), targetNodeOrNodeid, isInsertNextNode)
+      return $xeTree.handleInsertNodeAt(
+        records.map((item: any) => Object.assign({}, item, { [parentField]: parentNode[keyField] })),
+        targetNodeOrNodeid,
+        isInsertNextNode
+      )
     },
-    insertChild (records: any, parentNodeOrParentId: any) {
+    insertChild(records: any, parentNodeOrParentId: any) {
       const $xeTree = this
 
       return $xeTree.handleInsertChildNodeAt(records, parentNodeOrParentId, null)
     },
-    insertChildAt (records: any, parentNodeOrParentId: any, targetNode: any) {
+    insertChildAt(records: any, parentNodeOrParentId: any, targetNode: any) {
       const $xeTree = this
 
       return $xeTree.handleInsertChildNodeAt(records, parentNodeOrParentId, targetNode)
     },
-    insertChildNextAt (records: any, parentNodeOrParentId: any, targetNode: any) {
+    insertChildNextAt(records: any, parentNodeOrParentId: any, targetNode: any) {
       const $xeTree = this
 
       return $xeTree.handleInsertChildNodeAt(records, parentNodeOrParentId, targetNode, true)
     },
-    getInsertRecords () {
+    getInsertRecords() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -1995,7 +2049,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return insertRecords
     },
-    isInsertByNode (node: any) {
+    isInsertByNode(node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2003,7 +2057,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nodeid = $xeTree.getNodeId(node)
       return !!reactData.insertNodeFlag && !!internalData.insertNodeMaps[nodeid]
     },
-    remove (nodes?: any) {
+    remove(nodes?: any) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -2042,12 +2096,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         nodes.forEach((item: any) => {
           const nodeid = $xeTree.getNodeId(item)
-          const matchMapObj = XEUtils.findTree(treeFullData, item => nodeid === $xeTree.getNodeId(item), { children: mapChildrenField })
+          const matchMapObj = XEUtils.findTree(treeFullData, (item) => nodeid === $xeTree.getNodeId(item), { children: mapChildrenField })
           if (matchMapObj) {
             const rItems = matchMapObj.items.splice(matchMapObj.index, 1)
             delList.push(rItems[0])
           }
-          const matchObj = XEUtils.findTree(treeFullData, item => nodeid === $xeTree.getNodeId(item), { children: childrenField })
+          const matchObj = XEUtils.findTree(treeFullData, (item) => nodeid === $xeTree.getNodeId(item), { children: childrenField })
           if (matchObj) {
             const rItems = matchObj.items.splice(matchObj.index, 1)
             delList.push(rItems[0])
@@ -2072,13 +2126,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (reactData.scrollYLoad) {
         $xeTree.updateYSpace()
       }
-      return $xeTree.$nextTick().then(() => {
-        return $xeTree.recalculate()
-      }).then(() => {
-        return { node: delList.length ? delList[delList.length - 1] : null, nodes: delList }
-      })
+      return $xeTree
+        .$nextTick()
+        .then(() => {
+          return $xeTree.recalculate()
+        })
+        .then(() => {
+          return { node: delList.length ? delList[delList.length - 1] : null, nodes: delList }
+        })
     },
-    getRemoveRecords () {
+    getRemoveRecords() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -2089,7 +2146,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return removeRecords
     },
-    isRemoveByNode (node: any) {
+    isRemoveByNode(node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2097,7 +2154,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nodeid = $xeTree.getNodeId(node)
       return !!reactData.removeNodeFlag && !!internalData.removeNodeMaps[nodeid]
     },
-    handleNodeMousedownEvent (evnt: MouseEvent, node: any) {
+    handleNodeMousedownEvent(evnt: MouseEvent, node: any) {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -2121,7 +2178,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleNodeClickEvent (evnt: MouseEvent, node: any) {
+    handleNodeClickEvent(evnt: MouseEvent, node: any) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -2154,12 +2211,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeTree.dispatchEvent('node-click', { node, triggerCurrent, triggerRadio, triggerCheckbox, triggerExpand }, evnt)
     },
-    handleNodeDblclickEvent (evnt: MouseEvent, node: any) {
+    handleNodeDblclickEvent(evnt: MouseEvent, node: any) {
       const $xeTree = this
 
       $xeTree.dispatchEvent('node-dblclick', { node }, evnt)
     },
-    handleNodeMouseenterEvent (evnt: MouseEvent, node: any) {
+    handleNodeMouseenterEvent(evnt: MouseEvent, node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2223,7 +2280,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleNodeMouseleaveEvent () {
+    handleNodeMouseleaveEvent() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -2244,7 +2301,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeTree.closeTooltip()
       }
     },
-    closeTooltip () {
+    closeTooltip() {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
@@ -2259,7 +2316,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeTree.$nextTick()
     },
-    getRecordset () {
+    getRecordset() {
       const $xeTree = this
 
       return {
@@ -2267,7 +2324,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         removeRecords: $xeTree.getRemoveRecords()
       }
     },
-    handleContextmenuEvent (evnt: MouseEvent, node: any) {
+    handleContextmenuEvent(evnt: MouseEvent, node: any) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -2287,7 +2344,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             VxeUI.contextMenu.openByEvent(evnt, {
               options,
               events: {
-                optionClick (eventParams) {
+                optionClick(eventParams) {
                   const { option } = eventParams
                   const gMenuOpts = menus.get(option.code)
                   const tmMethod = gMenuOpts ? gMenuOpts.treeMenuMethod : null
@@ -2314,7 +2371,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeTree.dispatchEvent('node-menu', { node }, evnt)
     },
-    handleAsyncTreeExpandChilds (node: any) {
+    handleAsyncTreeExpandChilds(node: any) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -2323,56 +2380,57 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const checkboxOpts = $xeTree.computeCheckboxOpts
       const { loadMethod } = props
       const { checkStrictly } = checkboxOpts
-      return new Promise<void>(resolve => {
+      return new Promise<void>((resolve) => {
         const { nodeMaps } = internalData
         const nodeid = $xeTree.getNodeId(node)
         const nodeItem = nodeMaps[nodeid]
         if (loadMethod) {
           internalData.treeExpandLazyLoadedMaps[nodeid] = true
-          Promise.resolve(
-            loadMethod({ $tree: $xeTree, node })
-          ).then((childRecords: any) => {
-            const { treeExpandLazyLoadedMaps } = internalData
-            if (nodeItem) {
-              nodeItem.treeLoaded = true
-            }
-            if (treeExpandLazyLoadedMaps[nodeid]) {
-              treeExpandLazyLoadedMaps[nodeid] = false
-            }
-            if (!XEUtils.isArray(childRecords)) {
-              childRecords = []
-            }
-            if (childRecords) {
-              return $xeTree.loadChildrenNode(node, childRecords).then(childNodes => {
-                const { treeExpandedMaps } = internalData
-                if (childNodes.length && !treeExpandedMaps[nodeid]) {
-                  treeExpandedMaps[nodeid] = true
-                }
-                reactData.updateExpandedFlag++
-                // 如果当前节点已选中，则展开后子节点也被选中
-                if (!checkStrictly && $xeTree.isCheckedByCheckboxNodeId(nodeid)) {
-                  $xeTree.handleCheckedCheckboxNode(childNodes, true)
-                }
+          Promise.resolve(loadMethod({ $tree: $xeTree, node }))
+            .then((childRecords: any) => {
+              const { treeExpandLazyLoadedMaps } = internalData
+              if (nodeItem) {
+                nodeItem.treeLoaded = true
+              }
+              if (treeExpandLazyLoadedMaps[nodeid]) {
+                treeExpandLazyLoadedMaps[nodeid] = false
+              }
+              if (!XEUtils.isArray(childRecords)) {
+                childRecords = []
+              }
+              if (childRecords) {
+                return $xeTree.loadChildrenNode(node, childRecords).then((childNodes) => {
+                  const { treeExpandedMaps } = internalData
+                  if (childNodes.length && !treeExpandedMaps[nodeid]) {
+                    treeExpandedMaps[nodeid] = true
+                  }
+                  reactData.updateExpandedFlag++
+                  // 如果当前节点已选中，则展开后子节点也被选中
+                  if (!checkStrictly && $xeTree.isCheckedByCheckboxNodeId(nodeid)) {
+                    $xeTree.handleCheckedCheckboxNode(childNodes, true)
+                  }
+                  $xeTree.dispatchEvent('load-success', { node, data: childRecords }, new Event('load-success'))
+                  return $xeTree.$nextTick()
+                })
+              } else {
                 $xeTree.dispatchEvent('load-success', { node, data: childRecords }, new Event('load-success'))
-                return $xeTree.$nextTick()
-              })
-            } else {
-              $xeTree.dispatchEvent('load-success', { node, data: childRecords }, new Event('load-success'))
-            }
-          }).catch((e) => {
-            const { treeExpandLazyLoadedMaps } = internalData
-            if (nodeItem) {
-              nodeItem.treeLoaded = false
-            }
-            if (treeExpandLazyLoadedMaps[nodeid]) {
-              treeExpandLazyLoadedMaps[nodeid] = false
-            }
-            $xeTree.dispatchEvent('load-error', { node, data: e }, new Event('load-error'))
-          }).finally(() => {
-            $xeTree.handleTreeToList()
-            $xeTree.handleData()
-            return $xeTree.recalculate()
-          })
+              }
+            })
+            .catch((e) => {
+              const { treeExpandLazyLoadedMaps } = internalData
+              if (nodeItem) {
+                nodeItem.treeLoaded = false
+              }
+              if (treeExpandLazyLoadedMaps[nodeid]) {
+                treeExpandLazyLoadedMaps[nodeid] = false
+              }
+              $xeTree.dispatchEvent('load-error', { node, data: e }, new Event('load-error'))
+            })
+            .finally(() => {
+              $xeTree.handleTreeToList()
+              $xeTree.handleData()
+              return $xeTree.recalculate()
+            })
         } else {
           if (nodeItem) {
             nodeItem.treeLoaded = true
@@ -2387,7 +2445,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
      * @param expanded
      * @returns
      */
-    handleBaseTreeExpand (nodeList: any[], expanded: boolean) {
+    handleBaseTreeExpand(nodeList: any[], expanded: boolean) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -2406,7 +2464,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const nodeid = $xeTree.getNodeId(validNodes[0])
         const nodeItem = nodeMaps[nodeid]
         if (nodeItem) {
-          nodeItem.items.forEach(item => {
+          nodeItem.items.forEach((item) => {
             const itemNodeId = $xeTree.getNodeId(item)
             if (treeExpandedMaps[itemNodeId]) {
               delete treeExpandedMaps[itemNodeId]
@@ -2433,7 +2491,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         })
       } else {
-        validNodes.forEach(item => {
+        validNodes.forEach((item) => {
           const itemNodeId = $xeTree.getNodeId(item)
           if (treeExpandedMaps[itemNodeId]) {
             delete treeExpandedMaps[itemNodeId]
@@ -2446,7 +2504,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.handleData()
       return Promise.all(result).then(() => $xeTree.recalculate())
     },
-    toggleExpandEvent (evnt: MouseEvent, node: any) {
+    toggleExpandEvent(evnt: MouseEvent, node: any) {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -2461,7 +2519,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeTree.dispatchEvent('node-expand', { node, expanded }, evnt)
     },
-    updateCheckboxStatus () {
+    updateCheckboxStatus() {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -2476,16 +2534,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!checkStrictly) {
         const childNodeMaps: Record<string, number> = {}
         const childNodeList: any[][] = []
-        XEUtils.eachTree(afterTreeList, (node) => {
-          const nodeid = $xeTree.getNodeId(node)
-          const childList = node[childrenField]
-          if (childList && childList.length && !childNodeMaps[nodeid]) {
-            childNodeMaps[nodeid] = 1
-            childNodeList.unshift([node, nodeid, childList])
-          }
-        }, { children: transform ? mapChildrenField : childrenField })
+        XEUtils.eachTree(
+          afterTreeList,
+          (node) => {
+            const nodeid = $xeTree.getNodeId(node)
+            const childList = node[childrenField]
+            if (childList && childList.length && !childNodeMaps[nodeid]) {
+              childNodeMaps[nodeid] = 1
+              childNodeList.unshift([node, nodeid, childList])
+            }
+          },
+          { children: transform ? mapChildrenField : childrenField }
+        )
 
-        childNodeList.forEach(vals => {
+        childNodeList.forEach((vals) => {
           const node: string = vals[0]
           const nodeid: string = vals[1]
           const childList: any[] = vals[2]
@@ -2513,16 +2575,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
                     }
                   }
                 }
-              : item => {
-                const childNodeid = $xeTree.getNodeId(item)
-                const isSelect = selectCheckboxMaps[childNodeid]
-                if (isSelect) {
-                  sLen++
-                } else if (indeterminateNodeMaps[childNodeid]) {
-                  hLen++
+              : (item) => {
+                  const childNodeid = $xeTree.getNodeId(item)
+                  const isSelect = selectCheckboxMaps[childNodeid]
+                  if (isSelect) {
+                    sLen++
+                  } else if (indeterminateNodeMaps[childNodeid]) {
+                    hLen++
+                  }
+                  vLen++
                 }
-                vLen++
-              }
           )
 
           let isSelected = false
@@ -2531,7 +2593,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               isSelected = (sLen > 0 || hLen > 0) && sLen >= vLen
             } else {
               // 如果存在子项禁用
-              if ((sLen > 0 && sLen >= vLen)) {
+              if (sLen > 0 && sLen >= vLen) {
                 isSelected = true
               } else if (selectCheckboxMaps[nodeid]) {
                 isSelected = true
@@ -2566,7 +2628,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.updateCheckboxFlag++
       }
     },
-    changeCheckboxEvent (evnt: MouseEvent, node: any) {
+    changeCheckboxEvent(evnt: MouseEvent, node: any) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -2597,18 +2659,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
         selectCheckboxMaps[nodeid] = node
       }
       if (!checkStrictly) {
-        XEUtils.eachTree(XEUtils.get(node, transform ? mapChildrenField : childrenField), (childNode) => {
-          const childNodeid = $xeTree.getNodeId(childNode)
-          if (isChecked) {
-            if (!selectCheckboxMaps[childNodeid]) {
-              selectCheckboxMaps[childNodeid] = true
+        XEUtils.eachTree(
+          XEUtils.get(node, transform ? mapChildrenField : childrenField),
+          (childNode) => {
+            const childNodeid = $xeTree.getNodeId(childNode)
+            if (isChecked) {
+              if (!selectCheckboxMaps[childNodeid]) {
+                selectCheckboxMaps[childNodeid] = true
+              }
+            } else {
+              if (selectCheckboxMaps[childNodeid]) {
+                delete selectCheckboxMaps[childNodeid]
+              }
             }
-          } else {
-            if (selectCheckboxMaps[childNodeid]) {
-              delete selectCheckboxMaps[childNodeid]
-            }
-          }
-        }, { children: transform ? mapChildrenField : childrenField })
+          },
+          { children: transform ? mapChildrenField : childrenField }
+        )
       }
       reactData.updateCheckboxFlag++
       $xeTree.updateCheckboxStatus()
@@ -2617,7 +2683,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.emitCheckboxMode(value)
       $xeTree.dispatchEvent('checkbox-change', { node, value, checked: isChecked }, evnt)
     },
-    changeCurrentEvent (evnt: MouseEvent, node: any) {
+    changeCurrentEvent(evnt: MouseEvent, node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
@@ -2647,7 +2713,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.currentNode = node
       $xeTree.dispatchEvent('current-change', { node, checked: isChecked }, evnt)
     },
-    changeRadioEvent (evnt: MouseEvent, node: any) {
+    changeRadioEvent(evnt: MouseEvent, node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2673,19 +2739,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.emitRadioMode(value)
       $xeTree.dispatchEvent('radio-change', { node, value, checked: isChecked }, evnt)
     },
-    reloadData (data: any[]) {
+    reloadData(data: any[]) {
       const $xeTree = this
 
       return $xeTree.loadData(data || [])
     },
-    clearCurrentNode () {
+    clearCurrentNode() {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
       reactData.currentNode = null
       return $xeTree.$nextTick()
     },
-    getCurrentNodeId () {
+    getCurrentNodeId() {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
@@ -2695,7 +2761,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    getCurrentNode () {
+    getCurrentNode() {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2710,7 +2776,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    setCurrentNodeId (nodeKey: string | number | null) {
+    setCurrentNodeId(nodeKey: string | number | null) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2720,14 +2786,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.currentNode = nodeItem ? nodeItem.item : null
       return $xeTree.$nextTick()
     },
-    setCurrentNode (node: any) {
+    setCurrentNode(node: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
       reactData.currentNode = node
       return $xeTree.$nextTick()
     },
-    clearRadioNode () {
+    clearRadioNode() {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
@@ -2735,13 +2801,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.emitRadioMode(null)
       return $xeTree.$nextTick()
     },
-    getRadioNodeId () {
+    getRadioNodeId() {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
       return reactData.selectRadioKey || null
     },
-    getRadioNode () {
+    getRadioNode() {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2756,7 +2822,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    setRadioNodeId (nodeKey: string | number | null) {
+    setRadioNodeId(nodeKey: string | number | null) {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
@@ -2764,7 +2830,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.emitRadioMode(nodeKey)
       return $xeTree.$nextTick()
     },
-    getCheckboxNodeIds () {
+    getCheckboxNodeIds() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -2775,12 +2841,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return nodeKeys
     },
-    getCheckboxNodes () {
+    getCheckboxNodes() {
       const $xeTree = this
 
       return $xeTree.getCheckboxRecords()
     },
-    getCheckboxRecords () {
+    getCheckboxRecords() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -2794,7 +2860,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return list
     },
-    clearCheckboxNode () {
+    clearCheckboxNode() {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2808,7 +2874,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return { checkNodeKeys: [], checkNodes: [] }
       })
     },
-    setAllCheckboxNode (checked: boolean) {
+    setAllCheckboxNode(checked: boolean) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -2822,12 +2888,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const checkKeys: string[] = []
       const checkNodes: any[] = []
       if (checked) {
-        XEUtils.eachTree(transform ? afterTreeList : afterVisibleList, (node) => {
-          const nodeid = $xeTree.getNodeId(node)
-          checkKeys.push(nodeid)
-          checkNodes.push(node)
-          selectMaps[nodeid] = true
-        }, { children: transform ? mapChildrenField : childrenField })
+        XEUtils.eachTree(
+          transform ? afterTreeList : afterVisibleList,
+          (node) => {
+            const nodeid = $xeTree.getNodeId(node)
+            checkKeys.push(nodeid)
+            checkNodes.push(node)
+            selectMaps[nodeid] = true
+          },
+          { children: transform ? mapChildrenField : childrenField }
+        )
       }
       internalData.indeterminateNodeMaps = {}
       internalData.selectCheckboxMaps = selectMaps
@@ -2837,12 +2907,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return { checkNodeKeys: checkKeys, checkNodes }
       })
     },
-    clearExpandNode () {
+    clearExpandNode() {
       const $xeTree = this
 
       return $xeTree.clearAllExpandNode()
     },
-    clearAllExpandNode () {
+    clearAllExpandNode() {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2866,7 +2936,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return $xeTree.recalculate()
       })
     },
-    setExpandByNodeId (nodeKeys: string | number | (string | number | null)[] | null, expanded: boolean) {
+    setExpandByNodeId(nodeKeys: string | number | (string | number | null)[] | null, expanded: boolean) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2886,7 +2956,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.handleData()
       return $xeTree.recalculate()
     },
-    getExpandNodeIds () {
+    getExpandNodeIds() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -2897,7 +2967,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return nodeKeys
     },
-    getExpandNodes () {
+    getExpandNodes() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -2911,7 +2981,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return list
     },
-    setExpandNode (nodes: any, expanded: boolean) {
+    setExpandNode(nodes: any, expanded: boolean) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2931,7 +3001,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.handleData()
       return $xeTree.recalculate()
     },
-    toggleExpandByNodeId (nodeKeys: string | number | null | (string | number | null)[]) {
+    toggleExpandByNodeId(nodeKeys: string | number | null | (string | number | null)[]) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2951,7 +3021,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.handleData()
       return $xeTree.recalculate()
     },
-    toggleExpandNode (nodes: any) {
+    toggleExpandNode(nodes: any) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -2971,7 +3041,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.handleData()
       return $xeTree.recalculate()
     },
-    setAllExpandNode (expanded: boolean) {
+    setAllExpandNode(expanded: boolean) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -2983,14 +3053,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const childrenField = $xeTree.computeChildrenField
       const mapChildrenField = $xeTree.computeMapChildrenField
       if (expanded) {
-        XEUtils.eachTree(internalData.afterTreeList, (node) => {
-          const childList: any[] = XEUtils.get(node, childrenField)
-          const hasChild = childList && childList.length
-          if (hasChild) {
-            const nodeid = $xeTree.getNodeId(node)
-            treeExpandedMaps[nodeid] = true
-          }
-        }, { children: transform ? mapChildrenField : childrenField })
+        XEUtils.eachTree(
+          internalData.afterTreeList,
+          (node) => {
+            const childList: any[] = XEUtils.get(node, childrenField)
+            const hasChild = childList && childList.length
+            if (hasChild) {
+              const nodeid = $xeTree.getNodeId(node)
+              treeExpandedMaps[nodeid] = true
+            }
+          },
+          { children: transform ? mapChildrenField : childrenField }
+        )
       } else {
         internalData.treeExpandedMaps = {}
       }
@@ -3007,7 +3081,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return $xeTree.recalculate()
       })
     },
-    reloadExpandNode (node: any) {
+    reloadExpandNode(node: any) {
       const $xeTree = this
       const props = $xeTree
 
@@ -3018,7 +3092,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeTree.recalculate()
     },
-    clearExpandLoaded (node: any) {
+    clearExpandLoaded(node: any) {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -3036,7 +3110,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 用于树结构，给行数据加载子节点
      */
-    loadChildrenNode (node: any, childRecords: any[]) {
+    loadChildrenNode(node: any, childRecords: any[]) {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -3052,22 +3126,26 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const parentLevel = parentNodeItem ? parentNodeItem.level : 0
       const parentNodes = parentNodeItem ? parentNodeItem.nodes : []
       return $xeTree.createNode(childRecords).then((nodeList) => {
-        XEUtils.eachTree(nodeList, (childNode, index, items, path, parent, nodes) => {
-          const itemNodeId = $xeTree.getNodeId(childNode)
-          nodeMaps[itemNodeId] = {
-            item: childNode,
-            index: -1,
-            $index: -1,
-            _index: -1,
-            items,
-            parent: parent || parentNodeItem.item,
-            nodes: parentNodes.concat(nodes),
-            level: parentLevel + nodes.length,
-            treeIndex: -1,
-            lineCount: 0,
-            treeLoaded: false
-          }
-        }, { children: childrenField })
+        XEUtils.eachTree(
+          nodeList,
+          (childNode, index, items, path, parent, nodes) => {
+            const itemNodeId = $xeTree.getNodeId(childNode)
+            nodeMaps[itemNodeId] = {
+              item: childNode,
+              index: -1,
+              $index: -1,
+              _index: -1,
+              items,
+              parent: parent || parentNodeItem.item,
+              nodes: parentNodes.concat(nodes),
+              level: parentLevel + nodes.length,
+              treeIndex: -1,
+              lineCount: 0,
+              treeLoaded: false
+            }
+          },
+          { children: childrenField }
+        )
         node[childrenField] = nodeList
         if (transform) {
           node[mapChildrenField] = nodeList
@@ -3076,12 +3154,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return nodeList
       })
     },
-    findNodeIndexOf (list: any, node: any) {
+    findNodeIndexOf(list: any, node: any) {
       const $xeTree = this
 
-      return node ? XEUtils.findIndexOf(list, item => $xeTree.eqNode(item, node)) : -1
+      return node ? XEUtils.findIndexOf(list, (item) => $xeTree.eqNode(item, node)) : -1
     },
-    eqNode (node1: any, node2: any) {
+    eqNode(node1: any, node2: any) {
       const $xeTree = this
 
       if (node1 && node2) {
@@ -3092,16 +3170,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    handleCrossTreeNodeDragCancelEvent () {
+    handleCrossTreeNodeDragCancelEvent() {
       const $xeTree = this
 
       clearNodeDragData($xeTree)
       clearCrossTreeDragStatus($xeTree)
     },
     /**
-       * 处理跨树拖拽完成
-       */
-    handleCrossTreeNodeDragFinishEvent (evnt: DragEvent) {
+     * 处理跨树拖拽完成
+     */
+    handleCrossTreeNodeDragFinishEvent(evnt: DragEvent) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -3142,7 +3220,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             if (animation && dragNodeHeight && dragRangeList.length) {
               const wrapperEl = el
               const dtClss: string[] = []
-              dragRangeList.forEach(item => {
+              dragRangeList.forEach((item) => {
                 const nodeid = $xeTree.getNodeId(item)
                 dtClss.push(`.vxe-tree--node-wrapper[nodeid="${nodeid}"]`)
               })
@@ -3150,9 +3228,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
               moveRowAnimateToTb(dtTrList, dragNodeHeight)
             }
           })
-          $xeTree.dispatchEvent('node-remove-dragend', {
-            node: dragNode
-          }, evnt)
+          $xeTree.dispatchEvent(
+            'node-remove-dragend',
+            {
+              node: dragNode
+            },
+            evnt
+          )
           handleNodeDragEndClearStatus($xeTree)
         }
       }
@@ -3160,7 +3242,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 处理跨树拖至新的空树
      */
-    handleCrossTreeNodeDragoverEmptyEvent (evnt: DragEvent) {
+    handleCrossTreeNodeDragoverEmptyEvent(evnt: DragEvent) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -3189,7 +3271,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 处理跨树拖插入
      */
-    handleCrossTreeNodeDragInsertEvent  (evnt: DragEvent) {
+    handleCrossTreeNodeDragInsertEvent(evnt: DragEvent) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
@@ -3248,7 +3330,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             } else {
               dragNode[parentField] = null
             }
-            dragList.forEach(item => {
+            dragList.forEach((item) => {
               item[childrenField] = undefined
               item[mapChildrenField] = undefined
             })
@@ -3261,14 +3343,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
             } else {
               insertRest = $xeTree.insert(dragList)
             }
-            $xeTree.dispatchEvent('node-insert-dragend', {
-              oldNode,
-              newNode: prevDragNode,
-              dragNode,
-              dragPos: prevDragPos as any,
-              dragToChild: isDragToChildFlag,
-              offsetIndex: dragOffsetIndex
-            }, evnt)
+            $xeTree.dispatchEvent(
+              'node-insert-dragend',
+              {
+                oldNode,
+                newNode: prevDragNode,
+                dragNode,
+                dragPos: prevDragPos as any,
+                dragToChild: isDragToChildFlag,
+                offsetIndex: dragOffsetIndex
+              },
+              evnt
+            )
             clearNodeDragData($xeTree)
 
             insertRest.then(() => {
@@ -3292,7 +3378,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
               if (animation && dragNodeHeight && dragRangeList.length) {
                 const wrapperEl = el
                 const dtClss: string[] = []
-                dragRangeList.forEach(item => {
+                dragRangeList.forEach((item) => {
                   const nodeid = $xeTree.getNodeId(item)
                   dtClss.push(`.vxe-tree--node-wrapper[nodeid="${nodeid}"]`)
                 })
@@ -3304,12 +3390,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    hideCrossTreeNodeDropClearStatus () {
+    hideCrossTreeNodeDropClearStatus() {
       const $xeTree = this
 
       hideDropTip($xeTree)
     },
-    getCheckboxIndeterminateNodes () {
+    getCheckboxIndeterminateNodes() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -3323,7 +3409,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       return list
     },
-    handleNodeDragMousedownEvent (evnt: MouseEvent, params: { node: any }) {
+    handleNodeDragMousedownEvent(evnt: MouseEvent, params: { node: any }) {
       const $xeTree = this
       const reactData = $xeTree.reactData
       const crossTreeDragNodeInfo = getCrossTreeDragNodeInfo($xeTree)
@@ -3333,7 +3419,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dragConfig = $xeTree.computeDragOpts
       const { isCrossTreeDrag, trigger, dragStartMethod } = dragConfig
       const dragEl = evnt.currentTarget as HTMLElement
-      const itemEl = trigger === 'node' ? dragEl : (dragEl.parentElement as HTMLElement).parentElement as HTMLElement
+      const itemEl = trigger === 'node' ? dragEl : ((dragEl.parentElement as HTMLElement).parentElement as HTMLElement)
       clearNodeDropOrigin($xeTree)
       if (dragStartMethod && !dragStartMethod(params)) {
         itemEl.draggable = false
@@ -3352,17 +3438,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       updateNodeDropTipContent($xeTree, itemEl)
       $xeTree.dispatchEvent('node-dragstart', params, evnt)
     },
-    handleNodeDragMouseupEvent () {
+    handleNodeDragMouseupEvent() {
       const $xeTree = this
 
       clearDragStatus($xeTree)
     },
-    handleNodeDragDragstartEvent (evnt: DragEvent) {
+    handleNodeDragDragstartEvent(evnt: DragEvent) {
       if (evnt.dataTransfer) {
         evnt.dataTransfer.setDragImage(getTpImg(), 0, 0)
       }
     },
-    handleNodeDragDragendEvent (evnt: DragEvent) {
+    handleNodeDragDragendEvent(evnt: DragEvent) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -3399,7 +3485,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         handleNodeDragSwapEvent($xeTree, evnt, dragNode, prevDragNode, prevDragPos, prevDragToChild)
       }
     },
-    handleNodeDragDragoverEvent (evnt: DragEvent) {
+    handleNodeDragDragoverEvent(evnt: DragEvent) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -3424,7 +3510,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const node = nodeItem.item
         const offsetY = evnt.clientY - itemEl.getBoundingClientRect().y
         const dragPos = offsetY < itemEl.clientHeight / 2 ? 'top' : 'bottom'
-        internalData.prevDragToChild = !!(transform && (isCrossDrag && isToChildDrag) && isControlKey)
+        internalData.prevDragToChild = !!(transform && isCrossDrag && isToChildDrag && isControlKey)
         internalData.prevDragNode = node
         internalData.prevDragPos = dragPos
         // 跨树拖拽
@@ -3452,23 +3538,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
           }
         }
-        if ((dragNode && $xeTree.getNodeId(dragNode) === nodeid) ||
-            (isControlKey && lazy && node[hasChildField] && nodeItem && !nodeItem.treeLoaded) ||
-            (!isCrossDrag && transform && (isPeerDrag ? dragNode[parentField] !== node[parentField] : nodeItem.level))
-        ) {
+        if ((dragNode && $xeTree.getNodeId(dragNode) === nodeid) || (isControlKey && lazy && node[hasChildField] && nodeItem && !nodeItem.treeLoaded) || (!isCrossDrag && transform && (isPeerDrag ? dragNode[parentField] !== node[parentField] : nodeItem.level))) {
           showDropTip($xeTree, evnt, itemEl, false, dragPos)
           return
         }
         showDropTip($xeTree, evnt, itemEl, true, dragPos)
-        $xeTree.dispatchEvent('node-dragover', {
-          oldRNode: dragNode,
-          targetNode: node,
-          dragPos
-        }, evnt)
+        $xeTree.dispatchEvent(
+          'node-dragover',
+          {
+            oldRNode: dragNode,
+            targetNode: node,
+            dragPos
+          },
+          evnt
+        )
       }
     },
     // 滚动条
-    bindScrollbarResize () {
+    bindScrollbarResize() {
       const $xeTree = this
       const internalData = $xeTree.internalData
 
@@ -3499,7 +3586,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderDragIcon (h: CreateElement, node: any, nodeid: string) {
+    renderDragIcon(h: CreateElement, node: any, nodeid: string) {
       const $xeTree = this
       const props = $xeTree
       const internalData = $xeTree.internalData
@@ -3527,21 +3614,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
             ons.mouseup = $xeTree.handleNodeDragMouseupEvent
           }
-          return h('div', {
-            class: ['vxe-tree--drag-handle', {
-              'is--disabled': isDisabled
-            }],
-            on: ons
-          }, [
-            h('i', {
-              class: icon || getIcon().TREE_DRAG
-            })
-          ])
+          return h(
+            'div',
+            {
+              class: [
+                'vxe-tree--drag-handle',
+                {
+                  'is--disabled': isDisabled
+                }
+              ],
+              on: ons
+            },
+            [
+              h('i', {
+                class: icon || getIcon().TREE_DRAG
+              })
+            ]
+          )
         }
       }
       return renderEmptyElement($xeTree)
     },
-    renderRadio (h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isDisabled: boolean, isChecked: boolean) {
+    renderRadio(h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isDisabled: boolean, isChecked: boolean) {
       const $xeTree = this
       const props = $xeTree
 
@@ -3550,27 +3644,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { showIcon, visibleMode, visibleMethod } = radioOpts
       const isVisible = visibleMethod ? visibleMethod({ $tree: $xeTree, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
       if (showRadio && showIcon && isVisible) {
-        return h('div', {
-          class: ['vxe-tree--radio-option', {
-            'is--checked': isChecked,
-            'is--disabled': isDisabled
-          }],
-          on: {
-            click: (evnt: MouseEvent) => {
-              if (!isDisabled) {
-                $xeTree.changeRadioEvent(evnt, node)
+        return h(
+          'div',
+          {
+            class: [
+              'vxe-tree--radio-option',
+              {
+                'is--checked': isChecked,
+                'is--disabled': isDisabled
+              }
+            ],
+            on: {
+              click: (evnt: MouseEvent) => {
+                if (!isDisabled) {
+                  $xeTree.changeRadioEvent(evnt, node)
+                }
               }
             }
-          }
-        }, [
-          h('span', {
-            class: ['vxe-radio--icon', isChecked ? getIcon().RADIO_CHECKED : (isDisabled ? getIcon().RADIO_DISABLED_UNCHECKED : getIcon().RADIO_UNCHECKED)]
-          })
-        ])
+          },
+          [
+            h('span', {
+              class: ['vxe-radio--icon', isChecked ? getIcon().RADIO_CHECKED : isDisabled ? getIcon().RADIO_DISABLED_UNCHECKED : getIcon().RADIO_UNCHECKED]
+            })
+          ]
+        )
       }
       return renderEmptyElement($xeTree)
     },
-    renderCheckbox  (h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isDisabled: boolean, isChecked: boolean, isIndeterminate: boolean) {
+    renderCheckbox(h: CreateElement, node: any, nodeid: string, isExistChild: boolean, nLevel: number, isDisabled: boolean, isChecked: boolean, isIndeterminate: boolean) {
       const $xeTree = this
       const props = $xeTree
 
@@ -3579,28 +3680,35 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { showIcon, visibleMode, visibleMethod } = checkboxOpts
       const isVisible = visibleMethod ? visibleMethod({ $tree: $xeTree, node }) : handleVisibleOrCheckMode(visibleMode, isExistChild, nLevel)
       if (showCheckbox && showIcon && isVisible) {
-        return h('div', {
-          class: ['vxe-tree--checkbox-option', {
-            'is--checked': isChecked,
-            'is--indeterminate': isIndeterminate,
-            'is--disabled': isDisabled
-          }],
-          on: {
-            click: (evnt: MouseEvent) => {
-              if (!isDisabled) {
-                $xeTree.changeCheckboxEvent(evnt, node)
+        return h(
+          'div',
+          {
+            class: [
+              'vxe-tree--checkbox-option',
+              {
+                'is--checked': isChecked,
+                'is--indeterminate': isIndeterminate,
+                'is--disabled': isDisabled
+              }
+            ],
+            on: {
+              click: (evnt: MouseEvent) => {
+                if (!isDisabled) {
+                  $xeTree.changeCheckboxEvent(evnt, node)
+                }
               }
             }
-          }
-        }, [
-          h('span', {
-            class: ['vxe-checkbox--icon', isIndeterminate ? getIcon().CHECKBOX_INDETERMINATE : (isChecked ? getIcon().CHECKBOX_CHECKED : (isDisabled ? getIcon().CHECKBOX_DISABLED_UNCHECKED : getIcon().CHECKBOX_UNCHECKED))]
-          })
-        ])
+          },
+          [
+            h('span', {
+              class: ['vxe-checkbox--icon', isIndeterminate ? getIcon().CHECKBOX_INDETERMINATE : isChecked ? getIcon().CHECKBOX_CHECKED : isDisabled ? getIcon().CHECKBOX_DISABLED_UNCHECKED : getIcon().CHECKBOX_UNCHECKED]
+            })
+          ]
+        )
       }
       return renderEmptyElement($xeTree)
     },
-    renderNode (h: CreateElement, node: any, nodeid: string) {
+    renderNode(h: CreateElement, node: any, nodeid: string) {
       const $xeTree = this
       const props = $xeTree
       const slots = $xeTree.$scopedSlots
@@ -3666,17 +3774,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
         dragover?: (evnt: DragEvent) => void
         contextmenu?: (evnt: MouseEvent) => void
       } = {
-        mousedown (evnt) {
+        mousedown(evnt) {
           $xeTree.handleNodeMousedownEvent(evnt, node)
         },
         mouseup: $xeTree.handleNodeDragMouseupEvent,
-        click (evnt) {
+        click(evnt) {
           $xeTree.handleNodeClickEvent(evnt, node)
         },
-        dblclick (evnt) {
+        dblclick(evnt) {
           $xeTree.handleNodeDblclickEvent(evnt, node)
         },
-        contextmenu (evnt) {
+        contextmenu(evnt) {
           $xeTree.handleContextmenuEvent(evnt, node)
         }
       }
@@ -3692,80 +3800,119 @@ export default /* define-vxe-component start */ defineVxeComponent({
         itemOns.dragend = $xeTree.handleNodeDragDragendEvent
         itemOns.dragover = $xeTree.handleNodeDragDragoverEvent
       }
-      return h('div', {
-        key: nodeid,
-        class: ['vxe-tree--node-wrapper', `node--level-${nLevel}`],
-        attrs: {
-          nodeid,
-          title: tipMode === 'title' ? nodeTitle : ''
+      return h(
+        'div',
+        {
+          key: nodeid,
+          class: ['vxe-tree--node-wrapper', `node--level-${nLevel}`],
+          attrs: {
+            nodeid,
+            title: tipMode === 'title' ? nodeTitle : ''
+          },
+          on: itemOns
         },
-        on: itemOns
-      }, [
-        h('div', {
-          class: ['vxe-tree--node-item', {
-            'is--current': currentNode && nodeid === $xeTree.getNodeId(currentNode),
-            'is-radio--disabled': isRadioDisabled,
-            'is-radio--checked': isRadioChecked,
-            'is-checkbox--disabled': isCheckboxDisabled,
-            'is-checkbox--checked': isCheckboxChecked,
-            'is-checkbox--indeterminate': isCheckboxIndeterminate
-          }]
-        }, [
-          showLine
-            ? h('div', {
-              class: 'vxe-tree--node-line-wrapper'
-            }, [
-              h('div', {
-                class: 'vxe-tree--node-line',
-                style: {
-                  height: `${$xeTree.getNodeId(afterTreeList[0]) === nodeid ? 1 : calcTreeLine($xeTree, node, prevNode)}px`
+        [
+          h(
+            'div',
+            {
+              class: [
+                'vxe-tree--node-item',
+                {
+                  'is--current': currentNode && nodeid === $xeTree.getNodeId(currentNode),
+                  'is-radio--disabled': isRadioDisabled,
+                  'is-radio--checked': isRadioChecked,
+                  'is-checkbox--disabled': isCheckboxDisabled,
+                  'is-checkbox--checked': isCheckboxChecked,
+                  'is-checkbox--indeterminate': isCheckboxIndeterminate
                 }
-              })
-            ])
-            : renderEmptyElement($xeTree),
-          h('div', {
-            class: 'vxe-tree--node-item-switcher'
-          }, showIcon && (lazy ? (isLazyLoaded ? isExistChild : hasLazyChilds) : isExistChild) && (!visibleMethod || visibleMethod(nParams))
-            ? [
-                h('div', {
-                  class: 'vxe-tree--node-item-icon',
-                  on: {
-                    click (evnt: MouseEvent) {
-                      $xeTree.toggleExpandEvent(evnt, node)
-                    }
-                  }
-                }, iconSlot
-                  ? getSlotVNs(iconSlot(nParams))
-                  : [
-                      h('i', {
-                        class: isLazyLoading ? (iconLoaded || getIcon().TREE_NODE_LOADED) : (isExpand ? (iconOpen || getIcon().TREE_NODE_OPEN) : (iconClose || getIcon().TREE_NODE_CLOSE))
-                      })
-                    ])
               ]
-            : []),
-          $xeTree.renderRadio(h, node, nodeid, isExistChild, nLevel, isRadioDisabled, isRadioChecked),
-          $xeTree.renderCheckbox(h, node, nodeid, isExistChild, nLevel, isCheckboxDisabled, isCheckboxChecked, isCheckboxIndeterminate),
-          $xeTree.renderDragIcon(h, node, nodeid),
-          h('div', {
-            class: 'vxe-tree--node-item-inner'
-          }, [
-            h('div', {
-              class: 'vxe-tree--node-item-wrapper'
-            }, [
-              h('span', {
-                class: 'vxe-tree--node-item-title'
-              }, titleSlot ? getSlotVNs(titleSlot(nParams)) : nodeTitle)
-            ]),
-            extraSlot
-              ? h('div', {
-                class: 'vxe-tree--node-item-extra'
-              }, getSlotVNs(extraSlot(nParams)))
-              : renderEmptyElement($xeTree)
-          ])
-        ])
-      ])
+            },
+            [
+              showLine
+                ? h(
+                  'div',
+                  {
+                    class: 'vxe-tree--node-line-wrapper'
+                  },
+                  [
+                    h('div', {
+                      class: 'vxe-tree--node-line',
+                      style: {
+                        height: `${$xeTree.getNodeId(afterTreeList[0]) === nodeid ? 1 : calcTreeLine($xeTree, node, prevNode)}px`
+                      }
+                    })
+                  ]
+                )
+                : renderEmptyElement($xeTree),
+              h(
+                'div',
+                {
+                  class: 'vxe-tree--node-item-switcher'
+                },
+                showIcon && (lazy ? (isLazyLoaded ? isExistChild : hasLazyChilds) : isExistChild) && (!visibleMethod || visibleMethod(nParams))
+                  ? [
+                      h(
+                        'div',
+                        {
+                          class: 'vxe-tree--node-item-icon',
+                          on: {
+                            click(evnt: MouseEvent) {
+                              $xeTree.toggleExpandEvent(evnt, node)
+                            }
+                          }
+                        },
+                        iconSlot
+                          ? getSlotVNs(iconSlot(nParams))
+                          : [
+                              h('i', {
+                                class: isLazyLoading ? iconLoaded || getIcon().TREE_NODE_LOADED : isExpand ? iconOpen || getIcon().TREE_NODE_OPEN : iconClose || getIcon().TREE_NODE_CLOSE
+                              })
+                            ]
+                      )
+                    ]
+                  : []
+              ),
+              $xeTree.renderRadio(h, node, nodeid, isExistChild, nLevel, isRadioDisabled, isRadioChecked),
+              $xeTree.renderCheckbox(h, node, nodeid, isExistChild, nLevel, isCheckboxDisabled, isCheckboxChecked, isCheckboxIndeterminate),
+              $xeTree.renderDragIcon(h, node, nodeid),
+              h(
+                'div',
+                {
+                  class: 'vxe-tree--node-item-inner'
+                },
+                [
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-tree--node-item-wrapper'
+                    },
+                    [
+                      h(
+                        'span',
+                        {
+                          class: 'vxe-tree--node-item-title'
+                        },
+                        titleSlot ? getSlotVNs(titleSlot(nParams)) : nodeTitle
+                      )
+                    ]
+                  ),
+                  extraSlot
+                    ? h(
+                      'div',
+                      {
+                        class: 'vxe-tree--node-item-extra'
+                      },
+                      getSlotVNs(extraSlot(nParams))
+                    )
+                    : renderEmptyElement($xeTree)
+                ]
+              )
+            ]
+          )
+        ]
+      )
     },
-    renderList (h: CreateElement, treeList: any[]) {
+    renderList(h: CreateElement, treeList: any[]) {
       const $xeTree = this
       const props = $xeTree
       const slots = $xeTree.$scopedSlots
@@ -3777,35 +3924,45 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const emptySlot = slots.empty
       if (!loading && !treeList.length) {
         return [
-          h('div', {
-            class: 'vxe-tree--empty-placeholder'
-          }, emptySlot
-            ? emptySlot({})
-            : [
-                h('div', {
-                  class: 'vxe-tree--empty-placeholder-content'
-                }, getText(emptyText || getI18n('vxe.tree.searchEmpty')))
-              ])
+          h(
+            'div',
+            {
+              class: 'vxe-tree--empty-placeholder'
+            },
+            emptySlot
+              ? emptySlot({})
+              : [
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-tree--empty-placeholder-content'
+                    },
+                    getText(emptyText || getI18n('vxe.tree.searchEmpty'))
+                  )
+                ]
+          )
         ]
       }
       const nodeVNs: VNode[] = []
-      treeList.forEach(transform
-        ? (node) => {
-            const nodeid = $xeTree.getNodeId(node)
-            nodeVNs.push($xeTree.renderNode(h, node, nodeid))
-          }
-        : (node) => {
-            const nodeid = $xeTree.getNodeId(node)
-            nodeVNs.push($xeTree.renderNode(h, node, nodeid))
-            const childList: any[] = XEUtils.get(node, childrenField)
-            const hasChild = childList && childList.length
-            if (hasChild && treeExpandedMaps[nodeid]) {
-              nodeVNs.push(...$xeTree.renderList(h, childList))
+      treeList.forEach(
+        transform
+          ? (node) => {
+              const nodeid = $xeTree.getNodeId(node)
+              nodeVNs.push($xeTree.renderNode(h, node, nodeid))
             }
-          })
+          : (node) => {
+              const nodeid = $xeTree.getNodeId(node)
+              nodeVNs.push($xeTree.renderNode(h, node, nodeid))
+              const childList: any[] = XEUtils.get(node, childrenField)
+              const hasChild = childList && childList.length
+              if (hasChild && treeExpandedMaps[nodeid]) {
+                nodeVNs.push(...$xeTree.renderList(h, childList))
+              }
+            }
+      )
       return nodeVNs
     },
-    renderDragTip (h: CreateElement) {
+    renderDragTip(h: CreateElement) {
       const $xeTree = this
       const props = $xeTree
       const reactData = $xeTree.reactData
@@ -3815,47 +3972,70 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const dragOpts = $xeTree.computeDragOpts
       const dNode = dragNode
       if (drag) {
-        return h('div', {
-          class: 'vxe-tree--drag-wrapper'
-        }, [
-          h('div', {
-            ref: 'refDragNodeLineElem',
-            class: ['vxe-tree--drag-node-line', {
-              'is--guides': dragOpts.showGuidesStatus
-            }]
-          }),
-          dNode && dragOpts.showDragTip
-            ? h('div', {
-              ref: 'refDragTipElem',
-              class: 'vxe-tree--drag-sort-tip'
-            }, [
-              h('div', {
-                class: 'vxe-tree--drag-sort-tip-wrapper'
-              }, [
-                h('div', {
-                  class: 'vxe-tree--drag-sort-tip-status'
-                }, [
-                  h('span', {
-                    class: ['vxe-tree--drag-sort-tip-normal-status', getIcon().TREE_DRAG_STATUS_NODE]
-                  }),
-                  h('span', {
-                    class: ['vxe-tree--drag-sort-tip-sub-status', getIcon().TREE_DRAG_STATUS_SUB_NODE]
-                  }),
-                  h('span', {
-                    class: ['vxe-tree--drag-sort-tip-disabled-status', getIcon().TREE_DRAG_DISABLED]
-                  })
-                ]),
-                h('div', {
-                  class: 'vxe-tree--drag-sort-tip-content'
-                }, dragTipText)
-              ])
-            ])
-            : renderEmptyElement($xeTree)
-        ])
+        return h(
+          'div',
+          {
+            class: 'vxe-tree--drag-wrapper'
+          },
+          [
+            h('div', {
+              ref: 'refDragNodeLineElem',
+              class: [
+                'vxe-tree--drag-node-line',
+                {
+                  'is--guides': dragOpts.showGuidesStatus
+                }
+              ]
+            }),
+            dNode && dragOpts.showDragTip
+              ? h(
+                'div',
+                {
+                  ref: 'refDragTipElem',
+                  class: 'vxe-tree--drag-sort-tip'
+                },
+                [
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-tree--drag-sort-tip-wrapper'
+                    },
+                    [
+                      h(
+                        'div',
+                        {
+                          class: 'vxe-tree--drag-sort-tip-status'
+                        },
+                        [
+                          h('span', {
+                            class: ['vxe-tree--drag-sort-tip-normal-status', getIcon().TREE_DRAG_STATUS_NODE]
+                          }),
+                          h('span', {
+                            class: ['vxe-tree--drag-sort-tip-sub-status', getIcon().TREE_DRAG_STATUS_SUB_NODE]
+                          }),
+                          h('span', {
+                            class: ['vxe-tree--drag-sort-tip-disabled-status', getIcon().TREE_DRAG_DISABLED]
+                          })
+                        ]
+                      ),
+                      h(
+                        'div',
+                        {
+                          class: 'vxe-tree--drag-sort-tip-content'
+                        },
+                        dragTipText
+                      )
+                    ]
+                  )
+                ]
+              )
+              : renderEmptyElement($xeTree)
+          ]
+        )
       }
       return renderEmptyElement($xeTree)
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeTree = this
       const props = $xeTree
       const slots = $xeTree.$scopedSlots
@@ -3888,235 +4068,267 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const teOns: {
         dragover?: (...args: any[]) => void
-      } = { }
+      } = {}
       if (dragOpts.isCrossTreeDrag && !treeList.length) {
         teOns.dragover = $xeTree.handleCrossTreeNodeDragoverEmptyEvent
       }
 
-      return h('div', {
-        ref: 'refElem',
-        class: [
-          'vxe-tree',
-          isVScrollbar ? `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}` : '',
-          isVScrollbar ? `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}` : '',
-          isVScrollbar ? `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}` : '',
-          isVScrollbar ? `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}` : '',
-          {
-            [`size--${vSize}`]: vSize,
-            'show--line': showLine,
-            'is--virtual-scrollbar': isVScrollbar,
-            'ov-padding': isVScrollbar && scrollbarOpts.padding,
-            'ov-x--auto-hide': isVScrollbar && scrollXAutoHide,
-            'ov-y--auto-hide': isVScrollbar && scrollYAutoHide,
-            'overflow-y': yThumbHeight,
-            'overflow-x': xThumbWidth,
-            'checkbox--highlight': checkboxOpts.highlight,
-            'radio--highlight': radioOpts.highlight,
-            'node--hover': isNodeHover,
-            'node--trigger': trigger === 'node',
-            'is--loading': loading
-          }
-        ],
-        style: wrapperStyles,
-        on: teOns
-      }, [
-        headerSlot
-          ? h('div', {
-            ref: 'refHeaderWrapperElem',
-            class: 'vxe-tree--header-wrapper'
-          }, headerSlot({ $tree: $xeTree }))
-          : renderEmptyElement($xeTree),
-        h('div', {
-          ref: 'refVirtualWrapper',
-          class: 'vxe-tree--node-list-wrapper',
-          style: treeStyle,
-          on: {
-            scroll: $xeTree.scrollEvent
-          }
-        }, [
-          h('div', {
-            ref: 'refVirtualSpaceElem',
-            class: 'vxe-tree--y-space',
-            style: {
-              height: bodyHeight ? `${bodyHeight}px` : ''
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-tree',
+            isVScrollbar ? `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}` : '',
+            isVScrollbar ? `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}` : '',
+            isVScrollbar ? `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}` : '',
+            isVScrollbar ? `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}` : '',
+            {
+              [`size--${vSize}`]: vSize,
+              'show--line': showLine,
+              'is--virtual-scrollbar': isVScrollbar,
+              'ov-padding': isVScrollbar && scrollbarOpts.padding,
+              'ov-x--auto-hide': isVScrollbar && scrollXAutoHide,
+              'ov-y--auto-hide': isVScrollbar && scrollYAutoHide,
+              'overflow-y': yThumbHeight,
+              'overflow-x': xThumbWidth,
+              'checkbox--highlight': checkboxOpts.highlight,
+              'radio--highlight': radioOpts.highlight,
+              'node--hover': isNodeHover,
+              'node--trigger': trigger === 'node',
+              'is--loading': loading
             }
-          }),
-          h('div', {
-            ref: 'refVirtualBody',
-            class: 'vxe-tree--node-list-body',
-            style: {
-              transform: `translateY(${topSpaceHeight}px)`
-            }
-          }, $xeTree.renderList(h, treeList))
-        ]),
-        footerSlot
-          ? h('div', {
-            ref: 'refFooterWrapperElem',
-            class: 'vxe-tree--footer-wrapper'
-          }, footerSlot({ $tree: $xeTree }))
-          : renderEmptyElement($xeTree),
-        /**
-         * 滚动条
-         */
-        isVScrollbar
-          ? h('div', {
-            class: scrollbarWrapperClss
-          }, [
-            scrollXVisible === false
-              ? renderEmptyElement($xeTree)
-              : h('div', {
-                ref: 'refTrackXElem',
-                class: 'vxe-scrollbar--track-x',
-                on: {
-                  click: $xeTree.clickTrackXEvent
-                }
-              }, [
-                h('div', {
-                  ref: 'refThumbXElem',
-                  class: 'vxe-scrollbar--thumb-x',
-                  on: {
-                    pointerdown: $xeTree.pointerdownThumbXEvent,
-                    pointermove: $xeTree.pointermoveThumbXEvent,
-                    pointerup: $xeTree.cleatPointerThumbEvent,
-                    pointercancel: $xeTree.cleatPointerThumbEvent,
-                    lostpointercapture: $xeTree.cleatPointerThumbEvent
-                  }
-                })
-              ]),
-            scrollYVisible === false
-              ? renderEmptyElement($xeTree)
-              : h('div', {
-                ref: 'refTrackYElem',
-                class: 'vxe-scrollbar--track-y',
-                on: {
-                  click: $xeTree.clickTrackYEvent
-                }
-              }, [
-                h('div', {
-                  ref: 'refThumbYElem',
-                  class: 'vxe-scrollbar--thumb-y',
-                  on: {
-                    pointerdown: $xeTree.pointerdownThumbYEvent,
-                    pointermove: $xeTree.pointermoveThumbYEvent,
-                    pointerup: $xeTree.cleatPointerThumbEvent,
-                    pointercancel: $xeTree.cleatPointerThumbEvent,
-                    lostpointercapture: $xeTree.cleatPointerThumbEvent
-                  }
-                })
-              ])
-          ])
-          : renderEmptyElement($xeTree),
-        /**
-         * 拖拽提示
-         */
-        $xeTree.renderDragTip(h),
-        /**
-          * 工具提示
-          */
-        tooltipOpts.mode === 'tooltip'
-          ? h(VxeTooltipComponent, {
-            ref: 'refTooltip',
-            props: {
-              theme: tooltipOpts.theme,
-              enterable: tooltipOpts.enterable,
-              enterDelay: tooltipOpts.enterDelay,
-              leaveDelay: tooltipOpts.leaveDelay,
-              useHtml: tooltipOpts.useHtml,
-              width: tooltipOpts.width,
-              height: tooltipOpts.height,
-              minWidth: tooltipOpts.minWidth,
-              minHeight: tooltipOpts.minHeight,
-              maxWidth: tooltipOpts.maxWidth,
-              maxHeight: tooltipOpts.maxHeight,
-              placement: tooltipOpts.placement,
-              defaultPlacement: tooltipOpts.defaultPlacement,
-              popupClassName: tooltipOpts.popupClassName
+          ],
+          style: wrapperStyles,
+          on: teOns
+        },
+        [
+          headerSlot
+            ? h(
+              'div',
+              {
+                ref: 'refHeaderWrapperElem',
+                class: 'vxe-tree--header-wrapper'
+              },
+              headerSlot({ $tree: $xeTree })
+            )
+            : renderEmptyElement($xeTree),
+          h(
+            'div',
+            {
+              ref: 'refVirtualWrapper',
+              class: 'vxe-tree--node-list-wrapper',
+              style: treeStyle,
+              on: {
+                scroll: $xeTree.scrollEvent
+              }
             },
-            scopedSlots: tooltipSlot
-              ? {
-                  content: () => {
-                    const { node } = tooltipStore
-                    return tooltipSlot({ node, $tree: $xeTree })
+            [
+              h('div', {
+                ref: 'refVirtualSpaceElem',
+                class: 'vxe-tree--y-space',
+                style: {
+                  height: bodyHeight ? `${bodyHeight}px` : ''
+                }
+              }),
+              h(
+                'div',
+                {
+                  ref: 'refVirtualBody',
+                  class: 'vxe-tree--node-list-body',
+                  style: {
+                    transform: `translateY(${topSpaceHeight}px)`
                   }
+                },
+                $xeTree.renderList(h, treeList)
+              )
+            ]
+          ),
+          footerSlot
+            ? h(
+              'div',
+              {
+                ref: 'refFooterWrapperElem',
+                class: 'vxe-tree--footer-wrapper'
+              },
+              footerSlot({ $tree: $xeTree })
+            )
+            : renderEmptyElement($xeTree),
+          /**
+           * 滚动条
+           */
+          isVScrollbar
+            ? h(
+              'div',
+              {
+                class: scrollbarWrapperClss
+              },
+              [
+                scrollXVisible === false
+                  ? renderEmptyElement($xeTree)
+                  : h(
+                    'div',
+                    {
+                      ref: 'refTrackXElem',
+                      class: 'vxe-scrollbar--track-x',
+                      on: {
+                        click: $xeTree.clickTrackXEvent
+                      }
+                    },
+                    [
+                      h('div', {
+                        ref: 'refThumbXElem',
+                        class: 'vxe-scrollbar--thumb-x',
+                        on: {
+                          pointerdown: $xeTree.pointerdownThumbXEvent,
+                          pointermove: $xeTree.pointermoveThumbXEvent,
+                          pointerup: $xeTree.cleatPointerThumbEvent,
+                          pointercancel: $xeTree.cleatPointerThumbEvent,
+                          lostpointercapture: $xeTree.cleatPointerThumbEvent
+                        }
+                      })
+                    ]
+                  ),
+                scrollYVisible === false
+                  ? renderEmptyElement($xeTree)
+                  : h(
+                    'div',
+                    {
+                      ref: 'refTrackYElem',
+                      class: 'vxe-scrollbar--track-y',
+                      on: {
+                        click: $xeTree.clickTrackYEvent
+                      }
+                    },
+                    [
+                      h('div', {
+                        ref: 'refThumbYElem',
+                        class: 'vxe-scrollbar--thumb-y',
+                        on: {
+                          pointerdown: $xeTree.pointerdownThumbYEvent,
+                          pointermove: $xeTree.pointermoveThumbYEvent,
+                          pointerup: $xeTree.cleatPointerThumbEvent,
+                          pointercancel: $xeTree.cleatPointerThumbEvent,
+                          lostpointercapture: $xeTree.cleatPointerThumbEvent
+                        }
+                      })
+                    ]
+                  )
+              ]
+            )
+            : renderEmptyElement($xeTree),
+          /**
+           * 拖拽提示
+           */
+          $xeTree.renderDragTip(h),
+          /**
+           * 工具提示
+           */
+          tooltipOpts.mode === 'tooltip'
+            ? h(VxeTooltipComponent, {
+              ref: 'refTooltip',
+              props: {
+                theme: tooltipOpts.theme,
+                enterable: tooltipOpts.enterable,
+                enterDelay: tooltipOpts.enterDelay,
+                leaveDelay: tooltipOpts.leaveDelay,
+                useHtml: tooltipOpts.useHtml,
+                width: tooltipOpts.width,
+                height: tooltipOpts.height,
+                minWidth: tooltipOpts.minWidth,
+                minHeight: tooltipOpts.minHeight,
+                maxWidth: tooltipOpts.maxWidth,
+                maxHeight: tooltipOpts.maxHeight,
+                placement: tooltipOpts.placement,
+                defaultPlacement: tooltipOpts.defaultPlacement,
+                popupClassName: tooltipOpts.popupClassName
+              },
+              scopedSlots: tooltipSlot
+                ? {
+                    content: () => {
+                      const { node } = tooltipStore
+                      return tooltipSlot({ node, $tree: $xeTree })
+                    }
+                  }
+                : undefined
+            })
+            : renderEmptyElement($xeTree),
+          /**
+           * 加载中
+           */
+          h(VxeLoadingComponent, {
+            class: 'vxe-tree--loading',
+            props: {
+              value: loading,
+              icon: loadingOpts.icon,
+              text: loadingOpts.text
+            },
+            scopedSlots: loadingSlot
+              ? {
+                  default: () => loadingSlot({ $tree: $xeTree })
                 }
               : undefined
           })
-          : renderEmptyElement($xeTree),
-        /**
-         * 加载中
-         */
-        h(VxeLoadingComponent, {
-          class: 'vxe-tree--loading',
-          props: {
-            value: loading,
-            icon: loadingOpts.icon,
-            text: loadingOpts.text
-          },
-          scopedSlots: loadingSlot
-            ? {
-                default: () => loadingSlot({ $tree: $xeTree })
-              }
-            : undefined
-        })
-      ])
+        ]
+      )
     }
   },
   watch: {
-    data () {
+    data() {
       const $xeTree = this
 
       $xeTree.dataFlag++
     },
-    rootParentValue () {
+    rootParentValue() {
       const $xeTree = this
 
       $xeTree.dataFlag++
     },
-    rootValues () {
+    rootValues() {
       const $xeTree = this
 
       $xeTree.dataFlag++
     },
-    dataFlag () {
+    dataFlag() {
       const $xeTree = this
       const props = $xeTree
 
       $xeTree.loadData(props.data || [])
     },
-    checkNodeKey (nodeKey) {
+    checkNodeKey(nodeKey) {
       const $xeTree = this
       const reactData = $xeTree.reactData
 
       reactData.selectRadioKey = enModelValue(nodeKey)
     },
-    checkNodeKeys () {
+    checkNodeKeys() {
       const $xeTree = this
       const props = $xeTree
 
       $xeTree.updateCheckboxChecked(props.checkNodeKeys || [])
     },
-    filterValue () {
+    filterValue() {
       const $xeTree = this
 
       $xeTree.triggerSearchEvent(new Event('filter'))
     },
 
-    height () {
+    height() {
       const $xeTree = this
 
       $xeTree.reLayoutFlag++
     },
-    minHeight () {
+    minHeight() {
       const $xeTree = this
 
       $xeTree.reLayoutFlag++
     },
-    maxHeight () {
+    maxHeight() {
       const $xeTree = this
 
       $xeTree.reLayoutFlag++
     },
-    computeIsVScrollbar () {
+    computeIsVScrollbar() {
       const $xeTree = this
 
       $xeTree.$nextTick(() => {
@@ -4126,38 +4338,38 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       })
     },
-    computeScrollYWidth () {
+    computeScrollYWidth() {
       const $xeTree = this
 
       $xeTree.reLayoutFlag++
     },
-    computeScrollXHeight () {
+    computeScrollXHeight() {
       const $xeTree = this
 
       $xeTree.reLayoutFlag++
     },
-    computeScrollXVisible () {
+    computeScrollXVisible() {
       const $xeTree = this
 
       $xeTree.$nextTick(() => {
         $xeTree.reLayoutFlag++
       })
     },
-    computeScrollYVisible () {
+    computeScrollYVisible() {
       const $xeTree = this
 
       $xeTree.$nextTick(() => {
         $xeTree.reLayoutFlag++
       })
     },
-    reLayoutFlag () {
+    reLayoutFlag() {
       const $xeTree = this
 
       $xeTree.recalculate().then(() => {
         $xeTree.recalculate()
       })
     },
-    reScrollFlag () {
+    reScrollFlag() {
       const $xeTree = this
 
       $xeTree.updateScrollbar().then(() => {
@@ -4165,7 +4377,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
     }
   },
-  created () {
+  created() {
     const $xeTree = this
     const props = $xeTree
     const reactData = $xeTree.reactData
@@ -4175,7 +4387,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     reactData.selectRadioKey = enModelValue(props.checkNodeKey)
     $xeTree.loadData(props.data || [])
   },
-  mounted () {
+  mounted() {
     const $xeTree = this
     const props = $xeTree
     const internalData = $xeTree.internalData
@@ -4224,7 +4436,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.reLayoutFlag++
     })
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeTree = this
     const reactData = $xeTree.reactData
     const internalData = $xeTree.internalData
@@ -4240,7 +4452,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

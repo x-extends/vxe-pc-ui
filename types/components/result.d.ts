@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeResult: DefineVxeComponentApp<VxeResultProps, VxeResultEventProps, VxeResultSlots, VxeResultMethods>
 export type VxeResultComponent = DefineVxeComponentOptions<VxeResultProps>
 
-export type VxeResultInstance = DefineVxeComponentInstance<{
-  reactData: ResultReactData
-}, VxeResultProps, VxeResultPrivateComputed, VxeResultMethods>
+export type VxeResultInstance = DefineVxeComponentInstance<
+  {
+    reactData: ResultReactData
+  },
+  VxeResultProps,
+  VxeResultPrivateComputed,
+  VxeResultMethods
+>
 
 export type VxeResultConstructor = VxeResultInstance
 
-export interface ResultPrivateRef {
-}
-export interface VxeResultPrivateRef extends ResultPrivateRef { }
+export interface ResultPrivateRef {}
+export interface VxeResultPrivateRef extends ResultPrivateRef {}
 
 export namespace VxeResultPropTypes {
   export type ImageUrl = string
@@ -35,19 +39,16 @@ export interface VxeResultProps {
   content?: VxeResultPropTypes.Content
 }
 
-export interface ResultPrivateComputed {
-}
-export interface VxeResultPrivateComputed extends ResultPrivateComputed { }
+export interface ResultPrivateComputed {}
+export interface VxeResultPrivateComputed extends ResultPrivateComputed {}
 
-export interface ResultReactData {
-}
+export interface ResultReactData {}
 
-export interface ResultMethods {
-}
-export interface VxeResultMethods extends ResultMethods { }
+export interface ResultMethods {}
+export interface VxeResultMethods extends ResultMethods {}
 
-export interface ResultPrivateMethods { }
-export interface VxeResultPrivateMethods extends ResultPrivateMethods { }
+export interface ResultPrivateMethods {}
+export interface VxeResultPrivateMethods extends ResultPrivateMethods {}
 
 export type VxeResultEmits = []
 
@@ -59,9 +60,9 @@ export namespace VxeResultDefines {
 
 export type VxeResultEventProps = {}
 
-export interface VxeResultListeners { }
+export interface VxeResultListeners {}
 
-export namespace VxeResultEvents { }
+export namespace VxeResultEvents {}
 
 export namespace VxeResultSlotTypes {
   export interface DefaultSlotParams {}

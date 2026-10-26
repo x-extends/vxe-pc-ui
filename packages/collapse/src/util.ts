@@ -2,7 +2,7 @@ import XEUtils from 'xe-utils'
 
 import type { VxeCollapseConstructor, VxeCollapsePrivateMethods, VxeCollapsePaneDefines } from '../../../types'
 
-export function assembleCollapseItem ($xeCollapse: VxeCollapseConstructor & VxeCollapsePrivateMethods, elem: HTMLElement, collapseConfig: VxeCollapsePaneDefines.CollapseConfig) {
+export function assembleCollapseItem($xeCollapse: VxeCollapseConstructor & VxeCollapsePrivateMethods, elem: HTMLElement, collapseConfig: VxeCollapsePaneDefines.CollapseConfig) {
   const staticPanes = $xeCollapse.reactData.staticPanes
   const parentElem = elem.parentNode
   if (parentElem) {
@@ -11,9 +11,9 @@ export function assembleCollapseItem ($xeCollapse: VxeCollapseConstructor & VxeC
   }
 }
 
-export function destroyCollapseItem ($xeCollapse: VxeCollapseConstructor & VxeCollapsePrivateMethods, collapseConfig: VxeCollapsePaneDefines.CollapseConfig) {
+export function destroyCollapseItem($xeCollapse: VxeCollapseConstructor & VxeCollapsePrivateMethods, collapseConfig: VxeCollapsePaneDefines.CollapseConfig) {
   const staticPanes = $xeCollapse.reactData.staticPanes
-  const matchObj = XEUtils.findTree(staticPanes, item => item.id === collapseConfig.id, { children: 'children' })
+  const matchObj = XEUtils.findTree(staticPanes, (item) => item.id === collapseConfig.id, { children: 'children' })
   if (matchObj) {
     matchObj.items.splice(matchObj.index, 1)
   }

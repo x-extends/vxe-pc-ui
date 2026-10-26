@@ -6,16 +6,20 @@ import { VxeRadioPropTypes } from './radio'
 export declare const VxeRadioGroup: DefineVxeComponentApp<VxeRadioGroupProps, VxeRadioGroupEventProps, VxeRadioGroupSlots, VxeRadioGroupMethods>
 export type VxeRadioGroupComponent = DefineVxeComponentOptions<VxeRadioGroupProps>
 
-export type VxeRadioGroupInstance = DefineVxeComponentInstance<{
-  name: string
-  reactData: RadioGroupReactData
-}, VxeRadioGroupProps, VxeRadioGroupPrivateComputed, VxeRadioGroupMethods>
+export type VxeRadioGroupInstance = DefineVxeComponentInstance<
+  {
+    name: string
+    reactData: RadioGroupReactData
+  },
+  VxeRadioGroupProps,
+  VxeRadioGroupPrivateComputed,
+  VxeRadioGroupMethods
+>
 
 export type VxeRadioGroupConstructor = VxeRadioGroupInstance
 
-export interface RadioGroupPrivateRef {
-}
-export interface VxeRadioGroupPrivateRef extends RadioGroupPrivateRef { }
+export interface RadioGroupPrivateRef {}
+export interface VxeRadioGroupPrivateRef extends RadioGroupPrivateRef {}
 
 export namespace VxeRadioGroupPropTypes {
   export type Size = VxeComponentSizeType
@@ -68,10 +72,9 @@ export interface RadioGroupPrivateComputed {
   computeIsDisabled: boolean | undefined
   computeIsReadonly: boolean | undefined
 }
-export interface VxeRadioGroupPrivateComputed extends RadioGroupPrivateComputed { }
+export interface VxeRadioGroupPrivateComputed extends RadioGroupPrivateComputed {}
 
-export interface RadioGroupReactData {
-}
+export interface RadioGroupReactData {}
 export interface RadioGroupInternalData {
   isLoaded?: boolean
 }
@@ -79,28 +82,25 @@ export interface RadioGroupInternalData {
 export interface RadioGroupMethods {
   dispatchEvent(type: ValueOf<VxeRadioGroupEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeRadioGroupMethods extends RadioGroupMethods { }
+export interface VxeRadioGroupMethods extends RadioGroupMethods {}
 
 export interface RadioGroupPrivateMethods {
-  handleChecked(params: {
-    checkedValue: VxeRadioPropTypes.CheckedValue
-    checkedLabel: VxeRadioPropTypes.Content | undefined
+  handleChecked(
+    params: {
+      checkedValue: VxeRadioPropTypes.CheckedValue
+      checkedLabel: VxeRadioPropTypes.Content | undefined
 
-    /**
-     * @deprecated
-     */
-    label: any
-   }, evnt: Event): void
+      /**
+       * @deprecated
+       */
+      label: any
+    },
+    evnt: Event
+  ): void
 }
-export interface VxeRadioGroupPrivateMethods extends RadioGroupPrivateMethods { }
+export interface VxeRadioGroupPrivateMethods extends RadioGroupPrivateMethods {}
 
-export type VxeRadioGroupEmits = [
-  'input',
-  'model-value',
-  'modelValue',
-  'change',
-  'default-change'
-]
+export type VxeRadioGroupEmits = ['input', 'model-value', 'modelValue', 'change', 'default-change']
 
 export namespace VxeRadioGroupDefines {
   interface RadioGroupEventParams extends VxeComponentEventParams {
@@ -111,7 +111,7 @@ export namespace VxeRadioGroupDefines {
     value: any
     label: any
   }
-  export interface ChangeEventParams extends RadioGroupEventParams, ChangeParams { }
+  export interface ChangeEventParams extends RadioGroupEventParams, ChangeParams {}
 
   export interface DefaultChangeEventParams {
     value: any

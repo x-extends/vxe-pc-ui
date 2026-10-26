@@ -6,7 +6,7 @@ import type { VxeModalDefines, VxeDrawerDefines, VxeLoadingProps, VxeWatermarkPr
 let dynamicContainerElem: HTMLElement
 
 export const DynamicApp = Vue.extend({
-  data () {
+  data() {
     const modals: {
       key: number | string
       props: VxeModalDefines.ModalOptions
@@ -28,7 +28,7 @@ export const DynamicApp = Vue.extend({
     }
   },
   methods: {
-    renderVN (h: CreateElement) {
+    renderVN(h: CreateElement) {
       const $xeDynamicApp = this
 
       const VxeUIModalComponent = VxeUI.getComponent('vxe-modal')
@@ -39,29 +39,31 @@ export const DynamicApp = Vue.extend({
       const VxeUITooltipComponent = VxeUI.getComponent('vxe-tooltip')
 
       const { modals, drawers, globalLoading, globalWatermark, globalContextMenu, globalTooltip } = $xeDynamicApp
-      let cmOns: {
-        show: any
-        hide: any
-        'option-click': any
-      } | undefined
+      let cmOns:
+        | {
+            show: any
+            hide: any
+            'option-click': any
+          }
+        | undefined
       if (globalContextMenu) {
         const events = globalContextMenu.events || {}
         const { optionClick, show, hide } = events
         cmOns = {
-          show (params: VxeContextMenuDefines.ShowEventParams) {
+          show(params: VxeContextMenuDefines.ShowEventParams) {
             const { $contextMenu } = params
             if (show) {
               show.call($contextMenu, params)
             }
           },
-          hide (params: VxeContextMenuDefines.HideEventParams) {
+          hide(params: VxeContextMenuDefines.HideEventParams) {
             const { $contextMenu } = params
             if (hide) {
               hide.call($contextMenu, params)
             }
             dynamicStore.globalContextMenu = null
           },
-          'option-click' (params: VxeContextMenuDefines.OptionClickEventParams) {
+          'option-click'(params: VxeContextMenuDefines.OptionClickEventParams) {
             const { $contextMenu } = params
             if (optionClick) {
               optionClick.call($contextMenu, params)
@@ -73,7 +75,7 @@ export const DynamicApp = Vue.extend({
       let tpOOns = {}
       if (globalTooltip) {
         tpOOns = {
-          modelValue (value: boolean) {
+          modelValue(value: boolean) {
             globalTooltip.value = value
           }
         }
@@ -81,24 +83,36 @@ export const DynamicApp = Vue.extend({
 
       return h('div', {}, [
         modals.length
-          ? h('div', {
-            key: 'ml',
-            class: 'vxe-dynamics--modal'
-          }, modals.map((item) => h(VxeUIModalComponent, {
-            key: item.key,
-            props: item.props,
-            on: item.on
-          })))
+          ? h(
+            'div',
+            {
+              key: 'ml',
+              class: 'vxe-dynamics--modal'
+            },
+            modals.map((item) =>
+              h(VxeUIModalComponent, {
+                key: item.key,
+                props: item.props,
+                on: item.on
+              })
+            )
+          )
           : renderEmptyElement($xeDynamicApp),
         drawers.length
-          ? h('div', {
-            key: 'dr',
-            class: 'vxe-dynamics--drawer'
-          }, drawers.map((item) => h(VxeUIDrawerComponent, {
-            key: item.key,
-            props: item.props,
-            on: item.on
-          })))
+          ? h(
+            'div',
+            {
+              key: 'dr',
+              class: 'vxe-dynamics--drawer'
+            },
+            drawers.map((item) =>
+              h(VxeUIDrawerComponent, {
+                key: item.key,
+                props: item.props,
+                on: item.on
+              })
+            )
+          )
           : renderEmptyElement($xeDynamicApp),
         globalWatermark
           ? h(VxeUIWatermarkComponent, {
@@ -130,7 +144,7 @@ export const DynamicApp = Vue.extend({
       ])
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 })
@@ -138,7 +152,7 @@ export const DynamicApp = Vue.extend({
 export const dynamicApp = DynamicApp
 export const dynamicStore = new DynamicApp()
 
-export function checkDynamic () {
+export function checkDynamic() {
   if (!dynamicContainerElem) {
     dynamicContainerElem = document.createElement('div')
     dynamicContainerElem.className = 'vxe-dynamics'

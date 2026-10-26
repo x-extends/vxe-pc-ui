@@ -7,24 +7,31 @@ import { VxeImagePropTypes } from './image'
 export declare const VxeImageGroup: DefineVxeComponentApp<VxeImageGroupProps, VxeImageGroupEventProps, VxeImageGroupSlots, VxeImageGroupMethods>
 export type VxeImageGroupComponent = DefineVxeComponentOptions<VxeImageGroupProps>
 
-export type VxeImageGroupInstance = DefineVxeComponentInstance<{
-  reactData: ImageGroupReactData
-}, VxeImageGroupProps, VxeImageGroupPrivateComputed, VxeImageGroupMethods>
+export type VxeImageGroupInstance = DefineVxeComponentInstance<
+  {
+    reactData: ImageGroupReactData
+  },
+  VxeImageGroupProps,
+  VxeImageGroupPrivateComputed,
+  VxeImageGroupMethods
+>
 
 export type VxeImageGroupConstructor = VxeImageGroupInstance
 
-export interface ImageGroupPrivateRef {
-}
-export interface VxeImageGroupPrivateRef extends ImageGroupPrivateRef { }
+export interface ImageGroupPrivateRef {}
+export interface VxeImageGroupPrivateRef extends ImageGroupPrivateRef {}
 
 export namespace VxeImageGroupPropTypes {
   export type Size = VxeComponentSizeType
   export type ShowPreview = boolean
   export type ZIndex = number
-  export type UrlList = string | string[] | {
-    url?: string
-    alt?: string | number
-  }[]
+  export type UrlList =
+    | string
+    | string[]
+    | {
+        url?: string
+        alt?: string | number
+      }[]
   export interface ImageStyle {
     width?: number | string
     height?: number | string
@@ -47,28 +54,22 @@ export type VxeImageGroupProps = {
   getThumbnailUrlMethod?: VxeImageGroupPropTypes.GetThumbnailUrlMethod
 }
 
-export interface ImageGroupPrivateComputed {
-}
-export interface VxeImageGroupPrivateComputed extends ImageGroupPrivateComputed { }
+export interface ImageGroupPrivateComputed {}
+export interface VxeImageGroupPrivateComputed extends ImageGroupPrivateComputed {}
 
-export interface ImageGroupReactData {
-}
+export interface ImageGroupReactData {}
 
 export interface ImageGroupMethods {
   dispatchEvent(type: ValueOf<VxeImageGroupEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeImageGroupMethods extends ImageGroupMethods { }
+export interface VxeImageGroupMethods extends ImageGroupMethods {}
 
 export interface ImageGroupPrivateMethods {
   handleClickImgEvent(evnt: Event, params: { url: string }): void
 }
-export interface VxeImageGroupPrivateMethods extends ImageGroupPrivateMethods { }
+export interface VxeImageGroupPrivateMethods extends ImageGroupPrivateMethods {}
 
-export type VxeImageGroupEmits = [
-  'click',
-  'change',
-  'rotate'
-]
+export type VxeImageGroupEmits = ['click', 'change', 'rotate']
 
 export namespace VxeImageGroupDefines {
   export interface ImageGroupEventParams extends VxeComponentEventParams {

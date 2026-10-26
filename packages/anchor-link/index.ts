@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeAnchorLinkComponent from '../anchor/src/anchor-link'
 
 export const VxeAnchorLink = Object.assign({}, VxeAnchorLinkComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeAnchorLinkComponent.name as string, VxeAnchorLinkComponent)
   }
 })

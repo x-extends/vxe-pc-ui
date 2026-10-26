@@ -4,7 +4,7 @@ import VxeListComponent from './src/list'
 import { dynamicApp } from '../dynamics'
 
 export const VxeList = Object.assign(VxeListComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeListComponent.name as string, VxeListComponent)
   }
 })

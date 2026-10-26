@@ -6,15 +6,19 @@ import { VxeCarouselItemPropTypes, VxeCarouselItemProps, VxeCarouselItemSlots } 
 export declare const VxeCarousel: DefineVxeComponentApp<VxeCarouselProps, VxeCarouselEventProps, VxeCarouselSlots, VxeCarouselMethods>
 export type VxeCarouselComponent = DefineVxeComponentOptions<VxeCarouselProps>
 
-export type VxeCarouselInstance = DefineVxeComponentInstance<{
-  reactData: CarouselReactData
-}, VxeCarouselProps, VxeCarouselPrivateComputed, VxeCarouselMethods>
+export type VxeCarouselInstance = DefineVxeComponentInstance<
+  {
+    reactData: CarouselReactData
+  },
+  VxeCarouselProps,
+  VxeCarouselPrivateComputed,
+  VxeCarouselMethods
+>
 
 export type VxeCarouselConstructor = VxeCarouselInstance
 
-export interface CarouselPrivateRef {
-}
-export interface VxeCarouselPrivateRef extends CarouselPrivateRef { }
+export interface CarouselPrivateRef {}
+export interface VxeCarouselPrivateRef extends CarouselPrivateRef {}
 
 export namespace VxeCarouselPropTypes {
   export type ModelValue = VxeCarouselItemPropTypes.Name
@@ -45,9 +49,8 @@ export interface VxeCarouselProps {
   showIndicators?: VxeCarouselPropTypes.ShowIndicators
 }
 
-export interface CarouselPrivateComputed {
-}
-export interface VxeCarouselPrivateComputed extends CarouselPrivateComputed { }
+export interface CarouselPrivateComputed {}
+export interface VxeCarouselPrivateComputed extends CarouselPrivateComputed {}
 
 export interface CarouselReactData {
   activeName: VxeCarouselPropTypes.ModelValue | undefined
@@ -72,17 +75,12 @@ export interface CarouselMethods {
    */
   next(): Promise<any>
 }
-export interface VxeCarouselMethods extends CarouselMethods { }
+export interface VxeCarouselMethods extends CarouselMethods {}
 
-export interface CarouselPrivateMethods { }
-export interface VxeCarouselPrivateMethods extends CarouselPrivateMethods { }
+export interface CarouselPrivateMethods {}
+export interface VxeCarouselPrivateMethods extends CarouselPrivateMethods {}
 
-export type VxeCarouselEmits = [
-  'model-value',
-  'modelValue',
-  'input',
-  'change'
-]
+export type VxeCarouselEmits = ['model-value', 'modelValue', 'input', 'change']
 
 export namespace VxeCarouselDefines {
   export interface CarouselEventParams extends VxeComponentEventParams {

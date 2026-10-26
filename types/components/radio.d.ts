@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeRadio: DefineVxeComponentApp<VxeRadioProps, VxeRadioEventProps, VxeRadioSlots, VxeRadioMethods>
 export type VxeRadioComponent = DefineVxeComponentOptions<VxeRadioProps>
 
-export type VxeRadioInstance = DefineVxeComponentInstance<{
-  reactData: RadioReactData
-}, VxeRadioProps, VxeRadioPrivateComputed, VxeRadioMethods>
+export type VxeRadioInstance = DefineVxeComponentInstance<
+  {
+    reactData: RadioReactData
+  },
+  VxeRadioProps,
+  VxeRadioPrivateComputed,
+  VxeRadioMethods
+>
 
 export type VxeRadioConstructor = VxeRadioInstance
 
-export interface RadioPrivateRef {
-}
-export interface VxeRadioPrivateRef extends RadioPrivateRef { }
+export interface RadioPrivateRef {}
+export interface VxeRadioPrivateRef extends RadioPrivateRef {}
 
 export namespace VxeRadioPropTypes {
   export type Size = VxeComponentSizeType
@@ -69,27 +73,20 @@ export interface VxeRadioProps {
   label?: VxeRadioPropTypes.Label
 }
 
-export interface RadioPrivateComputed {
-}
-export interface VxeRadioPrivateComputed extends RadioPrivateComputed { }
+export interface RadioPrivateComputed {}
+export interface VxeRadioPrivateComputed extends RadioPrivateComputed {}
 
-export interface RadioReactData {
-}
+export interface RadioReactData {}
 
 export interface RadioMethods {
   dispatchEvent(type: ValueOf<VxeRadioEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeRadioMethods extends RadioMethods { }
+export interface VxeRadioMethods extends RadioMethods {}
 
-export interface RadioPrivateMethods { }
-export interface VxeRadioPrivateMethods extends RadioPrivateMethods { }
+export interface RadioPrivateMethods {}
+export interface VxeRadioPrivateMethods extends RadioPrivateMethods {}
 
-export type VxeRadioEmits = [
-  'model-value',
-  'modelValue',
-  'input',
-  'change'
-]
+export type VxeRadioEmits = ['model-value', 'modelValue', 'input', 'change']
 
 export namespace VxeRadioDefines {
   interface RadioEventParams extends VxeComponentEventParams {
@@ -99,7 +96,7 @@ export namespace VxeRadioDefines {
   export interface ChangeParams {
     label: any
   }
-  export interface ChangeEventParams extends RadioEventParams, ChangeParams { }
+  export interface ChangeEventParams extends RadioEventParams, ChangeParams {}
 }
 
 export type VxeRadioEventProps = {

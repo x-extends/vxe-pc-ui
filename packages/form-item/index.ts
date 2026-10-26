@@ -4,7 +4,7 @@ import VxeFormItemComponent from '../form/src/form-item'
 import { dynamicApp } from '../dynamics'
 
 export const VxeFormItem = Object.assign(VxeFormItemComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeFormItemComponent.name as string, VxeFormItemComponent)
   }
 })

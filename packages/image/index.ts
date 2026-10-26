@@ -4,7 +4,7 @@ import VxeImageComponent from './src/image'
 import { dynamicApp } from '../dynamics'
 
 export const VxeImage = Object.assign({}, VxeImageComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeImageComponent.name as string, VxeImageComponent)
   }
 })

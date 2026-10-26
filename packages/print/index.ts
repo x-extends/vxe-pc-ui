@@ -5,7 +5,7 @@ import VxePrintComponent from './src/print'
 import { printHtml } from './src/util'
 
 export const VxePrint = Object.assign({}, VxePrintComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxePrintComponent.name as string, VxePrintComponent)
   }
 })

@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeSpace: DefineVxeComponentApp<VxeSpaceProps, VxeSpaceEventProps, VxeSpaceSlots, VxeSpaceMethods>
 export type VxeSpaceComponent = DefineVxeComponentOptions<VxeSpaceProps>
 
-export type VxeSpaceInstance = DefineVxeComponentInstance<{
-  reactData: SpaceReactData
-}, VxeSpaceProps, VxeSpacePrivateComputed, VxeSpaceMethods>
+export type VxeSpaceInstance = DefineVxeComponentInstance<
+  {
+    reactData: SpaceReactData
+  },
+  VxeSpaceProps,
+  VxeSpacePrivateComputed,
+  VxeSpaceMethods
+>
 
 export type VxeSpaceConstructor = VxeSpaceInstance
 
-export interface SpacePrivateRef {
-}
-export interface VxeSpacePrivateRef extends SpacePrivateRef { }
+export interface SpacePrivateRef {}
+export interface VxeSpacePrivateRef extends SpacePrivateRef {}
 
 export namespace VxeSpacePropTypes {
   export type Size = VxeComponentSizeType
@@ -64,22 +68,18 @@ export interface VxeSpaceProps {
   separatorWidth?: VxeSpacePropTypes.SeparatorWidth
 }
 
-export interface SpacePrivateComputed {
-}
-export interface VxeSpacePrivateComputed extends SpacePrivateComputed { }
+export interface SpacePrivateComputed {}
+export interface VxeSpacePrivateComputed extends SpacePrivateComputed {}
 
-export interface SpaceReactData {
-}
+export interface SpaceReactData {}
 
-export interface SpaceMethods {
-}
-export interface VxeSpaceMethods extends SpaceMethods { }
+export interface SpaceMethods {}
+export interface VxeSpaceMethods extends SpaceMethods {}
 
-export interface SpacePrivateMethods { }
-export interface VxeSpacePrivateMethods extends SpacePrivateMethods { }
+export interface SpacePrivateMethods {}
+export interface VxeSpacePrivateMethods extends SpacePrivateMethods {}
 
-export type VxeSpaceEmits = [
-]
+export type VxeSpaceEmits = []
 
 export namespace VxeSpaceDefines {
   export interface GapObj {
@@ -99,9 +99,9 @@ export namespace VxeSpaceDefines {
 
 export type VxeSpaceEventProps = {}
 
-export interface VxeSpaceListeners { }
+export interface VxeSpaceListeners {}
 
-export namespace VxeSpaceEvents { }
+export namespace VxeSpaceEvents {}
 
 export namespace VxeSpaceSlotTypes {
   export interface DefaultSlotParams {}

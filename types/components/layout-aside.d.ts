@@ -6,15 +6,19 @@ import { VxeScrollbarProps } from './scrollbar'
 export declare const VxeLayoutAside: DefineVxeComponentApp<VxeLayoutAsideProps, VxeLayoutAsideEventProps, VxeLayoutAsideSlots, VxeLayoutAsideMethods>
 export type VxeLayoutAsideComponent = DefineVxeComponentOptions<VxeLayoutAsideProps>
 
-export type VxeLayoutAsideInstance = DefineVxeComponentInstance<{
-  reactData: LayoutAsideReactData
-}, VxeLayoutAsideProps, VxeLayoutAsidePrivateComputed, VxeLayoutAsideMethods>
+export type VxeLayoutAsideInstance = DefineVxeComponentInstance<
+  {
+    reactData: LayoutAsideReactData
+  },
+  VxeLayoutAsideProps,
+  VxeLayoutAsidePrivateComputed,
+  VxeLayoutAsideMethods
+>
 
 export type VxeLayoutAsideConstructor = VxeLayoutAsideInstance
 
-export interface LayoutAsidePrivateRef {
-}
-export interface VxeLayoutAsidePrivateRef extends LayoutAsidePrivateRef { }
+export interface LayoutAsidePrivateRef {}
+export interface VxeLayoutAsidePrivateRef extends LayoutAsidePrivateRef {}
 
 export namespace VxeLayoutAsidePropTypes {
   export type Width = string | number
@@ -79,17 +83,17 @@ export interface LayoutAsidePrivateComputed {
   computeSize: VxeLayoutAsidePropTypes.Size
   computeVarStyle: VxeComponentStyleType
 }
-export interface VxeLayoutAsidePrivateComputed extends LayoutAsidePrivateComputed { }
+export interface VxeLayoutAsidePrivateComputed extends LayoutAsidePrivateComputed {}
 
 export interface LayoutAsideReactData {}
 
 export interface LayoutAsideMethods {
   dispatchEvent(type: ValueOf<VxeLayoutAsideEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeLayoutAsideMethods extends LayoutAsideMethods { }
+export interface VxeLayoutAsideMethods extends LayoutAsideMethods {}
 
-export interface LayoutAsidePrivateMethods { }
-export interface VxeLayoutAsidePrivateMethods extends LayoutAsidePrivateMethods { }
+export interface LayoutAsidePrivateMethods {}
+export interface VxeLayoutAsidePrivateMethods extends LayoutAsidePrivateMethods {}
 
 export type VxeLayoutAsideEmits = []
 
@@ -101,9 +105,9 @@ export namespace VxeLayoutAsideDefines {
 
 export type VxeLayoutAsideEventProps = {}
 
-export interface VxeLayoutAsideListeners { }
+export interface VxeLayoutAsideListeners {}
 
-export namespace VxeLayoutAsideEvents { }
+export namespace VxeLayoutAsideEvents {}
 
 export namespace VxeLayoutAsideSlotTypes {
   export interface DefaultSlotParams {}

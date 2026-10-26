@@ -1,10 +1,12 @@
 import { CreateElement } from 'vue'
 import XEUtils from 'xe-utils'
-import { renderer, getComponent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getOnName, getModelEvent, getChangeEvent } from '../../ui/src/vn'
 import { createComponentLog } from '../../ui/src/log'
 
 import type { VxeGlobalRendererHandles, VxeFormConstructor, VxeFormPrivateMethods } from '../../../types'
+
+const { renderer, getComponent } = VxeUI
 
 const { errLog } = createComponentLog('form')
 
@@ -14,7 +16,7 @@ const componentDefaultModelProp = 'value'
  * 已废弃
  * @deprecated
  */
-function getOldComponentName (name: string | undefined) {
+function getOldComponentName(name: string | undefined) {
   return `vxe-${`${name || ''}`.replace('$', '')}`
 }
 
@@ -22,15 +24,15 @@ function getOldComponentName (name: string | undefined) {
  * 已废弃
  * @deprecated
  */
-function getOldComponent ({ name }: VxeGlobalRendererHandles.RenderFormItemContentOptions) {
+function getOldComponent({ name }: VxeGlobalRendererHandles.RenderFormItemContentOptions) {
   return getOldComponentName(name)
 }
 
-function getDefaultComponent ({ name }: VxeGlobalRendererHandles.RenderFormItemContentOptions) {
+function getDefaultComponent({ name }: VxeGlobalRendererHandles.RenderFormItemContentOptions) {
   return getComponent(name as any) || name
 }
 
-function getNativeAttrs (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions) {
+function getNativeAttrs(renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions) {
   let { name, attrs } = renderOpts
   if (name === 'input') {
     attrs = Object.assign({ type: 'text' }, attrs)
@@ -38,7 +40,7 @@ function getNativeAttrs (renderOpts: VxeGlobalRendererHandles.RenderFormItemCont
   return attrs
 }
 
-function getComponentFormItemProps (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams, value: any, defaultProps?: any) {
+function getComponentFormItemProps(renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams, value: any, defaultProps?: any) {
   return XEUtils.assign({}, defaultProps, renderOpts.props, { [componentDefaultModelProp]: value })
 }
 
@@ -49,7 +51,7 @@ function getComponentFormItemProps (renderOpts: VxeGlobalRendererHandles.RenderF
  * @param modelFunc
  * @param changeFunc
  */
-function getElementOns (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: any, modelFunc?: any, changeFunc?: any) {
+function getElementOns(renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: any, modelFunc?: any, changeFunc?: any) {
   const { events } = renderOpts
   const modelEvent = getModelEvent(renderOpts)
   const changeEvent = getChangeEvent(renderOpts)
@@ -91,10 +93,15 @@ function getElementOns (renderOpts: VxeGlobalRendererHandles.RenderFormItemConte
  * @param modelFunc
  * @param changeFunc
  */
-function getComponentOns (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams, eFns?: {
-  model: (cellValue: any) => void
-  change?: (...args: any[]) => void
-}, eventOns?: Record<string, any>) {
+function getComponentOns(
+  renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions,
+  params: VxeGlobalRendererHandles.RenderFormItemContentParams,
+  eFns?: {
+    model: (cellValue: any) => void
+    change?: (...args: any[]) => void
+  },
+  eventOns?: Record<string, any>
+) {
   const { events } = renderOpts
   const { model: modelFunc, change: changeFunc } = eFns || {}
   const modelEvent = getModelEvent(renderOpts)
@@ -127,47 +134,56 @@ function getComponentOns (renderOpts: VxeGlobalRendererHandles.RenderFormItemCon
   return eventOns ? Object.assign(ons, eventOns) : ons
 }
 
-function getItemOns (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function getItemOns(renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { $form, data, field } = params
   return getComponentOns(renderOpts, params, {
-    model (value: any) {
+    model(value: any) {
       // 处理 model 值双向绑定
       XEUtils.set(data, field, value)
     },
-    change () {
+    change() {
       // 处理 change 事件相关逻辑
       $form.updateStatus(params)
       if (renderOpts.changeToSubmit) {
-        ($form as VxeFormConstructor & VxeFormPrivateMethods).handleSubmitEvent(new Event('change'))
+        ;($form as VxeFormConstructor & VxeFormPrivateMethods).handleSubmitEvent(new Event('change'))
       }
     }
   })
 }
 
-function getNativeItemOns (renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function getNativeItemOns(renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { $form, data, field } = params
-  return getElementOns(renderOpts, params, (evnt: any) => {
-    // 处理 model 值双向绑定
-    const itemValue = evnt.target.value
-    XEUtils.set(data, field, itemValue)
-  }, () => {
-    // 处理 change 事件相关逻辑
-    $form.updateStatus(params)
-  })
+  return getElementOns(
+    renderOpts,
+    params,
+    (evnt: any) => {
+      // 处理 model 值双向绑定
+      const itemValue = evnt.target.value
+      XEUtils.set(data, field, itemValue)
+    },
+    () => {
+      // 处理 change 事件相关逻辑
+      $form.updateStatus(params)
+    }
+  )
 }
 
-function renderNativeOptgroup (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams, renderOptionsMethods: any) {
+function renderNativeOptgroup(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams, renderOptionsMethods: any) {
   const { optionGroups, optionGroupProps = {} } = renderOpts
   const groupOptions = optionGroupProps.options || 'options'
   const groupLabel = optionGroupProps.label || 'label'
   if (optionGroups) {
     return optionGroups.map((group: any, gIndex: any) => {
-      return h('optgroup', {
-        key: gIndex,
-        attrs: {
-          label: group[groupLabel]
-        }
-      }, renderOptionsMethods(group[groupOptions], renderOpts, params))
+      return h(
+        'optgroup',
+        {
+          key: gIndex,
+          attrs: {
+            label: group[groupLabel]
+          }
+        },
+        renderOptionsMethods(group[groupOptions], renderOpts, params)
+      )
     })
   }
   return []
@@ -177,7 +193,7 @@ function renderNativeOptgroup (h: CreateElement, renderOpts: VxeGlobalRendererHa
  * 渲染表单-项
  * 用于渲染原生的标签
  */
-function nativeItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function nativeItemRender(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { data, field } = params
   const { name } = renderOpts
   const attrs = getNativeAttrs(renderOpts)
@@ -194,7 +210,7 @@ function nativeItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandle
   ]
 }
 
-function defaultItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function defaultItemRender(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { data, field } = params
   const itemValue = XEUtils.get(data, field)
   return [
@@ -209,7 +225,7 @@ function defaultItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandl
  * 已废弃
  * @deprecated
  */
-function oldItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function oldItemRender(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { data, field } = params
   const itemValue = XEUtils.get(data, field)
   return [
@@ -224,7 +240,7 @@ function oldItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.R
  * 已废弃
  * @deprecated
  */
-function oldButtonItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function oldButtonItemRender(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   return [
     h('vxe-button', {
       props: getComponentFormItemProps(renderOpts, params, null),
@@ -237,7 +253,7 @@ function oldButtonItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHan
  * 已废弃
  * @deprecated
  */
-function oldButtonsItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function oldButtonsItemRender(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { children } = renderOpts
   return children ? children.map((childRenderOpts: any) => oldButtonItemRender(h, childRenderOpts, params)[0]) : []
 }
@@ -245,7 +261,7 @@ function oldButtonsItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHa
 /**
  * 渲染原生的 select 标签
  */
-function renderNativeFormOptions (h: CreateElement, options: any, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function renderNativeFormOptions(h: CreateElement, options: any, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { data, field } = params
   const { optionProps = {} } = renderOpts
   const labelProp = optionProps.label || 'label'
@@ -254,15 +270,19 @@ function renderNativeFormOptions (h: CreateElement, options: any, renderOpts: Vx
   const cellValue = XEUtils.get(data, field)
   if (options) {
     return options.map((item: any, oIndex: any) => {
-      return h('option', {
-        key: oIndex,
-        props: {
-          value: item[valueProp],
-          disabled: item[disabledProp],
-          /* eslint-disable eqeqeq */
-          selected: item[valueProp] == cellValue
-        }
-      }, item[labelProp])
+      return h(
+        'option',
+        {
+          key: oIndex,
+          props: {
+            value: item[valueProp],
+            disabled: item[disabledProp],
+            /* eslint-disable eqeqeq */
+            selected: item[valueProp] == cellValue
+          }
+        },
+        item[labelProp]
+      )
     })
   }
   return []
@@ -271,7 +291,7 @@ function renderNativeFormOptions (h: CreateElement, options: any, renderOpts: Vx
 /**
  * 渲染表单-项
  */
-function defaultFormItemRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function defaultFormItemRender(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { data, field } = params
   const itemValue = XEUtils.get(data, field)
   return [
@@ -282,7 +302,7 @@ function defaultFormItemRender (h: CreateElement, renderOpts: VxeGlobalRendererH
   ]
 }
 
-function formItemRadioAndCheckboxRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function formItemRadioAndCheckboxRender(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { options, optionProps } = renderOpts
   const { data, field } = params
   const itemValue = XEUtils.get(data, field)
@@ -302,7 +322,7 @@ function formItemRadioAndCheckboxRender (h: CreateElement, renderOpts: VxeGlobal
  * 已废弃
  * @deprecated
  */
-function oldFormItemRadioAndCheckboxRender (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+function oldFormItemRadioAndCheckboxRender(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
   const { name, options, optionProps = {} } = renderOpts
   const { data, field } = params
   const labelProp = optionProps.label || 'label'
@@ -355,16 +375,19 @@ renderer.mixin({
   },
   select: {
     formItemAutoFocus: true,
-    renderFormItemContent (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+    renderFormItemContent(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       return [
-        h('select', {
-          class: 'vxe-default-select',
-          attrs: {
-            ...getNativeAttrs(renderOpts)
+        h(
+          'select',
+          {
+            class: 'vxe-default-select',
+            attrs: {
+              ...getNativeAttrs(renderOpts)
+            },
+            on: getNativeItemOns(renderOpts, params)
           },
-          on: getNativeItemOns(renderOpts, params)
-        },
-        renderOpts.optionGroups ? renderNativeOptgroup(h, renderOpts, params, renderNativeFormOptions) : renderNativeFormOptions(h, renderOpts.options, renderOpts, params))
+          renderOpts.optionGroups ? renderNativeOptgroup(h, renderOpts, params, renderNativeFormOptions) : renderNativeFormOptions(h, renderOpts.options, renderOpts, params)
+        )
       ]
     }
   },
@@ -390,7 +413,7 @@ renderer.mixin({
   },
   VxeDateRangePicker: {
     formItemAutoFocus: true,
-    renderFormItemContent (h, renderOpts, params) {
+    renderFormItemContent(h, renderOpts, params) {
       const { startField, endField } = renderOpts
       const { $form, data, field } = params
       const itemValue = XEUtils.get(data, field)
@@ -413,20 +436,24 @@ renderer.mixin({
       return [
         h(getDefaultComponent(renderOpts), {
           props: getComponentFormItemProps(renderOpts, params, itemValue, seProps),
-          on: getComponentOns(renderOpts, params, {
-            model (value: any) {
-              // 处理 model 值双向绑定
-              XEUtils.set(data, field, value)
-            },
-            change ({ $event, isFinish }) {
-              // 处理 change 事件相关逻辑
-              $form.updateStatus(params)
-              if (renderOpts.changeToSubmit && isFinish) {
-                ($form as VxeFormConstructor & VxeFormPrivateMethods).handleSubmitEvent($event)
+          on: getComponentOns(
+            renderOpts,
+            params,
+            {
+              model(value: any) {
+                // 处理 model 值双向绑定
+                XEUtils.set(data, field, value)
+              },
+              change({ $event, isFinish }) {
+                // 处理 change 事件相关逻辑
+                $form.updateStatus(params)
+                if (renderOpts.changeToSubmit && isFinish) {
+                  ;($form as VxeFormConstructor & VxeFormPrivateMethods).handleSubmitEvent($event)
+                }
               }
-            }
-          }, seOs)
-
+            },
+            seOs
+          )
         })
       ]
     }
@@ -435,7 +462,7 @@ renderer.mixin({
     renderFormItemContent: defaultFormItemRender
   },
   VxeButtonGroup: {
-    renderFormItemContent (h: CreateElement, renderOpts, params) {
+    renderFormItemContent(h: CreateElement, renderOpts, params) {
       const { options } = renderOpts
       const { data, field } = params
       const itemValue = XEUtils.get(data, field)
@@ -452,7 +479,7 @@ renderer.mixin({
   },
   VxeSelect: {
     formItemAutoFocus: true,
-    renderFormItemContent (h: CreateElement, renderOpts, params) {
+    renderFormItemContent(h: CreateElement, renderOpts, params) {
       const { data, field } = params
       const { options, optionProps, optionGroups, optionGroupProps } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -466,7 +493,7 @@ renderer.mixin({
   },
   VxeTreeSelect: {
     formItemAutoFocus: true,
-    renderFormItemContent (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+    renderFormItemContent(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       const { data, field } = params
       const { options, optionProps } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -480,7 +507,7 @@ renderer.mixin({
   },
   VxeCascader: {
     formItemAutoFocus: true,
-    renderFormItemContent (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+    renderFormItemContent(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       const { data, field } = params
       const { options, optionProps } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -494,7 +521,7 @@ renderer.mixin({
   },
   VxeTableSelect: {
     formItemAutoFocus: true,
-    renderFormItemContent (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+    renderFormItemContent(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       const { data, field } = params
       const { options, optionProps } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -508,7 +535,7 @@ renderer.mixin({
   },
   VxeColorPicker: {
     formItemAutoFocus: true,
-    renderFormItemContent (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+    renderFormItemContent(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       const { data, field } = params
       const { options } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -522,7 +549,7 @@ renderer.mixin({
   },
   VxeIconPicker: {
     formItemAutoFocus: true,
-    renderFormItemContent (h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
+    renderFormItemContent(h: CreateElement, renderOpts: VxeGlobalRendererHandles.RenderFormItemContentOptions, params: VxeGlobalRendererHandles.RenderFormItemContentParams) {
       const { data, field } = params
       const { options } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -556,7 +583,7 @@ renderer.mixin({
     renderFormItemContent: defaultItemRender
   },
   VxeImage: {
-    renderFormItemContent (h, renderOpts, params) {
+    renderFormItemContent(h, renderOpts, params) {
       const { data, field } = params
       const { props } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -572,7 +599,7 @@ renderer.mixin({
     }
   },
   VxeImageGroup: {
-    renderFormItemContent (h, renderOpts, params) {
+    renderFormItemContent(h, renderOpts, params) {
       const { data, field } = params
       const { props } = renderOpts
       const itemValue = XEUtils.get(data, field)
@@ -608,7 +635,7 @@ renderer.mixin({
   },
   $select: {
     formItemAutoFocus: 'input',
-    renderFormItemContent (h, renderOpts, params) {
+    renderFormItemContent(h, renderOpts, params) {
       const { data, field } = params
       const { options, optionProps, optionGroups, optionGroupProps } = renderOpts
       const itemValue = XEUtils.get(data, field)

@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeAvatar: DefineVxeComponentApp<VxeAvatarProps, VxeAvatarEventProps, VxeAvatarSlots, VxeAvatarMethods>
 export type VxeAvatarComponent = DefineVxeComponentOptions<VxeAvatarProps>
 
-export type VxeAvatarInstance = DefineVxeComponentInstance<{
-  reactData: AvatarReactData
-}, VxeAvatarProps, VxeAvatarPrivateComputed, VxeAvatarMethods>
+export type VxeAvatarInstance = DefineVxeComponentInstance<
+  {
+    reactData: AvatarReactData
+  },
+  VxeAvatarProps,
+  VxeAvatarPrivateComputed,
+  VxeAvatarMethods
+>
 
 export type VxeAvatarConstructor = VxeAvatarInstance
 
-export interface AvatarPrivateRef {
-}
-export interface VxeAvatarPrivateRef extends AvatarPrivateRef { }
+export interface AvatarPrivateRef {}
+export interface VxeAvatarPrivateRef extends AvatarPrivateRef {}
 
 export namespace VxeAvatarPropTypes {
   export type Count = string | number
@@ -41,19 +45,16 @@ export interface VxeAvatarProps {
   size?: VxeAvatarPropTypes.Size
 }
 
-export interface AvatarPrivateComputed {
-}
-export interface VxeAvatarPrivateComputed extends AvatarPrivateComputed { }
+export interface AvatarPrivateComputed {}
+export interface VxeAvatarPrivateComputed extends AvatarPrivateComputed {}
 
-export interface AvatarReactData {
-}
+export interface AvatarReactData {}
 
-export interface AvatarMethods {
-}
-export interface VxeAvatarMethods extends AvatarMethods { }
+export interface AvatarMethods {}
+export interface VxeAvatarMethods extends AvatarMethods {}
 
-export interface AvatarPrivateMethods { }
-export interface VxeAvatarPrivateMethods extends AvatarPrivateMethods { }
+export interface AvatarPrivateMethods {}
+export interface VxeAvatarPrivateMethods extends AvatarPrivateMethods {}
 
 export type VxeAvatarEmits = []
 
@@ -65,9 +66,9 @@ export namespace VxeAvatarDefines {
 
 export type VxeAvatarEventProps = {}
 
-export interface VxeAvatarListeners { }
+export interface VxeAvatarListeners {}
 
-export namespace VxeAvatarEvents { }
+export namespace VxeAvatarEvents {}
 
 export namespace VxeAvatarSlotTypes {
   export interface DefaultSlotParams {}

@@ -3,16 +3,16 @@ import { VxeUI } from '@vxe-ui/core'
 import VxeTooltipComponent from './src/tooltip'
 import { dynamicApp, dynamicStore, checkDynamic } from '../dynamics'
 
-import type{ VxeTooltipProps, VxeTooltipInstance, TooltipPrivateMethods } from '../../types'
+import type { VxeTooltipProps, VxeTooltipInstance, TooltipPrivateMethods } from '../../types'
 
 export const VxeTooltip = Object.assign({}, VxeTooltipComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeTooltipComponent.name as string, VxeTooltipComponent)
   }
 })
 
 export const TooltipController = {
-  open (target: EventTarget | HTMLElement | null, options?: VxeTooltipProps) {
+  open(target: EventTarget | HTMLElement | null, options?: VxeTooltipProps) {
     const opts: VxeTooltipProps = Object.assign({}, options, {
       key: 'tip',
       value: true,
@@ -30,7 +30,7 @@ export const TooltipController = {
     }
     return Promise.resolve()
   },
-  close () {
+  close() {
     const { globalTooltip } = dynamicStore
     if (!globalTooltip || !globalTooltip.value) {
       return Promise.resolve()
@@ -45,7 +45,7 @@ export const TooltipController = {
     }
     return Promise.resolve()
   },
-  destroy () {
+  destroy() {
     const { globalTooltip } = dynamicStore
     if (!globalTooltip || !globalTooltip.value) {
       return Promise.resolve()

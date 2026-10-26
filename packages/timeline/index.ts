@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeTimelineComponent from './src/timeline'
 
 export const VxeTimeline = Object.assign({}, VxeTimelineComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeTimelineComponent.name as string, VxeTimelineComponent)
   }
 })

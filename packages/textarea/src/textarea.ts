@@ -1,12 +1,14 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getIcon, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getFuncText } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeTextareaPropTypes, TextareaReactData, VxeComponentSizeType, VxeTextareaEmits, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
+
+const { getConfig, getIcon, getI18n, createEvent, globalMixins, renderEmptyElement } = VxeUI
 
 const { warnLog } = createComponentLog('textarea')
 
@@ -18,9 +20,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     prop: 'value',
     event: 'modelValue'
   },
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     value: [String, Number] as PropType<VxeTextareaPropTypes.ModelValue>,
     className: String as PropType<VxeTextareaPropTypes.ClassName>,
@@ -102,7 +102,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const reactData: TextareaReactData = {
       inputValue: ''
     }
@@ -119,7 +119,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
-    computeFormReadonly () {
+    computeFormReadonly() {
       const $xeTextarea = this
       const props = $xeTextarea
       const $xeForm = $xeTextarea.$xeForm
@@ -133,7 +133,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return readonly
     },
-    computeIsDisabled () {
+    computeIsDisabled() {
       const $xeTextarea = this
       const props = $xeTextarea
       const $xeForm = $xeTextarea.$xeForm
@@ -147,14 +147,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return disabled
     },
-    computeInputReadonly () {
+    computeInputReadonly() {
       const $xeTextarea = this
       const props = $xeTextarea
 
       const { editable, readonly } = props
       return readonly || !editable
     },
-    computeInpPlaceholder () {
+    computeInpPlaceholder() {
       const $xeTextarea = this
       const props = $xeTextarea
 
@@ -168,27 +168,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return getI18n('vxe.base.pleaseInput')
     },
-    computeInpMaxLength () {
+    computeInpMaxLength() {
       const $xeTextarea = this
       const props = $xeTextarea
 
       const { maxLength, maxlength } = props
       return maxLength || maxlength
     },
-    computeInputCount () {
+    computeInputCount() {
       const $xeTextarea = this
       const reactData = $xeTextarea.reactData as TextareaReactData
 
       return XEUtils.getSize(reactData.inputValue)
     },
-    computeIsCountError () {
+    computeIsCountError() {
       const $xeTextarea = this
 
       const inputCount = $xeTextarea.computeInputCount as number
       const inpMaxLength = $xeTextarea.computeInpMaxLength
       return inpMaxLength && inputCount > XEUtils.toNumber(inpMaxLength)
     },
-    computeSizeOpts () {
+    computeSizeOpts() {
       const $xeTextarea = this
       const props = $xeTextarea
 
@@ -203,30 +203,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeTextareaEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeTextareaEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTextarea = this
       $xeTextarea.$emit(type, createEvent(evnt, { $textarea: $xeTextarea }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeTextarea = this
 
       handleEmitModelVal($xeTextarea, value)
     },
-    focus () {
+    focus() {
       const $xeTextarea = this
 
       const textElem = $xeTextarea.$refs.refTextarea as HTMLTextAreaElement
       textElem.focus()
       return $xeTextarea.$nextTick()
     },
-    blur () {
+    blur() {
       const $xeTextarea = this
 
       const textElem = $xeTextarea.$refs.refTextarea as HTMLTextAreaElement
       textElem.blur()
       return $xeTextarea.$nextTick()
     },
-    updateAutoTxt  () {
+    updateAutoTxt() {
       const $xeTextarea = this
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
@@ -257,7 +257,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         autoTxtElem.innerText = ('' + (inputValue || '　')).replace(/\n$/, '\n　')
       }
     },
-    handleResize () {
+    handleResize() {
       const $xeTextarea = this
       const props = $xeTextarea
 
@@ -289,18 +289,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
           } else if (textRows > maxRows) {
             vaildRows = maxRows
           }
-          textElem.style.height = `${(vaildRows * lineHeight) + intervalHeight}px`
+          textElem.style.height = `${vaildRows * lineHeight + intervalHeight}px`
         })
       }
     },
-    triggerEvent (evnt: Event & { type: 'focus' | 'blur' | 'change' }) {
+    triggerEvent(evnt: Event & { type: 'focus' | 'blur' | 'change' }) {
       const $xeTextarea = this
       const reactData = $xeTextarea.reactData
 
       const value = reactData.inputValue
       $xeTextarea.dispatchEvent(evnt.type, { value }, evnt)
     },
-    handleChange (value: string, evnt: Event) {
+    handleChange(value: string, evnt: Event) {
       const $xeTextarea = this
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
@@ -320,7 +320,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    clearValueEvent (evnt: Event, value: VxeTextareaPropTypes.ModelValue) {
+    clearValueEvent(evnt: Event, value: VxeTextareaPropTypes.ModelValue) {
       const $xeTextarea = this
       const props = $xeTextarea
 
@@ -331,7 +331,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTextarea.handleChange('', evnt)
       $xeTextarea.dispatchEvent('clear', { value }, evnt)
     },
-    inputEvent (evnt: InputEvent) {
+    inputEvent(evnt: InputEvent) {
       const $xeTextarea = this
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
@@ -353,7 +353,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTextarea.dispatchEvent('input', { value }, evnt)
       $xeTextarea.handleResize()
     },
-    changeEvent  (evnt: Event & { type: 'change' }) {
+    changeEvent(evnt: Event & { type: 'change' }) {
       const $xeTextarea = this
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
@@ -366,7 +366,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeTextarea.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     },
-    blurEvent (evnt: Event & { type: 'blur' }) {
+    blurEvent(evnt: Event & { type: 'blur' }) {
       const $xeTextarea = this
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
@@ -382,7 +382,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeTextarea = this
       const props = $xeTextarea
       const reactData = $xeTextarea.reactData
@@ -398,126 +398,157 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const inpPlaceholder = $xeTextarea.computeInpPlaceholder
       const inpMaxLength = $xeTextarea.computeInpMaxLength
       if (formReadonly) {
-        return h('div', {
-          ref: 'refElem',
-          class: ['vxe-textarea--readonly', className]
-        }, [
-          h('div', {
-            ref: 'refContent',
-            class: 'vxe-textarea--content'
-          }, inputValue)
-        ])
+        return h(
+          'div',
+          {
+            ref: 'refElem',
+            class: ['vxe-textarea--readonly', className]
+          },
+          [
+            h(
+              'div',
+              {
+                ref: 'refContent',
+                class: 'vxe-textarea--content'
+              },
+              inputValue
+            )
+          ]
+        )
       }
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-textarea', className, {
-          [`size--${vSize}`]: vSize,
-          'is--autosize': autosize || autoSize,
-          'is--count': showWordCount,
-          'is--disabled': isDisabled,
-          'is-clear': clearable,
-          'is--rows': !XEUtils.eqNull(rows),
-          'is--cols': !XEUtils.eqNull(cols),
-          'show--clear': clearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }],
-        attrs: {
-          spellcheck: false
-        }
-      }, [
-        h('textarea', {
-          ref: 'refTextarea',
-          class: 'vxe-textarea--inner' + (inputClassName ? (' ' + inputClassName) : ''),
-          domProps: {
-            value: inputValue
-          },
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-textarea',
+            className,
+            {
+              [`size--${vSize}`]: vSize,
+              'is--autosize': autosize || autoSize,
+              'is--count': showWordCount,
+              'is--disabled': isDisabled,
+              'is-clear': clearable,
+              'is--rows': !XEUtils.eqNull(rows),
+              'is--cols': !XEUtils.eqNull(cols),
+              'show--clear': clearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+            }
+          ],
           attrs: {
-            name: props.name,
-            placeholder: inpPlaceholder,
-            maxlength: inpMaxLength,
-            readonly: inputReadonly,
-            disabled: isDisabled,
-            rows,
-            cols
-          },
-          style: resize
-            ? {
-                resize
-              }
-            : {},
-          on: {
-            input: $xeTextarea.inputEvent,
-            change: $xeTextarea.changeEvent,
-            keydown: $xeTextarea.triggerEvent,
-            keyup: $xeTextarea.triggerEvent,
-            click: $xeTextarea.triggerEvent,
-            focus: $xeTextarea.triggerEvent,
-            blur: $xeTextarea.blurEvent
+            spellcheck: false
           }
-        }),
-        clearable || showWordCount
-          ? h('div', {
-            class: 'vxe-textarea--suffix'
-          }, [
-            clearable
-              ? h('div', {
-                class: 'vxe-textarea--clear-icon',
-                on: {
-                  click: $xeTextarea.clearValueEvent
+        },
+        [
+          h('textarea', {
+            ref: 'refTextarea',
+            class: ['vxe-textarea--inner', inputClassName || ''],
+            domProps: {
+              value: inputValue
+            },
+            attrs: {
+              name: props.name,
+              placeholder: inpPlaceholder,
+              maxlength: inpMaxLength,
+              readonly: inputReadonly,
+              disabled: isDisabled,
+              rows,
+              cols
+            },
+            style: resize
+              ? {
+                  resize
                 }
-              }, [
-                h('i', {
-                  class: getIcon().TEXTAREA_CLEAR
-                })
-              ])
-              : renderEmptyElement($xeTextarea),
-            showWordCount
-              ? h('span', {
-                class: ['vxe-textarea--count', {
-                  'is--error': isCountError
-                }]
-              }, countMethod ? `${countMethod({ value: inputValue })}` : `${inputCount}${inpMaxLength ? `/${inpMaxLength}` : ''}`)
-              : renderEmptyElement($xeTextarea)
-          ])
-          : renderEmptyElement($xeTextarea)
-      ])
+              : {},
+            on: {
+              input: $xeTextarea.inputEvent,
+              change: $xeTextarea.changeEvent,
+              keydown: $xeTextarea.triggerEvent,
+              keyup: $xeTextarea.triggerEvent,
+              click: $xeTextarea.triggerEvent,
+              focus: $xeTextarea.triggerEvent,
+              blur: $xeTextarea.blurEvent
+            }
+          }),
+          clearable || showWordCount
+            ? h(
+              'div',
+              {
+                class: 'vxe-textarea--suffix'
+              },
+              [
+                clearable
+                  ? h(
+                    'div',
+                    {
+                      class: 'vxe-textarea--clear-icon',
+                      on: {
+                        click: $xeTextarea.clearValueEvent
+                      }
+                    },
+                    [
+                      h('i', {
+                        class: getIcon().TEXTAREA_CLEAR
+                      })
+                    ]
+                  )
+                  : renderEmptyElement($xeTextarea),
+                showWordCount
+                  ? h(
+                    'span',
+                    {
+                      class: [
+                        'vxe-textarea--count',
+                        {
+                          'is--error': isCountError
+                        }
+                      ]
+                    },
+                    countMethod ? `${countMethod({ value: inputValue })}` : `${inputCount}${inpMaxLength ? `/${inpMaxLength}` : ''}`
+                  )
+                  : renderEmptyElement($xeTextarea)
+              ]
+            )
+            : renderEmptyElement($xeTextarea)
+        ]
+      )
     }
   },
   watch: {
-    value (val) {
+    value(val) {
       const $xeTextarea = this
       const reactData = $xeTextarea.reactData
 
       reactData.inputValue = val
       $xeTextarea.updateAutoTxt()
     },
-    computeFormReadonly () {
+    computeFormReadonly() {
       const $xeTextarea = this
 
       $xeTextarea.reFlag++
     },
-    computeSizeOpts () {
+    computeSizeOpts() {
       const $xeTextarea = this
 
       $xeTextarea.reFlag++
     },
-    autoSize () {
+    autoSize() {
       const $xeTextarea = this
 
       $xeTextarea.reFlag++
     },
-    autosize () {
+    autosize() {
       const $xeTextarea = this
 
       $xeTextarea.reFlag++
     },
-    reFlag () {
+    reFlag() {
       const $xeTextarea = this
 
       $xeTextarea.updateAutoTxt()
       $xeTextarea.handleResize()
     }
   },
-  created () {
+  created() {
     const $xeTextarea = this
     const props = $xeTextarea
     const reactData = $xeTextarea.reactData
@@ -534,7 +565,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     })
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

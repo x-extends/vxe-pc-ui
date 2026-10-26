@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
 import { getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
@@ -9,10 +9,10 @@ import VxeScrollbarComponent from '../../scrollbar'
 
 import type { VxeTooltipPropTypes, VxeTooltipEmits, TooltipReactData, TooltipInternalData, VxeComponentSizeType, VxeComponentIsVScrollbar, ValueOf, VxeScrollbarInstance, VxeComponentStyleType } from '../../../types'
 
-const { baseUtils, getConfig, createEvent, globalEvents } = VxeUI
+const { baseUtils, globalMixins, getConfig, createEvent, globalEvents } = VxeUI
 const { getDefVal } = baseUtils
 
-function createReactData (): TooltipReactData {
+function createReactData(): TooltipReactData {
   return {
     target: null,
     isUpdate: false,
@@ -30,7 +30,7 @@ function createReactData (): TooltipReactData {
   }
 }
 
-function createInternalData (): TooltipInternalData {
+function createInternalData(): TooltipInternalData {
   return {
     // scrollbarViewEl: undefined,
     // showDelayTip: undefined
@@ -39,10 +39,7 @@ function createInternalData (): TooltipInternalData {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTooltip',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.vScrollbarMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.vScrollbarMixin],
   props: {
     value: Boolean,
     size: {
@@ -64,7 +61,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     useHtml: {
       type: Boolean as PropType<VxeTooltipPropTypes.UseHtml>,
-      default: () => XEUtils.isBoolean(getConfig().tooltip.useHtml) ? getConfig().tooltip.useHtml : null
+      default: () => (XEUtils.isBoolean(getConfig().tooltip.useHtml) ? getConfig().tooltip.useHtml : null)
     },
     // 已废弃，请使用 useHtml
     useHTML: {
@@ -131,7 +128,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     scrollbarConfig: Object as PropType<VxeTooltipPropTypes.ScrollbarConfig>
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
     return {
@@ -144,10 +141,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   computed: {
     ...({} as {
-      computeSize(): VxeComponentSizeType,
+      computeSize(): VxeComponentSizeType
       computeIsVScrollbar(): VxeComponentIsVScrollbar
     }),
-    computeWrapperStyle () {
+    computeWrapperStyle() {
       const $xeTooltip = this
       const props = $xeTooltip
 
@@ -178,17 +175,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeTooltipEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeTooltipEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeTooltip = this
       $xeTooltip.$emit(type, createEvent(evnt, { $tooltip: $xeTooltip }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeTooltip = this
 
       $xeTooltip.$emit('input', value)
       handleEmitModelVal($xeTooltip, value)
     },
-    getSelectorEl  () {
+    getSelectorEl() {
       const $xeTooltip = this
       const props = $xeTooltip
 
@@ -203,19 +200,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    openByEvent (evnt: Event, target?: HTMLElement | null, content?: VxeTooltipPropTypes.Content) {
+    openByEvent(evnt: Event, target?: HTMLElement | null, content?: VxeTooltipPropTypes.Content) {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
-      return $xeTooltip.handleVisible(target || reactData.target as HTMLElement || $xeTooltip.getSelectorEl(), content, evnt as MouseEvent)
+      return $xeTooltip.handleVisible(target || (reactData.target as HTMLElement) || $xeTooltip.getSelectorEl(), content, evnt as MouseEvent)
     },
-    open (target?: HTMLElement | null, content?: VxeTooltipPropTypes.Content) {
+    open(target?: HTMLElement | null, content?: VxeTooltipPropTypes.Content) {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
-      return $xeTooltip.handleVisible(target || reactData.target as HTMLElement || $xeTooltip.getSelectorEl(), content)
+      return $xeTooltip.handleVisible(target || (reactData.target as HTMLElement) || $xeTooltip.getSelectorEl(), content)
     },
-    close () {
+    close() {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
@@ -231,12 +228,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTooltip.dispatchEvent('hide', {}, null)
       return $xeTooltip.$nextTick()
     },
-    toVisible (target: HTMLElement, content?: VxeTooltipPropTypes.Content) {
+    toVisible(target: HTMLElement, content?: VxeTooltipPropTypes.Content) {
       const $xeTooltip = this
 
       return $xeTooltip.handleVisible(target, content)
     },
-    updateTipStyle () {
+    updateTipStyle() {
       const $xeTooltip = this
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
@@ -287,28 +284,31 @@ export default /* define-vxe-component start */ defineVxeComponent({
       tipStore.arrowStyle.left = ppObj.arrowLeft ? `${ppObj.arrowLeft}px` : ''
       return $xeTooltip.$nextTick()
     },
-    updatePlacement () {
+    updatePlacement() {
       const $xeTooltip = this
 
-      return $xeTooltip.updateTipStyle().then(() => {
-        return $xeTooltip.updateTipStyle()
-      }).then(() => {
-        return $xeTooltip.updateTipStyle()
-      })
+      return $xeTooltip
+        .updateTipStyle()
+        .then(() => {
+          return $xeTooltip.updateTipStyle()
+        })
+        .then(() => {
+          return $xeTooltip.updateTipStyle()
+        })
     },
-    isActived () {
+    isActived() {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
       return reactData.tipActive
     },
-    setActived (active: boolean) {
+    setActived(active: boolean) {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
       reactData.tipActive = !!active
     },
-    updateValue (value: VxeTooltipPropTypes.ModelValue) {
+    updateValue(value: VxeTooltipPropTypes.ModelValue) {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
@@ -318,7 +318,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeTooltip.emitModel(value)
       }
     },
-    updateZIndex () {
+    updateZIndex() {
       const $xeTooltip = this
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
@@ -330,7 +330,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.tipZindex = nextZIndex()
       }
     },
-    clickEvent  () {
+    clickEvent() {
       const $xeTooltip = this
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
@@ -341,14 +341,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeTooltip.handleVisible(reactData.target || $xeTooltip.getSelectorEl(), props.content)
       }
     },
-    targetMouseenterEvent  () {
+    targetMouseenterEvent() {
       const $xeTooltip = this
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
 
       $xeTooltip.handleVisible(reactData.target || $xeTooltip.getSelectorEl(), props.content)
     },
-    targetMouseleaveEvent () {
+    targetMouseleaveEvent() {
       const $xeTooltip = this
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
@@ -365,13 +365,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeTooltip.close()
       }
     },
-    wrapperMouseenterEvent  () {
+    wrapperMouseenterEvent() {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
       reactData.tipActive = true
     },
-    wrapperMouseleaveEvent () {
+    wrapperMouseleaveEvent() {
       const $xeTooltip = this
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
@@ -386,7 +386,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, leaveDelay)
       }
     },
-    showTip () {
+    showTip() {
       const $xeTooltip = this
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
@@ -409,19 +409,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return $xeTooltip.updatePlacement()
       })
     },
-    handleDelayFn () {
+    handleDelayFn() {
       const $xeTooltip = this
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
       const internalData = $xeTooltip.internalData
 
-      internalData.showDelayTip = XEUtils.debounce(() => {
-        if (reactData.tipActive) {
-          $xeTooltip.showTip()
-        }
-      }, props.enterDelay, { leading: false, trailing: true })
+      internalData.showDelayTip = XEUtils.debounce(
+        () => {
+          if (reactData.tipActive) {
+            $xeTooltip.showTip()
+          }
+        },
+        props.enterDelay,
+        { leading: false, trailing: true }
+      )
     },
-    handleVisible (target: HTMLElement | null, content?: VxeTooltipPropTypes.Content, evnt?: MouseEvent) {
+    handleVisible(target: HTMLElement | null, content?: VxeTooltipPropTypes.Content, evnt?: MouseEvent) {
       const $xeTooltip = this
       const props = $xeTooltip
       const slots = $xeTooltip.$scopedSlots
@@ -464,10 +468,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeTooltip.$nextTick()
     },
-    wheelEvent (evnt: Event) {
+    wheelEvent(evnt: Event) {
       evnt.stopPropagation()
     },
-    handleGlobalScrollEvent () {
+    handleGlobalScrollEvent() {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
@@ -475,13 +479,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeTooltip.updatePlacement()
       }
     },
-    handleGlobalBlurEvent () {
+    handleGlobalBlurEvent() {
       const $xeTooltip = this
 
       $xeTooltip.close()
     },
     // pooltipPrivateMethods
-    handleCloseEvent () {
+    handleCloseEvent() {
       const $xeTooltip = this
 
       $xeTooltip.targetMouseleaveEvent()
@@ -490,7 +494,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderContent (h: CreateElement) {
+    renderContent(h: CreateElement) {
       const $xeTooltip = this
       const props = $xeTooltip
       const slots = $xeTooltip.$scopedSlots
@@ -504,9 +508,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const contVNs: VNode[] = []
       if (contentSlot) {
         contVNs.push(
-          h('div', {
-            key: 'ct'
-          }, getSlotVNs(contentSlot({})))
+          h(
+            'div',
+            {
+              key: 'ct'
+            },
+            getSlotVNs(contentSlot({}))
+          )
         )
       } else if (XEUtils.isBoolean(useHtml) ? useHtml : useHTML) {
         contVNs.push(
@@ -518,9 +526,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
           })
         )
       } else {
-        contVNs.push(h('span', {
-          key: 'cd'
-        }, `${tipContent}`))
+        contVNs.push(
+          h(
+            'span',
+            {
+              key: 'cd'
+            },
+            `${tipContent}`
+          )
+        )
       }
       if (isVScrollbar) {
         return h(VxeScrollbarComponent, {
@@ -538,14 +552,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         })
       }
-      return h('div', {
-        key: 3,
-        ref: 'contentWrapperElem',
-        class: 'vxe-tooltip--content',
-        style: wrapperStyle
-      }, contVNs)
+      return h(
+        'div',
+        {
+          key: 3,
+          ref: 'contentWrapperElem',
+          class: 'vxe-tooltip--content',
+          style: wrapperStyle
+        },
+        contVNs
+      )
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeTooltip = this
       const props = $xeTooltip
       const slots = $xeTooltip.$scopedSlots
@@ -562,41 +580,54 @@ export default /* define-vxe-component start */ defineVxeComponent({
           mouseleave: $xeTooltip.wrapperMouseleaveEvent
         }
       }
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-tooltip--wrapper', `theme--${theme}`, popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $tooltip: $xeTooltip }) : popupClassName) : '', {
-          [`size--${vSize}`]: vSize,
-          [`placement--${tipStore.placement}`]: tipStore.placement,
-          'is--enterable': enterable,
-          'is--visible': visible,
-          'is--arrow': isArrow,
-          'is--active': tipActive
-        }],
-        style: tipStore.style,
-        on: ons
-      }, [
-        h('div', {
-          key: 'tby',
-          class: 'vxe-tooltip--body'
-        }, [
-          $xeTooltip.renderContent(h),
-          h('div', {
-            class: 'vxe-tooltip--arrow',
-            style: tipStore.arrowStyle
-          })
-        ]),
-        ...(defaultSlot ? getSlotVNs(defaultSlot({})) : [])
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-tooltip--wrapper',
+            `theme--${theme}`,
+            popupClassName ? (XEUtils.isFunction(popupClassName) ? popupClassName({ $tooltip: $xeTooltip }) : popupClassName) : '',
+            {
+              [`size--${vSize}`]: vSize,
+              [`placement--${tipStore.placement}`]: tipStore.placement,
+              'is--enterable': enterable,
+              'is--visible': visible,
+              'is--arrow': isArrow,
+              'is--active': tipActive
+            }
+          ],
+          style: tipStore.style,
+          on: ons
+        },
+        [
+          h(
+            'div',
+            {
+              key: 'tby',
+              class: 'vxe-tooltip--body'
+            },
+            [
+              $xeTooltip.renderContent(h),
+              h('div', {
+                class: 'vxe-tooltip--arrow',
+                style: tipStore.arrowStyle
+              })
+            ]
+          ),
+          ...(defaultSlot ? getSlotVNs(defaultSlot({})) : [])
+        ]
+      )
     }
   },
   watch: {
-    content (val) {
+    content(val) {
       const $xeTooltip = this
       const reactData = $xeTooltip.reactData
 
       reactData.tipContent = val
     },
-    value (val) {
+    value(val) {
       const $xeTooltip = this
       const props = $xeTooltip
       const reactData = $xeTooltip.reactData
@@ -610,13 +641,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       reactData.isUpdate = false
     },
-    enterDelay () {
+    enterDelay() {
       const $xeTooltip = this
 
       $xeTooltip.handleDelayFn()
     }
   },
-  created () {
+  created() {
     const $xeTooltip = this
 
     $xeTooltip.internalData = createInternalData()
@@ -625,7 +656,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeTooltip, 'blur', $xeTooltip.handleGlobalBlurEvent)
     globalEvents.on($xeTooltip, 'scroll', $xeTooltip.handleGlobalScrollEvent)
   },
-  mounted () {
+  mounted() {
     const $xeTooltip = this
     const props = $xeTooltip
     const reactData = $xeTooltip.reactData
@@ -676,7 +707,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     })
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeTooltip = this
     const reactData = $xeTooltip.reactData
     const internalData = $xeTooltip.internalData
@@ -708,7 +739,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

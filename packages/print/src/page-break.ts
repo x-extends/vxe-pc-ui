@@ -1,18 +1,19 @@
 import { CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assemblePageBreak, destroyPageBreak } from './util'
 
 import type { PrintPageBreakReactData, VxePrintPageBreakEmits, VxeComponentSizeType, ValueOf, VxePrintDefines, VxePrintConstructor, VxePrintPrivateMethods } from '../../../types'
 
+const { createEvent } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePrintPageBreak',
   props: {},
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: PrintPageBreakReactData = {
-    }
+    const reactData: PrintPageBreakReactData = {}
     const pageBreakConfig: VxePrintDefines.PageBreakConfig = {
       id: xID,
       slots: {}
@@ -38,20 +39,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxePrintPageBreakEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxePrintPageBreakEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xePrintPageBreak = this
       $xePrintPageBreak.$emit(type, createEvent(evnt, { $printPageBreak: $xePrintPageBreak }, params))
     },
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       return h('div', {
         ref: 'refElem'
       })
     }
   },
-  mounted () {
+  mounted() {
     const $xePrintPageBreak = this
     const slots = $xePrintPageBreak.$scopedSlots
     const $xePrint = $xePrintPageBreak.$xePrint
@@ -63,7 +64,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       assemblePageBreak($xePrint, elem, pageBreakConfig)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xePrintPageBreak = this
     const $xePrint = $xePrintPageBreak.$xePrint
     const pageBreakConfig = $xePrintPageBreak.pageBreakConfig
@@ -72,7 +73,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       destroyPageBreak($xePrint, pageBreakConfig)
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

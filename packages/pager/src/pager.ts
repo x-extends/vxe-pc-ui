@@ -1,7 +1,7 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { createComponentLog } from '../../ui/src/log'
 import VxeSelectComponent from '../../select'
 import VxeNumberInputComponent from '../../number-input'
@@ -15,9 +15,7 @@ const { warnLog, errLog } = createComponentLog('pager')
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePager',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     size: {
       type: String as PropType<VxePagerPropTypes.Size>,
@@ -100,7 +98,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: PagerReactData = {
       inpCurrPage: 1
@@ -115,13 +113,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       computeSize(): VxeComponentSizeType
       $xeGrid(): (VxeGridConstructor & VxeGridPrivateMethods) | null
     }),
-    computePageCount (this: any) {
+    computePageCount(this: any) {
       const $xePager = this
       const props = $xePager
 
       return $xePager.getPageCount(props.total, props.pageSize)
     },
-    computeNumList () {
+    computeNumList() {
       const $xePager = this
       const props = $xePager
 
@@ -134,13 +132,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return rest
     },
-    computeOffsetNumber () {
+    computeOffsetNumber() {
       const $xePager = this
       const props = $xePager
 
       return Math.floor((props.pagerCount - 2) / 2)
     },
-    computeSizeList () {
+    computeSizeList() {
       const $xePager = this
       const props = $xePager
 
@@ -159,88 +157,88 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxePagerEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxePagerEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xePager = this
       $xePager.$emit(type, createEvent(evnt, { $pager: $xePager }, params))
     },
-    setPageSize (num: number) {
+    setPageSize(num: number) {
       const $xePager = this
 
       $xePager.pageSizeEvent({ value: num } as VxeSelectDefines.ChangeEventParams)
       return $xePager.$nextTick()
     },
-    setPageSizeByEvent (evnt: Event, num: number) {
+    setPageSizeByEvent(evnt: Event, num: number) {
       const $xePager = this
 
       $xePager.pageSizeEvent({ value: num, $event: evnt } as VxeSelectDefines.ChangeEventParams)
     },
-    homePage () {
+    homePage() {
       const $xePager = this
 
       $xePager.handleHomePage()
       return $xePager.$nextTick()
     },
-    homePageByEvent (evnt: Event) {
+    homePageByEvent(evnt: Event) {
       const $xePager = this
 
       $xePager.handleHomePage(evnt)
     },
-    endPage () {
+    endPage() {
       const $xePager = this
 
       $xePager.handleEndPage()
       return $xePager.$nextTick()
     },
-    endPageByEvent (evnt: Event) {
+    endPageByEvent(evnt: Event) {
       const $xePager = this
 
       $xePager.handleEndPage(evnt)
     },
-    prevPage () {
+    prevPage() {
       const $xePager = this
 
       $xePager.handlePrevPage()
       return $xePager.$nextTick()
     },
-    prevPageByEvent (evnt: Event) {
+    prevPageByEvent(evnt: Event) {
       const $xePager = this
 
       $xePager.handlePrevPage(evnt)
     },
-    nextPage () {
+    nextPage() {
       const $xePager = this
 
       $xePager.handleNextPage()
       return $xePager.$nextTick()
     },
-    nextPageByEvent (evnt: Event) {
+    nextPageByEvent(evnt: Event) {
       const $xePager = this
 
       $xePager.handleNextPage(evnt)
     },
-    prevJump () {
+    prevJump() {
       const $xePager = this
 
       $xePager.handlePrevJump()
       return $xePager.$nextTick()
     },
-    prevJumpByEvent (evnt: Event) {
+    prevJumpByEvent(evnt: Event) {
       const $xePager = this
 
       $xePager.handlePrevJump(evnt)
     },
-    nextJump () {
+    nextJump() {
       const $xePager = this
 
       $xePager.handleNextJump()
       return $xePager.$nextTick()
     },
-    nextJumpByEvent (evnt: Event) {
+    nextJumpByEvent(evnt: Event) {
       const $xePager = this
 
       $xePager.handleNextJump(evnt)
     },
-    setCurrentPage (currentPage: number) {
+    setCurrentPage(currentPage: number) {
       const $xePager = this
       const reactData = $xePager.reactData
 
@@ -249,7 +247,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xePager.handleChangeCurrentPage(current)
       return $xePager.$nextTick()
     },
-    setCurrentPageByEvent (evnt: Event, currentPage: number) {
+    setCurrentPageByEvent(evnt: Event, currentPage: number) {
       const $xePager = this
       const reactData = $xePager.reactData
 
@@ -261,16 +259,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
      * 已废弃，被 setCurrentPage 替换
      * @deprecated
      */
-    jumpPage (currentPage: number) {
+    jumpPage(currentPage: number) {
       const $xePager = this
 
       warnLog('vxe.error.delFunc', ['jumpPage', 'setCurrentPage'])
       return $xePager.setCurrentPage(currentPage)
     },
-    getPageCount  (total: number, size: number) {
+    getPageCount(total: number, size: number) {
       return Math.max(Math.ceil(total / size), 1)
     },
-    handleJumpPageEvent  (evnt: Event, currentPage: number) {
+    handleJumpPageEvent(evnt: Event, currentPage: number) {
       const $xePager = this
       const props = $xePager
 
@@ -279,7 +277,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePager.dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
       }
     },
-    handleChangeCurrentPage  (currentPage: number, evnt?: Event) {
+    handleChangeCurrentPage(currentPage: number, evnt?: Event) {
       const $xePager = this
       const props = $xePager
 
@@ -288,7 +286,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePager.dispatchEvent('page-change', { type: 'current', pageSize: props.pageSize, currentPage }, evnt)
       }
     },
-    triggerJumpEvent (params: VxeInputDefines.BlurEventParams) {
+    triggerJumpEvent(params: VxeInputDefines.BlurEventParams) {
       const $xePager = this
       const reactData = $xePager.reactData
 
@@ -302,7 +300,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.inpCurrPage = currPage
       $xePager.handleChangeCurrentPage(current, $event)
     },
-    handleHomePage  (evnt?: Event) {
+    handleHomePage(evnt?: Event) {
       const $xePager = this
       const props = $xePager
 
@@ -311,7 +309,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePager.handleChangeCurrentPage(1, evnt)
       }
     },
-    handleEndPage  (evnt?: Event) {
+    handleEndPage(evnt?: Event) {
       const $xePager = this
       const props = $xePager
 
@@ -321,7 +319,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePager.handleChangeCurrentPage(pageCount, evnt)
       }
     },
-    handlePrevPage  (evnt?: Event) {
+    handlePrevPage(evnt?: Event) {
       const $xePager = this
       const props = $xePager
 
@@ -331,7 +329,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePager.handleChangeCurrentPage(Math.min(pageCount, Math.max(currentPage - 1, 1)), evnt)
       }
     },
-    handleNextPage  (evnt?: Event) {
+    handleNextPage(evnt?: Event) {
       const $xePager = this
       const props = $xePager
 
@@ -341,14 +339,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePager.handleChangeCurrentPage(Math.min(pageCount, currentPage + 1), evnt)
       }
     },
-    handlePrevJump  (evnt?: Event) {
+    handlePrevJump(evnt?: Event) {
       const $xePager = this
       const props = $xePager
 
       const numList = $xePager.computeNumList
       $xePager.handleChangeCurrentPage(Math.max(props.currentPage - numList.length, 1), evnt)
     },
-    handleNextJump  (evnt?: Event) {
+    handleNextJump(evnt?: Event) {
       const $xePager = this
       const props = $xePager
 
@@ -356,7 +354,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const numList = $xePager.computeNumList
       $xePager.handleChangeCurrentPage(Math.min(props.currentPage + numList.length, pageCount), evnt)
     },
-    pageSizeEvent (params: VxeSelectDefines.ChangeEventParams) {
+    pageSizeEvent(params: VxeSelectDefines.ChangeEventParams) {
       const $xePager = this
       const props = $xePager
 
@@ -373,7 +371,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xePager.dispatchEvent('page-change', { type: 'size', pageSize, currentPage }, $event)
       }
     },
-    jumpKeydownEvent (params: VxeInputDefines.KeydownEventParams) {
+    jumpKeydownEvent(params: VxeInputDefines.KeydownEventParams) {
       const $xePager = this
 
       const { $event } = params
@@ -392,7 +390,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     // Render
     //
     // 第一页
-    renderHomePage  (h: CreateElement) {
+    renderHomePage(h: CreateElement) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -401,29 +399,40 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const homeSlot = slots.home
       const pageCount = $xePager.computePageCount
       if (homeSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-home-btn'
-        }, homeSlot({ $pager: $xePager, total, currentPage, pageCount }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-home-btn'
+          },
+          homeSlot({ $pager: $xePager, total, currentPage, pageCount })
+        )
       }
-      return h('button', {
-        class: ['vxe-pager--home-btn', {
-          'is--disabled': currentPage <= 1
-        }],
-        attrs: {
-          type: 'button',
-          title: getI18n('vxe.pager.homePageTitle')
+      return h(
+        'button',
+        {
+          class: [
+            'vxe-pager--home-btn',
+            {
+              'is--disabled': currentPage <= 1
+            }
+          ],
+          attrs: {
+            type: 'button',
+            title: getI18n('vxe.pager.homePageTitle')
+          },
+          on: {
+            click: $xePager.handleHomePage
+          }
         },
-        on: {
-          click: $xePager.handleHomePage
-        }
-      }, [
-        h('i', {
-          class: ['vxe-pager--btn-icon', props.iconHomePage || getIcon().PAGER_HOME]
-        })
-      ])
+        [
+          h('i', {
+            class: ['vxe-pager--btn-icon', props.iconHomePage || getIcon().PAGER_HOME]
+          })
+        ]
+      )
     },
     // 上一页
-    renderPrevPage  (h: CreateElement) {
+    renderPrevPage(h: CreateElement) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -432,29 +441,40 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const prevPageSlot = slots.prevPage || slots['prev-page']
       const pageCount = $xePager.computePageCount
       if (prevPageSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-prev-btn'
-        }, prevPageSlot({ $pager: $xePager, total, currentPage, pageCount }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-prev-btn'
+          },
+          prevPageSlot({ $pager: $xePager, total, currentPage, pageCount })
+        )
       }
-      return h('button', {
-        class: ['vxe-pager--prev-btn', {
-          'is--disabled': currentPage <= 1
-        }],
-        attrs: {
-          type: 'button',
-          title: getI18n('vxe.pager.prevPageTitle')
+      return h(
+        'button',
+        {
+          class: [
+            'vxe-pager--prev-btn',
+            {
+              'is--disabled': currentPage <= 1
+            }
+          ],
+          attrs: {
+            type: 'button',
+            title: getI18n('vxe.pager.prevPageTitle')
+          },
+          on: {
+            click: $xePager.handlePrevPage
+          }
         },
-        on: {
-          click: $xePager.handlePrevPage
-        }
-      }, [
-        h('i', {
-          class: ['vxe-pager--btn-icon', props.iconPrevPage || getIcon().PAGER_PREV_PAGE]
-        })
-      ])
+        [
+          h('i', {
+            class: ['vxe-pager--btn-icon', props.iconPrevPage || getIcon().PAGER_PREV_PAGE]
+          })
+        ]
+      )
     },
     // 向上翻页
-    renderPrevJump (h: CreateElement, tagName?: string) {
+    renderPrevJump(h: CreateElement, tagName?: string) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -463,35 +483,46 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const prevJumpSlot = slots.prevJump || slots['prev-jump']
       const pageCount = $xePager.computePageCount
       if (prevJumpSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-jump-prev'
-        }, prevJumpSlot({ $pager: $xePager, total, currentPage, pageCount }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-jump-prev'
+          },
+          prevJumpSlot({ $pager: $xePager, total, currentPage, pageCount })
+        )
       }
-      return h(tagName || 'button', {
-        class: ['vxe-pager--jump-prev', {
-          'is--fixed': !tagName,
-          'is--disabled': currentPage <= 1
-        }],
-        attrs: {
-          type: 'button',
-          title: getI18n('vxe.pager.prevJumpTitle')
+      return h(
+        tagName || 'button',
+        {
+          class: [
+            'vxe-pager--jump-prev',
+            {
+              'is--fixed': !tagName,
+              'is--disabled': currentPage <= 1
+            }
+          ],
+          attrs: {
+            type: 'button',
+            title: getI18n('vxe.pager.prevJumpTitle')
+          },
+          on: {
+            click: $xePager.handlePrevJump
+          }
         },
-        on: {
-          click: $xePager.handlePrevJump
-        }
-      }, [
-        tagName
-          ? h('i', {
-            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
+        [
+          tagName
+            ? h('i', {
+              class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
+            })
+            : null,
+          h('i', {
+            class: ['vxe-pager--jump-icon', props.iconJumpPrev || getIcon().PAGER_JUMP_PREV]
           })
-          : null,
-        h('i', {
-          class: ['vxe-pager--jump-icon', props.iconJumpPrev || getIcon().PAGER_JUMP_PREV]
-        })
-      ])
+        ]
+      )
     },
     // 向下翻页
-    renderNextJump  (h: CreateElement, tagName?: string) {
+    renderNextJump(h: CreateElement, tagName?: string) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -500,35 +531,46 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nextJumpSlot = slots.nextJump || slots['next-jump']
       const pageCount = $xePager.computePageCount
       if (nextJumpSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-jump-next'
-        }, nextJumpSlot({ $pager: $xePager, total, currentPage, pageCount }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-jump-next'
+          },
+          nextJumpSlot({ $pager: $xePager, total, currentPage, pageCount })
+        )
       }
-      return h(tagName || 'button', {
-        class: ['vxe-pager--jump-next', {
-          'is--fixed': !tagName,
-          'is--disabled': currentPage >= pageCount
-        }],
-        attrs: {
-          type: 'button',
-          title: getI18n('vxe.pager.nextJumpTitle')
+      return h(
+        tagName || 'button',
+        {
+          class: [
+            'vxe-pager--jump-next',
+            {
+              'is--fixed': !tagName,
+              'is--disabled': currentPage >= pageCount
+            }
+          ],
+          attrs: {
+            type: 'button',
+            title: getI18n('vxe.pager.nextJumpTitle')
+          },
+          on: {
+            click: $xePager.handleNextJump
+          }
         },
-        on: {
-          click: $xePager.handleNextJump
-        }
-      }, [
-        tagName
-          ? h('i', {
-            class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
+        [
+          tagName
+            ? h('i', {
+              class: ['vxe-pager--jump-more-icon', props.iconJumpMore || getIcon().PAGER_JUMP_MORE]
+            })
+            : null,
+          h('i', {
+            class: ['vxe-pager--jump-icon', props.iconJumpNext || getIcon().PAGER_JUMP_NEXT]
           })
-          : null,
-        h('i', {
-          class: ['vxe-pager--jump-icon', props.iconJumpNext || getIcon().PAGER_JUMP_NEXT]
-        })
-      ])
+        ]
+      )
     },
     // 下一页
-    renderNextPage  (h: CreateElement) {
+    renderNextPage(h: CreateElement) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -537,29 +579,40 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const nextPageSlot = slots.nextPage || slots['next-page']
       const pageCount = $xePager.computePageCount
       if (nextPageSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-next-btn'
-        }, nextPageSlot({ $pager: $xePager, total, currentPage, pageCount }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-next-btn'
+          },
+          nextPageSlot({ $pager: $xePager, total, currentPage, pageCount })
+        )
       }
-      return h('button', {
-        class: ['vxe-pager--next-btn', {
-          'is--disabled': currentPage >= pageCount
-        }],
-        attrs: {
-          type: 'button',
-          title: getI18n('vxe.pager.nextPageTitle')
+      return h(
+        'button',
+        {
+          class: [
+            'vxe-pager--next-btn',
+            {
+              'is--disabled': currentPage >= pageCount
+            }
+          ],
+          attrs: {
+            type: 'button',
+            title: getI18n('vxe.pager.nextPageTitle')
+          },
+          on: {
+            click: $xePager.handleNextPage
+          }
         },
-        on: {
-          click: $xePager.handleNextPage
-        }
-      }, [
-        h('i', {
-          class: ['vxe-pager--btn-icon', props.iconNextPage || getIcon().PAGER_NEXT_PAGE]
-        })
-      ])
+        [
+          h('i', {
+            class: ['vxe-pager--btn-icon', props.iconNextPage || getIcon().PAGER_NEXT_PAGE]
+          })
+        ]
+      )
     },
     // 最后一页
-    renderEndPage  (h: CreateElement) {
+    renderEndPage(h: CreateElement) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -568,35 +621,46 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const endSlot = slots.end
       const pageCount = $xePager.computePageCount
       if (endSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-end-btn'
-        }, endSlot({ $pager: $xePager, total, currentPage, pageCount }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-end-btn'
+          },
+          endSlot({ $pager: $xePager, total, currentPage, pageCount })
+        )
       }
-      return h('button', {
-        class: ['vxe-pager--end-btn', {
-          'is--disabled': currentPage >= pageCount
-        }],
-        attrs: {
-          type: 'button',
-          title: getI18n('vxe.pager.endPageTitle')
+      return h(
+        'button',
+        {
+          class: [
+            'vxe-pager--end-btn',
+            {
+              'is--disabled': currentPage >= pageCount
+            }
+          ],
+          attrs: {
+            type: 'button',
+            title: getI18n('vxe.pager.endPageTitle')
+          },
+          on: {
+            click: $xePager.handleEndPage
+          }
         },
-        on: {
-          click: $xePager.handleEndPage
-        }
-      }, [
-        h('i', {
-          class: ['vxe-pager--btn-icon', props.iconEndPage || getIcon().PAGER_END]
-        })
-      ])
+        [
+          h('i', {
+            class: ['vxe-pager--btn-icon', props.iconEndPage || getIcon().PAGER_END]
+          })
+        ]
+      )
     },
     // 页数
-    renderNumber  (h: CreateElement, showJump?: boolean) {
+    renderNumber(h: CreateElement, showJump?: boolean) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
 
       const { currentPage, total, pagerCount } = props
-      const numberSlot = showJump ? (slots.numberJump || slots['number-jump']) : slots.number
+      const numberSlot = showJump ? slots.numberJump || slots['number-jump'] : slots.number
       const nums = []
       const pageCount = $xePager.computePageCount
       const numList = $xePager.computeNumList
@@ -618,15 +682,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (showJump && isLt) {
         restList.push(1)
         nums.push(
-          h('button', {
-            class: 'vxe-pager--num-btn',
-            attrs: {
-              type: 'button'
+          h(
+            'button',
+            {
+              class: 'vxe-pager--num-btn',
+              attrs: {
+                type: 'button'
+              },
+              on: {
+                click: (evnt: Event) => $xePager.handleJumpPageEvent(evnt, 1)
+              }
             },
-            on: {
-              click: (evnt: Event) => $xePager.handleJumpPageEvent(evnt, 1)
-            }
-          }, '1'),
+            '1'
+          ),
           $xePager.renderPrevJump(h, 'span')
         )
       }
@@ -635,18 +703,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (number <= pageCount) {
           restList.push(number)
           nums.push(
-            h('button', {
-              key: number,
-              class: ['vxe-pager--num-btn', {
-                'is--active': currentPage === number
-              }],
-              attrs: {
-                type: 'button'
+            h(
+              'button',
+              {
+                key: number,
+                class: [
+                  'vxe-pager--num-btn',
+                  {
+                    'is--active': currentPage === number
+                  }
+                ],
+                attrs: {
+                  type: 'button'
+                },
+                on: {
+                  click: (evnt: Event) => $xePager.handleJumpPageEvent(evnt, number)
+                }
               },
-              on: {
-                click: (evnt: Event) => $xePager.handleJumpPageEvent(evnt, number)
-              }
-            }, `${number}`)
+              `${number}`
+            )
           )
         }
       })
@@ -654,34 +729,46 @@ export default /* define-vxe-component start */ defineVxeComponent({
         restList.push(pageCount)
         nums.push(
           $xePager.renderNextJump(h, 'button'),
-          h('button', {
-            class: 'vxe-pager--num-btn',
-            attrs: {
-              type: 'button'
+          h(
+            'button',
+            {
+              class: 'vxe-pager--num-btn',
+              attrs: {
+                type: 'button'
+              },
+              on: {
+                click: (evnt: Event) => $xePager.handleJumpPageEvent(evnt, pageCount)
+              }
             },
-            on: {
-              click: (evnt: Event) => $xePager.handleJumpPageEvent(evnt, pageCount)
-            }
-          }, pageCount)
+            pageCount
+          )
         )
       }
       if (numberSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-btn-wrapper'
-        }, numberSlot({ $pager: $xePager, total, numList: restList, currentPage, pageCount }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-btn-wrapper'
+          },
+          numberSlot({ $pager: $xePager, total, numList: restList, currentPage, pageCount })
+        )
       }
-      return h('span', {
-        class: 'vxe-pager--btn-wrapper'
-      }, nums)
+      return h(
+        'span',
+        {
+          class: 'vxe-pager--btn-wrapper'
+        },
+        nums
+      )
     },
     // jumpNumber
-    renderJumpNumber  (h: CreateElement) {
+    renderJumpNumber(h: CreateElement) {
       const $xePager = this
 
       return $xePager.renderNumber(h, true)
     },
     // sizes
-    renderSizes (h: CreateElement) {
+    renderSizes(h: CreateElement) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -691,9 +778,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const sizeList = $xePager.computeSizeList
       const pageCount = $xePager.computePageCount
       if (sizesSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-sizes'
-        }, sizesSlot({ $pager: $xePager, total, currentPage, pageCount, pageSize, options: sizeList }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-sizes'
+          },
+          sizesSlot({ $pager: $xePager, total, currentPage, pageCount, pageSize, options: sizeList })
+        )
       }
       return h(VxeSelectComponent, {
         class: 'vxe-pager--sizes',
@@ -710,7 +801,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
     },
     // Jump
-    renderJump (h: CreateElement, isFull?: boolean) {
+    renderJump(h: CreateElement, isFull?: boolean) {
       const $xePager = this
       const props = $xePager
       const reactData = $xePager.reactData
@@ -718,56 +809,72 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
       const { total } = props
       const { inpCurrPage } = reactData
-      const jumpSlot = isFull ? (slots.fullJump || slots['full-jump']) : slots.jump
+      const jumpSlot = isFull ? slots.fullJump || slots['full-jump'] : slots.jump
       const pageCount = $xePager.computePageCount
       if (jumpSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-jump'
-        }, jumpSlot({ $pager: $xePager, total, currentPage: inpCurrPage, pageCount }))
-      }
-      return h('span', {
-        class: 'vxe-pager--jump'
-      }, [
-        isFull
-          ? h('span', {
-            class: 'vxe-pager--goto-text'
-          }, getI18n('vxe.pager.goto'))
-          : null,
-        h(VxeNumberInputComponent, {
-          class: 'vxe-pager--goto',
-          props: {
-            value: inpCurrPage,
-            placeholder: getI18n('vxe.pager.gotoTitle'),
-            align: 'center',
-            type: 'integer',
-            max: pageCount,
-            min: 1,
-            controls: false,
-            clearable: false
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-jump'
           },
-          on: {
-            keydown: $xePager.jumpKeydownEvent,
-            blur: $xePager.triggerJumpEvent,
-            'modelValue' (val: string) {
-              reactData.inpCurrPage = val
+          jumpSlot({ $pager: $xePager, total, currentPage: inpCurrPage, pageCount })
+        )
+      }
+      return h(
+        'span',
+        {
+          class: 'vxe-pager--jump'
+        },
+        [
+          isFull
+            ? h(
+              'span',
+              {
+                class: 'vxe-pager--goto-text'
+              },
+              getI18n('vxe.pager.goto')
+            )
+            : null,
+          h(VxeNumberInputComponent, {
+            class: 'vxe-pager--goto',
+            props: {
+              value: inpCurrPage,
+              placeholder: getI18n('vxe.pager.gotoTitle'),
+              align: 'center',
+              type: 'integer',
+              max: pageCount,
+              min: 1,
+              controls: false,
+              clearable: false
+            },
+            on: {
+              keydown: $xePager.jumpKeydownEvent,
+              blur: $xePager.triggerJumpEvent,
+              modelValue(val: string) {
+                reactData.inpCurrPage = val
+              }
             }
-          }
-        }),
-        isFull
-          ? h('span', {
-            class: 'vxe-pager--classifier-text'
-          }, getI18n('vxe.pager.pageClassifier'))
-          : null
-      ])
+          }),
+          isFull
+            ? h(
+              'span',
+              {
+                class: 'vxe-pager--classifier-text'
+              },
+              getI18n('vxe.pager.pageClassifier')
+            )
+            : null
+        ]
+      )
     },
     // FullJump
-    renderFullJump  (h: CreateElement) {
+    renderFullJump(h: CreateElement) {
       const $xePager = this
 
       return $xePager.renderJump(h, true)
     },
     // PageCount
-    renderPageCount  (h: CreateElement) {
+    renderPageCount(h: CreateElement) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -776,21 +883,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const pageCountSlot = slots.pageCount || slots['page-count']
       const pageCount = $xePager.computePageCount
       if (pageCountSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-count'
-        }, pageCountSlot({ $pager: $xePager, total, currentPage, pageCount }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-count'
+          },
+          pageCountSlot({ $pager: $xePager, total, currentPage, pageCount })
+        )
       }
-      return h('span', {
-        class: 'vxe-pager--count'
-      }, [
-        h('span', {
-          class: 'vxe-pager--separator'
-        }),
-        h('span', pageCount)
-      ])
+      return h(
+        'span',
+        {
+          class: 'vxe-pager--count'
+        },
+        [
+          h('span', {
+            class: 'vxe-pager--separator'
+          }),
+          h('span', pageCount)
+        ]
+      )
     },
     // total
-    renderTotal  (h: CreateElement) {
+    renderTotal(h: CreateElement) {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -799,15 +914,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const totalSlot = slots.total
       const pageCount = $xePager.computePageCount
       if (totalSlot) {
-        return h('span', {
-          class: 'vxe-pager--custom-total'
-        }, totalSlot({ $pager: $xePager, total, currentPage, pageCount }))
+        return h(
+          'span',
+          {
+            class: 'vxe-pager--custom-total'
+          },
+          totalSlot({ $pager: $xePager, total, currentPage, pageCount })
+        )
       }
-      return h('span', {
-        class: 'vxe-pager--total'
-      }, getI18n('vxe.pager.total', [total]))
+      return h(
+        'span',
+        {
+          class: 'vxe-pager--total'
+        },
+        getI18n('vxe.pager.total', [total])
+      )
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xePager = this
       const props = $xePager
       const slots = $xePager.$scopedSlots
@@ -819,9 +942,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const pageCount = $xePager.computePageCount
       if (slots.left) {
         childNodes.push(
-          h('span', {
-            class: 'vxe-pager--left-wrapper'
-          }, slots.left({ $grid: $xeGrid }))
+          h(
+            'span',
+            {
+              class: 'vxe-pager--left-wrapper'
+            },
+            slots.left({ $grid: $xeGrid })
+          )
         )
       }
       layouts.forEach((name) => {
@@ -875,45 +1002,61 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
       if (slots.right) {
         childNodes.push(
-          h('span', {
-            class: 'vxe-pager--right-wrapper'
-          }, slots.right({ $grid: $xeGrid }))
+          h(
+            'span',
+            {
+              class: 'vxe-pager--right-wrapper'
+            },
+            slots.right({ $grid: $xeGrid })
+          )
         )
       }
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-pager', className ? (XEUtils.isFunction(className) ? className({ $pager: $xePager }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          [`align--${align}`]: align,
-          'is--border': props.border,
-          'is--background': props.background,
-          'is--perfect': props.perfect,
-          'is--hidden': props.autoHidden && pageCount === 1,
-          'is--loading': props.loading
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-pager--wrapper'
-        }, childNodes)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-pager',
+            className ? (XEUtils.isFunction(className) ? className({ $pager: $xePager }) : className) : '',
+            {
+              [`size--${vSize}`]: vSize,
+              [`align--${align}`]: align,
+              'is--border': props.border,
+              'is--background': props.background,
+              'is--perfect': props.perfect,
+              'is--hidden': props.autoHidden && pageCount === 1,
+              'is--loading': props.loading
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-pager--wrapper'
+            },
+            childNodes
+          )
+        ]
+      )
     }
   },
   watch: {
-    currentPage (val) {
+    currentPage(val) {
       const $xePager = this
       const reactData = $xePager.reactData
 
       reactData.inpCurrPage = val
     }
   },
-  created () {
+  created() {
     const $xePager = this
     const props = $xePager
     const reactData = $xePager.reactData
 
     reactData.inpCurrPage = props.currentPage
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

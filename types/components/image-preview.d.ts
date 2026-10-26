@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeImagePreview: DefineVxeComponentApp<VxeImagePreviewProps, VxeImagePreviewEventProps, VxeImagePreviewSlots, VxeImagePreviewMethods>
 export type VxeImagePreviewComponent = DefineVxeComponentOptions<VxeImagePreviewProps>
 
-export type VxeImagePreviewInstance = DefineVxeComponentInstance<{
-  reactData: ImagePreviewReactData
-}, VxeImagePreviewProps, VxeImagePreviewPrivateComputed, VxeImagePreviewMethods>
+export type VxeImagePreviewInstance = DefineVxeComponentInstance<
+  {
+    reactData: ImagePreviewReactData
+  },
+  VxeImagePreviewProps,
+  VxeImagePreviewPrivateComputed,
+  VxeImagePreviewMethods
+>
 
 export type VxeImagePreviewConstructor = VxeImagePreviewInstance
 
-export interface ImagePreviewPrivateRef {
-}
-export interface VxeImagePreviewPrivateRef extends ImagePreviewPrivateRef { }
+export interface ImagePreviewPrivateRef {}
+export interface VxeImagePreviewPrivateRef extends ImagePreviewPrivateRef {}
 
 export namespace VxeImagePreviewPropTypes {
   export type ModelValue = null | number
@@ -27,43 +31,51 @@ export namespace VxeImagePreviewPropTypes {
   export type ShowDownloadButton = boolean
   export interface ToolbarConfig {
     layouts?: ('PageNumber' | 'ZoomOut' | 'ZoomIn' | 'PctFull' | 'Pct11' | 'RotateLeft' | 'RotateRight' | 'Print' | 'Download')[]
-    zoomOut?: boolean | {
-      icon?: string
-    }
-    zoomIn?: boolean | {
-      icon?: string
-    }
-    pctFull?: boolean | {
-      icon?: string
-    }
-    pct11?: boolean | {
-      icon?: string
-    }
-    rotateLeft?: boolean | {
-      icon?: string
-    }
-    rotateRight?: boolean | {
-      icon?: string
-    }
-    print?: boolean | {
-      icon?: string
-    }
-    download?: boolean | {
-      icon?: string
-      beforeDownloadMethod?: BeforeDownloadMethod
-      downloadMethod?: DownloadMethod
-    }
+    zoomOut?:
+      | boolean
+      | {
+          icon?: string
+        }
+    zoomIn?:
+      | boolean
+      | {
+          icon?: string
+        }
+    pctFull?:
+      | boolean
+      | {
+          icon?: string
+        }
+    pct11?:
+      | boolean
+      | {
+          icon?: string
+        }
+    rotateLeft?:
+      | boolean
+      | {
+          icon?: string
+        }
+    rotateRight?:
+      | boolean
+      | {
+          icon?: string
+        }
+    print?:
+      | boolean
+      | {
+          icon?: string
+        }
+    download?:
+      | boolean
+      | {
+          icon?: string
+          beforeDownloadMethod?: BeforeDownloadMethod
+          downloadMethod?: DownloadMethod
+        }
   }
-  export type BeforeDownloadMethod = undefined | ((params: {
-    $imagePreview: VxeImagePreviewConstructor
-    url: any
-    index: number
-  }) => boolean | Promise<boolean>)
-  export type DownloadMethod = undefined | ((params: {
-    $imagePreview: VxeImagePreviewConstructor
-    url: any
-    index: number
-  }) => Promise<any>)
+  export type BeforeDownloadMethod = undefined | ((params: { $imagePreview: VxeImagePreviewConstructor; url: any; index: number }) => boolean | Promise<boolean>)
+  export type DownloadMethod = undefined | ((params: { $imagePreview: VxeImagePreviewConstructor; url: any; index: number }) => Promise<any>)
 }
 
 export interface VxeImagePreviewProps {
@@ -80,9 +92,8 @@ export interface VxeImagePreviewProps {
   beforeDownloadMethod?: VxeImagePreviewPropTypes.BeforeDownloadMethod
 }
 
-export interface ImagePreviewPrivateComputed {
-}
-export interface VxeImagePreviewPrivateComputed extends ImagePreviewPrivateComputed { }
+export interface ImagePreviewPrivateComputed {}
+export interface VxeImagePreviewPrivateComputed extends ImagePreviewPrivateComputed {}
 
 export interface ImagePreviewReactData {
   activeIndex: undefined | VxeImagePreviewPropTypes.ModelValue
@@ -96,20 +107,12 @@ export interface ImagePreviewReactData {
 export interface ImagePreviewMethods {
   dispatchEvent(type: ValueOf<VxeImagePreviewEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeImagePreviewMethods extends ImagePreviewMethods { }
+export interface VxeImagePreviewMethods extends ImagePreviewMethods {}
 
-export interface ImagePreviewPrivateMethods {
-}
-export interface VxeImagePreviewPrivateMethods extends ImagePreviewPrivateMethods { }
+export interface ImagePreviewPrivateMethods {}
+export interface VxeImagePreviewPrivateMethods extends ImagePreviewPrivateMethods {}
 
-export type VxeImagePreviewEmits = [
-  'input',
-  'change',
-  'download',
-  'download-fail',
-  'rotate',
-  'close'
-]
+export type VxeImagePreviewEmits = ['input', 'change', 'download', 'download-fail', 'rotate', 'close']
 
 export namespace VxeImagePreviewDefines {
   export interface ImagePreviewEventParams extends VxeComponentEventParams {
@@ -122,7 +125,7 @@ export namespace VxeImagePreviewDefines {
     url: string
     activeIndex: number
   }
-  export interface ChangeEventParams extends ImagePreviewEventParams, ChangeParams { }
+  export interface ChangeEventParams extends ImagePreviewEventParams, ChangeParams {}
 
   export interface RotateEventParams extends ImagePreviewEventParams {
     url: string
@@ -143,7 +146,7 @@ export interface VxeImagePreviewListeners {
 export namespace VxeImagePreviewEvents {
   export type Change = (params: VxeImagePreviewDefines.ChangeEventParams) => void
   export type Rotate = (params: VxeImagePreviewDefines.RotateEventParams) => void
- }
+}
 
 export namespace VxeImagePreviewSlotTypes {
   export interface DefaultSlotParams {

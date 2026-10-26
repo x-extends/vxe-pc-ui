@@ -1,7 +1,7 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText, eqEmptyValue } from '../../ui/src/utils'
 import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
@@ -9,23 +9,49 @@ import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input'
 import VxeButtonComponent from '../../button'
 
-import type { VxeSelectPropTypes, SelectInternalData, ValueOf, VxeUseSizeComputed, VxeUseVScrollbarComputed, VxeUseInitVScrollbarComputed, SelectReactData, VxeSelectEmits, VxeButtonDefines, VxeInputDefines, VxeSelectDefines, VxeOptionProps, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeInputConstructor, VxeComponentSlotType, VxeComponentStyleType, VxeCardConstructor, VxeCardPrivateMethods, VxeScrollbarPropTypes } from '../../../types'
+import type {
+  VxeSelectPropTypes,
+  SelectInternalData,
+  ValueOf,
+  VxeUseSizeComputed,
+  VxeUseVScrollbarComputed,
+  VxeUseInitVScrollbarComputed,
+  SelectReactData,
+  VxeSelectEmits,
+  VxeButtonDefines,
+  VxeInputDefines,
+  VxeSelectDefines,
+  VxeOptionProps,
+  VxeDrawerConstructor,
+  VxeDrawerMethods,
+  VxeFormDefines,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  VxeModalConstructor,
+  VxeModalMethods,
+  VxeInputConstructor,
+  VxeComponentSlotType,
+  VxeComponentStyleType,
+  VxeCardConstructor,
+  VxeCardPrivateMethods,
+  VxeScrollbarPropTypes
+} from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-const { getConfig, getIcon, getI18n, baseUtils, domUtils, globalEvents, GLOBAL_EVENT_KEYS, globalResize, createEvent, renderEmptyElement } = VxeUI
+const { getConfig, getIcon, getI18n, baseUtils, domUtils, globalEvents, GLOBAL_EVENT_KEYS, globalMixins, globalResize, createEvent, renderEmptyElement } = VxeUI
 const { getDefVal } = baseUtils
 
 const { errLog } = createComponentLog('select')
 
-function isOptionVisible (option: any) {
+function isOptionVisible(option: any) {
   return option.visible !== false
 }
 
-function getOptUniqueId () {
+function getOptUniqueId() {
   return XEUtils.uniqueId('opt_')
 }
 
-function createReactData (): SelectReactData {
+function createReactData(): SelectReactData {
   return {
     initialized: false,
     scrollYLoad: false,
@@ -53,7 +79,7 @@ function createReactData (): SelectReactData {
   }
 }
 
-function createInternalData (): SelectInternalData {
+function createInternalData(): SelectInternalData {
   return {
     // isLoaded: false,
     synchData: [],
@@ -88,11 +114,7 @@ function createInternalData (): SelectInternalData {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSelect',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.vScrollbarMixin,
-    globalMixins.initVScrollbarMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.vScrollbarMixin, globalMixins.initVScrollbarMixin],
   model: {
     prop: 'value',
     event: 'modelValue'
@@ -251,13 +273,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  provide () {
+  provide() {
     const $xeSelect = this
     return {
       $xeSelect
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
 
@@ -273,15 +295,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   computed: {
-    ...({} as VxeUseSizeComputed & VxeUseVScrollbarComputed & VxeUseInitVScrollbarComputed & {
-      $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
-      $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
-      $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
-      $xeCard(): (VxeCardConstructor & VxeCardPrivateMethods) | null
-      $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
-      formItemInfo(): VxeFormDefines.ProvideItemInfo | null
-    }),
-    computeFormReadonly () {
+    ...({} as VxeUseSizeComputed &
+      VxeUseVScrollbarComputed &
+      VxeUseInitVScrollbarComputed & {
+        $xeModal(): (VxeModalConstructor & VxeModalMethods) | null
+        $xeDrawer(): (VxeDrawerConstructor & VxeDrawerMethods) | null
+        $xeTable(): (VxeTableConstructor & VxeTablePrivateMethods) | null
+        $xeCard(): (VxeCardConstructor & VxeCardPrivateMethods) | null
+        $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
+        formItemInfo(): VxeFormDefines.ProvideItemInfo | null
+      }),
+    computeFormReadonly() {
       const $xeSelect = this
       const props = $xeSelect
       const $xeForm = $xeSelect.$xeForm
@@ -295,7 +319,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return readonly
     },
-    computeIsDisabled () {
+    computeIsDisabled() {
       const $xeSelect = this
       const props = $xeSelect
       const $xeForm = $xeSelect.$xeForm
@@ -309,7 +333,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return disabled
     },
-    computeBtnTransfer () {
+    computeBtnTransfer() {
       const $xeSelect = this
       const props = $xeSelect
       const $xeTable = $xeSelect.$xeTable
@@ -334,7 +358,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return transfer
     },
-    computeInpPlaceholder () {
+    computeInpPlaceholder() {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -348,79 +372,79 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return getI18n('vxe.base.pleaseSelect')
     },
-    computeDefaultOpts () {
+    computeDefaultOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, props.defaultConfig)
     },
-    computePropsOpts () {
+    computePropsOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, props.optionProps)
     },
-    computeGroupPropsOpts () {
+    computeGroupPropsOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, props.optionGroupProps)
     },
-    computeLabelField () {
+    computeLabelField() {
       const $xeSelect = this
 
       const propsOpts = $xeSelect.computePropsOpts as VxeSelectPropTypes.OptionProps
       return propsOpts.label || 'label'
     },
-    computeValueField () {
+    computeValueField() {
       const $xeSelect = this
 
       const propsOpts = $xeSelect.computePropsOpts as VxeSelectPropTypes.OptionProps
       return propsOpts.value || 'value'
     },
-    computeGroupLabelField () {
+    computeGroupLabelField() {
       const $xeSelect = this
 
       const groupPropsOpts = $xeSelect.computeGroupPropsOpts as VxeSelectPropTypes.OptionGroupProps
       return groupPropsOpts.label || 'label'
     },
-    computeGroupOptionsField () {
+    computeGroupOptionsField() {
       const $xeSelect = this
 
       const groupPropsOpts = $xeSelect.computeGroupPropsOpts as VxeSelectPropTypes.OptionGroupProps
       return groupPropsOpts.options || 'options'
     },
-    computeIsMaximize () {
+    computeIsMaximize() {
       const $xeSelect = this
 
       const selectVals = $xeSelect.computeSelectVals
       return ($xeSelect as any).checkMaxLimit(selectVals) as boolean
     },
-    computePopupOpts () {
+    computePopupOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, getConfig().select.popupConfig, props.popupConfig)
     },
-    computeVirtualYOpts () {
+    computeVirtualYOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({} as { gt: number }, getConfig().select.virtualYConfig || getConfig().select.scrollY, props.virtualYConfig || props.scrollY)
     },
-    computeRemoteOpts () {
+    computeRemoteOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, getConfig().select.remoteConfig, props.remoteConfig)
     },
-    computeBadgeOpts () {
+    computeBadgeOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, getConfig().select.badgeConfig, props.badgeConfig)
     },
-    computeBadgeCountNum () {
+    computeBadgeCountNum() {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -432,7 +456,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { count } = badgeOpts
       return count ? XEUtils.toNumber(count) : 0
     },
-    computeBadgeLabel () {
+    computeBadgeLabel() {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -455,43 +479,43 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return ''
     },
-    computeFilterOpts  () {
+    computeFilterOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, getConfig().select.filterConfig, props.filterConfig)
     },
-    computeOptionOpts () {
+    computeOptionOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, getConfig().select.optionConfig, props.optionConfig)
     },
-    computeRadioOpts () {
+    computeRadioOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, getConfig().select.radioConfig, props.radioConfig)
     },
-    computeCheckboxOpts () {
+    computeCheckboxOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, getConfig().select.checkboxConfig, props.checkboxConfig)
     },
-    computeIsGroup (this: any) {
+    computeIsGroup(this: any) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
       return reactData.fullGroupList.some((item: any) => item.options && item.options.length)
     },
-    computeMultiMaxCharNum () {
+    computeMultiMaxCharNum() {
       const $xeSelect = this
       const props = $xeSelect
 
       return XEUtils.toNumber(props.multiCharOverflow)
     },
-    computeCurrStyle () {
+    computeCurrStyle() {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -502,7 +526,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computePopupWrapperStyle () {
+    computePopupWrapperStyle() {
       const $xeSelect = this
 
       const popupOpts = $xeSelect.computePopupOpts
@@ -517,7 +541,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computeSelectVals () {
+    computeSelectVals() {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -528,7 +552,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         if (multiple) {
           if (!eqEmptyValue(modelValue)) {
-            vals = `${modelValue}`.indexOf(',') > -1 ? `${modelValue}`.split(',') : [modelValue] as any[]
+            vals = `${modelValue}`.indexOf(',') > -1 ? `${modelValue}`.split(',') : ([modelValue] as any[])
           }
         } else {
           vals = modelValue === null || modelValue === undefined ? [] : [modelValue]
@@ -536,7 +560,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return vals
     },
-    computeFullLabel () {
+    computeFullLabel() {
       const $xeSelect = this as any
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -545,11 +569,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { reactFlag } = reactData
       const selectVals = $xeSelect.computeSelectVals as string[]
       if (remote && reactFlag) {
-        return selectVals.map(val => $xeSelect.getRemoteSelectLabel(val)).join(', ')
+        return selectVals.map((val) => $xeSelect.getRemoteSelectLabel(val)).join(', ')
       }
       return selectVals.map((val) => $xeSelect.getSelectLabel(val)).join(', ')
     },
-    computeSelectLabel () {
+    computeSelectLabel() {
       const $xeSelect = this as any
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -559,7 +583,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const multiMaxCharNum = $xeSelect.computeMultiMaxCharNum
       const selectVals = $xeSelect.computeSelectVals as string[]
       if (remote && reactFlag) {
-        return selectVals.map(val => $xeSelect.getRemoteSelectLabel(val)).join(', ')
+        return selectVals.map((val) => $xeSelect.getRemoteSelectLabel(val)).join(', ')
       }
       const labels = selectVals.map((val) => $xeSelect.getSelectLabel(val))
       if (multiple && multiMaxCharNum > 0 && labels.length > multiMaxCharNum) {
@@ -567,13 +591,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return labels.join(', ')
     },
-    computeScrollbarOpts () {
+    computeScrollbarOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
       return Object.assign({}, getConfig().tree.scrollbarConfig, props.scrollbarConfig)
     },
-    computeScrollbarXOpts () {
+    computeScrollbarXOpts() {
       const $xeSelect = this
 
       const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
@@ -581,55 +605,55 @@ export default /* define-vxe-component start */ defineVxeComponent({
         visible: false
       })
     },
-    computeScrollbarYOpts () {
+    computeScrollbarYOpts() {
       const $xeSelect = this
 
       const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
       return Object.assign({}, getConfig().scrollbar.yConfig, scrollbarOpts.yConfig)
     },
-    computeScrollXHeight () {
+    computeScrollXHeight() {
       const $xeSelect = this
 
       const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
       const scrollbarXOpts = $xeSelect.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
       return getDefVal(getDefVal(scrollbarXOpts.height, scrollbarOpts.height), getConfig().scrollbar.height)
     },
-    computeScrollYWidth () {
+    computeScrollYWidth() {
       const $xeSelect = this
 
       const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
       const scrollbarYOpts = $xeSelect.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
       return getDefVal(getDefVal(scrollbarYOpts.width, scrollbarOpts.width), getConfig().scrollbar.width)
     },
-    computeScrollXVisible () {
+    computeScrollXVisible() {
       const $xeSelect = this
 
       const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
       const scrollbarXOpts = $xeSelect.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
       return getDefVal(scrollbarXOpts.visible, scrollbarOpts.visible)
     },
-    computeScrollYVisible () {
+    computeScrollYVisible() {
       const $xeSelect = this
 
       const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
       const scrollbarYOpts = $xeSelect.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
       return getDefVal(scrollbarYOpts.visible, scrollbarOpts.visible)
     },
-    computeScrollXAutoHide () {
+    computeScrollXAutoHide() {
       const $xeSelect = this
 
       const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
       const scrollbarXOpts = $xeSelect.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
       return getDefVal(getDefVal(scrollbarXOpts.autoHide, scrollbarOpts.autoHide), getConfig().scrollbar.autoHide)
     },
-    computeScrollYAutoHide () {
+    computeScrollYAutoHide() {
       const $xeSelect = this
 
       const scrollbarOpts = $xeSelect.computeScrollbarOpts as VxeSelectPropTypes.ScrollbarConfig
       const scrollbarYOpts = $xeSelect.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
       return getDefVal(getDefVal(scrollbarYOpts.autoHide, scrollbarOpts.autoHide), getConfig().scrollbar.autoHide)
     },
-    computeScrollbarWrapperClss () {
+    computeScrollbarWrapperClss() {
       const $xeSelect = this
       const reactData = ($xeSelect as any).reactData as SelectReactData
 
@@ -639,25 +663,28 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollbarYToLeft = $xeSelect.computeScrollbarYToLeft
       const scrollXVisible = $xeSelect.computeScrollXVisible
       const scrollYVisible = $xeSelect.computeScrollYVisible
-      return domUtils.buildClass([
-        'vxe-scrollbar is--virtual',
-        scrollbarOpts.fluentOverlay ? 'is--fluent-overlay' : 'is--default-mode',
-        `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
-        `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}`,
-        `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
-        `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
-      ], {
-        'overflow-y': yThumbHeight,
-        'overflow-x': xThumbWidth
-      })
+      return domUtils.buildClass(
+        [
+          'vxe-scrollbar is--virtual',
+          scrollbarOpts.fluentOverlay ? 'is--fluent-overlay' : 'is--default-mode',
+          `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}`,
+          `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}`,
+          `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}`,
+          `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}`
+        ],
+        {
+          'overflow-y': yThumbHeight,
+          'overflow-x': xThumbWidth
+        }
+      )
     },
-    computeScrollbarXToTop () {
+    computeScrollbarXToTop() {
       const $xeSelect = this
 
       const scrollbarXOpts = $xeSelect.computeScrollbarXOpts as VxeScrollbarPropTypes.XConfig
       return scrollbarXOpts.position === 'top'
     },
-    computeScrollbarYToLeft () {
+    computeScrollbarYToLeft() {
       const $xeSelect = this
 
       const scrollbarYOpts = $xeSelect.computeScrollbarYOpts as VxeScrollbarPropTypes.YConfig
@@ -668,34 +695,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeSelectEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeSelectEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeSelect = this
       $xeSelect.$emit(type, createEvent(evnt, { $select: $xeSelect }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeSelect = this
 
       handleEmitModelVal($xeSelect, value)
     },
-    emitDefaultValue (value: any) {
+    emitDefaultValue(value: any) {
       const $xeSelect = this
 
       $xeSelect.emitModel(value)
       $xeSelect.dispatchEvent('default-change', { value }, null)
     },
-    getScrollViewElem () {
+    getScrollViewElem() {
       const $xeSelect = this
 
       const viewEl = $xeSelect.$refs.refVirtualWrapper as HTMLDivElement
       return viewEl || null
     },
-    isPanelVisible () {
+    isPanelVisible() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
       return reactData.visiblePanel
     },
-    togglePanel () {
+    togglePanel() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -706,7 +733,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeSelect.$nextTick()
     },
-    hidePanel () {
+    hidePanel() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -715,7 +742,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeSelect.$nextTick()
     },
-    showPanel () {
+    showPanel() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -724,7 +751,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeSelect.$nextTick()
     },
-    focus () {
+    focus() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -735,7 +762,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.isActivated = true
       return $xeSelect.$nextTick()
     },
-    blur () {
+    blur() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -746,7 +773,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.isActivated = false
       return $xeSelect.$nextTick()
     },
-    callSlot (slotFunc: any, params: any, h: CreateElement) {
+    callSlot(slotFunc: any, params: any, h: CreateElement) {
       const $xeSelect = this
       const slots = $xeSelect.$scopedSlots
 
@@ -760,20 +787,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return []
     },
-    getOptKey () {
+    getOptKey() {
       const $xeSelect = this
       const props = $xeSelect
 
       const optionOpts = $xeSelect.computeOptionOpts
       return optionOpts.keyField || props.optionId || '_X_OPTION_KEY'
     },
-    getOptId (option: any) {
+    getOptId(option: any) {
       const $xeSelect = this
 
       const optid = option[$xeSelect.getOptKey()]
       return optid ? encodeURIComponent(optid) : ''
     },
-    checkMaxLimit (selectVals: VxeSelectPropTypes.ModelValue[]) {
+    checkMaxLimit(selectVals: VxeSelectPropTypes.ModelValue[]) {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -783,7 +810,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    getRemoteSelectLabel (value: any) {
+    getRemoteSelectLabel(value: any) {
       const $xeSelect = this
       const props = $xeSelect
       const internalData = $xeSelect.internalData
@@ -798,14 +825,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return XEUtils.toValueString(item[labelField])
       }
       if (lazyOptions) {
-        const lazyItem = lazyOptions.find(item => item[valueField] === value)
+        const lazyItem = lazyOptions.find((item) => item[valueField] === value)
         if (lazyItem) {
           return lazyItem[labelField]
         }
       }
       return value
     },
-    getSelectLabel (value: any) {
+    getSelectLabel(value: any) {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -820,21 +847,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return cacheItem.item[labelField as 'label']
       }
       if (lazyOptions) {
-        const lazyItem = lazyOptions.find(item => item[valueField] === value)
+        const lazyItem = lazyOptions.find((item) => item[valueField] === value)
         if (lazyItem) {
           return lazyItem[labelField]
         }
       }
       return value
     },
-    getOptkey () {
+    getOptkey() {
       const $xeSelect = this
       const props = $xeSelect
 
       const optionOpts = $xeSelect.computeOptionOpts
       return optionOpts.keyField || props.optionId || '_X_OPTION_KEY'
     },
-    getOptid (option: any) {
+    getOptid(option: any) {
       const $xeSelect = this
 
       const optid = option[$xeSelect.getOptkey()]
@@ -843,7 +870,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 处理选项，当选项被动态显示/隐藏时可能会用到
      */
-    handleOption () {
+    handleOption() {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -863,19 +890,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         if (filterable && frMethod) {
           avList = searchValue
-            ? fullData.filter(option => {
-              return isOptionVisible(option) && frMethod({
-                $select: $xeSelect,
-                group: null,
-                option,
-                filterValue: searchValue,
-                searchValue: searchValue,
-                value: modelValue
-              })
+            ? fullData.filter((option) => {
+              return (
+                isOptionVisible(option) &&
+                  frMethod({
+                    $select: $xeSelect,
+                    group: null,
+                    option,
+                    filterValue: searchValue,
+                    searchValue: searchValue,
+                    value: modelValue
+                  })
+              )
             })
             : fullData
         } else if (filterable) {
-          avList = searchStr ? fullData.filter(option => isOptionVisible(option) && (`${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1)) : fullData
+          avList = searchStr ? fullData.filter((option) => isOptionVisible(option) && `${option[labelField] || option[valueField]}`.toLowerCase().indexOf(searchStr) > -1) : fullData
         } else {
           avList = fullData.filter(isOptionVisible)
         }
@@ -889,14 +919,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.afterVisibleList = avList
       return $xeSelect.$nextTick()
     },
-    refreshOption () {
+    refreshOption() {
       const $xeSelect = this
 
       $xeSelect.handleOption()
       $xeSelect.updateYData()
       return $xeSelect.$nextTick()
     },
-    cacheItemMap (datas: any[]) {
+    cacheItemMap(datas: any[]) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
@@ -933,7 +963,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.reactFlag++
       $xeSelect.handleOption()
     },
-    setCurrentOption  (option: any) {
+    setCurrentOption(option: any) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -941,7 +971,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.currentOption = option
       }
     },
-    scrollToOption  (option: any, isAlignBottom?: boolean) {
+    scrollToOption(option: any, isAlignBottom?: boolean) {
       const $xeSelect = this
 
       return $xeSelect.$nextTick().then(() => {
@@ -965,7 +995,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    updateZindex () {
+    updateZindex() {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -978,7 +1008,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.panelIndex = nextZIndex()
       }
     },
-    updateZIndex () {
+    updateZIndex() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -986,7 +1016,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.panelIndex = nextZIndex()
       }
     },
-    updatePlacement  () {
+    updatePlacement() {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1013,7 +1043,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       handleStyle()
       return $xeSelect.$nextTick().then(handleStyle)
     },
-    handleScrollSelect () {
+    handleScrollSelect() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
@@ -1031,7 +1061,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    showOptionPanel  () {
+    showOptionPanel() {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1090,7 +1120,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSelect.dispatchEvent('visible-change', { visible: true }, null)
       }
     },
-    hideOptionPanel (evnt?: Event) {
+    hideOptionPanel(evnt?: Event) {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1117,7 +1147,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }, 350)
       $xeSelect.dispatchEvent('visible-change', { visible: false }, evnt || null)
     },
-    changeEvent (evnt: Event, selectValue: any, option: any) {
+    changeEvent(evnt: Event, selectValue: any, option: any) {
       const $xeSelect = this
       const props = $xeSelect
       const $xeForm = $xeSelect.$xeForm
@@ -1132,7 +1162,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    clearValueEvent  (evnt: Event, selectValue: any) {
+    clearValueEvent(evnt: Event, selectValue: any) {
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
@@ -1140,7 +1170,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeSelect.changeEvent(evnt, selectValue, null)
       $xeSelect.dispatchEvent('clear', { value: selectValue }, evnt)
     },
-    clearEvent (params: VxeInputDefines.ClearEventParams) {
+    clearEvent(params: VxeInputDefines.ClearEventParams) {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -1149,7 +1179,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeSelect.clearValueEvent($event, emptyValue)
       $xeSelect.hideOptionPanel($event)
     },
-    allCheckedPanelEvent (params: VxeButtonDefines.ClickEventParams) {
+    allCheckedPanelEvent(params: VxeButtonDefines.ClickEventParams) {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1174,7 +1204,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
             break
           }
-          if (!currVlas.some(val => val === selectValue)) {
+          if (!currVlas.some((val) => val === selectValue)) {
             currVlas.push(selectValue)
           }
         }
@@ -1185,7 +1215,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSelect.dispatchEvent('all-change', { value: currVlas }, $event)
       }
     },
-    clearCheckedPanelEvent (params: VxeButtonDefines.ClickEventParams) {
+    clearCheckedPanelEvent(params: VxeButtonDefines.ClickEventParams) {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -1196,13 +1226,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSelect.hideOptionPanel($event)
       }
     },
-    closePanelEvent (params: VxeButtonDefines.ClickEventParams) {
+    closePanelEvent(params: VxeButtonDefines.ClickEventParams) {
       const $xeSelect = this
 
       const { $event } = params
       $xeSelect.hideOptionPanel($event)
     },
-    changeOptionEvent (evnt: Event, option: any) {
+    changeOptionEvent(evnt: Event, option: any) {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1228,7 +1258,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (multiple) {
         let multipleValue: any[] = []
         const selectVals = $xeSelect.computeSelectVals
-        const index = XEUtils.findIndexOf(selectVals, val => val === selectValue)
+        const index = XEUtils.findIndexOf(selectVals, (val) => val === selectValue)
         if (index === -1) {
           multipleValue = selectVals.concat([selectValue])
         } else {
@@ -1241,7 +1271,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       reactData.reactFlag++
     },
-    handleGlobalMousedownEvent  (evnt: MouseEvent) {
+    handleGlobalMousedownEvent(evnt: MouseEvent) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1260,7 +1290,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    validOffsetOption (option: any) {
+    validOffsetOption(option: any) {
       const $xeSelect = this
 
       const isDisabled = option.disabled
@@ -1270,7 +1300,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    findOffsetOption (option: any, isDwArrow: boolean) {
+    findOffsetOption(option: any, isDwArrow: boolean) {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1333,7 +1363,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return null
     },
-    handleGlobalKeydownEvent  (evnt: KeyboardEvent) {
+    handleGlobalKeydownEvent(evnt: KeyboardEvent) {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1387,7 +1417,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalBlurEvent (evnt: Event) {
+    handleGlobalBlurEvent(evnt: Event) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1409,7 +1439,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalResizeEvent () {
+    handleGlobalResizeEvent() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1418,7 +1448,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSelect.updatePlacement()
       }
     },
-    handleGlobalScrollEvent () {
+    handleGlobalScrollEvent() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1427,7 +1457,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSelect.updatePlacement()
       }
     },
-    handleFocusSearch  () {
+    handleFocusSearch() {
       const $xeSelect = this
       const props = $xeSelect
 
@@ -1440,7 +1470,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
     },
-    focusEvent (evnt: FocusEvent) {
+    focusEvent(evnt: FocusEvent) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1460,7 +1490,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeSelect.dispatchEvent('focus', {}, evnt)
     },
-    clickEvent  (evnt: MouseEvent) {
+    clickEvent(evnt: MouseEvent) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1471,14 +1501,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeSelect.dispatchEvent('click', { triggerButton: false, visible: reactData.visiblePanel }, evnt)
     },
-    blurEvent  (evnt: FocusEvent) {
+    blurEvent(evnt: FocusEvent) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
       reactData.isActivated = false
       $xeSelect.dispatchEvent('blur', {}, evnt)
     },
-    suffixClickEvent (evnt: MouseEvent) {
+    suffixClickEvent(evnt: MouseEvent) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1489,19 +1519,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeSelect.dispatchEvent('click', { triggerButton: true, visible: reactData.visiblePanel }, evnt)
     },
-    modelSearchEvent (value: string) {
+    modelSearchEvent(value: string) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
       reactData.searchValue = value
     },
-    focusSearchEvent () {
+    focusSearchEvent() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
       reactData.isActivated = true
     },
-    handleSearchEvent () {
+    handleSearchEvent() {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1512,9 +1542,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const qyMethod = remoteOpts.queryMethod || props.remoteMethod
       if (remote && qyMethod && remoteOpts.enabled) {
         reactData.searchLoading = true
-        Promise.resolve(
-          qyMethod({ $select: $xeSelect, searchValue, value })
-        ).then(() => $xeSelect.$nextTick())
+        Promise.resolve(qyMethod({ $select: $xeSelect, searchValue, value }))
+          .then(() => $xeSelect.$nextTick())
           .catch(() => $xeSelect.$nextTick())
           .finally(() => {
             reactData.searchLoading = false
@@ -1526,12 +1555,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSelect.updateYData()
       }
     },
-    triggerSearchEvent: XEUtils.debounce(function (this: any) {
-      const $xeSelect = this
+    triggerSearchEvent: XEUtils.debounce(
+      function (this: any) {
+        const $xeSelect = this
 
-      $xeSelect.handleSearchEvent()
-    }, 350, { trailing: true }),
-    togglePanelEvent (params: any) {
+        $xeSelect.handleSearchEvent()
+      },
+      350,
+      { trailing: true }
+    ),
+    togglePanelEvent(params: any) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1547,7 +1580,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    checkOptionDisabled (isSelected: any, option: VxeOptionProps) {
+    checkOptionDisabled(isSelected: any, option: VxeOptionProps) {
       const $xeSelect = this
 
       if (option.disabled) {
@@ -1559,7 +1592,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    updateYSpace () {
+    updateYSpace() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
@@ -1569,7 +1602,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.bodyHeight = scrollYLoad ? afterVisibleList.length * scrollYStore.rowHeight : 0
       reactData.topSpaceHeight = scrollYLoad ? Math.max(scrollYStore.startIndex * scrollYStore.rowHeight, 0) : 0
     },
-    handleData () {
+    handleData() {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1582,7 +1615,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const valueField = $xeSelect.computeValueField
       const restList = scrollYLoad ? afterVisibleList.slice(scrollYStore.startIndex, scrollYStore.endIndex) : afterVisibleList.slice(0)
       if (filterable && allowCreate && searchValue) {
-        if (!restList.some(option => option[labelField] === searchValue)) {
+        if (!restList.some((option) => option[labelField] === searchValue)) {
           const addItem = optAddMaps[searchValue] || {
             [$xeSelect.getOptKey()]: searchValue,
             [labelField]: searchValue,
@@ -1595,13 +1628,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.optList = restList
       return $xeSelect.$nextTick()
     },
-    updateYData () {
+    updateYData() {
       const $xeSelect = this
 
       $xeSelect.handleData()
       $xeSelect.updateYSpace()
     },
-    computeScrollLoad () {
+    computeScrollLoad() {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
@@ -1637,7 +1670,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    handleScrollToOption (option: any, isDwArrow?: boolean) {
+    handleScrollToOption(option: any, isDwArrow?: boolean) {
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
@@ -1684,7 +1717,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
      * @param {Number} scrollLeft 左距离
      * @param {Number} scrollTop 上距离
      */
-    scrollTo (scrollLeft: number | null, scrollTop?: number | null) {
+    scrollTo(scrollLeft: number | null, scrollTop?: number | null) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
 
@@ -1698,7 +1731,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
       if (reactData.scrollYLoad) {
-        return new Promise<void>(resolve => {
+        return new Promise<void>((resolve) => {
           setTimeout(() => {
             $xeSelect.$nextTick(() => {
               resolve()
@@ -1711,7 +1744,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 刷新滚动条
      */
-    refreshScroll () {
+    refreshScroll() {
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
@@ -1724,7 +1757,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    updateScrollbar () {
+    updateScrollbar() {
       const $xeSelect = this
 
       const isVScrollbar = $xeSelect.computeIsVScrollbar
@@ -1739,7 +1772,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 重新计算列表
      */
-    recalculate () {
+    recalculate() {
       const $xeSelect = this
 
       const el = $xeSelect.$refs.refElem as HTMLDivElement
@@ -1750,7 +1783,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return Promise.resolve()
     },
-    loadYData (evnt: Event) {
+    loadYData(evnt: Event) {
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
@@ -1770,7 +1803,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
     },
     // 滚动、拖动过程中不需要触发
-    isVMScrollProcess () {
+    isVMScrollProcess() {
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
@@ -1778,7 +1811,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { lastScrollTime } = internalData
       return !!(lastScrollTime && Date.now() < lastScrollTime + delayHover)
     },
-    scrollEvent (evnt: Event) {
+    scrollEvent(evnt: Event) {
       const $xeSelect = this
       const reactData = $xeSelect.reactData
       const internalData = $xeSelect.internalData
@@ -1804,7 +1837,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
      * 加载数据
      * @param {Array} datas 数据
      */
-    loadData (datas: any[]) {
+    loadData(datas: any[]) {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -1831,7 +1864,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           if (selectMode === 'all') {
             if (multiple) {
               $xeSelect.$nextTick(() => {
-                $xeSelect.emitDefaultValue(datas.map(item => item[valueField]))
+                $xeSelect.emitDefaultValue(datas.map((item) => item[valueField]))
               })
             } else {
               errLog('vxe.error.notConflictProp', ['default-config.selectMode=all', 'multiple=true'])
@@ -1853,7 +1886,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeSelect.refreshScroll()
       })
     },
-    reloadData (datas: any[]) {
+    reloadData(datas: any[]) {
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
@@ -1861,7 +1894,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeSelect.clearScroll()
       return $xeSelect.loadData(datas)
     },
-    clearScroll () {
+    clearScroll() {
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
@@ -1874,7 +1907,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       internalData.lastScrollLeft = 0
       return $xeSelect.$nextTick()
     },
-    hasOptGroupById (optid: any) {
+    hasOptGroupById(optid: any) {
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
@@ -1882,7 +1915,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return !!optGroupKeyMaps[optid]
     },
     // 滚动条
-    bindScrollbarResize () {
+    bindScrollbarResize() {
       const $xeSelect = this
       const internalData = $xeSelect.internalData
 
@@ -1913,7 +1946,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderRadio (h: CreateElement, option: VxeOptionProps, isOptGroup: boolean, isChecked: boolean, isDisabled: boolean) {
+    renderRadio(h: CreateElement, option: VxeOptionProps, isOptGroup: boolean, isChecked: boolean, isDisabled: boolean) {
       const $xeSelect = this
 
       const radioOpts = $xeSelect.computeRadioOpts
@@ -1931,20 +1964,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }
       }
-      return h('div', {
-        key: 2,
-        class: ['vxe-select-option--radio', {
-          'is--checked': isChecked,
-          'is--disabled': isDisabled
-        }],
-        on: ons
-      }, [
-        h('span', {
-          class: ['vxe-radio--icon', isChecked ? getIcon().RADIO_CHECKED : (isDisabled ? getIcon().RADIO_DISABLED_UNCHECKED : getIcon().RADIO_UNCHECKED)]
-        })
-      ])
+      return h(
+        'div',
+        {
+          key: 2,
+          class: [
+            'vxe-select-option--radio',
+            {
+              'is--checked': isChecked,
+              'is--disabled': isDisabled
+            }
+          ],
+          on: ons
+        },
+        [
+          h('span', {
+            class: ['vxe-radio--icon', isChecked ? getIcon().RADIO_CHECKED : isDisabled ? getIcon().RADIO_DISABLED_UNCHECKED : getIcon().RADIO_UNCHECKED]
+          })
+        ]
+      )
     },
-    renderCheckbox (h: CreateElement, option: VxeOptionProps, isOptGroup: boolean, isChecked: boolean, isDisabled: boolean) {
+    renderCheckbox(h: CreateElement, option: VxeOptionProps, isOptGroup: boolean, isChecked: boolean, isDisabled: boolean) {
       const $xeSelect = this
 
       const checkboxOpts = $xeSelect.computeCheckboxOpts
@@ -1962,20 +2002,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }
       }
-      return h('div', {
-        key: 3,
-        class: ['vxe-select-option--checkbox', {
-          'is--checked': isChecked,
-          'is--disabled': isDisabled
-        }],
-        on: ons
-      }, [
-        h('span', {
-          class: ['vxe-checkbox--icon', (isChecked ? getIcon().CHECKBOX_CHECKED : (isDisabled ? getIcon().CHECKBOX_DISABLED_UNCHECKED : getIcon().CHECKBOX_UNCHECKED))]
-        })
-      ])
+      return h(
+        'div',
+        {
+          key: 3,
+          class: [
+            'vxe-select-option--checkbox',
+            {
+              'is--checked': isChecked,
+              'is--disabled': isDisabled
+            }
+          ],
+          on: ons
+        },
+        [
+          h('span', {
+            class: ['vxe-checkbox--icon', isChecked ? getIcon().CHECKBOX_CHECKED : isDisabled ? getIcon().CHECKBOX_DISABLED_UNCHECKED : getIcon().CHECKBOX_UNCHECKED]
+          })
+        ]
+      )
     },
-    renderOption (h: CreateElement, list: VxeOptionProps[]) {
+    renderOption(h: CreateElement, list: VxeOptionProps[]) {
       const $xeSelect = this
       const props = $xeSelect
       const slots = $xeSelect.$scopedSlots
@@ -2003,7 +2050,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const isOptGroup = $xeSelect.hasOptGroupById(optid)
         const isAdd = !!(allowCreate && optAddMaps[optid])
         const isSelected = !isAdd && selectVals.indexOf(optionValue) > -1
-        const isVisible = isAdd || (!isOptGroup || isOptionVisible(option))
+        const isVisible = isAdd || !isOptGroup || isOptionVisible(option)
         const isDisabled = !isAdd && $xeSelect.checkOptionDisabled(isSelected, option)
         const defaultSlot = slots ? slots.default : null
         const optSlot = defaultSlot || optionSlot
@@ -2023,10 +2070,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
           otlbVNs = [optLabel]
         }
         optVNs.push(
-          h('div', {
-            key: 1,
-            class: 'vxe-select-option--label'
-          }, otlbVNs)
+          h(
+            'div',
+            {
+              key: 1,
+              class: 'vxe-select-option--label'
+            },
+            otlbVNs
+          )
         )
 
         const ons: {
@@ -2047,7 +2098,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           }
         }
 
-        if (isCheckboxMode ? checkboxOpts.trigger === 'option' : (isRadioMode ? radioOpts.trigger === 'option' : true)) {
+        if (isCheckboxMode ? checkboxOpts.trigger === 'option' : isRadioMode ? radioOpts.trigger === 'option' : true) {
           ons.click = (evnt) => {
             if (!isDisabled && !isOptGroup) {
               $xeSelect.changeOptionEvent(evnt, option)
@@ -2056,47 +2107,63 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
 
         return isVisible
-          ? h('div', {
-            key: useKey || optionKey ? optid : cIndex,
-            class: ['vxe-select-option', className ? (XEUtils.isFunction(className) ? className(optParams) : className) : '', {
-              'vxe-select-optgroup': isOptGroup,
-              'is--disabled': isDisabled,
-              'is--selected': isSelected,
-              'is--add': isAdd,
-              'is--hover': currentOption && $xeSelect.getOptId(currentOption) === optid
-            }],
-            attrs: {
-              optid: optid,
-              title: optLabel || null
-            },
-            style: height
-              ? {
-                  height: toCssUnit(height)
+          ? h(
+            'div',
+            {
+              key: useKey || optionKey ? optid : cIndex,
+              class: [
+                'vxe-select-option',
+                className ? (XEUtils.isFunction(className) ? className(optParams) : className) : '',
+                {
+                  'vxe-select-optgroup': isOptGroup,
+                  'is--disabled': isDisabled,
+                  'is--selected': isSelected,
+                  'is--add': isAdd,
+                  'is--hover': currentOption && $xeSelect.getOptId(currentOption) === optid
                 }
-              : undefined,
-            on: ons
-          }, allowCreate
-            ? [
-                h('span', {
-                  key: 1,
-                  class: 'vxe-select-option--add-label'
-                }, optVNs),
-                isAdd
-                  ? h('span', {
-                    key: 2,
-                    class: 'vxe-select-option--add-icon'
-                  }, [
-                    h('i', {
-                      class: getIcon().SELECT_ADD_OPTION
-                    })
-                  ])
-                  : renderEmptyElement($xeSelect)
-              ]
-            : optVNs)
+              ],
+              attrs: {
+                optid: optid,
+                title: optLabel || null
+              },
+              style: height
+                ? {
+                    height: toCssUnit(height)
+                  }
+                : undefined,
+              on: ons
+            },
+            allowCreate
+              ? [
+                  h(
+                    'span',
+                    {
+                      key: 1,
+                      class: 'vxe-select-option--add-label'
+                    },
+                    optVNs
+                  ),
+                  isAdd
+                    ? h(
+                      'span',
+                      {
+                        key: 2,
+                        class: 'vxe-select-option--add-icon'
+                      },
+                      [
+                        h('i', {
+                          class: getIcon().SELECT_ADD_OPTION
+                        })
+                      ]
+                    )
+                    : renderEmptyElement($xeSelect)
+                ]
+              : optVNs
+          )
           : renderEmptyElement($xeSelect)
       })
     },
-    renderOpts  (h: CreateElement): VNode[] {
+    renderOpts(h: CreateElement): VNode[] {
       const $xeSelect = this
       const props = $xeSelect
       const reactData = $xeSelect.reactData
@@ -2104,28 +2171,40 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { optList, searchLoading } = reactData
       if (searchLoading) {
         return [
-          h('div', {
-            class: 'vxe-select--search-loading'
-          }, [
-            h('i', {
-              class: ['vxe-select--search-icon', getIcon().SELECT_LOADED]
-            }),
-            h('span', {
-              class: 'vxe-select--search-text'
-            }, getI18n('vxe.select.loadingText'))
-          ])
+          h(
+            'div',
+            {
+              class: 'vxe-select--search-loading'
+            },
+            [
+              h('i', {
+                class: ['vxe-select--search-icon', getIcon().SELECT_LOADED]
+              }),
+              h(
+                'span',
+                {
+                  class: 'vxe-select--search-text'
+                },
+                getI18n('vxe.select.loadingText')
+              )
+            ]
+          )
         ]
       }
       if (optList.length) {
         return $xeSelect.renderOption(h, optList)
       }
       return [
-        h('div', {
-          class: 'vxe-select--empty-placeholder'
-        }, props.emptyText || getI18n('vxe.select.emptyText'))
+        h(
+          'div',
+          {
+            class: 'vxe-select--empty-placeholder'
+          },
+          props.emptyText || getI18n('vxe.select.emptyText')
+        )
       ]
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeSelect = this
       const props = $xeSelect
       const slots = $xeSelect.$scopedSlots
@@ -2145,29 +2224,49 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const badgeLabel = $xeSelect.computeBadgeLabel
       const defaultSlot = slots.default
       if (formReadonly) {
-        return h('div', {
-          ref: 'refElem',
-          class: ['vxe-select--readonly', className, {
-            'is--badge': showBadge && badgeLabel,
-            'is--badge-dot': showBadge && badgeOpts.dot
-          }]
-        }, [
-          h('div', {
-            class: 'vxe-select-slots',
-            ref: 'hideOption'
-          }, defaultSlot ? $xeSelect.callSlot(defaultSlot, {}, h) : []),
-          h('span', {
-            class: 'vxe-select-label',
-            attrs: {
-              fullLabel
-            }
-          }, selectLabel),
-          showBadge && badgeLabel
-            ? h('div', {
-              class: 'vxe-badge--label'
-            }, badgeLabel)
-            : renderEmptyElement($xeSelect)
-        ])
+        return h(
+          'div',
+          {
+            ref: 'refElem',
+            class: [
+              'vxe-select--readonly',
+              className,
+              {
+                'is--badge': showBadge && badgeLabel,
+                'is--badge-dot': showBadge && badgeOpts.dot
+              }
+            ]
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-select-slots',
+                ref: 'hideOption'
+              },
+              defaultSlot ? $xeSelect.callSlot(defaultSlot, {}, h) : []
+            ),
+            h(
+              'span',
+              {
+                class: 'vxe-select-label',
+                attrs: {
+                  fullLabel
+                }
+              },
+              selectLabel
+            ),
+            showBadge && badgeLabel
+              ? h(
+                'div',
+                {
+                  class: 'vxe-badge--label'
+                },
+                badgeLabel
+              )
+              : renderEmptyElement($xeSelect)
+          ]
+        )
       }
       const currStyle = $xeSelect.computeCurrStyle
       const selectVals = $xeSelect.computeSelectVals
@@ -2185,284 +2284,367 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scrollXAutoHide = $xeSelect.computeScrollXAutoHide
       const scrollYAutoHide = $xeSelect.computeScrollYAutoHide
       const scrollbarWrapperClss = $xeSelect.computeScrollbarWrapperClss
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-select', className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          'is--badge': showBadge && badgeLabel,
-          'is--badge-dot': showBadge && badgeOpts.dot,
-          'is--visible': visiblePanel,
-          'is--disabled': isDisabled,
-          'is--filter': filterable,
-          'is--loading': loading,
-          'is--active': isActivated
-        }],
-        style: currStyle
-      }, [
-        h('div', {
-          class: 'vxe-select-slots',
-          ref: 'hideOption'
-        }, defaultSlot ? defaultSlot.call($xeSelect, {}) : []),
-        h(VxeInputComponent, {
-          ref: 'refInput',
-          props: {
-            clearable: props.clearable,
-            placeholder: inpPlaceholder,
-            editable: false,
-            disabled: isDisabled,
-            type: 'text',
-            prefixIcon: props.prefixIcon,
-            suffixIcon: loading ? getIcon().SELECT_LOADED : (visiblePanel ? getIcon().SELECT_OPEN : getIcon().SELECT_CLOSE),
-            autoFocus: false,
-            title: fullLabel,
-            value: selectLabel
-          },
-          on: {
-            clear: $xeSelect.clearEvent,
-            click: $xeSelect.clickEvent,
-            focus: $xeSelect.focusEvent,
-            blur: $xeSelect.blurEvent,
-            'suffix-click': $xeSelect.suffixClickEvent
-          },
-          scopedSlots: prefixSlot
-            ? {
-                prefix: () => prefixSlot({})
-              }
-            : {}
-        }),
-        showBadge && badgeLabel
-          ? h('div', {
-            class: 'vxe-badge--label'
-          }, badgeLabel)
-          : renderEmptyElement($xeSelect),
-        h('div', {
-          ref: 'refOptionPanel',
-          class: ['vxe-table--ignore-clear vxe-select--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $select: $xeSelect }) : ppClassName) : '', {
-            [`size--${vSize}`]: vSize,
-            'is--transfer': btnTransfer,
-            'ani--leave': !loading && isAniVisible,
-            'ani--enter': !loading && visiblePanel
-          }],
-          attrs: {
-            placement: reactData.panelPlacement
-          },
-          style: reactData.panelStyle
-        }, initialized && (visiblePanel || isAniVisible)
-          ? [
-              h('div', {
-                class: 'vxe-select--panel-wrapper',
-                style: popupWrapperStyle
-              }, [
-                filterable
-                  ? h('div', {
-                    class: 'vxe-select--panel-search'
-                  }, [
-                    h(VxeInputComponent, {
-                      ref: 'refInpSearch',
-                      class: 'vxe-select-search--input',
-                      props: {
-                        value: reactData.searchValue,
-                        type: 'text',
-                        clearable: true,
-                        disabled: false,
-                        readonly: false,
-                        placeholder: getI18n('vxe.select.search'),
-                        prefixIcon: getIcon().INPUT_SEARCH
-                      },
-                      on: {
-                        'model-value': $xeSelect.modelSearchEvent,
-                        focus: $xeSelect.focusSearchEvent,
-                        change: $xeSelect.triggerSearchEvent,
-                        search: $xeSelect.triggerSearchEvent
-                      }
-                    })
-                  ])
-                  : renderEmptyElement($xeSelect),
-                (showCheckedButton && multiple) || showClearButton || headerSlot
-                  ? h('div', {
-                    class: 'vxe-select--panel-header'
-                  }, headerSlot
-                    ? $xeSelect.callSlot(headerSlot, {}, h)
-                    : [
-                        h('div', {
-                          class: 'vxe-tree-select--header-button'
-                        }, [
-                          h('div', {
-                            class: 'vxe-tree-select--header-btns'
-                          }, [
-                            (showCheckedButton && multiple)
-                              ? h(VxeButtonComponent, {
-                                props: {
-                                  content: getI18n('vxe.select.allChecked'),
-                                  mode: 'text'
-                                },
-                                on: {
-                                  click: $xeSelect.allCheckedPanelEvent
-                                }
-                              })
-                              : renderEmptyElement($xeSelect),
-                            showClearButton
-                              ? h(VxeButtonComponent, {
-                                props: {
-                                  content: getI18n('vxe.select.clear'),
-                                  mode: 'text'
-                                },
-                                on: {
-                                  click: $xeSelect.clearCheckedPanelEvent
-                                }
-                              })
-                              : renderEmptyElement($xeSelect)
-                          ])
-                        ])
-                      ])
-                  : renderEmptyElement($xeSelect),
-                h('div', {
-                  class: [
-                    'vxe-select--panel-body',
-                    isVScrollbar ? `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}` : '',
-                    isVScrollbar ? `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}` : '',
-                    isVScrollbar ? `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}` : '',
-                    isVScrollbar ? `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}` : '',
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-select',
+            className ? (XEUtils.isFunction(className) ? className({ $select: $xeSelect }) : className) : '',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--badge': showBadge && badgeLabel,
+              'is--badge-dot': showBadge && badgeOpts.dot,
+              'is--visible': visiblePanel,
+              'is--disabled': isDisabled,
+              'is--filter': filterable,
+              'is--loading': loading,
+              'is--active': isActivated
+            }
+          ],
+          style: currStyle
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-select-slots',
+              ref: 'hideOption'
+            },
+            defaultSlot ? defaultSlot.call($xeSelect, {}) : []
+          ),
+          h(VxeInputComponent, {
+            ref: 'refInput',
+            props: {
+              clearable: props.clearable,
+              placeholder: inpPlaceholder,
+              editable: false,
+              disabled: isDisabled,
+              type: 'text',
+              prefixIcon: props.prefixIcon,
+              suffixIcon: loading ? getIcon().SELECT_LOADED : visiblePanel ? getIcon().SELECT_OPEN : getIcon().SELECT_CLOSE,
+              autoFocus: false,
+              title: fullLabel,
+              value: selectLabel
+            },
+            on: {
+              clear: $xeSelect.clearEvent,
+              click: $xeSelect.clickEvent,
+              focus: $xeSelect.focusEvent,
+              blur: $xeSelect.blurEvent,
+              'suffix-click': $xeSelect.suffixClickEvent
+            },
+            scopedSlots: prefixSlot
+              ? {
+                  prefix: () => prefixSlot({})
+                }
+              : {}
+          }),
+          showBadge && badgeLabel
+            ? h(
+              'div',
+              {
+                class: 'vxe-badge--label'
+              },
+              badgeLabel
+            )
+            : renderEmptyElement($xeSelect),
+          h(
+            'div',
+            {
+              ref: 'refOptionPanel',
+              class: [
+                'vxe-table--ignore-clear vxe-select--panel',
+                ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $select: $xeSelect }) : ppClassName) : '',
+                {
+                  [`size--${vSize}`]: vSize,
+                  'is--transfer': btnTransfer,
+                  'ani--leave': !loading && isAniVisible,
+                  'ani--enter': !loading && visiblePanel
+                }
+              ],
+              attrs: {
+                placement: reactData.panelPlacement
+              },
+              style: reactData.panelStyle
+            },
+            initialized && (visiblePanel || isAniVisible)
+              ? [
+                  h(
+                    'div',
                     {
-
-                      'is--virtual-scrollbar': isVScrollbar,
-                      'ov-padding': isVScrollbar && scrollbarOpts.padding,
-                      'ov-x--auto-hide': isVScrollbar && scrollXAutoHide,
-                      'ov-y--auto-hide': isVScrollbar && scrollYAutoHide,
-                      'overflow-y': yThumbHeight,
-                      'overflow-x': xThumbWidth
-                    }
-                  ]
-                }, [
-                  h('div', {
-                    ref: 'refVirtualWrapper',
-                    class: 'vxe-select-option--wrapper',
-                    on: {
-                      scroll: $xeSelect.scrollEvent
-                    }
-                  }, [
-                    h('div', {
-                      ref: 'refVirtualSpaceElem',
-                      class: 'vxe-select--y-space',
-                      style: {
-                        height: bodyHeight ? `${bodyHeight}px` : ''
-                      }
-                    }),
-                    h('div', {
-                      ref: 'refVirtualBody',
-                      class: 'vxe-select--body',
-                      style: {
-                        transform: `translateY(${topSpaceHeight}px)`
-                      }
-                    }, $xeSelect.renderOpts(h))
-                  ]),
-                  /**
-                   * 滚动条
-                   */
-                  isVScrollbar
-                    ? h('div', {
-                      class: scrollbarWrapperClss
-                    }, [
-                      scrollXVisible === false
-                        ? renderEmptyElement($xeSelect)
-                        : h('div', {
-                          ref: 'refTrackXElem',
-                          class: 'vxe-scrollbar--track-x',
-                          on: {
-                            click: $xeSelect.clickTrackXEvent
-                          }
-                        }, [
-                          h('div', {
-                            ref: 'refThumbXElem',
-                            class: 'vxe-scrollbar--thumb-x',
-                            on: {
-                              pointerdown: $xeSelect.pointerdownThumbXEvent,
-                              pointermove: $xeSelect.pointermoveThumbXEvent,
-                              pointerup: $xeSelect.cleatPointerThumbEvent,
-                              pointercancel: $xeSelect.cleatPointerThumbEvent,
-                              lostpointercapture: $xeSelect.cleatPointerThumbEvent
+                      class: 'vxe-select--panel-wrapper',
+                      style: popupWrapperStyle
+                    },
+                    [
+                      filterable
+                        ? h(
+                          'div',
+                          {
+                            class: 'vxe-select--panel-search'
+                          },
+                          [
+                            h(VxeInputComponent, {
+                              ref: 'refInpSearch',
+                              class: 'vxe-select-search--input',
+                              props: {
+                                value: reactData.searchValue,
+                                type: 'text',
+                                clearable: true,
+                                disabled: false,
+                                readonly: false,
+                                placeholder: getI18n('vxe.select.search'),
+                                prefixIcon: getIcon().INPUT_SEARCH
+                              },
+                              on: {
+                                'model-value': $xeSelect.modelSearchEvent,
+                                focus: $xeSelect.focusSearchEvent,
+                                change: $xeSelect.triggerSearchEvent,
+                                search: $xeSelect.triggerSearchEvent
+                              }
+                            })
+                          ]
+                        )
+                        : renderEmptyElement($xeSelect),
+                      (showCheckedButton && multiple) || showClearButton || headerSlot
+                        ? h(
+                          'div',
+                          {
+                            class: 'vxe-select--panel-header'
+                          },
+                          headerSlot
+                            ? $xeSelect.callSlot(headerSlot, {}, h)
+                            : [
+                                h(
+                                  'div',
+                                  {
+                                    class: 'vxe-tree-select--header-button'
+                                  },
+                                  [
+                                    h(
+                                      'div',
+                                      {
+                                        class: 'vxe-tree-select--header-btns'
+                                      },
+                                      [
+                                        showCheckedButton && multiple
+                                          ? h(VxeButtonComponent, {
+                                            props: {
+                                              content: getI18n('vxe.select.allChecked'),
+                                              mode: 'text'
+                                            },
+                                            on: {
+                                              click: $xeSelect.allCheckedPanelEvent
+                                            }
+                                          })
+                                          : renderEmptyElement($xeSelect),
+                                        showClearButton
+                                          ? h(VxeButtonComponent, {
+                                            props: {
+                                              content: getI18n('vxe.select.clear'),
+                                              mode: 'text'
+                                            },
+                                            on: {
+                                              click: $xeSelect.clearCheckedPanelEvent
+                                            }
+                                          })
+                                          : renderEmptyElement($xeSelect)
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ]
+                        )
+                        : renderEmptyElement($xeSelect),
+                      h(
+                        'div',
+                        {
+                          class: [
+                            'vxe-select--panel-body',
+                            isVScrollbar ? `ov-x--${scrollXVisible === false ? 'hidden' : 'visible'}` : '',
+                            isVScrollbar ? `ov-y--${scrollYVisible === false ? 'hidden' : 'visible'}` : '',
+                            isVScrollbar ? `sx-pos--${scrollbarXToTop ? 'top' : 'bottom'}` : '',
+                            isVScrollbar ? `sy-pos--${scrollbarYToLeft ? 'left' : 'right'}` : '',
+                            {
+                              'is--virtual-scrollbar': isVScrollbar,
+                              'ov-padding': isVScrollbar && scrollbarOpts.padding,
+                              'ov-x--auto-hide': isVScrollbar && scrollXAutoHide,
+                              'ov-y--auto-hide': isVScrollbar && scrollYAutoHide,
+                              'overflow-y': yThumbHeight,
+                              'overflow-x': xThumbWidth
                             }
-                          })
-                        ]),
-                      scrollYVisible === false
-                        ? renderEmptyElement($xeSelect)
-                        : h('div', {
-                          ref: 'refTrackYElem',
-                          class: 'vxe-scrollbar--track-y',
-                          on: {
-                            click: $xeSelect.clickTrackYEvent
-                          }
-                        }, [
-                          h('div', {
-                            ref: 'refThumbYElem',
-                            class: 'vxe-scrollbar--thumb-y',
-                            on: {
-                              pointerdown: $xeSelect.pointerdownThumbYEvent,
-                              pointermove: $xeSelect.pointermoveThumbYEvent,
-                              pointerup: $xeSelect.cleatPointerThumbEvent,
-                              pointercancel: $xeSelect.cleatPointerThumbEvent,
-                              lostpointercapture: $xeSelect.cleatPointerThumbEvent
-                            }
-                          })
-                        ])
-                    ])
-                    : renderEmptyElement($xeSelect)
-                ]),
-                footerSlot || showTotalButton || (showCloseButton && multiple)
-                  ? h('div', {
-                    class: 'vxe-select--panel-footer'
-                  }, footerSlot
-                    ? $xeSelect.callSlot(footerSlot, {}, h)
-                    : [
-                        h('div', {
-                          class: 'vxe-select--footer-button'
-                        }, [
-                          showTotalButton
-                            ? h('div', {
-                              class: 'vxe-select--total-btns'
-                            }, getI18n('vxe.select.total', [selectVals.length, optList.length]))
-                            : renderEmptyElement($xeSelect),
-                          showCloseButton && multiple
-                            ? h('div', {
-                              class: 'vxe-select--oper-btns'
-                            }, [
-                              h(VxeButtonComponent, {
-                                props: {
-                                  content: getI18n('vxe.select.close'),
-                                  mode: 'text'
-                                },
-                                on: {
-                                  click: $xeSelect.closePanelEvent
+                          ]
+                        },
+                        [
+                          h(
+                            'div',
+                            {
+                              ref: 'refVirtualWrapper',
+                              class: 'vxe-select-option--wrapper',
+                              on: {
+                                scroll: $xeSelect.scrollEvent
+                              }
+                            },
+                            [
+                              h('div', {
+                                ref: 'refVirtualSpaceElem',
+                                class: 'vxe-select--y-space',
+                                style: {
+                                  height: bodyHeight ? `${bodyHeight}px` : ''
                                 }
-                              })
-                            ])
+                              }),
+                              h(
+                                'div',
+                                {
+                                  ref: 'refVirtualBody',
+                                  class: 'vxe-select--body',
+                                  style: {
+                                    transform: `translateY(${topSpaceHeight}px)`
+                                  }
+                                },
+                                $xeSelect.renderOpts(h)
+                              )
+                            ]
+                          ),
+                          /**
+                           * 滚动条
+                           */
+                          isVScrollbar
+                            ? h(
+                              'div',
+                              {
+                                class: scrollbarWrapperClss
+                              },
+                              [
+                                scrollXVisible === false
+                                  ? renderEmptyElement($xeSelect)
+                                  : h(
+                                    'div',
+                                    {
+                                      ref: 'refTrackXElem',
+                                      class: 'vxe-scrollbar--track-x',
+                                      on: {
+                                        click: $xeSelect.clickTrackXEvent
+                                      }
+                                    },
+                                    [
+                                      h('div', {
+                                        ref: 'refThumbXElem',
+                                        class: 'vxe-scrollbar--thumb-x',
+                                        on: {
+                                          pointerdown: $xeSelect.pointerdownThumbXEvent,
+                                          pointermove: $xeSelect.pointermoveThumbXEvent,
+                                          pointerup: $xeSelect.cleatPointerThumbEvent,
+                                          pointercancel: $xeSelect.cleatPointerThumbEvent,
+                                          lostpointercapture: $xeSelect.cleatPointerThumbEvent
+                                        }
+                                      })
+                                    ]
+                                  ),
+                                scrollYVisible === false
+                                  ? renderEmptyElement($xeSelect)
+                                  : h(
+                                    'div',
+                                    {
+                                      ref: 'refTrackYElem',
+                                      class: 'vxe-scrollbar--track-y',
+                                      on: {
+                                        click: $xeSelect.clickTrackYEvent
+                                      }
+                                    },
+                                    [
+                                      h('div', {
+                                        ref: 'refThumbYElem',
+                                        class: 'vxe-scrollbar--thumb-y',
+                                        on: {
+                                          pointerdown: $xeSelect.pointerdownThumbYEvent,
+                                          pointermove: $xeSelect.pointermoveThumbYEvent,
+                                          pointerup: $xeSelect.cleatPointerThumbEvent,
+                                          pointercancel: $xeSelect.cleatPointerThumbEvent,
+                                          lostpointercapture: $xeSelect.cleatPointerThumbEvent
+                                        }
+                                      })
+                                    ]
+                                  )
+                              ]
+                            )
                             : renderEmptyElement($xeSelect)
-                        ])
-                      ])
-                  : renderEmptyElement($xeSelect)
-              ])
-            ]
-          : [])
-      ])
+                        ]
+                      ),
+                      footerSlot || showTotalButton || (showCloseButton && multiple)
+                        ? h(
+                          'div',
+                          {
+                            class: 'vxe-select--panel-footer'
+                          },
+                          footerSlot
+                            ? $xeSelect.callSlot(footerSlot, {}, h)
+                            : [
+                                h(
+                                  'div',
+                                  {
+                                    class: 'vxe-select--footer-button'
+                                  },
+                                  [
+                                    showTotalButton
+                                      ? h(
+                                        'div',
+                                        {
+                                          class: 'vxe-select--total-btns'
+                                        },
+                                        getI18n('vxe.select.total', [selectVals.length, optList.length])
+                                      )
+                                      : renderEmptyElement($xeSelect),
+                                    showCloseButton && multiple
+                                      ? h(
+                                        'div',
+                                        {
+                                          class: 'vxe-select--oper-btns'
+                                        },
+                                        [
+                                          h(VxeButtonComponent, {
+                                            props: {
+                                              content: getI18n('vxe.select.close'),
+                                              mode: 'text'
+                                            },
+                                            on: {
+                                              click: $xeSelect.closePanelEvent
+                                            }
+                                          })
+                                        ]
+                                      )
+                                      : renderEmptyElement($xeSelect)
+                                  ]
+                                )
+                              ]
+                        )
+                        : renderEmptyElement($xeSelect)
+                    ]
+                  )
+                ]
+              : []
+          )
+        ]
+      )
     }
   },
   watch: {
-    'reactData.staticOptions' (val: VxeSelectDefines.OptionInfo[]) {
+    'reactData.staticOptions'(val: VxeSelectDefines.OptionInfo[]) {
       const $xeSelect = this
 
       $xeSelect.loadData(val)
     },
-    options (val) {
+    options(val) {
       const $xeSelect = this
 
       $xeSelect.loadData(val)
     },
-    optionGroups (val) {
+    optionGroups(val) {
       const $xeSelect = this
 
       $xeSelect.loadData(val)
     },
-    computeIsVScrollbar () {
+    computeIsVScrollbar() {
       const $xeSelect = this
 
       $xeSelect.$nextTick(() => {
@@ -2472,38 +2654,38 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       })
     },
-    computeScrollYWidth () {
+    computeScrollYWidth() {
       const $xeSelect = this
 
       $xeSelect.reLayoutFlag++
     },
-    computeScrollXHeight () {
+    computeScrollXHeight() {
       const $xeSelect = this
 
       $xeSelect.reLayoutFlag++
     },
-    computeScrollXVisible () {
+    computeScrollXVisible() {
       const $xeSelect = this
 
       $xeSelect.$nextTick(() => {
         $xeSelect.reLayoutFlag++
       })
     },
-    computeScrollYVisible () {
+    computeScrollYVisible() {
       const $xeSelect = this
 
       $xeSelect.$nextTick(() => {
         $xeSelect.reLayoutFlag++
       })
     },
-    reLayoutFlag () {
+    reLayoutFlag() {
       const $xeSelect = this
 
       $xeSelect.recalculate().then(() => {
         $xeSelect.recalculate()
       })
     },
-    reScrollFlag () {
+    reScrollFlag() {
       const $xeSelect = this
 
       $xeSelect.updateScrollbar().then(() => {
@@ -2511,12 +2693,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       })
     }
   },
-  created () {
+  created() {
     const $xeSelect = this
 
     $xeSelect.internalData = createInternalData()
   },
-  mounted () {
+  mounted() {
     const $xeSelect = this
     const props = $xeSelect
 
@@ -2535,7 +2717,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeSelect, 'resize', $xeSelect.handleGlobalResizeEvent)
     globalEvents.on($xeSelect, 'scroll', $xeSelect.handleGlobalScrollEvent)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeSelect = this
     const internalData = $xeSelect.internalData
 
@@ -2553,7 +2735,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeSelect, 'resize')
     globalEvents.off($xeSelect, 'scroll')
   },
-  destroyed () {
+  destroyed() {
     const $xeSelect = this
     const reactData = $xeSelect.reactData
     const internalData = $xeSelect.internalData
@@ -2561,7 +2743,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

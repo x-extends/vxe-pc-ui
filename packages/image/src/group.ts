@@ -9,9 +9,7 @@ import type { VxeImageGroupPropTypes, VxeImageGroupEmits, ImageGroupReactData, V
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeImageGroup',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     urlList: [Array, String] as PropType<VxeImageGroupPropTypes.UrlList>,
     showPreview: {
@@ -35,16 +33,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     getThumbnailUrlMethod: Function as PropType<VxeImageGroupPropTypes.GetThumbnailUrlMethod>
   },
-  provide () {
+  provide() {
     const $xeImageGroup = this
     return {
       $xeImageGroup
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: ImageGroupReactData = {
-    }
+    const reactData: ImageGroupReactData = {}
     return {
       xID,
       reactData
@@ -54,13 +51,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeImgList  () {
+    computeImgList() {
       const $xeImageGroup = this
       const props = $xeImageGroup
 
       const { urlList } = props
       if (urlList) {
-        return (XEUtils.isArray(urlList) ? urlList : [urlList]).map(item => {
+        return (XEUtils.isArray(urlList) ? urlList : [urlList]).map((item) => {
           if (XEUtils.isString(item)) {
             return {
               url: item,
@@ -75,13 +72,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return []
     },
-    computeImgStyleOpts () {
+    computeImgStyleOpts() {
       const $xeImageGroup = this
       const props = $xeImageGroup
 
       return Object.assign({}, getConfig().imageGroup.imageStyle, props.imageStyle)
     },
-    computeGetThumbnailUrlMethod () {
+    computeGetThumbnailUrlMethod() {
       const $xeImageGroup = this
       const props = $xeImageGroup
 
@@ -92,13 +89,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeImageGroupEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeImageGroupEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeImageGroup = this
       $xeImageGroup.$emit(type, createEvent(evnt, { $imageGroup: $xeImageGroup }, params))
     },
-    handleClickImgEvent (evnt: Event, params: {
-      url: string;
-    }) {
+    handleClickImgEvent(
+      evnt: Event,
+      params: {
+        url: string
+      }
+    ) {
       const $xeImageGroup = this
       const props = $xeImageGroup
 
@@ -107,17 +107,20 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const imgList = $xeImageGroup.computeImgList
       if (showPreview && url) {
         openPreviewImage({
-          activeIndex: Math.max(0, XEUtils.findIndexOf(imgList, item => item.url === url)),
+          activeIndex: Math.max(
+            0,
+            XEUtils.findIndexOf(imgList, (item) => item.url === url)
+          ),
           urlList: imgList,
           toolbarConfig,
           showPrintButton,
           showDownloadButton,
           zIndex,
           events: {
-            change (eventParams) {
+            change(eventParams) {
               $xeImageGroup.dispatchEvent('change', eventParams, eventParams.$event)
             },
-            rotate (eventParams) {
+            rotate(eventParams) {
               $xeImageGroup.dispatchEvent('rotate', eventParams, eventParams.$event)
             }
           }
@@ -129,34 +132,41 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeImageGroup = this
 
       const imgList = $xeImageGroup.computeImgList
       const vSize = $xeImageGroup.computeSize
       const imgStyleOpts = $xeImageGroup.computeImgStyleOpts
       const getThumbnailUrlMethod = $xeImageGroup.computeGetThumbnailUrlMethod
-      return h('div', {
-        class: ['vxe-image-group', {
-          [`size--${vSize}`]: vSize
-        }]
-      }, imgList
-        ? imgList.map((item, index) => {
-          return h(VxeImageComponent, {
-            key: index,
-            props: {
-              src: item.url,
-              alt: item.alt,
-              width: imgStyleOpts.width,
-              height: imgStyleOpts.height,
-              getThumbnailUrlMethod
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-image-group',
+            {
+              [`size--${vSize}`]: vSize
             }
+          ]
+        },
+        imgList
+          ? imgList.map((item, index) => {
+            return h(VxeImageComponent, {
+              key: index,
+              props: {
+                src: item.url,
+                alt: item.alt,
+                width: imgStyleOpts.width,
+                height: imgStyleOpts.height,
+                getThumbnailUrlMethod
+              }
+            })
           })
-        })
-        : [])
+          : []
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -1,19 +1,36 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getEventTargetNode, getPopupAppendElement, toCssUnit, updatePanelPlacement } from '../../ui/src/dom'
 import { getLastZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import VxeInputComponent from '../../input'
 
-import type { VxeIconPickerPropTypes, IconPickerInternalData, ValueOf, IconPickerReactData, VxeInputConstructor, VxeComponentSizeType, VxeIconPickerEmits, VxeIconPickerDefines, VxeDrawerConstructor, VxeDrawerMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, VxeModalConstructor, VxeModalMethods, VxeComponentStyleType } from '../../../types'
+import type {
+  VxeIconPickerPropTypes,
+  IconPickerInternalData,
+  ValueOf,
+  IconPickerReactData,
+  VxeInputConstructor,
+  VxeComponentSizeType,
+  VxeIconPickerEmits,
+  VxeIconPickerDefines,
+  VxeDrawerConstructor,
+  VxeDrawerMethods,
+  VxeFormDefines,
+  VxeFormConstructor,
+  VxeFormPrivateMethods,
+  VxeModalConstructor,
+  VxeModalMethods,
+  VxeComponentStyleType
+} from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { getConfig, getIcon, getI18n, baseUtils, globalEvents, createEvent, renderer, globalMixins, GLOBAL_EVENT_KEYS, renderEmptyElement } = VxeUI
 const { getDefVal } = baseUtils
 
-function createReactData (): IconPickerReactData {
+function createReactData(): IconPickerReactData {
   return {
     initialized: false,
     selectIcon: '',
@@ -28,7 +45,7 @@ function createReactData (): IconPickerReactData {
   }
 }
 
-function createInternalData (): IconPickerInternalData {
+function createInternalData(): IconPickerInternalData {
   return {
     fullList: []
     // hpTimeout: undefined
@@ -37,10 +54,7 @@ function createInternalData (): IconPickerInternalData {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeIconPicker',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.vScrollbarMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.vScrollbarMixin],
   model: {
     prop: 'value',
     event: 'modelValue'
@@ -108,17 +122,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  provide () {
+  provide() {
     const $xeIconPicker = this
     return {
       $xeIconPicker
     }
   },
-  data () {
+  data() {
     const reactData = createReactData()
     return {
       ...({} as {
-        internalData: IconPickerInternalData,
+        internalData: IconPickerInternalData
       }),
       xID: XEUtils.uniqueId(),
       reactData
@@ -133,7 +147,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
-    computeFormReadonly () {
+    computeFormReadonly() {
       const $xeIconPicker = this
       const props = $xeIconPicker
       const $xeForm = $xeIconPicker.$xeForm
@@ -147,7 +161,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return readonly
     },
-    computeIsDisabled () {
+    computeIsDisabled() {
       const $xeIconPicker = this
       const props = $xeIconPicker
       const $xeForm = $xeIconPicker.$xeForm
@@ -161,7 +175,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return disabled
     },
-    computeBtnTransfer () {
+    computeBtnTransfer() {
       const $xeIconPicker = this
       const props = $xeIconPicker
       const $xeTable = $xeIconPicker.$xeTable
@@ -185,7 +199,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return transfer
     },
-    computeInpPlaceholder () {
+    computeInpPlaceholder() {
       const $xeIconPicker = this
       const props = $xeIconPicker
 
@@ -199,7 +213,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return getI18n('vxe.base.pleaseSelect')
     },
-    computeCurrStyle () {
+    computeCurrStyle() {
       const $xeIconPicker = this
       const props = $xeIconPicker
 
@@ -210,7 +224,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computeWrapperStyle () {
+    computeWrapperStyle() {
       const $xeIconPicker = this
 
       const popupOpts = $xeIconPicker.computePopupOpts
@@ -226,7 +240,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computeIconList () {
+    computeIconList() {
       const $xeIconPicker = this
       const props = $xeIconPicker
 
@@ -234,7 +248,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (!icons || !icons.length) {
         icons = getConfig().iconPicker.icons || []
       }
-      return icons.map(item => {
+      return icons.map((item) => {
         if (XEUtils.isString(item)) {
           return {
             title: item,
@@ -248,19 +262,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       })
     },
-    computeFilterOpts () {
+    computeFilterOpts() {
       const $xeIconPicker = this
       const props = $xeIconPicker
 
       return Object.assign({}, getConfig().iconPicker.filterConfig, props.filterConfig)
     },
-    computePopupOpts () {
+    computePopupOpts() {
       const $xeIconPicker = this
       const props = $xeIconPicker
 
       return Object.assign({}, getConfig().iconPicker.popupConfig, props.popupConfig)
     },
-    computeIconGroupList () {
+    computeIconGroupList() {
       const $xeIconPicker = this
 
       const iconList = $xeIconPicker.computeIconList as {
@@ -270,7 +284,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }[]
       return XEUtils.chunk(iconList, 4)
     },
-    computeSelectIconItem () {
+    computeSelectIconItem() {
       const $xeIconPicker = this
       const reactData = ($xeIconPicker as any).reactData
 
@@ -280,29 +294,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
         icon: string
         iconRender: VxeIconPickerDefines.OptionIconRender
       }[]
-      return selectIcon ? iconList.find(item => item.icon === selectIcon) : null
+      return selectIcon ? iconList.find((item) => item.icon === selectIcon) : null
     }
   },
   methods: {
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeIconPickerEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeIconPickerEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeIconPicker = this
       $xeIconPicker.$emit(type, createEvent(evnt, { $iconPicker: $xeIconPicker }, params))
     },
-    emitModel (value: any) {
+    emitModel(value: any) {
       const $xeIconPicker = this
 
       handleEmitModelVal($xeIconPicker, value)
     },
-    isPanelVisible () {
+    isPanelVisible() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
       return reactData.visiblePanel
     },
-    togglePanel () {
+    togglePanel() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -313,7 +327,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeIconPicker.$nextTick()
     },
-    hidePanel () {
+    hidePanel() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -322,7 +336,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeIconPicker.$nextTick()
     },
-    showPanel () {
+    showPanel() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -331,7 +345,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeIconPicker.$nextTick()
     },
-    focus () {
+    focus() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -340,7 +354,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $input.blur()
       return $xeIconPicker.$nextTick()
     },
-    blur () {
+    blur() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -349,7 +363,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.isActivated = false
       return $xeIconPicker.$nextTick()
     },
-    updateZindex  () {
+    updateZindex() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -357,7 +371,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.panelIndex = nextZIndex()
       }
     },
-    updatePlacement () {
+    updatePlacement() {
       const $xeIconPicker = this
       const props = $xeIconPicker
       const reactData = $xeIconPicker.reactData
@@ -391,7 +405,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       handleStyle()
       return $xeIconPicker.$nextTick().then(handleStyle)
     },
-    showOptionPanel () {
+    showOptionPanel() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
       const internalData = $xeIconPicker.internalData
@@ -426,7 +440,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeIconPicker.updatePlacement()
       }
     },
-    hideOptionPanel () {
+    hideOptionPanel() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
       const internalData = $xeIconPicker.internalData
@@ -436,7 +450,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.isAniVisible = false
       }, 350)
     },
-    handleFocusSearch () {
+    handleFocusSearch() {
       const $xeIconPicker = this
       const props = $xeIconPicker
 
@@ -449,7 +463,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
     },
-    handleData () {
+    handleData() {
       const $xeIconPicker = this
       const props = $xeIconPicker
       const reactData = $xeIconPicker.reactData
@@ -462,7 +476,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       let visibleList = iconList
       if (searchValue) {
         const searchTxt = `${searchValue}`.toLowerCase()
-        visibleList = iconList.filter(item => {
+        visibleList = iconList.filter((item) => {
           if (filterMethod) {
             return filterMethod({ option: item, value: modelValue, searchValue: searchTxt, $iconPicker: $xeIconPicker })
           }
@@ -471,7 +485,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       reactData.iconList = visibleList
     },
-    changeEvent  (evnt: Event, selectValue: any) {
+    changeEvent(evnt: Event, selectValue: any) {
       const $xeIconPicker = this
       const props = $xeIconPicker
       const reactData = $xeIconPicker.reactData
@@ -488,7 +502,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    focusEvent () {
+    focusEvent() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -499,25 +513,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    blurEvent  () {
+    blurEvent() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
       reactData.isActivated = false
     },
-    clearValueEvent  (evnt: Event, selectValue: any) {
+    clearValueEvent(evnt: Event, selectValue: any) {
       const $xeIconPicker = this
 
       $xeIconPicker.changeEvent(evnt, selectValue)
       $xeIconPicker.dispatchEvent('clear', { value: selectValue }, evnt)
     },
-    clearEvent  (params: any, evnt: Event) {
+    clearEvent(params: any, evnt: Event) {
       const $xeIconPicker = this
 
       $xeIconPicker.clearValueEvent(evnt, null)
       $xeIconPicker.hideOptionPanel()
     },
-    togglePanelEvent (evnt: MouseEvent) {
+    togglePanelEvent(evnt: MouseEvent) {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -528,13 +542,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeIconPicker.showOptionPanel()
       }
     },
-    clickEvent  (evnt: MouseEvent) {
+    clickEvent(evnt: MouseEvent) {
       const $xeIconPicker = this
 
       $xeIconPicker.togglePanelEvent(evnt)
       $xeIconPicker.dispatchEvent('click', {}, evnt)
     },
-    handleGlobalMousedownEvent (evnt: MouseEvent) {
+    handleGlobalMousedownEvent(evnt: MouseEvent) {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -549,7 +563,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalKeydownEvent (evnt: KeyboardEvent) {
+    handleGlobalKeydownEvent(evnt: KeyboardEvent) {
       const $xeIconPicker = this
       const props = $xeIconPicker
       const reactData = $xeIconPicker.reactData
@@ -597,7 +611,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalBlurEvent  () {
+    handleGlobalBlurEvent() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -615,7 +629,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalResizeEvent () {
+    handleGlobalResizeEvent() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -624,7 +638,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeIconPicker.updatePlacement()
       }
     },
-    handleGlobalScrollEvent () {
+    handleGlobalScrollEvent() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -633,40 +647,44 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeIconPicker.updatePlacement()
       }
     },
-    handleClickIconEvent  (evnt: MouseEvent, item: VxeIconPickerDefines.IconItemObj) {
+    handleClickIconEvent(evnt: MouseEvent, item: VxeIconPickerDefines.IconItemObj) {
       const $xeIconPicker = this
 
       const value = item.icon
       $xeIconPicker.changeEvent(evnt, value)
       $xeIconPicker.hideOptionPanel()
     },
-    modelSearchEvent (value: string) {
+    modelSearchEvent(value: string) {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
       reactData.searchValue = value
     },
-    focusSearchEvent () {
+    focusSearchEvent() {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
       reactData.isActivated = true
     },
-    handleSearchEvent () {
+    handleSearchEvent() {
       const $xeIconPicker = this
 
       $xeIconPicker.handleData()
     },
-    triggerSearchEvent: XEUtils.debounce(function (this: any) {
-      const $xeIconPicker = this
+    triggerSearchEvent: XEUtils.debounce(
+      function (this: any) {
+        const $xeIconPicker = this
 
-      $xeIconPicker.handleSearchEvent()
-    }, 350, { trailing: true }),
+        $xeIconPicker.handleSearchEvent()
+      },
+      350,
+      { trailing: true }
+    ),
 
     //
     // Render
     //
-    renderIconWrapper (h: CreateElement) {
+    renderIconWrapper(h: CreateElement) {
       const $xeIconPicker = this
       const props = $xeIconPicker
       const reactData = $xeIconPicker.reactData
@@ -675,55 +693,86 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { selectIcon, iconList } = reactData
 
       if (!iconList.length) {
-        return h('div', {
-          class: 'vxe-ico-picker--empty-placeholder'
-        }, getI18n('vxe.iconPicker.emptyText'))
+        return h(
+          'div',
+          {
+            class: 'vxe-ico-picker--empty-placeholder'
+          },
+          getI18n('vxe.iconPicker.emptyText')
+        )
       }
-      return h('div', {
-        class: 'vxe-ico-picker--list-wrapper'
-      }, [
-        h('div', {
-          class: 'vxe-ico-picker--list'
-        }, iconList.map(item => {
-          const { iconRender } = item
-          const compConf = iconRender ? renderer.get(iconRender.name) : null
-          const iconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
-          return h('div', {
-            class: ['vxe-ico-picker--item', {
-              'is--selected': selectIcon === item.icon
-            }]
-          }, [
-            h('div', {
-              class: 'vxe-ico-picker--item-inner',
-              on: {
-                click (evnt: MouseEvent) {
-                  const isDisabled = $xeIconPicker.computeIsDisabled
-                  if (!isDisabled) {
-                    $xeIconPicker.handleClickIconEvent(evnt, item)
-                  }
-                }
-              }
-            }, [
-              h('div', {
-                class: 'vxe-ico-picker--item-icon'
-              }, iconMethod && iconRender
-                ? getSlotVNs(iconMethod(h, iconRender, { $iconPicker: $xeIconPicker, option: item }))
-                : [
-                    h('i', {
-                      class: item.icon || ''
-                    })
-                  ]),
-              showIconTitle
-                ? h('div', {
-                  class: 'vxe-ico-picker--item-title'
-                }, `${item.title || ''}`)
-                : renderEmptyElement($xeIconPicker)
-            ])
-          ])
-        }))
-      ])
+      return h(
+        'div',
+        {
+          class: 'vxe-ico-picker--list-wrapper'
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-ico-picker--list'
+            },
+            iconList.map((item) => {
+              const { iconRender } = item
+              const compConf = iconRender ? renderer.get(iconRender.name) : null
+              const iconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
+              return h(
+                'div',
+                {
+                  class: [
+                    'vxe-ico-picker--item',
+                    {
+                      'is--selected': selectIcon === item.icon
+                    }
+                  ]
+                },
+                [
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-ico-picker--item-inner',
+                      on: {
+                        click(evnt: MouseEvent) {
+                          const isDisabled = $xeIconPicker.computeIsDisabled
+                          if (!isDisabled) {
+                            $xeIconPicker.handleClickIconEvent(evnt, item)
+                          }
+                        }
+                      }
+                    },
+                    [
+                      h(
+                        'div',
+                        {
+                          class: 'vxe-ico-picker--item-icon'
+                        },
+                        iconMethod && iconRender
+                          ? getSlotVNs(iconMethod(h, iconRender, { $iconPicker: $xeIconPicker, option: item }))
+                          : [
+                              h('i', {
+                                class: item.icon || ''
+                              })
+                            ]
+                      ),
+                      showIconTitle
+                        ? h(
+                          'div',
+                          {
+                            class: 'vxe-ico-picker--item-title'
+                          },
+                            `${item.title || ''}`
+                        )
+                        : renderEmptyElement($xeIconPicker)
+                    ]
+                  )
+                ]
+              )
+            })
+          )
+        ]
+      )
     },
-    renderIconView (h: CreateElement) {
+    renderIconView(h: CreateElement) {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
@@ -734,22 +783,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const compConf = iconRender ? renderer.get(iconRender.name) : null
         const oIconMethod = compConf ? compConf.renderIconPickerOptionIcon : null
         if (oIconMethod && iconRender) {
-          return h('div', {
-            key: 'inc',
-            class: 'vxe-ico-picker--icon'
-          }, getSlotVNs(oIconMethod.call($xeIconPicker, h, iconRender, { $iconPicker: $xeIconPicker, option: selectIconItem })))
+          return h(
+            'div',
+            {
+              key: 'inc',
+              class: 'vxe-ico-picker--icon'
+            },
+            getSlotVNs(oIconMethod.call($xeIconPicker, h, iconRender, { $iconPicker: $xeIconPicker, option: selectIconItem }))
+          )
         }
       }
-      return h('div', {
-        key: 'ind',
-        class: 'vxe-ico-picker--icon'
-      }, [
-        h('i', {
-          class: selectIcon
-        })
-      ])
+      return h(
+        'div',
+        {
+          key: 'ind',
+          class: 'vxe-ico-picker--icon'
+        },
+        [
+          h('i', {
+            class: selectIcon
+          })
+        ]
+      )
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeIconPicker = this
       const props = $xeIconPicker
       const reactData = $xeIconPicker.reactData
@@ -762,136 +819,184 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const formReadonly = $xeIconPicker.computeFormReadonly
 
       if (formReadonly) {
-        return h('div', {
-          ref: 'refElem',
-          class: ['vxe-ico-picker--readonly', className]
-        }, [
-          h('i', {
-            class: selectIcon
-          })
-        ])
+        return h(
+          'div',
+          {
+            ref: 'refElem',
+            class: ['vxe-ico-picker--readonly', className]
+          },
+          [
+            h('i', {
+              class: selectIcon
+            })
+          ]
+        )
       }
       const currStyle = $xeIconPicker.computeCurrStyle
       const inpPlaceholder = $xeIconPicker.computeInpPlaceholder
       const wrapperStyle = $xeIconPicker.computeWrapperStyle
       const popupOpts = $xeIconPicker.computePopupOpts
       const ppClassName = popupOpts.className || props.popupClassName
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-ico-picker', className ? (XEUtils.isFunction(className) ? className({ $iconPicker: $xeIconPicker }) : className) : '', {
-          [`size--${vSize}`]: vSize,
-          'show--clear': clearable && !isDisabled && !!selectIcon,
-          'is--visible': visiblePanel,
-          'is--disabled': isDisabled,
-          'is--active': isActivated
-        }],
-        style: currStyle
-      }, [
-        h('div', {
-          class: 'vxe-ico-picker--inner',
-          on: {
-            click: $xeIconPicker.clickEvent
-          }
-        }, [
-          h('input', {
-            ref: 'refInput',
-            class: 'vxe-ico-picker--input',
-            on: {
-              focus: $xeIconPicker.focusEvent,
-              blur: $xeIconPicker.blurEvent
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-ico-picker',
+            className ? (XEUtils.isFunction(className) ? className({ $iconPicker: $xeIconPicker }) : className) : '',
+            {
+              [`size--${vSize}`]: vSize,
+              'show--clear': clearable && !isDisabled && !!selectIcon,
+              'is--visible': visiblePanel,
+              'is--disabled': isDisabled,
+              'is--active': isActivated
             }
-          }),
-          selectIcon
-            ? $xeIconPicker.renderIconView(h)
-            : h('div', {
-              class: 'vxe-ico-picker--placeholder'
-            }, inpPlaceholder),
-          h('div', {
-            class: 'vxe-ico-picker--suffix'
-          }, [
-            h('div', {
-              class: 'vxe-ico-picker--clear-icon',
+          ],
+          style: currStyle
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-ico-picker--inner',
               on: {
-                click: $xeIconPicker.clearEvent
+                click: $xeIconPicker.clickEvent
               }
-            }, [
-              h('i', {
-                class: getIcon().INPUT_CLEAR
-              })
-            ]),
-            h('div', {
-              class: 'vxe-ico-picker--suffix-icon'
-            }, [
-              h('i', {
-                class: visiblePanel ? getIcon().ICON_PICKER_OPEN : getIcon().ICON_PICKER_CLOSE
-              })
-            ])
-          ])
-        ]),
-        h('div', {
-          ref: 'refOptionPanel',
-          class: ['vxe-table--ignore-clear vxe-ico-picker--panel', ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $iconPicker: $xeIconPicker }) : ppClassName) : '', {
-            [`size--${vSize}`]: vSize,
-            'is--transfer': btnTransfer,
-            'ani--leave': isAniVisible,
-            'ani--enter': visiblePanel
-          }],
-          attrs: {
-            placement: reactData.panelPlacement
-          },
-          style: reactData.panelStyle
-        }, [
-          initialized && (visiblePanel || isAniVisible)
-            ? h('div', {
-              class: 'vxe-ico-picker--panel-wrapper',
-              style: wrapperStyle
-            }, [
-              filterable
-                ? h('div', {
-                  class: 'vxe-ico-picker--panel-search'
-                }, [
-                  h(VxeInputComponent, {
-                    ref: 'refInpSearch',
-                    class: 'vxe-ico-picker-search--input',
-                    props: {
-                      value: reactData.searchValue,
-                      type: 'text',
-                      clearable: true,
-                      disabled: false,
-                      readonly: false,
-                      placeholder: getI18n('vxe.iconPicker.search'),
-                      prefixIcon: getIcon().INPUT_SEARCH
+            },
+            [
+              h('input', {
+                ref: 'refInput',
+                class: 'vxe-ico-picker--input',
+                on: {
+                  focus: $xeIconPicker.focusEvent,
+                  blur: $xeIconPicker.blurEvent
+                }
+              }),
+              selectIcon
+                ? $xeIconPicker.renderIconView(h)
+                : h(
+                  'div',
+                  {
+                    class: 'vxe-ico-picker--placeholder'
+                  },
+                  inpPlaceholder
+                ),
+              h(
+                'div',
+                {
+                  class: 'vxe-ico-picker--suffix'
+                },
+                [
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-ico-picker--clear-icon',
+                      on: {
+                        click: $xeIconPicker.clearEvent
+                      }
                     },
-                    on: {
-                      'model-value': $xeIconPicker.modelSearchEvent,
-                      focus: $xeIconPicker.focusSearchEvent,
-                      change: $xeIconPicker.triggerSearchEvent,
-                      search: $xeIconPicker.triggerSearchEvent
-                    }
-                  })
-                ])
-                : renderEmptyElement($xeIconPicker),
-              $xeIconPicker.renderIconWrapper(h)
-            ])
-            : renderEmptyElement($xeIconPicker)
-        ])
-      ])
+                    [
+                      h('i', {
+                        class: getIcon().INPUT_CLEAR
+                      })
+                    ]
+                  ),
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-ico-picker--suffix-icon'
+                    },
+                    [
+                      h('i', {
+                        class: visiblePanel ? getIcon().ICON_PICKER_OPEN : getIcon().ICON_PICKER_CLOSE
+                      })
+                    ]
+                  )
+                ]
+              )
+            ]
+          ),
+          h(
+            'div',
+            {
+              ref: 'refOptionPanel',
+              class: [
+                'vxe-table--ignore-clear vxe-ico-picker--panel',
+                ppClassName ? (XEUtils.isFunction(ppClassName) ? ppClassName({ $iconPicker: $xeIconPicker }) : ppClassName) : '',
+                {
+                  [`size--${vSize}`]: vSize,
+                  'is--transfer': btnTransfer,
+                  'ani--leave': isAniVisible,
+                  'ani--enter': visiblePanel
+                }
+              ],
+              attrs: {
+                placement: reactData.panelPlacement
+              },
+              style: reactData.panelStyle
+            },
+            [
+              initialized && (visiblePanel || isAniVisible)
+                ? h(
+                  'div',
+                  {
+                    class: 'vxe-ico-picker--panel-wrapper',
+                    style: wrapperStyle
+                  },
+                  [
+                    filterable
+                      ? h(
+                        'div',
+                        {
+                          class: 'vxe-ico-picker--panel-search'
+                        },
+                        [
+                          h(VxeInputComponent, {
+                            ref: 'refInpSearch',
+                            class: 'vxe-ico-picker-search--input',
+                            props: {
+                              value: reactData.searchValue,
+                              type: 'text',
+                              clearable: true,
+                              disabled: false,
+                              readonly: false,
+                              placeholder: getI18n('vxe.iconPicker.search'),
+                              prefixIcon: getIcon().INPUT_SEARCH
+                            },
+                            on: {
+                              'model-value': $xeIconPicker.modelSearchEvent,
+                              focus: $xeIconPicker.focusSearchEvent,
+                              change: $xeIconPicker.triggerSearchEvent,
+                              search: $xeIconPicker.triggerSearchEvent
+                            }
+                          })
+                        ]
+                      )
+                      : renderEmptyElement($xeIconPicker),
+                    $xeIconPicker.renderIconWrapper(h)
+                  ]
+                )
+                : renderEmptyElement($xeIconPicker)
+            ]
+          )
+        ]
+      )
     }
   },
   watch: {
-    value (val) {
+    value(val) {
       const $xeIconPicker = this
       const reactData = $xeIconPicker.reactData
 
       reactData.selectIcon = `${val || ''}`
     },
-    computeIconList () {
+    computeIconList() {
       const $xeIconPicker = this
 
       $xeIconPicker.handleData()
     }
   },
-  created () {
+  created() {
     const $xeIconPicker = this
     const props = $xeIconPicker
     const reactData = $xeIconPicker.reactData
@@ -907,7 +1012,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeIconPicker, 'resize', $xeIconPicker.handleGlobalResizeEvent)
     globalEvents.on($xeIconPicker, 'scroll', $xeIconPicker.handleGlobalScrollEvent)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeIconPicker = this
     const reactData = $xeIconPicker.reactData
     const internalData = $xeIconPicker.internalData
@@ -924,7 +1029,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

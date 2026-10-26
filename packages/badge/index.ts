@@ -4,7 +4,7 @@ import VxeBadgeComponent from './src/badge'
 import { dynamicApp } from '../dynamics'
 
 export const VxeBadge = Object.assign({}, VxeBadgeComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeBadgeComponent.name as string, VxeBadgeComponent)
   }
 })

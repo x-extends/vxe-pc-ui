@@ -4,7 +4,7 @@ import VxeDividerComponent from './src/divider'
 import { dynamicApp } from '../dynamics'
 
 export const VxeDivider = Object.assign({}, VxeDividerComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeDividerComponent.name as string, VxeDividerComponent)
   }
 })

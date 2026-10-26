@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeBreadcrumbItemComponent from '../breadcrumb/src/breadcrumb-item'
 
 export const VxeBreadcrumbItem = Object.assign({}, VxeBreadcrumbItemComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeBreadcrumbItemComponent.name as string, VxeBreadcrumbItemComponent)
   }
 })

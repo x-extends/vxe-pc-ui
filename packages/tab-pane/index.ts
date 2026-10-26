@@ -4,7 +4,7 @@ import VxeTabPaneComponent from '../tabs/src/tab-pane'
 import { dynamicApp } from '../dynamics'
 
 export const VxeTabPane = Object.assign({}, VxeTabPaneComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeTabPaneComponent.name as string, VxeTabPaneComponent)
   }
 })

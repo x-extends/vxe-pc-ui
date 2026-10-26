@@ -1,7 +1,7 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs } from '../../ui/src/vn'
 
 import type { VxeAlertPropTypes, AlertReactData, VxeAlertEmits, ValueOf } from '../../../types'
@@ -24,10 +24,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().alert.icon
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: AlertReactData = {
-    }
+    const reactData: AlertReactData = {}
     return {
       xID,
       reactData
@@ -37,11 +36,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeAlertEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeAlertEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeAlert = this
       this.$emit(type, createEvent(evnt, { $alert: $xeAlert }, params))
     },
-    closeEvent  (evnt: MouseEvent) {
+    closeEvent(evnt: MouseEvent) {
       const $xeAlert = this
       $xeAlert.dispatchEvent('close', {}, evnt)
     },
@@ -49,7 +48,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeAlert = this
       const props = $xeAlert
       const slots = $xeAlert.$scopedSlots
@@ -58,51 +57,78 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const defaultSlot = slots.default
       const titleSlot = slots.title
       const iconSlot = slots.icon
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-alert', {
-          [`theme--${status}`]: status
-        }]
-      }, [
-        iconSlot || (showIcon && status) || icon
-          ? h('div', {
-            class: 'vxe-alert--icon'
-          }, iconSlot
-            ? getSlotVNs(iconSlot({}))
-            : [
-                h('i', {
-                  class: icon || getIcon()[`ALERT_${status?.toUpperCase()}` as 'ALERT_SUCCESS']
-                })
-              ])
-          : renderEmptyElement($xeAlert),
-        h('div', {
-          class: 'vxe-alert--body'
-        }, [
-          titleSlot || title
-            ? h('div', {
-              class: 'vxe-alert--title'
-            }, titleSlot ? getSlotVNs(titleSlot({})) : XEUtils.toValueString(title))
-            : renderEmptyElement($xeAlert),
-          h('div', {
-            class: 'vxe-alert--content'
-          }, defaultSlot ? getSlotVNs(defaultSlot({})) : XEUtils.toValueString(content))
-        ]),
-        showClose
-          ? h('div', {
-            class: 'vxe-alert--close-btn',
-            on: {
-              click: $xeAlert.closeEvent
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-alert',
+            {
+              [`theme--${status}`]: status
             }
-          }, [
-            h('i', {
-              class: getIcon().ALERT_CLOSE
-            })
-          ])
-          : renderEmptyElement($xeAlert)
-      ])
+          ]
+        },
+        [
+          iconSlot || (showIcon && status) || icon
+            ? h(
+              'div',
+              {
+                class: 'vxe-alert--icon'
+              },
+              iconSlot
+                ? getSlotVNs(iconSlot({}))
+                : [
+                    h('i', {
+                      class: icon || getIcon()[`ALERT_${status?.toUpperCase()}` as 'ALERT_SUCCESS']
+                    })
+                  ]
+            )
+            : renderEmptyElement($xeAlert),
+          h(
+            'div',
+            {
+              class: 'vxe-alert--body'
+            },
+            [
+              titleSlot || title
+                ? h(
+                  'div',
+                  {
+                    class: 'vxe-alert--title'
+                  },
+                  titleSlot ? getSlotVNs(titleSlot({})) : XEUtils.toValueString(title)
+                )
+                : renderEmptyElement($xeAlert),
+              h(
+                'div',
+                {
+                  class: 'vxe-alert--content'
+                },
+                defaultSlot ? getSlotVNs(defaultSlot({})) : XEUtils.toValueString(content)
+              )
+            ]
+          ),
+          showClose
+            ? h(
+              'div',
+              {
+                class: 'vxe-alert--close-btn',
+                on: {
+                  click: $xeAlert.closeEvent
+                }
+              },
+              [
+                h('i', {
+                  class: getIcon().ALERT_CLOSE
+                })
+              ]
+            )
+            : renderEmptyElement($xeAlert)
+        ]
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

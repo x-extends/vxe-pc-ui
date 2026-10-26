@@ -1,15 +1,15 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { globalMixins, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeBreadcrumbItemPropTypes, BreadcrumbItemReactData, VxeComponentSizeType, VxeBreadcrumbEmits, VxeBreadcrumbConstructor, VxeBreadcrumbPrivateMethods, ValueOf } from '../../../types'
 
+const { globalMixins, createEvent, renderEmptyElement } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBreadcrumbItem',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     title: String as PropType<VxeBreadcrumbItemPropTypes.Title>,
     routerLink: Object as PropType<VxeBreadcrumbItemPropTypes.RouterLink>
@@ -19,10 +19,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: BreadcrumbItemReactData = {
-    }
+    const reactData: BreadcrumbItemReactData = {}
     return {
       xID,
       reactData
@@ -30,10 +29,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   computed: {
     ...({} as {
-        computeSize(): VxeComponentSizeType
-        $xeBreadcrumb(): (VxeBreadcrumbConstructor & VxeBreadcrumbPrivateMethods) | null
-      }),
-    computeSeparator () {
+      computeSize(): VxeComponentSizeType
+      $xeBreadcrumb(): (VxeBreadcrumbConstructor & VxeBreadcrumbPrivateMethods) | null
+    }),
+    computeSeparator() {
       const $xeBreadcrumbItem = this
       const $xeBreadcrumb = $xeBreadcrumbItem.$xeBreadcrumb
 
@@ -47,11 +46,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeBreadcrumbEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeBreadcrumbEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeBreadcrumbItem = this
       $xeBreadcrumbItem.$emit(type, createEvent(evnt, { $breadcrumbItem: $xeBreadcrumbItem }, params))
     },
-    clickEvent  (evnt: MouseEvent) {
+    clickEvent(evnt: MouseEvent) {
       const $xeBreadcrumbItem = this
       const props = $xeBreadcrumbItem
       const $xeBreadcrumb = $xeBreadcrumbItem.$xeBreadcrumb
@@ -68,7 +67,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeBreadcrumbItem = this
       const props = $xeBreadcrumbItem
       const slots = $xeBreadcrumbItem.$scopedSlots
@@ -77,42 +76,66 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const separator = $xeBreadcrumbItem.computeSeparator
       const defaultSlot = slots.default
 
-      return h('span', {
-        ref: 'refElem',
-        class: 'vxe-breadcrumb-item',
-        on: {
-          click: $xeBreadcrumbItem.clickEvent
-        }
-      }, [
-        h('span', {
-          class: 'vxe-breadcrumb-item--content'
-        }, [
-          routerLink
-            ? h('router-link', {
-              class: 'vxe-breadcrumb-item--content-link',
-              props: {
-                title,
-                custom: true,
-                to: routerLink
-              }
-            }, [
-              h('span', {
-                class: 'vxe-breadcrumb-item--content-text'
-              }, defaultSlot ? defaultSlot({}) : `${title || ''}`)
-            ])
-            : h('span', {
-              class: 'vxe-breadcrumb-item--content-text'
-            }, defaultSlot ? defaultSlot({}) : `${title || ''}`)
-        ]),
-        separator
-          ? h('span', {
-            class: 'vxe-breadcrumb-item--separator'
-          }, `${separator}`)
-          : renderEmptyElement($xeBreadcrumbItem)
-      ])
+      return h(
+        'span',
+        {
+          ref: 'refElem',
+          class: 'vxe-breadcrumb-item',
+          on: {
+            click: $xeBreadcrumbItem.clickEvent
+          }
+        },
+        [
+          h(
+            'span',
+            {
+              class: 'vxe-breadcrumb-item--content'
+            },
+            [
+              routerLink
+                ? h(
+                  'router-link',
+                  {
+                    class: 'vxe-breadcrumb-item--content-link',
+                    props: {
+                      title,
+                      custom: true,
+                      to: routerLink
+                    }
+                  },
+                  [
+                    h(
+                      'span',
+                      {
+                        class: 'vxe-breadcrumb-item--content-text'
+                      },
+                      defaultSlot ? defaultSlot({}) : `${title || ''}`
+                    )
+                  ]
+                )
+                : h(
+                  'span',
+                  {
+                    class: 'vxe-breadcrumb-item--content-text'
+                  },
+                  defaultSlot ? defaultSlot({}) : `${title || ''}`
+                )
+            ]
+          ),
+          separator
+            ? h(
+              'span',
+              {
+                class: 'vxe-breadcrumb-item--separator'
+              },
+                `${separator}`
+            )
+            : renderEmptyElement($xeBreadcrumbItem)
+        ]
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -1,17 +1,17 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { createOption, watchOption, destroyOption, assembleOption } from './util'
 import { OptionInfo } from './option-info'
 
 import type { VxeSelectConstructor, VxeOptgroupPropTypes, VxeComponentSizeType, VxeOptgroupEmits, ValueOf, OptgroupReactData } from '../../../types'
 
+const { createEvent, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeOptgroup',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     label: {
       type: [String, Number, Boolean] as PropType<VxeOptgroupPropTypes.Label>,
@@ -29,16 +29,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  provide () {
+  provide() {
     const $xeOptgroup = this
     return {
       $xeOptgroup
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: OptgroupReactData = {
-    }
+    const reactData: OptgroupReactData = {}
     const optionConfig = {} as OptionInfo
     return {
       xID,
@@ -56,7 +55,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeOptgroupEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeOptgroupEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeOptgroup = this
       $xeOptgroup.$emit(type, createEvent(evnt, { $optgroup: $xeOptgroup }, params))
     },
@@ -64,17 +63,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeOptgroup = this
       const slots = $xeOptgroup.$scopedSlots
       const defaultSlot = slots.default
 
-      return h('div', {
-        ref: 'elem'
-      }, defaultSlot ? defaultSlot({}) : [])
+      return h(
+        'div',
+        {
+          ref: 'elem'
+        },
+        defaultSlot ? defaultSlot({}) : []
+      )
     }
   },
-  created () {
+  created() {
     const $xeOptgroup = this
     const props = $xeOptgroup
     const slots = $xeOptgroup.$scopedSlots
@@ -86,7 +89,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     watchOption($xeOptgroup, optionConfig)
   },
-  mounted () {
+  mounted() {
     const $xeOptgroup = this
     const optionConfig = $xeOptgroup.optionConfig
     const $xeSelect = $xeOptgroup.$xeSelect
@@ -94,14 +97,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const el = $xeOptgroup.$refs.elem as HTMLDivElement
     assembleOption($xeSelect, el, optionConfig)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeOptgroup = this
     const optionConfig = $xeOptgroup.optionConfig
     const $xeSelect = $xeOptgroup.$xeSelect
 
     destroyOption($xeSelect, optionConfig)
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

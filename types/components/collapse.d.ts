@@ -6,16 +6,20 @@ import { VxeCollapsePaneProps, VxeCollapsePaneDefines, VxeCollapsePanePropTypes 
 export declare const VxeCollapse: DefineVxeComponentApp<VxeCollapseProps, VxeCollapseEventProps, VxeCollapseSlots, VxeCollapseMethods>
 export type VxeCollapseComponent = DefineVxeComponentOptions<VxeCollapseProps>
 
-export type VxeCollapseInstance = DefineVxeComponentInstance<{
-  reactData: CollapseReactData
-  internalData: CollapseInternalData
-}, VxeCollapseProps, VxeCollapsePrivateComputed, VxeCollapseMethods>
+export type VxeCollapseInstance = DefineVxeComponentInstance<
+  {
+    reactData: CollapseReactData
+    internalData: CollapseInternalData
+  },
+  VxeCollapseProps,
+  VxeCollapsePrivateComputed,
+  VxeCollapseMethods
+>
 
 export type VxeCollapseConstructor = VxeCollapseInstance
 
-export interface CollapsePrivateRef {
-}
-export interface VxeCollapsePrivateRef extends CollapsePrivateRef { }
+export interface CollapsePrivateRef {}
+export interface VxeCollapsePrivateRef extends CollapsePrivateRef {}
 
 export namespace VxeCollapsePropTypes {
   export type Size = VxeComponentSizeType
@@ -41,9 +45,8 @@ export type VxeCollapseProps = {
   expandConfig?: VxeCollapsePropTypes.ExpandConfig
 }
 
-export interface CollapsePrivateComputed {
-}
-export interface VxeCollapsePrivateComputed extends CollapsePrivateComputed { }
+export interface CollapsePrivateComputed {}
+export interface VxeCollapsePrivateComputed extends CollapsePrivateComputed {}
 
 export interface CollapseReactData {
   staticPanes: VxeCollapsePaneDefines.CollapseConfig[]
@@ -58,20 +61,13 @@ export interface CollapseInternalData {
   openKeyMaps: Record<string, boolean>
 }
 
-export interface CollapseMethods {
-}
-export interface VxeCollapseMethods extends CollapseMethods { }
+export interface CollapseMethods {}
+export interface VxeCollapseMethods extends CollapseMethods {}
 
-export interface CollapsePrivateMethods { }
-export interface VxeCollapsePrivateMethods extends CollapsePrivateMethods { }
+export interface CollapsePrivateMethods {}
+export interface VxeCollapsePrivateMethods extends CollapsePrivateMethods {}
 
-export type VxeCollapseEmits = [
-  'model-value',
-  'modelValue',
-  'load',
-  'change',
-  'toggle-expand'
-]
+export type VxeCollapseEmits = ['model-value', 'modelValue', 'load', 'change', 'toggle-expand']
 
 export namespace VxeCollapseDefines {
   export interface CacheItemObj {
@@ -115,9 +111,7 @@ export interface VxeCollapseSlots {
   /**
    * 自定义插槽模板
    */
-  [key: string]: ((params: {
-    [key: string]: any
-  }) => any) | undefined
+  [key: string]: ((params: { [key: string]: any }) => any) | undefined
 
   default?: (params: VxeCollapseSlotTypes.DefaultSlotParams) => any
 }

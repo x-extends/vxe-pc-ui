@@ -7,15 +7,19 @@ import { VxeScrollbarProps } from './scrollbar'
 export declare const VxeTooltip: DefineVxeComponentApp<VxeTooltipProps, VxeTooltipEventProps, VxeTooltipSlots, VxeTooltipMethods>
 export type VxeTooltipComponent = DefineVxeComponentOptions<VxeTooltipProps>
 
-export type VxeTooltipInstance = DefineVxeComponentInstance<{
-  reactData: TooltipReactData
-}, VxeTooltipProps, VxeTooltipPrivateComputed, VxeTooltipMethods>
+export type VxeTooltipInstance = DefineVxeComponentInstance<
+  {
+    reactData: TooltipReactData
+  },
+  VxeTooltipProps,
+  VxeTooltipPrivateComputed,
+  VxeTooltipMethods
+>
 
 export type VxeTooltipConstructor = VxeTooltipInstance
 
-export interface TooltipPrivateRef {
-}
-export interface VxeTooltipPrivateRef extends TooltipPrivateRef { }
+export interface TooltipPrivateRef {}
+export interface VxeTooltipPrivateRef extends TooltipPrivateRef {}
 
 export namespace VxeTooltipPropTypes {
   export type Size = VxeComponentSizeType
@@ -113,9 +117,8 @@ export interface VxeTooltipProps {
   scrollbarConfig?: VxeTooltipPropTypes.ScrollbarConfig
 }
 
-export interface TooltipPrivateComputed {
-}
-export interface VxeTooltipPrivateComputed extends TooltipPrivateComputed { }
+export interface TooltipPrivateComputed {}
+export interface VxeTooltipPrivateComputed extends TooltipPrivateComputed {}
 
 export interface TooltipReactData {
   target: HTMLElement | null
@@ -127,7 +130,7 @@ export interface TooltipReactData {
     oLeft: number
     oTop: number
   }
-  tipContent: string | number | undefined,
+  tipContent: string | number | undefined
   tipActive: boolean
   tipTarget: HTMLElement | null
   tipZindex: number
@@ -166,20 +169,14 @@ export interface TooltipMethods {
   isActived(): boolean
   setActived(actived: boolean): void
 }
-export interface VxeTooltipMethods extends TooltipMethods { }
+export interface VxeTooltipMethods extends TooltipMethods {}
 
 export interface TooltipPrivateMethods {
   handleCloseEvent(): void
 }
-export interface VxeTooltipPrivateMethods extends TooltipPrivateMethods { }
+export interface VxeTooltipPrivateMethods extends TooltipPrivateMethods {}
 
-export type VxeTooltipEmits = [
-  'model-value',
-  'modelValue',
-  'input',
-  'show',
-  'hide'
-]
+export type VxeTooltipEmits = ['model-value', 'modelValue', 'input', 'show', 'hide']
 
 export namespace VxeTooltipDefines {
   export interface TooltipEventParams extends VxeComponentEventParams {
@@ -209,9 +206,9 @@ export namespace VxeTooltipDefines {
 
 export type VxeTooltipEventProps = {}
 
-export interface VxeTooltipListeners { }
+export interface VxeTooltipListeners {}
 
-export namespace VxeTooltipEvents { }
+export namespace VxeTooltipEvents {}
 
 export namespace VxeTooltipSlotTypes {
   export interface DefaultSlotParams {}

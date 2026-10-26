@@ -10,15 +10,19 @@ import { VxeButtonProps } from './button'
 export declare const VxeListView: DefineVxeComponentApp<VxeListViewProps, VxeListViewEventProps, VxeListViewSlots, VxeListViewMethods>
 export type VxeListViewComponent = DefineVxeComponentOptions<VxeListViewProps>
 
-export type VxeListViewInstance = DefineVxeComponentInstance<{
-  reactData: ListViewReactData
-}, VxeListViewProps, VxeListViewPrivateComputed, VxeListViewMethods>
+export type VxeListViewInstance = DefineVxeComponentInstance<
+  {
+    reactData: ListViewReactData
+  },
+  VxeListViewProps,
+  VxeListViewPrivateComputed,
+  VxeListViewMethods
+>
 
 export type VxeListViewConstructor = VxeListViewInstance
 
-export interface ListViewPrivateRef<D = any> {
-}
-export interface VxeListViewPrivateRef<D = any> extends ListViewPrivateRef<D> { }
+export interface ListViewPrivateRef<D = any> {}
+export interface VxeListViewPrivateRef<D = any> extends ListViewPrivateRef<D> {}
 
 export namespace VxeListViewPropTypes {
   export type Config = null | VxeListDesignDefines.ListDesignConfig
@@ -45,9 +49,8 @@ export interface VxeListViewProps<D = any> {
   viewRender?: VxeListViewPropTypes.ViewRender
 }
 
-export interface ListViewPrivateComputed {
-}
-export interface VxeListViewPrivateComputed extends ListViewPrivateComputed { }
+export interface ListViewPrivateComputed {}
+export interface VxeListViewPrivateComputed extends ListViewPrivateComputed {}
 
 export interface ListViewReactData<D = VxeListDesignDefines.DefaultSettingFormDataObjVO> {
   formConfig: D
@@ -94,16 +97,12 @@ export interface ListViewMethods<D = any> {
    */
   commitProxy(code: string, ...args: any[]): Promise<any>
 }
-export interface VxeListViewMethods<D = any> extends ListViewMethods<D> { }
+export interface VxeListViewMethods<D = any> extends ListViewMethods<D> {}
 
-export interface ListViewPrivateMethods { }
-export interface VxeListViewPrivateMethods extends ListViewPrivateMethods { }
+export interface ListViewPrivateMethods {}
+export interface VxeListViewPrivateMethods extends ListViewPrivateMethods {}
 
-export type VxeListViewEmits = [
-  'cell-action',
-  'update:formData',
-  'update:actionButtons'
-]
+export type VxeListViewEmits = ['cell-action', 'update:formData', 'update:actionButtons']
 
 export namespace VxeListViewDefines {
   export interface ListViewEventParams extends VxeComponentEventParams {
@@ -177,9 +176,7 @@ export namespace VxeListViewSlotTypes {
 }
 
 export interface VxeListViewSlots<D = any> {
-  [key: string]: ((params: {
-    [key: string]: any
-  }) => any) | undefined
+  [key: string]: ((params: { [key: string]: any }) => any) | undefined
 
   default?: (params: VxeListViewSlotTypes.DefaultSlotParams) => any
   grid?: (params: VxeListViewSlotTypes.GridSlotParams) => any

@@ -1,11 +1,13 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getDomNode, addClass, removeClass, hasControlKey } from '../../ui/src/dom'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { ImagePreviewReactData, VxeGlobalIcon, VxeImagePreviewEmits, VxeComponentSizeType, VxeImagePreviewPropTypes, ValueOf, VxeImagePreviewDefines } from '../../../types'
+
+const { getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n, renderEmptyElement } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeImagePreview',
@@ -37,13 +39,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     beforeDownloadMethod: Function as PropType<VxeImagePreviewPropTypes.BeforeDownloadMethod>,
     downloadMethod: Function as PropType<VxeImagePreviewPropTypes.DownloadMethod>
   },
-  provide () {
+  provide() {
     const $xeImagePreview = this
     return {
       $xeImagePreview
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: ImagePreviewReactData = {
       activeIndex: 0,
@@ -62,25 +64,25 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeUrlProp () {
+    computeUrlProp() {
       const $xeImagePreview = this
       const props = $xeImagePreview
 
       return props.urlField || 'url'
     },
-    computeMarginSize () {
+    computeMarginSize() {
       const $xeImagePreview = this
       const props = $xeImagePreview
 
       return XEUtils.toNumber(props.marginSize || 0) || 16
     },
-    computeToolbarOpts () {
+    computeToolbarOpts() {
       const $xeImagePreview = this
       const props = $xeImagePreview
 
       return Object.assign({}, getConfig().imagePreview.toolbarConfig, props.toolbarConfig)
     },
-    computeRotateText () {
+    computeRotateText() {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData as ImagePreviewReactData
 
@@ -90,7 +92,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return '0°'
     },
-    computeScaleText () {
+    computeScaleText() {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData as ImagePreviewReactData
 
@@ -100,14 +102,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return '100%'
     },
-    computeImgList () {
+    computeImgList() {
       const $xeImagePreview = this
       const props = $xeImagePreview
 
       const { urlList } = props
       const urlProp = $xeImagePreview.computeUrlProp as string
       if (urlList && urlList.length) {
-        return urlList.map(item => {
+        return urlList.map((item) => {
           if (XEUtils.isString(item)) {
             return item
           }
@@ -119,7 +121,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return []
     },
-    computeImgTransform () {
+    computeImgTransform() {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -169,22 +171,22 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeImagePreviewEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeImagePreviewEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeImagePreview = this
       $xeImagePreview.$emit(type, createEvent(evnt, { $imagePreview: $xeImagePreview }, params))
     },
-    emitModel  (value: VxeImagePreviewPropTypes.ModelValue) {
+    emitModel(value: VxeImagePreviewPropTypes.ModelValue) {
       const $xeImagePreview = this
 
       $xeImagePreview.$emit('input', value)
       handleEmitModelVal($xeImagePreview, value)
     },
-    handleCloseEvent  (evnt: MouseEvent) {
+    handleCloseEvent(evnt: MouseEvent) {
       const $xeImagePreview = this
 
       $xeImagePreview.dispatchEvent('close', {}, evnt)
     },
-    resetStyle  () {
+    resetStyle() {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -198,7 +200,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         offsetTop: 0
       })
     },
-    getOffsetZoomStep  () {
+    getOffsetZoomStep() {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -236,7 +238,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stepNum
     },
-    handleZoom  (isAdd: boolean) {
+    handleZoom(isAdd: boolean) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -248,7 +250,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.offsetScale = Number(Math.max(-0.9, offsetScale - stepNum).toFixed(2))
       }
     },
-    handleChangeEvent (evnt: Event, isNext: boolean) {
+    handleChangeEvent(evnt: Event, isNext: boolean) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -273,7 +275,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeImagePreview.emitModel(activeIndex)
       $xeImagePreview.dispatchEvent('change', { url: imgUrl, activeIndex }, evnt)
     },
-    handleRotateImgEvent (evnt: Event, isRight: boolean) {
+    handleRotateImgEvent(evnt: Event, isRight: boolean) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -289,14 +291,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.offsetRotate = offsetRotate
       $xeImagePreview.dispatchEvent('rotate', { url: imgUrl, rotateValue: offsetRotate }, evnt)
     },
-    handlePct11  () {
+    handlePct11() {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
       $xeImagePreview.resetStyle()
       reactData.offsetPct11 = true
     },
-    handlePrintImg () {
+    handlePrintImg() {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -314,34 +316,36 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
     },
-    handleDownloadEvent  (evnt: MouseEvent, imgUrl: string) {
+    handleDownloadEvent(evnt: MouseEvent, imgUrl: string) {
       const $xeImagePreview = this
 
       $xeImagePreview.dispatchEvent('download', { url: imgUrl }, evnt)
     },
-    handleDefaultDownload  (evnt: MouseEvent, imgUrl: string) {
+    handleDefaultDownload(evnt: MouseEvent, imgUrl: string) {
       const $xeImagePreview = this
 
       if (VxeUI.saveFile) {
-        fetch(imgUrl).then(res => {
-          return res.blob().then(blob => {
-            VxeUI.saveFile({
-              filename: imgUrl,
-              content: blob
+        fetch(imgUrl)
+          .then((res) => {
+            return res.blob().then((blob) => {
+              VxeUI.saveFile({
+                filename: imgUrl,
+                content: blob
+              })
+              $xeImagePreview.handleDownloadEvent(evnt, imgUrl)
             })
-            $xeImagePreview.handleDownloadEvent(evnt, imgUrl)
           })
-        }).catch(() => {
-          if (VxeUI.modal) {
-            VxeUI.modal.message({
-              content: getI18n('vxe.error.downErr'),
-              status: 'error'
-            })
-          }
-        })
+          .catch(() => {
+            if (VxeUI.modal) {
+              VxeUI.modal.message({
+                content: getI18n('vxe.error.downErr'),
+                status: 'error'
+              })
+            }
+          })
       }
     },
-    handleDownloadImg (evnt: MouseEvent) {
+    handleDownloadImg(evnt: MouseEvent) {
       const $xeImagePreview = this
       const props = $xeImagePreview
       const reactData = $xeImagePreview.reactData
@@ -349,7 +353,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { activeIndex } = reactData
       const toolbarOpts = $xeImagePreview.computeToolbarOpts
       const btnConf = toolbarOpts.download
-      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : (btnConf ? Object.assign({}, btnConf) : {})
+      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : btnConf ? Object.assign({}, btnConf) : {}
       const imgList = $xeImagePreview.computeImgList
       const imgUrl = imgList[activeIndex || 0]
       const beforeDownloadFn = props.beforeDownloadMethod || btnOpts.beforeDownloadMethod || getConfig().imagePreview.beforeDownloadMethod
@@ -362,7 +366,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
             index: activeIndex || 0
           })
           : true
-      ).then(status => {
+      ).then((status) => {
         if (status) {
           if (downloadFn) {
             Promise.resolve(
@@ -371,16 +375,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 url: imgUrl,
                 index: activeIndex || 0
               })
-            ).then(() => {
-              $xeImagePreview.handleDownloadEvent(evnt, imgUrl)
-            }).catch(e => e)
+            )
+              .then(() => {
+                $xeImagePreview.handleDownloadEvent(evnt, imgUrl)
+              })
+              .catch((e) => e)
           } else {
             $xeImagePreview.handleDefaultDownload(evnt, imgUrl)
           }
         }
       })
     },
-    handleOperationBtn  (evnt: MouseEvent, code: VxeImagePreviewDefines.ToolbarCode) {
+    handleOperationBtn(evnt: MouseEvent, code: VxeImagePreviewDefines.ToolbarCode) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -416,7 +422,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    wheelEvent  (evnt: WheelEvent) {
+    wheelEvent(evnt: WheelEvent) {
       const $xeImagePreview = this
 
       const delta = evnt.deltaY
@@ -428,7 +434,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeImagePreview.handleZoom(true)
       }
     },
-    moveEvent  (evnt: MouseEvent) {
+    moveEvent(evnt: MouseEvent) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -440,13 +446,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const startX = evnt.pageX
       const startY = evnt.pageY
       const marginSize = $xeImagePreview.computeMarginSize
-      document.onmousemove = et => {
+      document.onmousemove = (et) => {
         const { pageX, pageY } = et
         const { visibleHeight, visibleWidth } = getDomNode()
         et.preventDefault()
         addClass(elem, 'is--move')
         // 限制边界值
-        if (pageX > marginSize && pageY > marginSize && pageX < (visibleWidth - marginSize) && pageY < (visibleHeight - marginSize)) {
+        if (pageX > marginSize && pageY > marginSize && pageX < visibleWidth - marginSize && pageY < visibleHeight - marginSize) {
           reactData.offsetLeft = offsetLeft + pageX - startX
           reactData.offsetTop = offsetTop + pageY - startY
         }
@@ -457,7 +463,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         removeClass(elem, 'is--move')
       }
     },
-    handleGlobalKeydownEvent (evnt: KeyboardEvent) {
+    handleGlobalKeydownEvent(evnt: KeyboardEvent) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -509,7 +515,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeImagePreview.handlePrintImg()
       }
     },
-    handleClickMaskEvent (evnt: MouseEvent) {
+    handleClickMaskEvent(evnt: MouseEvent) {
       const $xeImagePreview = this
       const props = $xeImagePreview
 
@@ -523,66 +529,77 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderImgWrapper  (h: CreateElement) {
+    renderImgWrapper(h: CreateElement) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
       const { activeIndex } = reactData
       const imgList = $xeImagePreview.computeImgList
       const imgTransform = $xeImagePreview.computeImgTransform
-      return h('div', {
-        class: 'vxe-image-preview--img-list',
-        on: {
-          click: $xeImagePreview.handleClickMaskEvent
-        }
-      }, imgList.map((url, index) => {
-        const isActive = activeIndex === index
-        return h('img', {
-          class: ['vxe-image-preview--img-item', {
-            'is--active': isActive
-          }],
-          style: isActive
-            ? {
-                transform: imgTransform
-              }
-            : {},
-          attrs: {
-            src: url
-          },
+      return h(
+        'div',
+        {
+          class: 'vxe-image-preview--img-list',
           on: {
-            mousedown (evnt: MouseEvent) {
-              $xeImagePreview.moveEvent(evnt)
-            }
+            click: $xeImagePreview.handleClickMaskEvent
           }
+        },
+        imgList.map((url, index) => {
+          const isActive = activeIndex === index
+          return h('img', {
+            class: [
+              'vxe-image-preview--img-item',
+              {
+                'is--active': isActive
+              }
+            ],
+            style: isActive
+              ? {
+                  transform: imgTransform
+                }
+              : {},
+            attrs: {
+              src: url
+            },
+            on: {
+              mousedown(evnt: MouseEvent) {
+                $xeImagePreview.moveEvent(evnt)
+              }
+            }
+          })
         })
-      }))
+      )
     },
-    renderOperationBtn  (h: CreateElement, code: VxeImagePreviewDefines.ToolbarCode, icon: keyof VxeGlobalIcon) {
+    renderOperationBtn(h: CreateElement, code: VxeImagePreviewDefines.ToolbarCode, icon: keyof VxeGlobalIcon) {
       const $xeImagePreview = this
 
       const toolbarOpts = $xeImagePreview.computeToolbarOpts
       const btnConf = toolbarOpts[code]
-      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : (btnConf ? Object.assign({}, btnConf) : {})
+      const btnOpts = XEUtils.isBoolean(btnConf) ? {} : btnConf ? Object.assign({}, btnConf) : {}
       const showBtn = btnConf !== false
       return showBtn
-        ? h('div', {
-          class: 'vxe-image-preview--operation-btn',
-          attrs: {
-            title: getI18n(`vxe.imagePreview.operBtn.${code}`)
-          },
-          on: {
-            click (evnt: MouseEvent) {
-              $xeImagePreview.handleOperationBtn(evnt, code)
+        ? h(
+          'div',
+          {
+            class: 'vxe-image-preview--operation-btn',
+            attrs: {
+              title: getI18n(`vxe.imagePreview.operBtn.${code}`)
+            },
+            on: {
+              click(evnt: MouseEvent) {
+                $xeImagePreview.handleOperationBtn(evnt, code)
+              }
             }
-          }
-        }, [
-          h('i', {
-            class: btnOpts.icon || getIcon()[icon]
-          })
-        ])
+          },
+          [
+            h('i', {
+              class: btnOpts.icon || getIcon()[icon]
+            })
+          ]
+        )
         : renderEmptyElement($xeImagePreview)
     },
-    renderBtnWrapper  (h: CreateElement) {
+    renderBtnWrapper(h: CreateElement) {
       const $xeImagePreview = this
       const props = $xeImagePreview
       const reactData = $xeImagePreview.reactData
@@ -594,106 +611,158 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const scaleText = $xeImagePreview.computeScaleText
       const toolbarOpts = $xeImagePreview.computeToolbarOpts
 
-      return h('div', {
-        class: 'vxe-image-preview--btn-wrapper'
-      }, [
-        h('div', {
-          class: 'vxe-image-preview--close-wrapper'
-        }, [
-          h('div', {
-            class: 'vxe-image-preview--close-btn',
-            on: {
-              click: $xeImagePreview.handleCloseEvent
-            }
-          }, [
-            h('i', {
-              class: getIcon().IMAGE_PREVIEW_CLOSE
-            })
-          ]),
-          h('div', {
-            class: 'vxe-image-preview--close-bg'
-          })
-        ]),
-        imgList.length > 1
-          ? h('div', {
-            class: 'vxe-image-preview--previous-btn',
-            on: {
-              click (evnt: KeyboardEvent) {
-                $xeImagePreview.handleChangeEvent(evnt, false)
-              }
-            }
-          }, [
-            h('i', {
-              class: getIcon().IMAGE_PREVIEW_PREVIOUS
-            })
-          ])
-          : renderEmptyElement($xeImagePreview),
-        imgList.length > 1
-          ? h('div', {
-            class: 'vxe-image-preview--next-btn',
-            on: {
-              click (evnt: KeyboardEvent) {
-                $xeImagePreview.handleChangeEvent(evnt, true)
-              }
-            }
-          }, [
-            h('i', {
-              class: getIcon().IMAGE_PREVIEW_NEXT
-            })
-          ])
-          : renderEmptyElement($xeImagePreview),
-        h('div', {
-          class: 'vxe-image-preview--operation-info'
-        }, [
-          h('div', {
-            class: 'vxe-image-preview--operation-deg'
-          }, rotateText),
-          h('div', {
-            class: 'vxe-image-preview--operation-pct'
-          }, scaleText)
-        ]),
-        h('div', {
-          class: 'vxe-image-preview--operation-wrapper'
-        }, [
-          h('div', {
-            class: 'vxe-image-preview--operation-active-count'
-          }, [
-            h('span', {
-              class: 'vxe-image-preview--operation-active-current'
-            }, `${(activeIndex || 0) + 1}`),
-            h('span', {
-              class: 'vxe-image-preview--operation-active-total'
-            }, `/${imgList.length}`)
-          ]),
-          $xeImagePreview.renderOperationBtn(h, 'zoomOut', 'IMAGE_PREVIEW_ZOOM_OUT'),
-          $xeImagePreview.renderOperationBtn(h, 'zoomIn', 'IMAGE_PREVIEW_ZOOM_IN'),
-          $xeImagePreview.renderOperationBtn(h, 'pctFull', 'IMAGE_PREVIEW_PCT_FULL'),
-          $xeImagePreview.renderOperationBtn(h, 'pct11', 'IMAGE_PREVIEW_PCT_1_1'),
-          $xeImagePreview.renderOperationBtn(h, 'rotateLeft', 'IMAGE_PREVIEW_ROTATE_LEFT'),
-          $xeImagePreview.renderOperationBtn(h, 'rotateRight', 'IMAGE_PREVIEW_ROTATE_RIGHT'),
-          showPrintButton || toolbarOpts.print ? $xeImagePreview.renderOperationBtn(h, 'print', 'IMAGE_PREVIEW_PRINT') : renderEmptyElement($xeImagePreview),
-          showDownloadButton || toolbarOpts.download ? $xeImagePreview.renderOperationBtn(h, 'download', 'IMAGE_PREVIEW_DOWNLOAD') : renderEmptyElement($xeImagePreview)
-        ])
-      ])
+      return h(
+        'div',
+        {
+          class: 'vxe-image-preview--btn-wrapper'
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-image-preview--close-wrapper'
+            },
+            [
+              h(
+                'div',
+                {
+                  class: 'vxe-image-preview--close-btn',
+                  on: {
+                    click: $xeImagePreview.handleCloseEvent
+                  }
+                },
+                [
+                  h('i', {
+                    class: getIcon().IMAGE_PREVIEW_CLOSE
+                  })
+                ]
+              ),
+              h('div', {
+                class: 'vxe-image-preview--close-bg'
+              })
+            ]
+          ),
+          imgList.length > 1
+            ? h(
+              'div',
+              {
+                class: 'vxe-image-preview--previous-btn',
+                on: {
+                  click(evnt: KeyboardEvent) {
+                    $xeImagePreview.handleChangeEvent(evnt, false)
+                  }
+                }
+              },
+              [
+                h('i', {
+                  class: getIcon().IMAGE_PREVIEW_PREVIOUS
+                })
+              ]
+            )
+            : renderEmptyElement($xeImagePreview),
+          imgList.length > 1
+            ? h(
+              'div',
+              {
+                class: 'vxe-image-preview--next-btn',
+                on: {
+                  click(evnt: KeyboardEvent) {
+                    $xeImagePreview.handleChangeEvent(evnt, true)
+                  }
+                }
+              },
+              [
+                h('i', {
+                  class: getIcon().IMAGE_PREVIEW_NEXT
+                })
+              ]
+            )
+            : renderEmptyElement($xeImagePreview),
+          h(
+            'div',
+            {
+              class: 'vxe-image-preview--operation-info'
+            },
+            [
+              h(
+                'div',
+                {
+                  class: 'vxe-image-preview--operation-deg'
+                },
+                rotateText
+              ),
+              h(
+                'div',
+                {
+                  class: 'vxe-image-preview--operation-pct'
+                },
+                scaleText
+              )
+            ]
+          ),
+          h(
+            'div',
+            {
+              class: 'vxe-image-preview--operation-wrapper'
+            },
+            [
+              h(
+                'div',
+                {
+                  class: 'vxe-image-preview--operation-active-count'
+                },
+                [
+                  h(
+                    'span',
+                    {
+                      class: 'vxe-image-preview--operation-active-current'
+                    },
+                    `${(activeIndex || 0) + 1}`
+                  ),
+                  h(
+                    'span',
+                    {
+                      class: 'vxe-image-preview--operation-active-total'
+                    },
+                    `/${imgList.length}`
+                  )
+                ]
+              ),
+              $xeImagePreview.renderOperationBtn(h, 'zoomOut', 'IMAGE_PREVIEW_ZOOM_OUT'),
+              $xeImagePreview.renderOperationBtn(h, 'zoomIn', 'IMAGE_PREVIEW_ZOOM_IN'),
+              $xeImagePreview.renderOperationBtn(h, 'pctFull', 'IMAGE_PREVIEW_PCT_FULL'),
+              $xeImagePreview.renderOperationBtn(h, 'pct11', 'IMAGE_PREVIEW_PCT_1_1'),
+              $xeImagePreview.renderOperationBtn(h, 'rotateLeft', 'IMAGE_PREVIEW_ROTATE_LEFT'),
+              $xeImagePreview.renderOperationBtn(h, 'rotateRight', 'IMAGE_PREVIEW_ROTATE_RIGHT'),
+              showPrintButton || toolbarOpts.print ? $xeImagePreview.renderOperationBtn(h, 'print', 'IMAGE_PREVIEW_PRINT') : renderEmptyElement($xeImagePreview),
+              showDownloadButton || toolbarOpts.download ? $xeImagePreview.renderOperationBtn(h, 'download', 'IMAGE_PREVIEW_DOWNLOAD') : renderEmptyElement($xeImagePreview)
+            ]
+          )
+        ]
+      )
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
       const { offsetPct11 } = reactData
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-image-preview', {
-          'is--pct11': offsetPct11
-        }]
-      }, [
-        $xeImagePreview.renderImgWrapper(h),
-        $xeImagePreview.renderBtnWrapper(h)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-image-preview',
+            {
+              'is--pct11': offsetPct11
+            }
+          ]
+        },
+        [$xeImagePreview.renderImgWrapper(h), $xeImagePreview.renderBtnWrapper(h)]
+      )
     }
   },
   watch: {
-    value (val) {
+    value(val) {
       const $xeImagePreview = this
       const reactData = $xeImagePreview.reactData
 
@@ -701,14 +770,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeImagePreview.resetStyle()
     }
   },
-  created () {
+  created() {
     const $xeImagePreview = this
     const props = $xeImagePreview
     const reactData = $xeImagePreview.reactData
 
     reactData.activeIndex = props.value || 0
   },
-  mounted () {
+  mounted() {
     const $xeImagePreview = this
 
     const elem = $xeImagePreview.$refs.refElem as HTMLDivElement
@@ -717,7 +786,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     globalEvents.on($xeImagePreview, 'keydown', $xeImagePreview.handleGlobalKeydownEvent)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeImagePreview = this
 
     const elem = $xeImagePreview.$refs.refElem as HTMLDivElement
@@ -727,7 +796,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
     globalEvents.off($xeImagePreview, 'keydown')
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

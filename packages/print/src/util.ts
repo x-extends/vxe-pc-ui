@@ -10,29 +10,30 @@ const { warnLog, errLog } = createComponentLog('print')
 let printFrame: any
 
 // 默认导出或打印的 HTML 样式
-const defaultHtmlStyle = 'body{padding:0;color:rgba(0,0,0,0.7);font-family:"Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu}body *{-webkit-box-sizing:border-box;box-sizing:border-box}.vxe-table{border-collapse:collapse;text-align:left;border-spacing:0}.vxe-table.is--default-width,.vxe-table.is--auto-width{width:100%}.vxe-table.is--scale-width{table-layout:fixed}.vxe-table,.vxe-table th,.vxe-table td,.vxe-table td{white-space:pre-line;word-break:break-all;border-color:#D0D0D0;border-style:solid;border-width:0}.border--default,.border--full,.border--outer{border-top-width:1px}.border--default,.border--full,.border--outer{border-left-width:1px}.border--outer,.border--default th,.border--default td,.border--full th,.border--full td,.border--outer th,.border--inner th,.border--inner td{border-bottom-width:1px}.border--default,.border--outer,.border--full th,.border--full td{border-right-width:1px}.border--default th,.border--full th,.border--outer th{background-color:#f8f8f9}.vxe-table td>div,.vxe-table th>div{padding:0.5em 0.4em}.col--center{text-align:center}.col--right{text-align:right}.vxe-table .col--ellipsis>div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-break:break-all}.vxe-table--tree-node{text-align:left}.vxe-table--tree-node-wrapper{position:relative}.vxe-table--tree-icon-wrapper{position:absolute;top:50%;width:1em;height:1em;text-align:center;-webkit-transform:translateY(-50%);transform:translateY(-50%);-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:pointer}.vxe-table--tree-unfold-icon,.vxe-table--tree-fold-icon{position:absolute;width:0;height:0;border-style:solid;border-width:0.5em;border-right-color:transparent;border-bottom-color:transparent}.vxe-table--tree-unfold-icon{left:.3em;top:0;border-left-color:#939599;border-top-color:transparent}.vxe-table--tree-fold-icon{left:0;top:.3em;border-left-color:transparent;border-top-color:#939599}.vxe-table--tree-cell{display:block;padding-left:1.5em}.vxe-table input[type="checkbox"]{margin:0}.vxe-table input[type="checkbox"],.vxe-table input[type="radio"],.vxe-table input[type="checkbox"]+span,.vxe-table input[type="radio"]+span{vertical-align:middle;padding-left:0.4em}'
+const defaultHtmlStyle =
+  'body{padding:0;color:rgba(0,0,0,0.7);font-family:"Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu}body *{-webkit-box-sizing:border-box;box-sizing:border-box}.vxe-table{border-collapse:collapse;text-align:left;border-spacing:0}.vxe-table.is--default-width,.vxe-table.is--auto-width{width:100%}.vxe-table.is--scale-width{table-layout:fixed}.vxe-table,.vxe-table th,.vxe-table td,.vxe-table td{white-space:pre-line;word-break:break-all;border-color:#D0D0D0;border-style:solid;border-width:0}.border--default,.border--full,.border--outer{border-top-width:1px}.border--default,.border--full,.border--outer{border-left-width:1px}.border--outer,.border--default th,.border--default td,.border--full th,.border--full td,.border--outer th,.border--inner th,.border--inner td{border-bottom-width:1px}.border--default,.border--outer,.border--full th,.border--full td{border-right-width:1px}.border--default th,.border--full th,.border--outer th{background-color:#f8f8f9}.vxe-table td>div,.vxe-table th>div{padding:0.5em 0.4em}.col--center{text-align:center}.col--right{text-align:right}.vxe-table .col--ellipsis>div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-break:break-all}.vxe-table--tree-node{text-align:left}.vxe-table--tree-node-wrapper{position:relative}.vxe-table--tree-icon-wrapper{position:absolute;top:50%;width:1em;height:1em;text-align:center;-webkit-transform:translateY(-50%);transform:translateY(-50%);-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:pointer}.vxe-table--tree-unfold-icon,.vxe-table--tree-fold-icon{position:absolute;width:0;height:0;border-style:solid;border-width:0.5em;border-right-color:transparent;border-bottom-color:transparent}.vxe-table--tree-unfold-icon{left:.3em;top:0;border-left-color:#939599;border-top-color:transparent}.vxe-table--tree-fold-icon{left:0;top:.3em;border-left-color:transparent;border-top-color:#939599}.vxe-table--tree-cell{display:block;padding-left:1.5em}.vxe-table input[type="checkbox"]{margin:0}.vxe-table input[type="checkbox"],.vxe-table input[type="radio"],.vxe-table input[type="checkbox"]+span,.vxe-table input[type="radio"]+span{vertical-align:middle;padding-left:0.4em}'
 
-export function trimHtml (html: string) {
+export function trimHtml(html: string) {
   return `${html}`.replace(/(<!---->)/, '')
 }
 
-export function createPrintFrame () {
+export function createPrintFrame() {
   const frame = document.createElement('iframe')
   frame.className = 'vxe-table--print-frame'
   return frame
 }
 
-function appendPrintFrame () {
+function appendPrintFrame() {
   if (!printFrame.parentNode) {
     document.body.appendChild(printFrame)
   }
 }
 
-function afterPrintEvent () {
+function afterPrintEvent() {
   requestAnimationFrame(removeFrame)
 }
 
-function removeFrame () {
+function removeFrame() {
   if (printFrame) {
     if (printFrame.parentNode) {
       try {
@@ -44,14 +45,14 @@ function removeFrame () {
   }
 }
 
-function getExportBlobByString (str: string, type: string) {
+function getExportBlobByString(str: string, type: string) {
   return new Blob([str], { type: `text/${type};charset=utf-8;` })
 }
 
 const defaultPrintMargin = 50
 const defaultFontColor = '#000000'
 
-function parsePageStyle (val?: VxePrintPropTypes.PageStyle) {
+function parsePageStyle(val?: VxePrintPropTypes.PageStyle) {
   const styOpts = Object.assign({}, val)
   const headStyOpts = Object.assign({}, styOpts.header)
   const titStyOpts = Object.assign({}, styOpts.title)
@@ -98,14 +99,14 @@ function parsePageStyle (val?: VxePrintPropTypes.PageStyle) {
   }
 }
 
-function createCssLink (urls?: string[]) {
+function createCssLink(urls?: string[]) {
   if (urls) {
-    return urls.map(url => `<link rel="stylesheet" href="${url}">`).join('\n')
+    return urls.map((url) => `<link rel="stylesheet" href="${url}">`).join('\n')
   }
   return ''
 }
 
-function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml: string): string {
+function createHtmlPage(opts: VxePrintProps & { _pageBreaks: boolean }, printHtml: string): string {
   const { pageStyle, customStyle, styleUrls } = opts
   const pageStyObj = parsePageStyle(pageStyle)
   const headStyOpts = pageStyObj.header
@@ -149,12 +150,12 @@ function createHtmlPage (opts: VxePrintProps & { _pageBreaks: boolean }, printHt
   ].join('')
 }
 
-function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml = '') {
+function handlePrint(opts: VxePrintProps & { _pageBreaks: boolean }, printHtml = '') {
   const browseObj = XEUtils.browse()
   const { printMethod, afterPrintMethod, styleUrls } = opts
   const beforePrintMethod = opts.beforePrintMethod || opts.beforeMethod
   if (styleUrls && styleUrls.length) {
-    styleUrls.forEach(url => {
+    styleUrls.forEach((url) => {
       if (!/.css$/.test(url)) {
         warnLog('vxe.error.errProp', [url, `${url}.css`])
       }
@@ -181,7 +182,7 @@ function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml 
   const blob = getExportBlobByString(printHtml, 'html')
   return new Promise<{
     status: boolean
-  }>(resolve => {
+  }>((resolve) => {
     if (browseObj.msie) {
       removeFrame()
       printFrame = createPrintFrame()
@@ -231,45 +232,39 @@ function handlePrint (opts: VxePrintProps & { _pageBreaks: boolean }, printHtml 
   })
 }
 
-function createPageBreak (opts: VxePrintProps) {
+function createPageBreak(opts: VxePrintProps) {
   const { title, showPageNumber, align, headerAlign, footerAlign, showAllPageTitle } = opts
   const pageBreaks = opts.pageBreaks || []
   const pageCount = pageBreaks.length
-  return pageBreaks.map((item, index) => {
-    const bodyHtml = item.bodyHtml
-    const headerHtml = item.headerHtml || opts.headerHtml
-    const footerHtml = item.footerHtml || opts.footerHtml
-    const leftHtml = item.leftHtml || opts.leftHtml
-    const rightHtml = item.rightHtml || opts.rightHtml
-    const currentPage = index + 1
-    const params = {
-      currentPage,
-      pageCount
-    }
-    return [
-      `<div class="${['vxe-print-page-break', align ? `align--${align}` : ''].join(' ')}">`,
-      `<div class="${['vxe-print-page-break--header', headerAlign ? `align--${headerAlign}` : ''].join(' ')}">`,
-      headerHtml
-        ? `${XEUtils.isFunction(headerHtml) ? headerHtml(params) : (headerHtml || '')}`
-        : (
-            title && (showAllPageTitle || !index) ? `<div class="vxe-print-page-break--header-title">${title || ''}</div>` : ''
-          ),
-      '</div>',
-      '<div class="vxe-print-page-break--body">',
-      `<div class="vxe-print-page-break--left">${XEUtils.isFunction(leftHtml) ? leftHtml(params) : (leftHtml || '')}</div>`,
-      `<div class="vxe-print-page-break--content">${XEUtils.isFunction(bodyHtml) ? bodyHtml(params) : (bodyHtml || '')}</div>`,
-      `<div class="vxe-print-page-break--right">${XEUtils.isFunction(rightHtml) ? rightHtml(params) : (rightHtml || '')}</div>`,
-      '</div>',
-      `<div class="${['vxe-print-page-break--footer', footerAlign ? `align--${footerAlign}` : ''].join(' ')}">`,
-      footerHtml
-        ? `${XEUtils.isFunction(footerHtml) ? footerHtml(params) : (footerHtml || '')}`
-        : (
-            showPageNumber ? `<div class="vxe-print-page-break--footer-page-number">${currentPage}/${pageCount}</div>` : ''
-          ),
-      '</div>',
-      '</div>'
-    ].join('')
-  }).join('')
+  return pageBreaks
+    .map((item, index) => {
+      const bodyHtml = item.bodyHtml
+      const headerHtml = item.headerHtml || opts.headerHtml
+      const footerHtml = item.footerHtml || opts.footerHtml
+      const leftHtml = item.leftHtml || opts.leftHtml
+      const rightHtml = item.rightHtml || opts.rightHtml
+      const currentPage = index + 1
+      const params = {
+        currentPage,
+        pageCount
+      }
+      return [
+        `<div class="${['vxe-print-page-break', align ? `align--${align}` : ''].join(' ')}">`,
+        `<div class="${['vxe-print-page-break--header', headerAlign ? `align--${headerAlign}` : ''].join(' ')}">`,
+        headerHtml ? `${XEUtils.isFunction(headerHtml) ? headerHtml(params) : headerHtml || ''}` : title && (showAllPageTitle || !index) ? `<div class="vxe-print-page-break--header-title">${title || ''}</div>` : '',
+        '</div>',
+        '<div class="vxe-print-page-break--body">',
+        `<div class="vxe-print-page-break--left">${XEUtils.isFunction(leftHtml) ? leftHtml(params) : leftHtml || ''}</div>`,
+        `<div class="vxe-print-page-break--content">${XEUtils.isFunction(bodyHtml) ? bodyHtml(params) : bodyHtml || ''}</div>`,
+        `<div class="vxe-print-page-break--right">${XEUtils.isFunction(rightHtml) ? rightHtml(params) : rightHtml || ''}</div>`,
+        '</div>',
+        `<div class="${['vxe-print-page-break--footer', footerAlign ? `align--${footerAlign}` : ''].join(' ')}">`,
+        footerHtml ? `${XEUtils.isFunction(footerHtml) ? footerHtml(params) : footerHtml || ''}` : showPageNumber ? `<div class="vxe-print-page-break--footer-page-number">${currentPage}/${pageCount}</div>` : '',
+        '</div>',
+        '</div>'
+      ].join('')
+    })
+    .join('')
 }
 
 export const printHtml: VxePrintDefines.PrintFunction = (options) => {
@@ -290,7 +285,7 @@ export const printHtml: VxePrintDefines.PrintFunction = (options) => {
   return handlePrint(opts, printHtml)
 }
 
-export function assemblePageBreak ($xePageBreak: VxePrintConstructor & VxePrintPrivateMethods, elem: HTMLElement, pageBreakConfig: VxePrintDefines.PageBreakConfig) {
+export function assemblePageBreak($xePageBreak: VxePrintConstructor & VxePrintPrivateMethods, elem: HTMLElement, pageBreakConfig: VxePrintDefines.PageBreakConfig) {
   const staticPageBreaks = $xePageBreak.reactData.staticPageBreaks
   const parentElem = elem.parentNode
   if (parentElem && staticPageBreaks) {
@@ -299,6 +294,6 @@ export function assemblePageBreak ($xePageBreak: VxePrintConstructor & VxePrintP
   }
 }
 
-export function destroyPageBreak ($xePageBreak: VxePrintConstructor & VxePrintPrivateMethods, pageBreakConfig: VxePrintDefines.PageBreakConfig) {
-  $xePageBreak.reactData.staticPageBreaks = $xePageBreak.reactData.staticPageBreaks.filter(item => item.id !== pageBreakConfig.id)
+export function destroyPageBreak($xePageBreak: VxePrintConstructor & VxePrintPrivateMethods, pageBreakConfig: VxePrintDefines.PageBreakConfig) {
+  $xePageBreak.reactData.staticPageBreaks = $xePageBreak.reactData.staticPageBreaks.filter((item) => item.id !== pageBreakConfig.id)
 }

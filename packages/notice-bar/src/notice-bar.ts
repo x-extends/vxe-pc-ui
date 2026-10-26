@@ -1,16 +1,16 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalEvents, renderEmptyElement, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 
 import type { NoticeBarReactData, VxeNoticeBarEmits, ValueOf, VxeNoticeBarPropTypes, VxeComponentSizeType, VxeTabsConstructor, VxeTabsPrivateMethods } from '../../../types'
 
+const { getConfig, createEvent, globalEvents, renderEmptyElement, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeNoticeBar',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     duration: [String, Number] as PropType<VxeNoticeBarPropTypes.Duration>,
     direction: {
@@ -37,7 +37,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: NoticeBarReactData = {
       animationStatus: false,
@@ -51,16 +51,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
-      $xeTabs():(VxeTabsConstructor & VxeTabsPrivateMethods) | null
+      $xeTabs(): (VxeTabsConstructor & VxeTabsPrivateMethods) | null
     }),
-    computeNoticeText () {
+    computeNoticeText() {
       const $xeNoticeBar = this
       const props = $xeNoticeBar
 
       const { content } = props
       return `${content || ''}`
     },
-    computeTabsResizeFlag () {
+    computeTabsResizeFlag() {
       const $xeNoticeBar = this
       const $xeTabs = $xeNoticeBar.$xeTabs
 
@@ -71,11 +71,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeNoticeBarEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeNoticeBarEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeNoticeBar = this
       $xeNoticeBar.$emit(type, createEvent(evnt, { $noticeBar: $xeNoticeBar }, params))
     },
-    updateAnimationStyle  () {
+    updateAnimationStyle() {
       const $xeNoticeBar = this
       const props = $xeNoticeBar
       const reactData = $xeNoticeBar.reactData
@@ -92,14 +92,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.animationDuration = Math.ceil(contEl.scrollWidth / sRate)
       }
     },
-    animationStartEvent (evnt: AnimationEvent) {
+    animationStartEvent(evnt: AnimationEvent) {
       const $xeNoticeBar = this
       const reactData = $xeNoticeBar.reactData
 
       reactData.animationStatus = true
       $xeNoticeBar.dispatchEvent('start', { status: true }, evnt)
     },
-    animationEndEvent (evnt: AnimationEvent) {
+    animationEndEvent(evnt: AnimationEvent) {
       const $xeNoticeBar = this
       const reactData = $xeNoticeBar.reactData
 
@@ -110,7 +110,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeNoticeBar = this
       const props = $xeNoticeBar
       const slots = $xeNoticeBar.$scopedSlots
@@ -123,60 +123,89 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const defaultSlot = slots.default
       const prefixSlot = slots.prefix
       const suffixSlot = slots.suffix
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-notice-bar', `is--${vertical ? 'vertical' : 'horizontal'}`, `dir--${direction || 'left'}`, {
-          [`size--${vSize}`]: vSize,
-          'is--loop': loop
-        }]
-      }, [
-        prefixSlot
-          ? h('div', {
-            class: 'vxe-notice-bar--prefix'
-          }, prefixSlot({}))
-          : renderEmptyElement($xeNoticeBar),
-        h('div', {
-          class: 'vxe-notice-bar--content'
-        }, [
-          h('div', {
-            ref: 'refContentElem',
-            class: 'vxe-notice-bar--inner'
-          }, [
-            h('div', {
-              class: ['vxe-notice-bar--wrapper', `is--${animationStatus ? 'progress' : 'end'}`],
-              style: {
-                animationDuration: duration ? toCssUnit(duration, 's') : `${animationDuration}s`
-              }
-            }, defaultSlot ? defaultSlot({}) : noticeText)
-          ])
-        ]),
-        suffixSlot
-          ? h('div', {
-            class: 'vxe-notice-bar--suffix'
-          }, suffixSlot({}))
-          : renderEmptyElement($xeNoticeBar)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-notice-bar',
+            `is--${vertical ? 'vertical' : 'horizontal'}`,
+            `dir--${direction || 'left'}`,
+            {
+              [`size--${vSize}`]: vSize,
+              'is--loop': loop
+            }
+          ]
+        },
+        [
+          prefixSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-notice-bar--prefix'
+              },
+              prefixSlot({})
+            )
+            : renderEmptyElement($xeNoticeBar),
+          h(
+            'div',
+            {
+              class: 'vxe-notice-bar--content'
+            },
+            [
+              h(
+                'div',
+                {
+                  ref: 'refContentElem',
+                  class: 'vxe-notice-bar--inner'
+                },
+                [
+                  h(
+                    'div',
+                    {
+                      class: ['vxe-notice-bar--wrapper', `is--${animationStatus ? 'progress' : 'end'}`],
+                      style: {
+                        animationDuration: duration ? toCssUnit(duration, 's') : `${animationDuration}s`
+                      }
+                    },
+                    defaultSlot ? defaultSlot({}) : noticeText
+                  )
+                ]
+              )
+            ]
+          ),
+          suffixSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-notice-bar--suffix'
+              },
+              suffixSlot({})
+            )
+            : renderEmptyElement($xeNoticeBar)
+        ]
+      )
     }
   },
   watch: {
-    computeTabsResizeFlag () {
+    computeTabsResizeFlag() {
       const $xeNoticeBar = this
 
       $xeNoticeBar.updateAnimationStyle()
     }
   },
-  mounted () {
+  mounted() {
     const $xeNoticeBar = this
 
     globalEvents.on($xeNoticeBar, 'resize', $xeNoticeBar.updateAnimationStyle)
     $xeNoticeBar.updateAnimationStyle()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeNoticeBar = this
 
     globalEvents.off($xeNoticeBar, 'resize')
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

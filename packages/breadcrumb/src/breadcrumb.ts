@@ -1,16 +1,16 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, globalMixins, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import VxeBreadcrumbItemComponent from './breadcrumb-item'
 
 import type { VxeBreadcrumbPropTypes, BreadcrumbReactData, VxeBreadcrumbItemProps, VxeComponentSizeType, VxeBreadcrumbEmits, ValueOf } from '../../../types'
 
+const { getConfig, globalMixins, createEvent } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBreadcrumb',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     separator: {
       type: String as PropType<VxeBreadcrumbPropTypes.Separator>,
@@ -18,16 +18,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     options: Array as PropType<VxeBreadcrumbPropTypes.Options>
   },
-  provide () {
+  provide() {
     const $xeBreadcrumb = this
     return {
       $xeBreadcrumb
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: BreadcrumbReactData = {
-    }
+    const reactData: BreadcrumbReactData = {}
     return {
       xID,
       reactData
@@ -42,11 +41,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeBreadcrumbEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeBreadcrumbEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeBreadcrumb = this
       $xeBreadcrumb.$emit(type, createEvent(evnt, { $breadcrumb: $xeBreadcrumb }, params))
     },
-    handleClickLink (evnt: MouseEvent, option?: VxeBreadcrumbItemProps) {
+    handleClickLink(evnt: MouseEvent, option?: VxeBreadcrumbItemProps) {
       const $xeBreadcrumb = this
       $xeBreadcrumb.dispatchEvent('click', { option }, evnt)
     },
@@ -54,13 +53,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderItems  (h: CreateElement): VNode[] {
+    renderItems(h: CreateElement): VNode[] {
       const $xeBreadcrumb = this
       const props = $xeBreadcrumb
 
       const { options } = props
       if (options && options.length) {
-        return options.map(item => {
+        return options.map((item) => {
           return h(VxeBreadcrumbItemComponent, {
             props: {
               title: item.title,
@@ -71,19 +70,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return []
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeBreadcrumb = this
       const slots = $xeBreadcrumb.$scopedSlots
 
       const defaultSlot = slots.default
 
-      return h('div', {
-        ref: 'refElem',
-        class: 'vxe-breadcrumb'
-      }, defaultSlot ? defaultSlot({}) : $xeBreadcrumb.renderItems(h))
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: 'vxe-breadcrumb'
+        },
+        defaultSlot ? defaultSlot({}) : $xeBreadcrumb.renderItems(h)
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

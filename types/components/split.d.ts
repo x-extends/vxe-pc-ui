@@ -13,17 +13,21 @@ export type VxeSplitComponent = DefineVxeComponentOptions<VxeSplitProps>
 /**
  * @deprecated
  */
-export type VxeSplitInstance = DefineVxeComponentInstance<{
-  reactData: SplitReactData
-}, VxeSplitProps, VxeSplitPrivateComputed, VxeSplitMethods>
+export type VxeSplitInstance = DefineVxeComponentInstance<
+  {
+    reactData: SplitReactData
+  },
+  VxeSplitProps,
+  VxeSplitPrivateComputed,
+  VxeSplitMethods
+>
 /**
  * @deprecated
  */
 export type VxeSplitConstructor = VxeSplitInstance
 
-export interface SplitPrivateRef {
-}
-export interface VxeSplitPrivateRef extends SplitPrivateRef { }
+export interface SplitPrivateRef {}
+export interface VxeSplitPrivateRef extends SplitPrivateRef {}
 
 /**
  * @deprecated
@@ -152,7 +156,7 @@ export interface SplitPrivateComputed {
 /**
  * @deprecated
  */
-export interface VxeSplitPrivateComputed extends SplitPrivateComputed { }
+export interface VxeSplitPrivateComputed extends SplitPrivateComputed {}
 /**
  * @deprecated
  */
@@ -194,23 +198,16 @@ export interface SplitMethods {
 /**
  * @deprecated
  */
-export interface VxeSplitMethods extends SplitMethods { }
+export interface VxeSplitMethods extends SplitMethods {}
 /**
  * @deprecated
  */
-export interface SplitPrivateMethods { }
-export interface VxeSplitPrivateMethods extends SplitPrivateMethods { }
+export interface SplitPrivateMethods {}
+export interface VxeSplitPrivateMethods extends SplitPrivateMethods {}
 /**
  * @deprecated
  */
-export type VxeSplitEmits = [
-  'action-dblclick',
-  'action-click',
-  'toggle-expand',
-  'resize-start',
-  'resize-drag',
-  'resize-end'
-]
+export type VxeSplitEmits = ['action-dblclick', 'action-click', 'toggle-expand', 'resize-start', 'resize-drag', 'resize-end']
 /**
  * @deprecated
  */
@@ -293,8 +290,7 @@ export namespace VxeSplitEvents {
  * @deprecated
  */
 export namespace VxeSplitSlotTypes {
-  export interface DefaultSlotParams {
-  }
+  export interface DefaultSlotParams {}
 }
 /**
  * @deprecated
@@ -303,11 +299,7 @@ export interface VxeSplitSlots {
   /**
    * 自定义插槽模板
    */
-  [key: string]: ((params: {
-    name: VxeSplitPanePropTypes.Name
-    isVisible: boolean
-    isExpand: boolean
-  }) => any) | undefined
+  [key: string]: ((params: { name: VxeSplitPanePropTypes.Name; isVisible: boolean; isExpand: boolean }) => any) | undefined
 
   default?: (params: VxeSplitSlotTypes.DefaultSlotParams) => any
 }

@@ -1,16 +1,16 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { globalMixins, createEvent } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleCarouselItem, destroyCarouselItem } from './util'
 
 import type { VxeCarouselItemPropTypes, CarouselItemReactData, VxeCarouselItemEmits, VxeCarouselDefines, VxeComponentSizeType, ValueOf, VxeCarouselConstructor, VxeCarouselPrivateMethods } from '../../../types'
 
+const { globalMixins, createEvent } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCarouselItem',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     name: [String, Number] as PropType<VxeCarouselItemPropTypes.Name>,
     className: String as PropType<VxeCarouselItemPropTypes.ClassName>,
@@ -21,7 +21,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: CarouselItemReactData = {
       currentDate: null
@@ -49,34 +49,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeCarouselItemEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeCarouselItemEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeCarouselItem = this
       $xeCarouselItem.$emit(type, createEvent(evnt, { $carouselItem: $xeCarouselItem }, params))
     },
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       return h('div', {
         ref: 'refElem'
       })
     }
   },
   watch: {
-    name (val) {
+    name(val) {
       const $xeCarouselItem = this
       const itemConfig = $xeCarouselItem.itemConfig
 
       itemConfig.name = val
     },
-    url (val) {
+    url(val) {
       const $xeCarouselItem = this
       const itemConfig = $xeCarouselItem.itemConfig
 
       itemConfig.url = val
     }
   },
-  created () {
+  created() {
     const $xeCarouselItem = this
     const props = $xeCarouselItem
     const slots = $xeCarouselItem.$scopedSlots
@@ -89,7 +89,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       slots
     })
   },
-  mounted () {
+  mounted() {
     const $xeCarouselItem = this
     const slots = $xeCarouselItem.$scopedSlots
     const itemConfig = $xeCarouselItem.itemConfig
@@ -102,7 +102,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       assembleCarouselItem($xeCarousel, elem, itemConfig)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeCarouselItem = this
     const itemConfig = $xeCarouselItem.itemConfig
     const $xeCarousel = $xeCarouselItem.$xeCarousel
@@ -111,7 +111,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       destroyCarouselItem($xeCarousel, itemConfig)
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

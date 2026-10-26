@@ -4,7 +4,7 @@ import VxeDatePickerComponent from './src/date-picker'
 import { dynamicApp } from '../dynamics'
 
 export const VxeDatePicker = Object.assign({}, VxeDatePickerComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeDatePickerComponent.name as string, VxeDatePickerComponent)
     app.component('VxeDateInput', VxeDatePickerComponent)
   }

@@ -1,11 +1,14 @@
-import { formats } from '../../ui'
+
+import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { createComponentLog } from '../../ui/src/log'
+
+const { formats } = VxeUI
 
 const { errLog } = createComponentLog('form')
 
 export class ItemInfo {
-  constructor ($xeForm: any, item: any) {
+  constructor($xeForm: any, item: any) {
     const { field, itemRender, formatter } = item
     if (formatter) {
       if (XEUtils.isString(formatter)) {
@@ -74,9 +77,9 @@ export class ItemInfo {
     })
   }
 
-  update (name: string, value: any) {
+  update(name: string, value: any) {
     this[name] = value
   }
 
-  [key: string]: any;
+  [key: string]: any
 }

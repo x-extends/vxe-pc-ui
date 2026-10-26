@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeTextComponent from './src/text'
 
 export const VxeText = Object.assign({}, VxeTextComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeTextComponent.name as string, VxeTextComponent)
   }
 })

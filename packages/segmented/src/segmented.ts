@@ -1,13 +1,15 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { toCssUnit } from '../../ui/src/dom'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeSegmentedPropTypes, SegmentedReactData, VxeSegmentedEmits, VxeComponentSizeType, ValueOf, VxeComponentStyleType } from '../../../types'
 
-function createReactData (): SegmentedReactData {
+const { getConfig, createEvent, globalMixins, renderEmptyElement } = VxeUI
+
+function createReactData(): SegmentedReactData {
   return {
     groupName: XEUtils.uniqueId('xe_group_'),
     selectStyle: {
@@ -20,9 +22,7 @@ function createReactData (): SegmentedReactData {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSegmented',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   model: {
     prop: 'value',
     event: 'modelValue'
@@ -45,7 +45,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().segmented.size || getConfig().size
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
     return {
@@ -57,7 +57,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeItemType () {
+    computeItemType() {
       const $xeSegmented = this
       const props = $xeSegmented
 
@@ -70,7 +70,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return 'default'
     },
-    computeWrapperStyle () {
+    computeWrapperStyle() {
       const $xeSegmented = this
       const props = $xeSegmented
 
@@ -81,27 +81,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return stys
     },
-    computeOptionOpts () {
+    computeOptionOpts() {
       const $xeSegmented = this
       const props = $xeSegmented
 
       return Object.assign({}, getConfig().segmented.optionConfig, props.optionConfig)
     },
-    computeItemList () {
+    computeItemList() {
       const $xeSegmented = this
       const props = $xeSegmented
 
       return props.options || []
     },
-    computeSelectIndex () {
+    computeSelectIndex() {
       const $xeSegmented = this
       const props = $xeSegmented
 
       const { value: modelValue } = props
       const itemList = $xeSegmented.computeItemList
-      return XEUtils.findIndexOf(itemList, item => item.value === modelValue)
+      return XEUtils.findIndexOf(itemList, (item) => item.value === modelValue)
     },
-    comIsFullWidth () {
+    comIsFullWidth() {
       const $xeSegmented = this
 
       const wrapperStyle = $xeSegmented.computeWrapperStyle as VxeComponentStyleType
@@ -109,7 +109,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   watch: {
-    computeSelectIndex () {
+    computeSelectIndex() {
       const $xeSegmented = this
 
       $xeSegmented.updateStyle()
@@ -119,17 +119,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeSegmentedEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeSegmentedEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeSegmented = this
       $xeSegmented.$emit(type, createEvent(evnt, { $segmented: $xeSegmented }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeSegmented = this
 
       $xeSegmented.$emit('input', value)
       handleEmitModelVal($xeSegmented, value)
     },
-    changeEvent (evnt: Event, item: VxeSegmentedPropTypes.Option) {
+    changeEvent(evnt: Event, item: VxeSegmentedPropTypes.Option) {
       const $xeSegmented = this
 
       const value = item.value
@@ -137,7 +137,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeSegmented.dispatchEvent('change', { value }, evnt)
       $xeSegmented.updateStyle()
     },
-    updateStyle () {
+    updateStyle() {
       const $xeSegmented = this
       const reactData = $xeSegmented.reactData
 
@@ -164,7 +164,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderItems (h: CreateElement) {
+    renderItems(h: CreateElement) {
       const $xeSegmented = this
       const props = $xeSegmented
       const reactData = $xeSegmented.reactData
@@ -182,51 +182,71 @@ export default /* define-vxe-component start */ defineVxeComponent({
         const { icon, width } = item
         const itemWidth = width || optionOpts.width
         itemVNs.push(
-          h('label', {
-            key: i,
-            class: ['vxe-segmented--item', {
-              'is--checked': modelValue === item.value
-            }],
-            style: isFullWidth || itemWidth
-              ? {
-                  width: itemWidth ? toCssUnit(itemWidth) : (fullItemWidth ? `${fullItemWidth}%` : '')
+          h(
+            'label',
+            {
+              key: i,
+              class: [
+                'vxe-segmented--item',
+                {
+                  'is--checked': modelValue === item.value
                 }
-              : undefined
-          }, [
-            h('input', {
-              class: 'vxe-segmented--input',
-              attrs: {
-                type: 'radio',
-                name: name || groupName
-              },
-              on: {
-                change (evnt: Event) {
-                  $xeSegmented.changeEvent(evnt, item)
+              ],
+              style:
+                isFullWidth || itemWidth
+                  ? {
+                      width: itemWidth ? toCssUnit(itemWidth) : fullItemWidth ? `${fullItemWidth}%` : ''
+                    }
+                  : undefined
+            },
+            [
+              h('input', {
+                class: 'vxe-segmented--input',
+                attrs: {
+                  type: 'radio',
+                  name: name || groupName
+                },
+                on: {
+                  change(evnt: Event) {
+                    $xeSegmented.changeEvent(evnt, item)
+                  }
                 }
-              }
-            }),
-            h('div', {
-              class: 'vxe-segmented--content'
-            }, [
-              icon
-                ? h('div', {
-                  class: 'vxe-segmented--icon'
-                }, [
-                  h('i', {
-                    class: icon
-                  })
-                ])
-                : renderEmptyElement($xeSegmented),
-              h('div', {
-                class: 'vxe-segmented--label'
-              }, defaultSlot ? defaultSlot({ option: item }) : XEUtils.eqNull(item.label) ? '' : `${item.label}`)
-            ])
-          ])
+              }),
+              h(
+                'div',
+                {
+                  class: 'vxe-segmented--content'
+                },
+                [
+                  icon
+                    ? h(
+                      'div',
+                      {
+                        class: 'vxe-segmented--icon'
+                      },
+                      [
+                        h('i', {
+                          class: icon
+                        })
+                      ]
+                    )
+                    : renderEmptyElement($xeSegmented),
+                  h(
+                    'div',
+                    {
+                      class: 'vxe-segmented--label'
+                    },
+                    defaultSlot ? defaultSlot({ option: item }) : XEUtils.eqNull(item.label) ? '' : `${item.label}`
+                  )
+                ]
+              )
+            ]
+          )
         )
       })
       return itemVNs
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeSegmented = this
       const props = $xeSegmented
       const reactData = $xeSegmented.reactData
@@ -236,42 +256,58 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const itemType = $xeSegmented.computeItemType
       const wrapperStyle = $xeSegmented.computeWrapperStyle
       const vSize = $xeSegmented.computeSize
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-segmented', `type--${itemType}`, {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-segmented--group',
-          style: wrapperStyle
-        }, [
-          h('div', {
-            ref: 'refSelectedElem',
-            class: 'vxe-segmented--selected',
-            style: selectStyle
-          }),
-          h('div', {
-            ref: 'refWrapperElem',
-            class: 'vxe-segmented--inner'
-          }, $xeSegmented.renderItems(h))
-        ])
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-segmented',
+            `type--${itemType}`,
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-segmented--group',
+              style: wrapperStyle
+            },
+            [
+              h('div', {
+                ref: 'refSelectedElem',
+                class: 'vxe-segmented--selected',
+                style: selectStyle
+              }),
+              h(
+                'div',
+                {
+                  ref: 'refWrapperElem',
+                  class: 'vxe-segmented--inner'
+                },
+                $xeSegmented.renderItems(h)
+              )
+            ]
+          )
+        ]
+      )
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeSegmented = this
     const reactData = $xeSegmented.reactData
 
     XEUtils.assign(reactData, createReactData())
   },
-  mounted () {
+  mounted() {
     const $xeSegmented = this
 
     $xeSegmented.updateStyle()
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

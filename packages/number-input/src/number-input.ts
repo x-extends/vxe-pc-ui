@@ -1,7 +1,7 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils, { CommafyOptions } from 'xe-utils'
-import { VxeUI, getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getFuncText, eqEmptyValue, isEnableConf, getText } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import { hasClass, getEventTargetNode, hasControlKey, toCssUnit } from '../../ui/src/dom'
@@ -9,6 +9,8 @@ import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
 
 import type { NumberInputInternalData, VxeNumberInputEmits, NumberInputReactData, VxeNumberInputPropTypes, VxeComponentSizeType, VxeFormConstructor, ValueOf, VxeFormPrivateMethods, VxeFormDefines, VxeComponentStyleType } from '../../../types'
+
+const { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } = VxeUI
 
 const { errLog } = createComponentLog('number-input')
 
@@ -21,9 +23,7 @@ const handleNumberString = (val: any) => {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeNumberInput',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   model: {
     prop: 'value',
     event: 'modelValue'
@@ -155,7 +155,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: NumberInputReactData = {
       isFocus: false,
@@ -180,7 +180,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
-    computeFormReadonly () {
+    computeFormReadonly() {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const $xeForm = $xeNumberInput.$xeForm
@@ -194,7 +194,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return readonly
     },
-    computeIsDisabled () {
+    computeIsDisabled() {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const $xeForm = $xeNumberInput.$xeForm
@@ -208,7 +208,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return disabled
     },
-    computeDigitsValue () {
+    computeDigitsValue() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
@@ -224,38 +224,38 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return XEUtils.toInteger(defDigits) || 1
     },
-    computeControlOpts () {
+    computeControlOpts() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       return Object.assign({}, getConfig().numberInput.controlConfig, props.controlConfig)
     },
-    computePrefixOpts () {
+    computePrefixOpts() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       return Object.assign({}, getConfig().numberInput.prefixConfig, props.prefixConfig)
     },
-    computeSuffixOpts () {
+    computeSuffixOpts() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       return Object.assign({}, getConfig().numberInput.suffixConfig, props.suffixConfig)
     },
-    computeTooltipOpts () {
+    computeTooltipOpts() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       return Object.assign({}, getConfig().numberInput.tooltipConfig, props.tooltipConfig)
     },
-    computeDecimalsType () {
+    computeDecimalsType() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       const { type } = props
       return type === 'float' || type === 'amount'
     },
-    computeStepValue () {
+    computeStepValue() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
@@ -266,17 +266,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       if (type === 'integer') {
         return XEUtils.toInteger(step) || 1
       } else if (decimalsType) {
-        return XEUtils.toNumber(step) || (1 / Math.pow(10, digitsValue))
+        return XEUtils.toNumber(step) || 1 / Math.pow(10, digitsValue)
       }
       return XEUtils.toNumber(step) || 1
     },
-    computeIsClearable () {
+    computeIsClearable() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       return props.clearable
     },
-    computeInputReadonly () {
+    computeInputReadonly() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
@@ -284,7 +284,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const formReadonly = $xeNumberInput.computeFormReadonly
       return formReadonly || !editable
     },
-    computeInpPlaceholder () {
+    computeInpPlaceholder() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
@@ -298,7 +298,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return getI18n('vxe.base.pleaseInput')
     },
-    computeInpMaxLength () {
+    computeInpMaxLength() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
@@ -307,21 +307,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
       // 数值最大长度默认限制 16 位，包含小数
       const maxDefLen = 16
       if (!eqEmptyValue(min) && !eqEmptyValue(max)) {
-        return `${max}`.length + (type === 'integer' ? 0 : (digitsValue + 1)) + (XEUtils.toNumber(min) >= 0 ? 0 : 1)
+        return `${max}`.length + (type === 'integer' ? 0 : digitsValue + 1) + (XEUtils.toNumber(min) >= 0 ? 0 : 1)
       }
       if (maxLength || maxlength) {
         return XEUtils.toNumber(maxLength || maxlength)
       }
       return maxDefLen
     },
-    computeInpImmediate () {
+    computeInpImmediate() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       const { immediate } = props
       return immediate
     },
-    computeNumValue () {
+    computeNumValue() {
       const $xeNumberInput = this as any
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -330,7 +330,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { inputValue } = reactData
       return type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
     },
-    computeNumLabel () {
+    computeNumLabel() {
       const $xeNumberInput = this as any
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -363,7 +363,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return XEUtils.toString(inputValue)
     },
-    computeIsDisabledSubtractNumber () {
+    computeIsDisabledSubtractNumber() {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -377,7 +377,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    computeIsDisabledAddNumber () {
+    computeIsDisabledAddNumber() {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -391,14 +391,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return false
     },
-    computeInpClassNamevalue () {
+    computeInpClassNamevalue() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       const { inputClassName } = props
-      return 'vxe-number-input--input' + (inputClassName ? (' ' + inputClassName) : '')
+      return 'vxe-number-input--input' + (inputClassName ? ' ' + inputClassName : '')
     },
-    computeCurrStyle () {
+    computeCurrStyle() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
@@ -414,16 +414,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeNumberInputEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeNumberInputEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeNumberInput = this
       $xeNumberInput.$emit(type, createEvent(evnt, { $numberInput: $xeNumberInput }, params))
     },
-    emitModel (value: any) {
+    emitModel(value: any) {
       const $xeNumberInput = this
 
       handleEmitModelVal($xeNumberInput, value)
     },
-    focus () {
+    focus() {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -435,7 +435,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeNumberInput.$nextTick()
     },
-    blur () {
+    blur() {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -444,7 +444,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.isActivated = false
       return $xeNumberInput.$nextTick()
     },
-    select () {
+    select() {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -453,7 +453,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.isActivated = false
       return $xeNumberInput.$nextTick()
     },
-    getNumberValue (val: any) {
+    getNumberValue(val: any) {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
@@ -475,14 +475,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return restVal.slice(0, inpMaxLength)
     },
-    triggerEvent (evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) {
+    triggerEvent(evnt: Event & { type: 'input' | 'change' | 'keydown' | 'keyup' | 'wheel' | 'click' | 'focus' | 'blur' }) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
       const { inputValue } = reactData
       $xeNumberInput.dispatchEvent(evnt.type, { value: inputValue }, evnt)
     },
-    handleChange (val: number | null, inputValue: string, evnt: Event | { type: string }) {
+    handleChange(val: number | null, inputValue: string, evnt: Event | { type: string }) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -510,7 +510,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    emitInputEvent (inputValue: any, evnt: Event) {
+    emitInputEvent(inputValue: any, evnt: Event) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
       const $xeForm = $xeNumberInput.$xeForm
@@ -529,14 +529,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    inputEvent (evnt: Event & { type: 'input' }) {
+    inputEvent(evnt: Event & { type: 'input' }) {
       const $xeNumberInput = this
 
       const inputElem = evnt.target as HTMLInputElement
       const value = inputElem.value
       $xeNumberInput.emitInputEvent(value, evnt)
     },
-    changeEvent  (evnt: Event & { type: 'change' }) {
+    changeEvent(evnt: Event & { type: 'change' }) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -546,7 +546,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeNumberInput.dispatchEvent('lazy-change', { value: reactData.inputValue }, evnt)
     },
-    focusEvent  (evnt: Event & { type: 'focus' }) {
+    focusEvent(evnt: Event & { type: 'focus' }) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -559,7 +559,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.triggerEvent(evnt)
       }
     },
-    clickPrefixEvent (evnt: Event) {
+    clickPrefixEvent(evnt: Event) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -569,7 +569,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.dispatchEvent('prefix-click', { value: inputValue }, evnt)
       }
     },
-    clearValueEvent  (evnt: Event, value: VxeNumberInputPropTypes.ModelValue) {
+    clearValueEvent(evnt: Event, value: VxeNumberInputPropTypes.ModelValue) {
       const $xeNumberInput = this
 
       $xeNumberInput.focus()
@@ -580,7 +580,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.handleShowTip()
       })
     },
-    clickSuffixEvent (evnt: Event) {
+    clickSuffixEvent(evnt: Event) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -590,7 +590,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.dispatchEvent('suffix-click', { value: inputValue }, evnt)
       }
     },
-    updateModel (val: any) {
+    updateModel(val: any) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -617,7 +617,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     /**
      * 检查初始值
      */
-    initValue  () {
+    initValue() {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -645,19 +645,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    validMaxNum  (num: number | string) {
+    validMaxNum(num: number | string) {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       return props.max === null || props.max === '' || XEUtils.toNumber(num) <= XEUtils.toNumber(props.max)
     },
-    validMinNum  (num: number | string) {
+    validMinNum(num: number | string) {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       return props.min === null || props.min === '' || XEUtils.toNumber(num) >= XEUtils.toNumber(props.min)
     },
-    afterCheckValue  () {
+    afterCheckValue() {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -680,7 +680,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           $xeNumberInput.handleChange(inpNumVal, `${inpValue || ''}`, { type: 'check' })
           return
         }
-        if (inputValue || (min || max)) {
+        if (inputValue || min || max) {
           let inpNumVal: number | string = type === 'integer' ? XEUtils.toInteger(handleNumber(inputValue)) : XEUtils.toNumber(handleNumber(inputValue))
           if (!$xeNumberInput.validMinNum(inpNumVal)) {
             inpNumVal = min as number
@@ -701,7 +701,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    blurEvent  (evnt: Event & { type: 'blur' }) {
+    blurEvent(evnt: Event & { type: 'blur' }) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
       const $xeForm = $xeNumberInput.$xeForm
@@ -722,19 +722,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeForm.triggerItemEvent(evnt, formItemInfo.itemConfig.field, value)
       }
     },
-    mouseenterEvent () {
+    mouseenterEvent() {
       const $xeNumberInput = this
 
       $xeNumberInput.handleShowTip()
     },
-    mouseleaveEvent () {
+    mouseleaveEvent() {
       const $xeNumberInput = this
 
       $xeNumberInput.handleHideTip()
     },
 
     // 数值
-    numberChange  (isPlus: boolean, evnt: Event) {
+    numberChange(isPlus: boolean, evnt: Event) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -752,9 +752,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
       } else {
         restNum = newValue
       }
-      $xeNumberInput.emitInputEvent($xeNumberInput.getNumberValue(restNum), evnt as (Event & { type: 'input' }))
+      $xeNumberInput.emitInputEvent($xeNumberInput.getNumberValue(restNum), evnt as Event & { type: 'input' })
     },
-    numberPlusEvent (evnt: Event) {
+    numberPlusEvent(evnt: Event) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -771,7 +771,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       // 已废弃
       $xeNumberInput.dispatchEvent('next-number', { value: reactData.inputValue }, evnt)
     },
-    numberMinusEvent (evnt: Event) {
+    numberMinusEvent(evnt: Event) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -788,7 +788,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       // 已废弃
       $xeNumberInput.dispatchEvent('prev-number', { value: reactData.inputValue }, evnt)
     },
-    numberKeydownEvent  (evnt: KeyboardEvent) {
+    numberKeydownEvent(evnt: KeyboardEvent) {
       const $xeNumberInput = this
 
       const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
@@ -802,7 +802,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleShowTip () {
+    handleShowTip() {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -815,29 +815,38 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const tooltipOpts = $xeNumberInput.computeTooltipOpts
           const { contentMethod } = tooltipOpts
           const inputElem = $xeNumberInput.$refs.refInputTarget as HTMLInputElement
-          const content = getText(contentMethod
-            ? contentMethod({
-              $numberInput: $xeNumberInput,
-              type,
-              inputValue: inputElem.value,
-              value: inputValue || '',
-              label: numLabel
-            })
-            : numLabel)
+          const content = getText(
+            contentMethod
+              ? contentMethod({
+                $numberInput: $xeNumberInput,
+                type,
+                inputValue: inputElem.value,
+                value: inputValue || '',
+                label: numLabel
+              })
+              : numLabel
+          )
           if (content) {
-            VxeUI.tooltip.open(inputElem, Object.assign({}, {
-              ...tooltipOpts,
-              content
-            }, {
-              contentMethod: undefined
-            }))
+            VxeUI.tooltip.open(
+              inputElem,
+              Object.assign(
+                {},
+                {
+                  ...tooltipOpts,
+                  content
+                },
+                {
+                  contentMethod: undefined
+                }
+              )
+            )
           } else {
             VxeUI.tooltip.close()
           }
         }
       }
     },
-    handleHideTip () {
+    handleHideTip() {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
@@ -848,7 +857,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    keydownEvent  (evnt: KeyboardEvent & { type: 'keydown' }) {
+    keydownEvent(evnt: KeyboardEvent & { type: 'keydown' }) {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
@@ -865,13 +874,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isUpArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_UP)
       const isDwArrow = globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.ARROW_DOWN)
       if (!isControlKey && !isShiftKey && !isAltKey) {
-        if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) ||
-          (!negative && key === '-') ||
-          (type === 'integer' && key === '.') ||
-          ((!exponential || keyCode !== 69) && (keyCode >= 65 && keyCode <= 90)) ||
-          (keyCode >= 186 && keyCode <= 188) ||
-          keyCode >= 191
-        ) {
+        if (globalEvents.hasKey(evnt, GLOBAL_EVENT_KEYS.SPACEBAR) || (!negative && key === '-') || (type === 'integer' && key === '.') || ((!exponential || keyCode !== 69) && keyCode >= 65 && keyCode <= 90) || (keyCode >= 186 && keyCode <= 188) || keyCode >= 191) {
           evnt.preventDefault()
         }
       }
@@ -884,14 +887,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeNumberInput.triggerEvent(evnt)
     },
-    keyupEvent  (evnt: KeyboardEvent & { type: 'keyup' }) {
+    keyupEvent(evnt: KeyboardEvent & { type: 'keyup' }) {
       const $xeNumberInput = this
 
       $xeNumberInput.handleShowTip()
       $xeNumberInput.triggerEvent(evnt)
     },
     // 数值
-    stopDown () {
+    stopDown() {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
@@ -901,7 +904,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         internalData.dnTimeout = undefined
       }
     },
-    stopAutoIncrement () {
+    stopAutoIncrement() {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
@@ -911,7 +914,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         internalData.ainTimeout = undefined
       }
     },
-    numberDownMinusEvent (evnt: Event) {
+    numberDownMinusEvent(evnt: Event) {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
@@ -921,7 +924,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.numberDownMinusEvent(evnt)
       }, 60)
     },
-    numberDownPlusEvent (evnt: Event) {
+    numberDownPlusEvent(evnt: Event) {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
@@ -931,13 +934,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeNumberInput.numberDownPlusEvent(evnt)
       }, 60)
     },
-    numberStopAll () {
+    numberStopAll() {
       const $xeNumberInput = this
 
       $xeNumberInput.stopDown()
       $xeNumberInput.stopAutoIncrement()
     },
-    numberClickEvent (evnt: MouseEvent) {
+    numberClickEvent(evnt: MouseEvent) {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
@@ -953,7 +956,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    numberMousedownEvent (evnt: MouseEvent) {
+    numberMousedownEvent(evnt: MouseEvent) {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
@@ -975,7 +978,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, 500)
       }
     },
-    wheelEvent  (evnt: WheelEvent) {
+    wheelEvent(evnt: WheelEvent) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -1000,14 +1003,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeNumberInput.triggerEvent(evnt as WheelEvent & { type: 'wheel' })
     },
-    clickEvent  (evnt: Event & { type: 'click' }) {
+    clickEvent(evnt: Event & { type: 'click' }) {
       const $xeNumberInput = this
 
       $xeNumberInput.handleShowTip()
       $xeNumberInput.triggerEvent(evnt)
     },
     // 全局事件
-    handleGlobalMousedownEvent (evnt: Event) {
+    handleGlobalMousedownEvent(evnt: Event) {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -1030,7 +1033,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalKeydownEvent  (evnt: KeyboardEvent) {
+    handleGlobalKeydownEvent(evnt: KeyboardEvent) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -1056,7 +1059,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalBlurEvent  () {
+    handleGlobalBlurEvent() {
       const $xeNumberInput = this
       const reactData = $xeNumberInput.reactData
 
@@ -1069,7 +1072,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderPrefixIcon (h: CreateElement) {
+    renderPrefixIcon(h: CreateElement) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const slots = $xeNumberInput.$scopedSlots
@@ -1080,32 +1083,44 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const preIcon = prefixIcon || prefixOpts.icon
       const sufContent = prefixOpts.content
       return prefixSlot || preIcon || sufContent
-        ? h('div', {
-          class: 'vxe-number-input--prefix',
-          on: {
-            click: $xeNumberInput.clickPrefixEvent
-          }
-        }, [
-          h('div', {
-            class: 'vxe-number-input--prefix-icon'
-          }, prefixSlot
-            ? getSlotVNs(prefixSlot({}))
-            : [
-                preIcon
-                  ? h('i', {
-                    class: preIcon
-                  })
-                  : renderEmptyElement($xeNumberInput),
-                sufContent
-                  ? h('span', {
-                    class: 'vxe-prefix-input--suffix-text'
-                  }, `${sufContent}`)
-                  : renderEmptyElement($xeNumberInput)
-              ])
-        ])
+        ? h(
+          'div',
+          {
+            class: 'vxe-number-input--prefix',
+            on: {
+              click: $xeNumberInput.clickPrefixEvent
+            }
+          },
+          [
+            h(
+              'div',
+              {
+                class: 'vxe-number-input--prefix-icon'
+              },
+              prefixSlot
+                ? getSlotVNs(prefixSlot({}))
+                : [
+                    preIcon
+                      ? h('i', {
+                        class: preIcon
+                      })
+                      : renderEmptyElement($xeNumberInput),
+                    sufContent
+                      ? h(
+                        'span',
+                        {
+                          class: 'vxe-prefix-input--suffix-text'
+                        },
+                            `${sufContent}`
+                      )
+                      : renderEmptyElement($xeNumberInput)
+                  ]
+            )
+          ]
+        )
         : renderEmptyElement($xeNumberInput)
     },
-    renderSuffixIcon (h: CreateElement) {
+    renderSuffixIcon(h: CreateElement) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -1119,47 +1134,66 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isClearable = $xeNumberInput.computeIsClearable
       const sufIcon = suffixIcon || suffixOpts.icon
       const sufContent = suffixOpts.content
-      return h('div', {
-        class: ['vxe-number-input--suffix', {
-          'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }]
-      }, [
-        isClearable
-          ? h('div', {
-            class: 'vxe-number-input--clear-icon',
-            on: {
-              click: $xeNumberInput.clearValueEvent
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-number-input--suffix',
+            {
+              'is--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
             }
-          }, [
-            h('i', {
-              class: getIcon().INPUT_CLEAR
-            })
-          ])
-          : renderEmptyElement($xeNumberInput),
-        suffixSlot || sufIcon || sufContent
-          ? h('div', {
-            class: 'vxe-number-input--suffix-icon',
-            on: {
-              click: $xeNumberInput.clickSuffixEvent
-            }
-          }, suffixSlot
-            ? getSlotVNs(suffixSlot({}))
-            : [
-                sufIcon
-                  ? h('i', {
-                    class: sufIcon
-                  })
-                  : renderEmptyElement($xeNumberInput),
-                sufContent
-                  ? h('span', {
-                    class: 'vxe-number-input--suffix-text'
-                  }, `${sufContent}`)
-                  : renderEmptyElement($xeNumberInput)
-              ])
-          : renderEmptyElement($xeNumberInput)
-      ])
+          ]
+        },
+        [
+          isClearable
+            ? h(
+              'div',
+              {
+                class: 'vxe-number-input--clear-icon',
+                on: {
+                  click: $xeNumberInput.clearValueEvent
+                }
+              },
+              [
+                h('i', {
+                  class: getIcon().INPUT_CLEAR
+                })
+              ]
+            )
+            : renderEmptyElement($xeNumberInput),
+          suffixSlot || sufIcon || sufContent
+            ? h(
+              'div',
+              {
+                class: 'vxe-number-input--suffix-icon',
+                on: {
+                  click: $xeNumberInput.clickSuffixEvent
+                }
+              },
+              suffixSlot
+                ? getSlotVNs(suffixSlot({}))
+                : [
+                    sufIcon
+                      ? h('i', {
+                        class: sufIcon
+                      })
+                      : renderEmptyElement($xeNumberInput),
+                    sufContent
+                      ? h(
+                        'span',
+                        {
+                          class: 'vxe-number-input--suffix-text'
+                        },
+                            `${sufContent}`
+                      )
+                      : renderEmptyElement($xeNumberInput)
+                  ]
+            )
+            : renderEmptyElement($xeNumberInput)
+        ]
+      )
     },
-    renderInput (h: CreateElement) {
+    renderInput(h: CreateElement) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -1172,107 +1206,130 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const inpMaxLength = $xeNumberInput.computeInpMaxLength
       const inpPlaceholder = $xeNumberInput.computeInpPlaceholder
       const inpClassName = $xeNumberInput.computeInpClassNamevalue
-      return h('div', {
-        key: 'ni',
-        class: 'vxe-number-input--input-wrapper'
-      }, [
-        $xeNumberInput.renderPrefixIcon(h),
-        h('div', {
-          class: 'vxe-number-input--input-inner'
-        }, [
-          h('input', {
-            ref: 'refInputTarget',
-            class: inpClassName,
-            domProps: {
-              value: !isFocus && type === 'amount' ? numLabel : inputValue
+      return h(
+        'div',
+        {
+          key: 'ni',
+          class: 'vxe-number-input--input-wrapper'
+        },
+        [
+          $xeNumberInput.renderPrefixIcon(h),
+          h(
+            'div',
+            {
+              class: 'vxe-number-input--input-inner'
             },
-            attrs: {
-              name,
-              type: 'text',
-              placeholder: inpPlaceholder,
-              maxlength: inpMaxLength,
-              readonly: inputReadonly,
-              disabled: isDisabled,
-              autocomplete: autoComplete || autocomplete
-            },
-            on: {
-              keydown: $xeNumberInput.keydownEvent,
-              keyup: $xeNumberInput.keyupEvent,
-              click: $xeNumberInput.clickEvent,
-              input: $xeNumberInput.inputEvent,
-              change: $xeNumberInput.changeEvent,
-              focus: $xeNumberInput.focusEvent,
-              blur: $xeNumberInput.blurEvent
-            }
-          })
-        ]),
-        $xeNumberInput.renderSuffixIcon(h)
-      ])
+            [
+              h('input', {
+                ref: 'refInputTarget',
+                class: inpClassName,
+                domProps: {
+                  value: !isFocus && type === 'amount' ? numLabel : inputValue
+                },
+                attrs: {
+                  name,
+                  type: 'text',
+                  placeholder: inpPlaceholder,
+                  maxlength: inpMaxLength,
+                  readonly: inputReadonly,
+                  disabled: isDisabled,
+                  autocomplete: autoComplete || autocomplete
+                },
+                on: {
+                  keydown: $xeNumberInput.keydownEvent,
+                  keyup: $xeNumberInput.keyupEvent,
+                  click: $xeNumberInput.clickEvent,
+                  input: $xeNumberInput.inputEvent,
+                  change: $xeNumberInput.changeEvent,
+                  focus: $xeNumberInput.focusEvent,
+                  blur: $xeNumberInput.blurEvent
+                }
+              })
+            ]
+          ),
+          $xeNumberInput.renderSuffixIcon(h)
+        ]
+      )
     },
-    renderMinusBtn (h: CreateElement) {
+    renderMinusBtn(h: CreateElement) {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       const { minusIcon } = props
       const isDisabledSubtractNumber = $xeNumberInput.computeIsDisabledSubtractNumber
-      return h('button', {
-        key: 'prev',
-        class: ['vxe-number-input--minus-btn is--minus', {
-          'is--disabled': isDisabledSubtractNumber
-        }],
-        attrs: {
-          type: 'button'
+      return h(
+        'button',
+        {
+          key: 'prev',
+          class: [
+            'vxe-number-input--minus-btn is--minus',
+            {
+              'is--disabled': isDisabledSubtractNumber
+            }
+          ],
+          attrs: {
+            type: 'button'
+          },
+          on: {
+            click: $xeNumberInput.numberClickEvent,
+            mousedown: $xeNumberInput.numberMousedownEvent,
+            mouseup: $xeNumberInput.numberStopAll,
+            mouseleave: $xeNumberInput.numberStopAll
+          }
         },
-        on: {
-          click: $xeNumberInput.numberClickEvent,
-          mousedown: $xeNumberInput.numberMousedownEvent,
-          mouseup: $xeNumberInput.numberStopAll,
-          mouseleave: $xeNumberInput.numberStopAll
-        }
-      }, [
-        h('i', {
-          class: minusIcon || getIcon().NUMBER_INPUT_MINUS_NUM
-        })
-      ])
+        [
+          h('i', {
+            class: minusIcon || getIcon().NUMBER_INPUT_MINUS_NUM
+          })
+        ]
+      )
     },
-    renderPlusBtn (h: CreateElement) {
+    renderPlusBtn(h: CreateElement) {
       const $xeNumberInput = this
       const props = $xeNumberInput
 
       const { plusIcon } = props
       const isDisabledAddNumber = $xeNumberInput.computeIsDisabledAddNumber
-      return h('button', {
-        key: 'next',
-        class: ['vxe-number-input--plus-btn is--plus', {
-          'is--disabled': isDisabledAddNumber
-        }],
-        attrs: {
-          type: 'button'
+      return h(
+        'button',
+        {
+          key: 'next',
+          class: [
+            'vxe-number-input--plus-btn is--plus',
+            {
+              'is--disabled': isDisabledAddNumber
+            }
+          ],
+          attrs: {
+            type: 'button'
+          },
+          on: {
+            click: $xeNumberInput.numberClickEvent,
+            mousedown: $xeNumberInput.numberMousedownEvent,
+            mouseup: $xeNumberInput.numberStopAll,
+            mouseleave: $xeNumberInput.numberStopAll
+          }
         },
-        on: {
-          click: $xeNumberInput.numberClickEvent,
-          mousedown: $xeNumberInput.numberMousedownEvent,
-          mouseup: $xeNumberInput.numberStopAll,
-          mouseleave: $xeNumberInput.numberStopAll
-        }
-      }, [
-        h('i', {
-          class: plusIcon || getIcon().NUMBER_INPUT_PLUS_NUM
-        })
-      ])
+        [
+          h('i', {
+            class: plusIcon || getIcon().NUMBER_INPUT_PLUS_NUM
+          })
+        ]
+      )
     },
-    renderSideControl (h: CreateElement) {
+    renderSideControl(h: CreateElement) {
       const $xeNumberInput = this
 
-      return h('div', {
-        key: 'cplr',
-        class: 'vxe-number-input--side-control'
-      }, [
-        $xeNumberInput.renderPlusBtn(h),
-        $xeNumberInput.renderMinusBtn(h)
-      ])
+      return h(
+        'div',
+        {
+          key: 'cplr',
+          class: 'vxe-number-input--side-control'
+        },
+        [$xeNumberInput.renderPlusBtn(h), $xeNumberInput.renderMinusBtn(h)]
+      )
     },
-    renderFloat (h: CreateElement) {
+    renderFloat(h: CreateElement) {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const slots = $xeNumberInput.$scopedSlots
@@ -1280,13 +1337,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { floatContent } = props
       const floatSlot = slots.float
       if (floatContent || floatSlot) {
-        return h('span', {
-          class: 'vxe-number-input--float-wrapper'
-        }, floatSlot ? floatSlot({}) : getText(floatContent))
+        return h(
+          'span',
+          {
+            class: 'vxe-number-input--float-wrapper'
+          },
+          floatSlot ? floatSlot({}) : getText(floatContent)
+        )
       }
       return renderEmptyElement($xeNumberInput)
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -1303,60 +1364,59 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const prefixSlot = slots.prefix
       const suffixSlot = slots.suffix
       if (formReadonly) {
-        return h('div', {
-          ref: 'refElem',
-          class: ['vxe-number-input--readonly', `type--${type}`, className]
-        }, numLabel)
+        return h(
+          'div',
+          {
+            ref: 'refElem',
+            class: ['vxe-number-input--readonly', `type--${type}`, className]
+          },
+          numLabel
+        )
       }
       const inputReadonly = $xeNumberInput.computeInputReadonly
       const isClearable = $xeNumberInput.computeIsClearable
       const isControls = isEnableConf(controlOpts) && (controls === false ? controls : showButton)
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-number-input', `type--${type}`, isControls ? (`ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}`) : '', floatContent ? (`fla--${floatAlign || 'center'}`) : '', className, {
-          [`size--${vSize}`]: vSize,
-          [`is--${align}`]: align,
-          'is--controls': isControls && !inputReadonly,
-          'is--prefix': !!prefixSlot || prefixIcon,
-          'is--suffix': !!suffixSlot || suffixIcon,
-          'is--disabled': isDisabled,
-          'is--active': isActivated,
-          'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
-        }],
-        attrs: {
-          spellcheck: false
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-number-input',
+            `type--${type}`,
+            isControls ? `ctl--${layout === 'right' || layout === 'left' ? layout : 'default'}` : '',
+            floatContent ? `fla--${floatAlign || 'center'}` : '',
+            className,
+            {
+              [`size--${vSize}`]: vSize,
+              [`is--${align}`]: align,
+              'is--controls': isControls && !inputReadonly,
+              'is--prefix': !!prefixSlot || prefixIcon,
+              'is--suffix': !!suffixSlot || suffixIcon,
+              'is--disabled': isDisabled,
+              'is--active': isActivated,
+              'show--clear': isClearable && !isDisabled && !(inputValue === '' || XEUtils.eqNull(inputValue))
+            }
+          ],
+          attrs: {
+            spellcheck: false
+          },
+          on: {
+            mouseenter: $xeNumberInput.mouseenterEvent,
+            mouseleave: $xeNumberInput.mouseleaveEvent
+          }
         },
-        on: {
-          mouseenter: $xeNumberInput.mouseenterEvent,
-          mouseleave: $xeNumberInput.mouseleaveEvent
-        }
-      }, isControls
-        ? (layout === 'right'
-            ? [
-                $xeNumberInput.renderInput(h),
-                $xeNumberInput.renderSideControl(h),
-                $xeNumberInput.renderFloat(h)
-              ]
-            : (layout === 'left'
-                ? [
-                    $xeNumberInput.renderSideControl(h),
-                    $xeNumberInput.renderInput(h),
-                    $xeNumberInput.renderFloat(h)
-                  ]
-                : [
-                    $xeNumberInput.renderMinusBtn(h),
-                    $xeNumberInput.renderInput(h),
-                    $xeNumberInput.renderPlusBtn(h),
-                    $xeNumberInput.renderFloat(h)
-                  ]))
-        : [
-            $xeNumberInput.renderInput(h),
-            $xeNumberInput.renderFloat(h)
-          ])
+        isControls
+          ? layout === 'right'
+            ? [$xeNumberInput.renderInput(h), $xeNumberInput.renderSideControl(h), $xeNumberInput.renderFloat(h)]
+            : layout === 'left'
+              ? [$xeNumberInput.renderSideControl(h), $xeNumberInput.renderInput(h), $xeNumberInput.renderFloat(h)]
+              : [$xeNumberInput.renderMinusBtn(h), $xeNumberInput.renderInput(h), $xeNumberInput.renderPlusBtn(h), $xeNumberInput.renderFloat(h)]
+          : [$xeNumberInput.renderInput(h), $xeNumberInput.renderFloat(h)]
+      )
     }
   },
   watch: {
-    value (val) {
+    value(val) {
       const $xeNumberInput = this
       const internalData = $xeNumberInput.internalData
 
@@ -1365,7 +1425,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       internalData.isUM = false
     },
-    type () {
+    type() {
       const $xeNumberInput = this
       const props = $xeNumberInput
       const reactData = $xeNumberInput.reactData
@@ -1377,14 +1437,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeNumberInput.initValue()
     }
   },
-  created () {
+  created() {
     const $xeNumberInput = this
     const props = $xeNumberInput
 
     this.updateModel(props.value)
     $xeNumberInput.initValue()
   },
-  mounted () {
+  mounted() {
     const $xeNumberInput = this
     const props = $xeNumberInput
 
@@ -1401,7 +1461,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeNumberInput, 'keydown', $xeNumberInput.handleGlobalKeydownEvent)
     globalEvents.on($xeNumberInput, 'blur', $xeNumberInput.handleGlobalBlurEvent)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeNumberInput = this
     const reactData = $xeNumberInput.reactData
 
@@ -1416,7 +1476,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.off($xeNumberInput, 'keydown')
     globalEvents.off($xeNumberInput, 'blur')
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

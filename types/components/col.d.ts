@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeCol: DefineVxeComponentApp<VxeColProps, VxeColEventProps, VxeColSlots, VxeColMethods>
 export type VxeColComponent = DefineVxeComponentOptions<VxeColProps>
 
-export type VxeColInstance = DefineVxeComponentInstance<{
-  reactData: ColReactData
-}, VxeColProps, VxeColPrivateComputed, VxeColMethods>
+export type VxeColInstance = DefineVxeComponentInstance<
+  {
+    reactData: ColReactData
+  },
+  VxeColProps,
+  VxeColPrivateComputed,
+  VxeColMethods
+>
 
 export type VxeColConstructor = VxeColInstance
 
-export interface ColPrivateRef {
-}
-export interface VxeColPrivateRef extends ColPrivateRef { }
+export interface ColPrivateRef {}
+export interface VxeColPrivateRef extends ColPrivateRef {}
 
 export namespace VxeColPropTypes {
   export type Span = string | number
@@ -33,19 +37,16 @@ export interface VxeColProps {
   size?: VxeColPropTypes.Size
 }
 
-export interface ColPrivateComputed {
-}
-export interface VxeColPrivateComputed extends ColPrivateComputed { }
+export interface ColPrivateComputed {}
+export interface VxeColPrivateComputed extends ColPrivateComputed {}
 
-export interface ColReactData {
-}
+export interface ColReactData {}
 
-export interface ColMethods {
-}
-export interface VxeColMethods extends ColMethods { }
+export interface ColMethods {}
+export interface VxeColMethods extends ColMethods {}
 
-export interface ColPrivateMethods { }
-export interface VxeColPrivateMethods extends ColPrivateMethods { }
+export interface ColPrivateMethods {}
+export interface VxeColPrivateMethods extends ColPrivateMethods {}
 
 export type VxeColEmits = []
 
@@ -57,9 +58,9 @@ export namespace VxeColDefines {
 
 export type VxeColEventProps = {}
 
-export interface VxeColListeners { }
+export interface VxeColListeners {}
 
-export namespace VxeColEvents { }
+export namespace VxeColEvents {}
 
 export namespace VxeColSlotTypes {
   export interface DefaultSlotParams {}

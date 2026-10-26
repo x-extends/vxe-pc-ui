@@ -5,15 +5,19 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxePrint: DefineVxeComponentApp<VxePrintProps, VxePrintEventProps, VxePrintSlots, VxePrintMethods>
 export type VxePrintComponent = DefineVxeComponentOptions<VxePrintProps>
 
-export type VxePrintInstance = DefineVxeComponentInstance<{
-  reactData: PrintReactData
-}, VxePrintProps, VxePrintPrivateComputed, VxePrintMethods>
+export type VxePrintInstance = DefineVxeComponentInstance<
+  {
+    reactData: PrintReactData
+  },
+  VxePrintProps,
+  VxePrintPrivateComputed,
+  VxePrintMethods
+>
 
 export type VxePrintConstructor = VxePrintInstance
 
-export interface PrintPrivateRef {
-}
-export interface VxePrintPrivateRef extends PrintPrivateRef { }
+export interface PrintPrivateRef {}
+export interface VxePrintPrivateRef extends PrintPrivateRef {}
 
 export namespace VxePrintPropTypes {
   export type Align = VxeComponentAlignType
@@ -94,10 +98,7 @@ export namespace VxePrintPropTypes {
      */
     content: string
   }) => string
-  export type AfterPrintMethod = (params: {
-    html: string
-    options: VxePrintProps
-  }) => void
+  export type AfterPrintMethod = (params: { html: string; options: VxePrintProps }) => void
 }
 
 export interface VxePrintProps {
@@ -148,9 +149,8 @@ export interface VxePrintProps {
   content?: VxePrintPropTypes.Content
 }
 
-export interface PrintPrivateComputed {
-}
-export interface VxePrintPrivateComputed extends PrintPrivateComputed { }
+export interface PrintPrivateComputed {}
+export interface VxePrintPrivateComputed extends PrintPrivateComputed {}
 
 export interface PrintReactData {
   staticPageBreaks: VxePrintDefines.PageBreakConfig[]
@@ -160,10 +160,10 @@ export interface PrintMethods {
   dispatchEvent(type: ValueOf<VxePrintEmits>, params: Record<string, any>, evnt: Event | null): void
   print(): Promise<any>
 }
-export interface VxePrintMethods extends PrintMethods { }
+export interface VxePrintMethods extends PrintMethods {}
 
-export interface PrintPrivateMethods { }
-export interface VxePrintPrivateMethods extends PrintPrivateMethods { }
+export interface PrintPrivateMethods {}
+export interface VxePrintPrivateMethods extends PrintPrivateMethods {}
 
 export type VxePrintEmits = []
 
@@ -196,27 +196,29 @@ export namespace VxePrintDefines {
     }
   }
 
-  export type PrintFunction = (options?: VxePrintProps & {
-    /**
-     * 请使用 title
-     * @deprecated
-     */
-    sheetName?: string
-    /**
-     * 请使用 customStyle
-     * @deprecated
-     */
-    style?: string
-  }) => Promise<{
+  export type PrintFunction = (
+    options?: VxePrintProps & {
+      /**
+       * 请使用 title
+       * @deprecated
+       */
+      sheetName?: string
+      /**
+       * 请使用 customStyle
+       * @deprecated
+       */
+      style?: string
+    }
+  ) => Promise<{
     status: boolean
   }>
 }
 
 export type VxePrintEventProps = {}
 
-export interface VxePrintListeners { }
+export interface VxePrintListeners {}
 
-export namespace VxePrintEvents { }
+export namespace VxePrintEvents {}
 
 export namespace VxePrintSlotTypes {
   export interface HeaderSlotParams extends VxePrintDefines.PageBreakParams {}

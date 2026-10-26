@@ -1,9 +1,11 @@
 import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getIcon, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { ResultReactData, VxeResultEmits, ValueOf, VxeResultPropTypes } from '../../../types'
+
+const { getIcon, createEvent, renderEmptyElement } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeResult',
@@ -16,10 +18,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
     title: [String, Number] as PropType<VxeResultPropTypes.Title>,
     content: [String, Number] as PropType<VxeResultPropTypes.Content>
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: ResultReactData = {
-    }
+    const reactData: ResultReactData = {}
     return {
       xID,
       reactData
@@ -29,7 +30,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeResultEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeResultEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeResult = this
       $xeResult.$emit(type, createEvent(evnt, { $result: $xeResult }, params))
     },
@@ -37,7 +38,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeResult = this
       const props = $xeResult
       const slots = $xeResult.$scopedSlots
@@ -45,49 +46,80 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { imageUrl, imageStyle, icon, title, type, content } = props
       const status = props.status || type
       const slotExtra = slots.extra
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-result', {
-          [`theme--${status}`]: status
-        }]
-      }, [
-        h('div', {
-          class: 'vxe-result--inner'
-        }, [
-          imageUrl
-            ? h('div', {
-              class: 'vxe-result--img-wrapper'
-            }, [
-              h('img', {
-                attrs: {
-                  src: imageUrl
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-result',
+            {
+              [`theme--${status}`]: status
+            }
+          ]
+        },
+        [
+          h(
+            'div',
+            {
+              class: 'vxe-result--inner'
+            },
+            [
+              imageUrl
+                ? h(
+                  'div',
+                  {
+                    class: 'vxe-result--img-wrapper'
+                  },
+                  [
+                    h('img', {
+                      attrs: {
+                        src: imageUrl
+                      },
+                      style: imageStyle
+                    })
+                  ]
+                )
+                : h(
+                  'div',
+                  {
+                    class: 'vxe-result--icon-wrapper'
+                  },
+                  [
+                    h('i', {
+                      class: [icon, type ? getIcon()[`RESULT_${type}`.toLocaleUpperCase() as 'RESULT_SUCCESS' | 'RESULT_ERROR' | 'RESULT_WARNING' | 'RESULT_QUESTION'] : '']
+                    })
+                  ]
+                ),
+              h(
+                'div',
+                {
+                  class: 'vxe-result--title-wrapper'
                 },
-                style: imageStyle
-              })
-            ])
-            : h('div', {
-              class: 'vxe-result--icon-wrapper'
-            }, [
-              h('i', {
-                class: [icon, type ? getIcon()[`RESULT_${type}`.toLocaleUpperCase() as 'RESULT_SUCCESS' | 'RESULT_ERROR'| 'RESULT_WARNING' | 'RESULT_QUESTION'] : '']
-              })
-            ]),
-          h('div', {
-            class: 'vxe-result--title-wrapper'
-          }, `${title || ''}`),
-          h('div', {
-            class: 'vxe-result--content-wrapper'
-          }, `${content || ''}`),
-          slotExtra
-            ? h('div', {
-              class: 'vxe-result--extra-wrapper'
-            }, slotExtra({}))
-            : renderEmptyElement($xeResult)
-        ])
-      ])
+                `${title || ''}`
+              ),
+              h(
+                'div',
+                {
+                  class: 'vxe-result--content-wrapper'
+                },
+                `${content || ''}`
+              ),
+              slotExtra
+                ? h(
+                  'div',
+                  {
+                    class: 'vxe-result--extra-wrapper'
+                  },
+                  slotExtra({})
+                )
+                : renderEmptyElement($xeResult)
+            ]
+          )
+        ]
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

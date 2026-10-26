@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeColComponent from '../row/src/col'
 
 export const VxeCol = Object.assign({}, VxeColComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeColComponent.name as string, VxeColComponent)
   }
 })

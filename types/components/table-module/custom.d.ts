@@ -3,12 +3,17 @@ import { VxeTableDefines, VxeTableConstructor, VxeTableMethods, VxeTablePrivateM
 
 /* eslint-disable @typescript-eslint/no-empty-interface,@typescript-eslint/no-unused-vars,no-use-before-define */
 
-export type VxeTableCustomPanelInstance = DefineVxeComponentInstance<{
-  reactData: TableCustomPanelReactData
-  internalData: TableCustomPanelInternalData
+export type VxeTableCustomPanelInstance = DefineVxeComponentInstance<
+  {
+    reactData: TableCustomPanelReactData
+    internalData: TableCustomPanelInternalData
 
-  $xeTable: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods
-}, VxeTableCustomPanelProps, TableCustomPanelPrivateComputed, VxeTableCustomPanelMethods>
+    $xeTable: VxeTableConstructor & VxeTableMethods & VxeTablePrivateMethods
+  },
+  VxeTableCustomPanelProps,
+  TableCustomPanelPrivateComputed,
+  VxeTableCustomPanelMethods
+>
 
 export type VxeTableCustomPanelConstructor = VxeTableCustomPanelInstance
 
@@ -33,20 +38,15 @@ export interface TableCustomPanelInternalData {
   customDragTime?: number
 }
 
-export interface TableCustomPanelPrivateRef {
-}
+export interface TableCustomPanelPrivateRef {}
 
-export interface TableCustomPanelPrivateComputed {
-}
+export interface TableCustomPanelPrivateComputed {}
 
-export interface VxeTableCustomPanelMethods {
-
-}
+export interface VxeTableCustomPanelMethods {}
 
 type VxeTableCustomPanelEmits = []
 
-export interface VxeCustomPanel {
-}
+export interface VxeCustomPanel {}
 
 export interface TableCustomMethods<D = any> {
   /**
@@ -69,12 +69,16 @@ export interface TableCustomMethods<D = any> {
    * 重置个性化列操作
    * 支持只重置指定的操作（列可视、列宽、冻结列、列顺序）
    */
-  resetCustom(options?: boolean | {
-    visible?: boolean
-    resizable?: boolean
-    fixed?: boolean
-    order?: boolean
-  }): Promise<void>
+  resetCustom(
+    options?:
+      | boolean
+      | {
+          visible?: boolean
+          resizable?: boolean
+          fixed?: boolean
+          order?: boolean
+        }
+  ): Promise<void>
   /**
    * 保存个性化列操作
    */
@@ -97,19 +101,19 @@ export interface TableCustomPrivateMethods<D = any> {
   checkCustomStatus(): void
   emitCustomEvent(type: string, evnt: Event): void
   triggerCustomEvent(evnt: MouseEvent): void
-  customOpenEvent (evnt: Event): void
-  customCloseEvent (evnt: Event): void
-  customOpenEvent (evnt: Event): void
-  handleUpdateCustomColumn (): void
+  customOpenEvent(evnt: Event): void
+  customCloseEvent(evnt: Event): void
+  customOpenEvent(evnt: Event): void
+  handleUpdateCustomColumn(): void
   handleCustomStyle(): Promise<any>
   clearDragAnimateStatus(): void
 }
 
 declare module '../grid' {
-  export interface VxeGridMethods<D = any> extends TableCustomMethods<D> { }
+  export interface VxeGridMethods<D = any> extends TableCustomMethods<D> {}
 }
 
 declare module '../table' {
-  export interface VxeTableMethods<D = any> extends TableCustomMethods<D> { }
-  export interface VxeTablePrivateMethods<D = any> extends TableCustomPrivateMethods<D> { }
+  export interface VxeTableMethods<D = any> extends TableCustomMethods<D> {}
+  export interface VxeTablePrivateMethods<D = any> extends TableCustomPrivateMethods<D> {}
 }

@@ -6,18 +6,21 @@ import { VxeFormItemPropTypes } from './form-item'
 export declare const VxeFormGather: DefineVxeComponentApp<VxeFormGatherProps, VxeFormGatherEventProps, VxeFormGatherSlots, VxeFormGatherMethods>
 export type VxeFormGatherComponent = DefineVxeComponentOptions<VxeFormGatherProps>
 
-export type VxeFormGatherInstance = DefineVxeComponentInstance<{
-  reactData: FormGatherReactData
-}, VxeFormGatherProps, VxeFormGatherPrivateComputed, VxeFormGatherMethods>
+export type VxeFormGatherInstance = DefineVxeComponentInstance<
+  {
+    reactData: FormGatherReactData
+  },
+  VxeFormGatherProps,
+  VxeFormGatherPrivateComputed,
+  VxeFormGatherMethods
+>
 
 export type VxeFormGatherConstructor = VxeFormGatherInstance
 
-export interface FormGatherPrivateRef {
-}
-export interface VxeFormGatherPrivateRef extends FormGatherPrivateRef { }
+export interface FormGatherPrivateRef {}
+export interface VxeFormGatherPrivateRef extends FormGatherPrivateRef {}
 
-export namespace VxeFormGatherPropTypes {
-}
+export namespace VxeFormGatherPropTypes {}
 
 export interface VxeFormGatherProps {
   /**
@@ -30,19 +33,16 @@ export interface VxeFormGatherProps {
   className?: VxeFormItemPropTypes.ClassName
 }
 
-export interface FormGatherPrivateComputed {
-}
-export interface VxeFormGatherPrivateComputed extends FormGatherPrivateComputed { }
+export interface FormGatherPrivateComputed {}
+export interface VxeFormGatherPrivateComputed extends FormGatherPrivateComputed {}
 
-export interface FormGatherReactData {
-}
+export interface FormGatherReactData {}
 
-export interface FormGatherMethods {
-}
-export interface VxeFormGatherMethods extends FormGatherMethods { }
+export interface FormGatherMethods {}
+export interface VxeFormGatherMethods extends FormGatherMethods {}
 
-export interface FormGatherPrivateMethods { }
-export interface VxeFormGatherPrivateMethods extends FormGatherPrivateMethods { }
+export interface FormGatherPrivateMethods {}
+export interface VxeFormGatherPrivateMethods extends FormGatherPrivateMethods {}
 
 export type VxeFormGatherEmits = []
 
@@ -54,9 +54,9 @@ export namespace VxeFormGatherDefines {
 
 export type VxeFormGatherEventProps = {}
 
-export interface VxeFormGatherListeners { }
+export interface VxeFormGatherListeners {}
 
-export namespace VxeFormGatherEvents { }
+export namespace VxeFormGatherEvents {}
 
 export namespace VxeFormGatherSlotTypes {
   export interface DefaultSlotParams {

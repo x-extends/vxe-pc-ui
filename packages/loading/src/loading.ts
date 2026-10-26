@@ -1,16 +1,16 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import { getConfig, getIcon, getI18n, globalMixins, createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 import XEUtils from 'xe-utils'
 
 import type { VxeLoadingPropTypes, LoadingReactData, VxeLoadingEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
+const { getConfig, getIcon, getI18n, globalMixins, createEvent, renderEmptyElement } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLoading',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     value: Boolean as PropType<VxeLoadingPropTypes.ModelValue>,
     icon: {
@@ -35,7 +35,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().loading.size || getConfig().size
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData: LoadingReactData = {
       initialized: false
@@ -49,13 +49,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeLoadingIcon () {
+    computeLoadingIcon() {
       const $xeLoading = this
       const props = $xeLoading
 
       return props.icon || getIcon().LOADING
     },
-    computeLoadingText () {
+    computeLoadingText() {
       const $xeLoading = this
       const props = $xeLoading
 
@@ -64,7 +64,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   watch: {
-    value () {
+    value() {
       this.handleInit()
     }
   },
@@ -72,17 +72,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeLoadingEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeLoadingEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeLoading = this
       $xeLoading.$emit(type, createEvent(evnt, { $loading: $xeLoading }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeLoading = this
 
       $xeLoading.$emit('input', value)
       handleEmitModelVal($xeLoading, value)
     },
-    handleInit () {
+    handleInit() {
       const $xeLoading = this
       const reactData = $xeLoading.reactData
 
@@ -94,7 +94,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeLoading = this
       const props = $xeLoading
       const slots = $xeLoading.$scopedSlots
@@ -113,45 +113,68 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return renderEmptyElement($xeLoading)
       }
 
-      return h('div', {
-        class: ['vxe-loading', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--visible': value
-        }]
-      }, defaultSlot
-        ? [
-            h('div', {
-              class: 'vxe-loading--wrapper'
-            }, getSlotVNs(defaultSlot({})))
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-loading',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--visible': value
+            }
           ]
-        : [
-            h('div', {
-              class: 'vxe-loading--chunk'
-            }, [
-              showIcon && (iconSlot || loadingIcon)
-                ? h('div', {
-                  class: 'vxe-loading--icon'
-                }, iconSlot
-                  ? getSlotVNs(iconSlot({}))
-                  : [
-                      h('i', {
-                        class: loadingIcon
-                      })
-                    ])
-                : h('div', {
-                  class: 'vxe-loading--spinner'
-                }),
-              textSlot || loadingText
-                ? h('div', {
-                  class: 'vxe-loading--text'
-                }, textSlot ? getSlotVNs(textSlot({})) : `${loadingText}`)
-                : null
-            ])
-          ])
+        },
+        defaultSlot
+          ? [
+              h(
+                'div',
+                {
+                  class: 'vxe-loading--wrapper'
+                },
+                getSlotVNs(defaultSlot({}))
+              )
+            ]
+          : [
+              h(
+                'div',
+                {
+                  class: 'vxe-loading--chunk'
+                },
+                [
+                  showIcon && (iconSlot || loadingIcon)
+                    ? h(
+                      'div',
+                      {
+                        class: 'vxe-loading--icon'
+                      },
+                      iconSlot
+                        ? getSlotVNs(iconSlot({}))
+                        : [
+                            h('i', {
+                              class: loadingIcon
+                            })
+                          ]
+                    )
+                    : h('div', {
+                      class: 'vxe-loading--spinner'
+                    }),
+                  textSlot || loadingText
+                    ? h(
+                      'div',
+                      {
+                        class: 'vxe-loading--text'
+                      },
+                      textSlot ? getSlotVNs(textSlot({})) : `${loadingText}`
+                    )
+                    : null
+                ]
+              )
+            ]
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

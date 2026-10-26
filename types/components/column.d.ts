@@ -9,16 +9,20 @@ import { VxeGlobalRendererHandles } from '../ui'
 export declare const VxeColumn: DefineVxeComponentApp<VxeColumnProps, VxeColumnEventProps, VxeColumnSlots, VxeColumnMethods>
 export type VxeColumnComponent = DefineVxeComponentOptions<VxeColumnProps>
 
-export type VxeColumnInstance = DefineVxeComponentInstance<{
-  reactData: ColumnReactData
-  columnConfig: any
-}, VxeColumnProps, VxeColumnPrivateComputed, VxeColumnMethods>
+export type VxeColumnInstance = DefineVxeComponentInstance<
+  {
+    reactData: ColumnReactData
+    columnConfig: any
+  },
+  VxeColumnProps,
+  VxeColumnPrivateComputed,
+  VxeColumnMethods
+>
 
 export type VxeColumnConstructor = VxeColumnInstance
 
-export interface ColumnPrivateRef {
-}
-export interface VxeColumnPrivateRef extends ColumnPrivateRef { }
+export interface ColumnPrivateRef {}
+export interface VxeColumnPrivateRef extends ColumnPrivateRef {}
 
 export namespace VxeColumnPropTypes {
   export type ColId = string | number
@@ -46,27 +50,12 @@ export namespace VxeColumnPropTypes {
 
   export type Formatter<D = any> = ((params: VxeColumnDefines.CellFormatterParams<D>) => string | number) | any[] | string
 
-  export type HeaderFormatter = ((params: {
-    cellTitle: any
-    cellValue: any
-    column: VxeTableDefines.ColumnInfo
-    _columnIndex: number
-  }) => string | number) | any[] | string
+  export type HeaderFormatter = ((params: { cellTitle: any; cellValue: any; column: VxeTableDefines.ColumnInfo; _columnIndex: number }) => string | number) | any[] | string
 
-  export type FooterFormatter<D = any> = ((params: {
-    cellValue: any
-    itemValue: any
-    column: VxeTableDefines.ColumnInfo
-    row: any
-    items: any[]
-    _columnIndex: number
-  }) => string | number) | any[] | string
+  export type FooterFormatter<D = any> = ((params: { cellValue: any; itemValue: any; column: VxeTableDefines.ColumnInfo; row: any; items: any[]; _columnIndex: number }) => string | number) | any[] | string
 
   export type Sortable = boolean
-  export type SortBy<D = any> = string | ((params: {
-    row: D
-    column: VxeTableDefines.ColumnInfo
-  }) => string | number)
+  export type SortBy<D = any> = string | ((params: { row: D; column: VxeTableDefines.ColumnInfo }) => string | number)
   export type SortType = 'auto' | 'string' | 'number' | null
 
   export interface FilterItem<OD = any> {
@@ -580,7 +569,7 @@ export interface VxeColumnProps<D = any> {
    * 是否可视
    */
   visible?: VxeColumnPropTypes.Visible
-   /**
+  /**
    * 指定聚合函数
    */
   aggFunc?: VxeColumnPropTypes.AggFunc
@@ -643,20 +632,18 @@ export interface VxeColumnProps<D = any> {
   params?: VxeColumnPropTypes.Params
 }
 
-export interface ColumnPrivateComputed {
-}
-export interface VxeColumnPrivateComputed extends ColumnPrivateComputed { }
+export interface ColumnPrivateComputed {}
+export interface VxeColumnPrivateComputed extends ColumnPrivateComputed {}
 
-export interface ColumnReactData {
-}
+export interface ColumnReactData {}
 
 export interface ColumnMethods {
   dispatchEvent(type: ValueOf<VxeColumnEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeColumnMethods extends ColumnMethods { }
+export interface VxeColumnMethods extends ColumnMethods {}
 
-export interface ColumnPrivateMethods { }
-export interface VxeColumnPrivateMethods extends ColumnPrivateMethods { }
+export interface ColumnPrivateMethods {}
+export interface VxeColumnPrivateMethods extends ColumnPrivateMethods {}
 
 export type VxeColumnEmits = []
 
@@ -684,7 +671,7 @@ export namespace VxeColumnDefines {
   export interface CellCutParams<D = any> {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $grid: VxeGridConstructor<D> | null | undefined
-    row: D,
+    row: D
     column: VxeTableDefines.ColumnInfo
     cellValue: any
     clipData: {
@@ -697,7 +684,7 @@ export namespace VxeColumnDefines {
     $table: VxeTableConstructor<D> & VxeTablePrivateMethods<D>
     $grid: VxeGridConstructor<D> | null | undefined
     isCut: boolean
-    row: D,
+    row: D
     column: VxeTableDefines.ColumnInfo
     cellValue: any
     clipData: {
@@ -709,9 +696,9 @@ export namespace VxeColumnDefines {
 
 export type VxeColumnEventProps = {}
 
-export interface VxeColumnListeners { }
+export interface VxeColumnListeners {}
 
-export namespace VxeColumnEvents { }
+export namespace VxeColumnEvents {}
 
 export namespace VxeColumnSlotTypes {
   export interface FilterSlotParams<D = any> {
@@ -724,9 +711,9 @@ export namespace VxeColumnSlotTypes {
     $rowIndex: number
     option: VxeColumnPropTypes.FilterItem
   }
-  export interface FloatingFilterSlotParams<D = any> extends VxeTableDefines.CellFloatingFilterParams<D> { }
+  export interface FloatingFilterSlotParams<D = any> extends VxeTableDefines.CellFloatingFilterParams<D> {}
 
-  export interface EditSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> { }
+  export interface EditSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> {}
 
   export interface FooterSlotParams<D = any> {
     row: D
@@ -740,13 +727,13 @@ export namespace VxeColumnSlotTypes {
     data: D[][]
   }
 
-  export interface HeaderSlotParams<D = any> extends VxeTableDefines.CellRenderHeaderParams<D> { }
-  export interface TitleSlotParams<D = any> extends HeaderSlotParams<D> { }
-  export interface SortSlotParams<D = any> extends HeaderSlotParams<D> { }
+  export interface HeaderSlotParams<D = any> extends VxeTableDefines.CellRenderHeaderParams<D> {}
+  export interface TitleSlotParams<D = any> extends HeaderSlotParams<D> {}
+  export interface SortSlotParams<D = any> extends HeaderSlotParams<D> {}
 
-  export interface ContentSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> { }
+  export interface ContentSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> {}
 
-  export interface DefaultSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> { }
+  export interface DefaultSlotParams<D = any> extends VxeTableDefines.CellRenderBodyParams<D> {}
 
   export interface CheckboxSlotParams<D = any> extends DefaultSlotParams<D> {
     checked: boolean
@@ -755,7 +742,7 @@ export namespace VxeColumnSlotTypes {
   export interface RadioSlotParams<D = any> extends DefaultSlotParams<D> {
     checked: boolean
   }
-  export interface IconSlotParams<D = any> extends DefaultSlotParams<D> { }
+  export interface IconSlotParams<D = any> extends DefaultSlotParams<D> {}
 
   export interface ValidSlotParams<D = any> extends DefaultSlotParams<D> {
     rule: VxeTableDefines.ValidatorRule<D>
@@ -826,7 +813,7 @@ export interface VxeColumnSlots<D = any> {
    * 只对 edit-render 启用时有效，自定义可编辑组件模板
    */
   edit?: (params: VxeColumnSlotTypes.EditSlotParams<D>) => any
-   /**
+  /**
    * 只对 edit-render 启用时有效，自定义展示错误校验模板
    */
   valid?: (params: VxeColumnSlotTypes.ValidSlotParams<D>) => any

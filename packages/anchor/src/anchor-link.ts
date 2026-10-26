@@ -1,10 +1,12 @@
 import { CreateElement, PropType, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { createEvent, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { assembleAnchorLink, destroyAnchorLink } from './util'
 
 import type { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, AnchorLinkReactData, VxeComponentSizeType, VxeAnchorLinkEmits, VxeAnchorLinkConstructor, VxeAnchorLinkPrivateMethods, VxeAnchorConstructor, VxeAnchorPrivateMethods, ValueOf } from '../../../types'
+
+const { createEvent, renderEmptyElement } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAnchorLink',
@@ -22,16 +24,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  provide () {
+  provide() {
     const $xeAnchorLink = this
     return {
       $xeAnchorLink
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
-    const reactData: AnchorLinkReactData = {
-    }
+    const reactData: AnchorLinkReactData = {}
     const linkConfig: VxeAnchorLinkDefines.LinkConfig = {
       id: xID,
       href: '',
@@ -49,7 +50,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeAnchor(): (VxeAnchorConstructor & VxeAnchorPrivateMethods) | null
       $xeParentAnchorLink(): (VxeAnchorLinkConstructor & VxeAnchorLinkPrivateMethods) | null
     }),
-    computeIsActive () {
+    computeIsActive() {
       const $xeAnchorLink = this
       const props = $xeAnchorLink
       const $xeAnchor = $xeAnchorLink.$xeAnchor
@@ -62,7 +63,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
   },
   watch: {
-    href (val) {
+    href(val) {
       const $xeAnchorLink = this
       const linkConfig = $xeAnchorLink.linkConfig
 
@@ -73,11 +74,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeAnchorLinkEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeAnchorLinkEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeAnchorLink = this
       $xeAnchorLink.$emit(type, createEvent(evnt, { $anchorLink: $xeAnchorLink }, params))
     },
-    clickEvent  (event: KeyboardEvent) {
+    clickEvent(event: KeyboardEvent) {
       const $xeAnchorLink = this
       const props = $xeAnchorLink
       const $xeAnchor = $xeAnchorLink.$xeAnchor
@@ -91,7 +92,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeAnchorLink = this
       const props = $xeAnchorLink
       const slots = $xeAnchorLink.$scopedSlots
@@ -101,38 +102,53 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const subSlot = slots.sub
       const isActive = $xeAnchorLink.computeIsActive
 
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-anchor-link', {
-          'is--active': isActive
-        }]
-      }, [
-        h('a', {
-          class: 'vxe-anchor-link--item',
-          attrs: {
-            href,
-            title
-          },
-          on: {
-            click: $xeAnchorLink.clickEvent
-          }
-        }, defaultSlot ? defaultSlot({}) : (XEUtils.toValueString(content))),
-        subSlot
-          ? h('div', {
-            class: 'vxe-anchor-link--sub-items'
-          }, subSlot({}))
-          : renderEmptyElement($xeAnchorLink)
-      ])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-anchor-link',
+            {
+              'is--active': isActive
+            }
+          ]
+        },
+        [
+          h(
+            'a',
+            {
+              class: 'vxe-anchor-link--item',
+              attrs: {
+                href,
+                title
+              },
+              on: {
+                click: $xeAnchorLink.clickEvent
+              }
+            },
+            defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content)
+          ),
+          subSlot
+            ? h(
+              'div',
+              {
+                class: 'vxe-anchor-link--sub-items'
+              },
+              subSlot({})
+            )
+            : renderEmptyElement($xeAnchorLink)
+        ]
+      )
     }
   },
-  created () {
+  created() {
     const $xeAnchorLink = this
     const props = $xeAnchorLink
     const linkConfig = $xeAnchorLink.linkConfig
 
     linkConfig.href = props.href
   },
-  mounted () {
+  mounted() {
     const $xeAnchorLink = this
     const $xeAnchor = $xeAnchorLink.$xeAnchor
     const $xeParentAnchorLink = $xeAnchorLink.$xeParentAnchorLink
@@ -143,7 +159,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       assembleAnchorLink($xeAnchor, elem, linkConfig, $xeParentAnchorLink)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeAnchorLink = this
     const $xeAnchor = $xeAnchorLink.$xeAnchor
     const linkConfig = $xeAnchorLink.linkConfig
@@ -152,7 +168,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       destroyAnchorLink($xeAnchor, linkConfig)
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

@@ -5,36 +5,36 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeFlowView: DefineVxeComponentApp<VxeFlowViewProps, VxeFlowViewEventProps, VxeFlowViewSlots, VxeFlowViewMethods>
 export type VxeFlowViewComponent = DefineVxeComponentOptions<VxeFlowViewProps>
 
-export type VxeFlowViewInstance = DefineVxeComponentInstance<{
-  reactData: FlowViewReactData
-}, VxeFlowViewProps, VxeFlowViewPrivateComputed, VxeFlowViewMethods>
+export type VxeFlowViewInstance = DefineVxeComponentInstance<
+  {
+    reactData: FlowViewReactData
+  },
+  VxeFlowViewProps,
+  VxeFlowViewPrivateComputed,
+  VxeFlowViewMethods
+>
 
 export type VxeFlowViewConstructor = VxeFlowViewInstance
 
-export interface FlowViewPrivateRef {
-}
-export interface VxeFlowViewPrivateRef extends FlowViewPrivateRef { }
+export interface FlowViewPrivateRef {}
+export interface VxeFlowViewPrivateRef extends FlowViewPrivateRef {}
 
-export namespace VxeFlowViewPropTypes {
-}
+export namespace VxeFlowViewPropTypes {}
 
-export interface VxeFlowViewProps {
-}
+export interface VxeFlowViewProps {}
 
-export interface FlowViewPrivateComputed {
-}
-export interface VxeFlowViewPrivateComputed extends FlowViewPrivateComputed { }
+export interface FlowViewPrivateComputed {}
+export interface VxeFlowViewPrivateComputed extends FlowViewPrivateComputed {}
 
-export interface FlowViewReactData {
-}
+export interface FlowViewReactData {}
 
 export interface FlowViewMethods {
   dispatchEvent(type: ValueOf<VxeFlowViewEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeFlowViewMethods extends FlowViewMethods { }
+export interface VxeFlowViewMethods extends FlowViewMethods {}
 
-export interface FlowViewPrivateMethods { }
-export interface VxeFlowViewPrivateMethods extends FlowViewPrivateMethods { }
+export interface FlowViewPrivateMethods {}
+export interface VxeFlowViewPrivateMethods extends FlowViewPrivateMethods {}
 
 export type VxeFlowViewEmits = []
 
@@ -43,17 +43,9 @@ export namespace VxeFlowViewDefines {
     $flowView: VxeFlowViewConstructor
   }
 
-  export type SaveFileFunction = (options: {
-    filename: string
-    type: string
-    content: string | Blob
-  }) => Promise<any>
+  export type SaveFileFunction = (options: { filename: string; type: string; content: string | Blob }) => Promise<any>
 
-  export type ReadFileFunction = (options?: {
-    multiple?: boolean
-    types?: string[]
-    message?: boolean
-  }) => Promise<{
+  export type ReadFileFunction = (options?: { multiple?: boolean; types?: string[]; message?: boolean }) => Promise<{
     status: boolean
     files: FileList
     file: File
@@ -62,9 +54,9 @@ export namespace VxeFlowViewDefines {
 
 export type VxeFlowViewEventProps = {}
 
-export interface VxeFlowViewListeners { }
+export interface VxeFlowViewListeners {}
 
-export namespace VxeFlowViewEvents { }
+export namespace VxeFlowViewEvents {}
 
 export namespace VxeFlowViewSlotTypes {
   export interface DefaultSlotParams {}

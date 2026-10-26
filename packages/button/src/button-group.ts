@@ -8,10 +8,7 @@ import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, VxeComponentPermissi
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeButtonGroup',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.permissionMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.permissionMixin],
   props: {
     options: Array as PropType<VxeButtonGroupPropTypes.Options>,
     mode: String as PropType<VxeButtonGroupPropTypes.Mode>,
@@ -28,15 +25,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().buttonGroup.size || getConfig().size
     }
   },
-  provide () {
+  provide() {
     const $xeButtonGroup = this
     return {
       $xeButtonGroup
     }
   },
-  data () {
-    const reactData: ButtonGroupReactData = {
-    }
+  data() {
+    const reactData: ButtonGroupReactData = {}
     return {
       xID: XEUtils.uniqueId(),
       reactData
@@ -44,13 +40,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   computed: {
     ...({} as {
-    computePermissionInfo(): VxeComponentPermissionInfo
-    computeSize(): VxeComponentSizeType
-  })
+      computePermissionInfo(): VxeComponentPermissionInfo
+      computeSize(): VxeComponentSizeType
+    })
   },
   methods: {
     // Method
-    dispatchEvent (type: ValueOf<VxeButtonGroupEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeButtonGroupEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeButtonGroup = this
       $xeButtonGroup.$emit(type, createEvent(evnt, { $buttonGroup: $xeButtonGroup }, params))
     },
@@ -58,16 +54,16 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Private
     //
-    handleClick (params: any, evnt: any) {
+    handleClick(params: any, evnt: any) {
       const $xeButtonGroup = this
       const props = $xeButtonGroup
 
       const { options } = props
       const { name } = params
-      const option = options ? options.find(item => item.name === name) : null
+      const option = options ? options.find((item) => item.name === name) : null
       $xeButtonGroup.dispatchEvent('click', { ...params, option }, evnt)
     },
-    contextmenuEvent (evnt: MouseEvent) {
+    contextmenuEvent(evnt: MouseEvent) {
       const $xeButtonGroup = this
 
       $xeButtonGroup.dispatchEvent('contextmenu', {}, evnt)
@@ -76,7 +72,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement) {
+    renderVN(h: CreateElement) {
       const $xeButtonGroup = this
       const props = $xeButtonGroup
       const slots = $xeButtonGroup.$scopedSlots
@@ -88,26 +84,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
         return renderEmptyElement($xeButtonGroup)
       }
 
-      return h('div', {
-        class: ['vxe-button-group', className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '', {
-          'is--vertical': vertical
-        }],
-        on: {
-          contextmenu: $xeButtonGroup.contextmenuEvent
-        }
-      }, defaultSlot
-        ? defaultSlot({})
-        : (options
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-button-group',
+            className ? (XEUtils.isFunction(className) ? className({ $buttonGroup: $xeButtonGroup }) : className) : '',
+            {
+              'is--vertical': vertical
+            }
+          ],
+          on: {
+            contextmenu: $xeButtonGroup.contextmenuEvent
+          }
+        },
+        defaultSlot
+          ? defaultSlot({})
+          : options
             ? options.map((item, index) => {
               return h(VxeButtonComponent, {
                 key: index,
                 props: item
               })
             })
-            : []))
+            : []
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

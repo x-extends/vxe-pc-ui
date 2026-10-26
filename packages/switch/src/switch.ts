@@ -1,13 +1,15 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getFuncText } from '../../ui/src/utils'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeSwitchPropTypes, VxeSwitchEmits, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, SwitchReactData, SwitchInternalData, VxeComponentPermissionInfo, VxeComponentSizeType, ValueOf } from '../../../types'
 
-function createReactData (): SwitchReactData {
+const { getConfig, getI18n, createEvent, globalMixins, renderEmptyElement } = VxeUI
+
+function createReactData(): SwitchReactData {
   return {
     isActivated: false,
     hasAnimat: false,
@@ -15,7 +17,7 @@ function createReactData (): SwitchReactData {
   }
 }
 
-function createInternalData (): SwitchInternalData {
+function createInternalData(): SwitchInternalData {
   return {
     // atTimeout: undefined
   }
@@ -23,10 +25,7 @@ function createInternalData (): SwitchInternalData {
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSwitch',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.permissionMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.permissionMixin],
   props: {
     value: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.ModelValue>,
     disabled: {
@@ -65,7 +64,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: null
     }
   },
-  data () {
+  data() {
     const xID = XEUtils.uniqueId()
     const reactData = createReactData()
 
@@ -84,7 +83,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
       formItemInfo(): VxeFormDefines.ProvideItemInfo | null
     }),
-    computeIsReadonly () {
+    computeIsReadonly() {
       const $xeSwitch = this
       const props = $xeSwitch
       const $xeForm = $xeSwitch.$xeForm
@@ -98,7 +97,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return readonly
     },
-    computeIsDisabled () {
+    computeIsDisabled() {
       const $xeSwitch = this
       const props = $xeSwitch
       const $xeForm = $xeSwitch.$xeForm
@@ -112,19 +111,19 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return disabled
     },
-    computeOnShowLabel () {
+    computeOnShowLabel() {
       const $xeSwitch = this
       const props = $xeSwitch
 
       return getFuncText(props.openLabel)
     },
-    computeOffShowLabel  () {
+    computeOffShowLabel() {
       const $xeSwitch = this
       const props = $xeSwitch
 
       return getFuncText(props.closeLabel)
     },
-    computeIsChecked  () {
+    computeIsChecked() {
       const $xeSwitch = this
       const props = $xeSwitch
 
@@ -135,17 +134,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeSwitchEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeSwitchEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeSwitch = this
       $xeSwitch.$emit(type, createEvent(evnt, { $switch: $xeSwitch }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeSwitch = this
 
       $xeSwitch.$emit('input', value)
       handleEmitModelVal($xeSwitch, value)
     },
-    focus () {
+    focus() {
       const $xeSwitch = this
       const reactData = $xeSwitch.reactData
 
@@ -156,7 +155,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return $xeSwitch.$nextTick()
     },
-    blur () {
+    blur() {
       const $xeSwitch = this
       const reactData = $xeSwitch.reactData
 
@@ -167,7 +166,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.isActivated = false
       return $xeSwitch.$nextTick()
     },
-    clickEvent  (evnt: Event) {
+    clickEvent(evnt: Event) {
       const $xeSwitch = this
       const props = $xeSwitch
       const reactData = $xeSwitch.reactData
@@ -197,7 +196,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }, 400)
       }
     },
-    focusEvent  (evnt: Event) {
+    focusEvent(evnt: Event) {
       const $xeSwitch = this
       const props = $xeSwitch
       const reactData = $xeSwitch.reactData
@@ -205,7 +204,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData.isActivated = true
       $xeSwitch.dispatchEvent('focus', { value: props.value }, evnt)
     },
-    blurEvent  (evnt: Event) {
+    blurEvent(evnt: Event) {
       const $xeSwitch = this
       const props = $xeSwitch
       const reactData = $xeSwitch.reactData
@@ -217,7 +216,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeSwitch = this
       const props = $xeSwitch
       const reactData = $xeSwitch.reactData
@@ -232,74 +231,106 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const isReadonly = $xeSwitch.computeIsReadonly
 
       if (isReadonly) {
-        return h('div', {
-          class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
-            [`size--${vSize}`]: vSize,
-            'is--readonly': isReadonly
-          }]
-        }, isChecked ? (onShowLabel || getI18n('vxe.switch.onText')) : offShowLabel || getI18n('vxe.switch.offText'))
-      }
-      return h('div', {
-        class: ['vxe-switch', isChecked ? 'is--on' : 'is--off', {
-          [`size--${vSize}`]: vSize,
-          'is--active': isActivated,
-          'is--disabled': isDisabled,
-          'is--readonly': isReadonly,
-          'is--animat': hasAnimat
-        }]
-      }, [
-        h('button', {
-          ref: 'refButton',
-          class: 'vxe-switch--button',
-          attrs: {
-            type: 'button',
-            disabled: isDisabled || isReadonly
+        return h(
+          'div',
+          {
+            class: [
+              'vxe-switch',
+              isChecked ? 'is--on' : 'is--off',
+              {
+                [`size--${vSize}`]: vSize,
+                'is--readonly': isReadonly
+              }
+            ]
           },
-          on: {
-            click: $xeSwitch.clickEvent,
-            focus: $xeSwitch.focusEvent,
-            blur: $xeSwitch.blurEvent
-          }
-        }, [
-          h('span', {
-            class: 'vxe-switch--label vxe-switch--label-on'
-          }, [
-            openIcon
-              ? h('i', {
-                class: ['vxe-switch--label-icon', openIcon]
-              })
-              : renderEmptyElement($xeSwitch),
-            onShowLabel
-          ]),
-          h('span', {
-            class: 'vxe-switch--label vxe-switch--label-off'
-          }, [
-            closeIcon
-              ? h('i', {
-                class: ['vxe-switch--label-icon', closeIcon]
-              })
-              : renderEmptyElement($xeSwitch),
-            offShowLabel
-          ]),
-          h('span', {
-            class: ['vxe-switch--icon']
-          }, openActiveIcon || closeActiveIcon
-            ? [
-                h('i', {
-                  class: isChecked ? openActiveIcon : closeActiveIcon
-                })
-              ]
-            : [])
-        ])
-      ])
+          isChecked ? onShowLabel || getI18n('vxe.switch.onText') : offShowLabel || getI18n('vxe.switch.offText')
+        )
+      }
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-switch',
+            isChecked ? 'is--on' : 'is--off',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--active': isActivated,
+              'is--disabled': isDisabled,
+              'is--readonly': isReadonly,
+              'is--animat': hasAnimat
+            }
+          ]
+        },
+        [
+          h(
+            'button',
+            {
+              ref: 'refButton',
+              class: 'vxe-switch--button',
+              attrs: {
+                type: 'button',
+                disabled: isDisabled || isReadonly
+              },
+              on: {
+                click: $xeSwitch.clickEvent,
+                focus: $xeSwitch.focusEvent,
+                blur: $xeSwitch.blurEvent
+              }
+            },
+            [
+              h(
+                'span',
+                {
+                  class: 'vxe-switch--label vxe-switch--label-on'
+                },
+                [
+                  openIcon
+                    ? h('i', {
+                      class: ['vxe-switch--label-icon', openIcon]
+                    })
+                    : renderEmptyElement($xeSwitch),
+                  onShowLabel
+                ]
+              ),
+              h(
+                'span',
+                {
+                  class: 'vxe-switch--label vxe-switch--label-off'
+                },
+                [
+                  closeIcon
+                    ? h('i', {
+                      class: ['vxe-switch--label-icon', closeIcon]
+                    })
+                    : renderEmptyElement($xeSwitch),
+                  offShowLabel
+                ]
+              ),
+              h(
+                'span',
+                {
+                  class: ['vxe-switch--icon']
+                },
+                openActiveIcon || closeActiveIcon
+                  ? [
+                      h('i', {
+                        class: isChecked ? openActiveIcon : closeActiveIcon
+                      })
+                    ]
+                  : []
+              )
+            ]
+          )
+        ]
+      )
     }
   },
-  created () {
+  created() {
     const $xeSwitch = this
 
     $xeSwitch.internalData = createInternalData()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeSwitch = this
     const internalData = $xeSwitch.internalData
 
@@ -308,7 +339,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       clearTimeout(atTimeout)
     }
   },
-  destroyed () {
+  destroyed() {
     const $xeSwitch = this
     const reactData = $xeSwitch.reactData
     const internalData = $xeSwitch.internalData
@@ -316,7 +347,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

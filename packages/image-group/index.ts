@@ -4,7 +4,7 @@ import VxeImageGroupComponent from '../image/src/group'
 import { dynamicApp } from '../dynamics'
 
 export const VxeImageGroup = Object.assign({}, VxeImageGroupComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeImageGroupComponent.name as string, VxeImageGroupComponent)
   }
 })

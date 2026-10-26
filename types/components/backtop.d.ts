@@ -5,16 +5,20 @@ import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentIns
 export declare const VxeBacktop: DefineVxeComponentApp<VxeBacktopProps, VxeBacktopEventProps, VxeBacktopSlots, VxeBacktopMethods>
 export type VxeBacktopComponent = DefineVxeComponentOptions<VxeBacktopProps>
 
-export type VxeBacktopInstance = DefineVxeComponentInstance<{
-  internalData: BacktopInternalData
-  reactData: BacktopReactData
-}, VxeBacktopProps, VxeBacktopPrivateComputed, VxeBacktopMethods>
+export type VxeBacktopInstance = DefineVxeComponentInstance<
+  {
+    internalData: BacktopInternalData
+    reactData: BacktopReactData
+  },
+  VxeBacktopProps,
+  VxeBacktopPrivateComputed,
+  VxeBacktopMethods
+>
 
 export type VxeBacktopConstructor = VxeBacktopInstance
 
-export interface BacktopPrivateRef {
-}
-export interface VxeBacktopPrivateRef extends BacktopPrivateRef { }
+export interface BacktopPrivateRef {}
+export interface VxeBacktopPrivateRef extends BacktopPrivateRef {}
 
 export namespace VxeBacktopPropTypes {
   export type Target = string
@@ -54,9 +58,8 @@ export interface VxeBacktopProps {
   position?: VxeBacktopPropTypes.Position
 }
 
-export interface BacktopPrivateComputed {
-}
-export interface VxeBacktopPrivateComputed extends BacktopPrivateComputed { }
+export interface BacktopPrivateComputed {}
+export interface VxeBacktopPrivateComputed extends BacktopPrivateComputed {}
 
 export interface BacktopInternalData {
   targetEl: HTMLElement | null
@@ -70,21 +73,19 @@ export interface BacktopReactData {
 export interface BacktopMethods {
   dispatchEvent(type: ValueOf<VxeBacktopEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeBacktopMethods extends BacktopMethods { }
+export interface VxeBacktopMethods extends BacktopMethods {}
 
-export interface BacktopPrivateMethods { }
-export interface VxeBacktopPrivateMethods extends BacktopPrivateMethods { }
+export interface BacktopPrivateMethods {}
+export interface VxeBacktopPrivateMethods extends BacktopPrivateMethods {}
 
-export type VxeBacktopEmits = [
-  'click'
-]
+export type VxeBacktopEmits = ['click']
 
 export namespace VxeBacktopDefines {
   export interface BacktopEventParams extends VxeComponentEventParams {
     $backtop: VxeBacktopConstructor
   }
 
-  export interface ClickEventParams extends BacktopEventParams { }
+  export interface ClickEventParams extends BacktopEventParams {}
 }
 
 export type VxeBacktopEventProps = {

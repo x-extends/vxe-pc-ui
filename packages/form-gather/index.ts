@@ -6,7 +6,7 @@ import { dynamicApp } from '../dynamics'
 const VxeFormGatherComponent = Object.assign({}, VxeFormGroupComponent, { name: 'VxeFormGather' })
 
 export const VxeFormGather = Object.assign(VxeFormGatherComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeFormGatherComponent.name as string, VxeFormGatherComponent)
   }
 })

@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeLayoutContainerComponent from './src/layout-container'
 
 export const VxeLayoutContainer = Object.assign({}, VxeLayoutContainerComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeLayoutContainerComponent.name as string, VxeLayoutContainerComponent)
   }
 })

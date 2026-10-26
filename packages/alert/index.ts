@@ -4,7 +4,7 @@ import { dynamicApp } from '../dynamics'
 import VxeAlertComponent from './src/alert'
 
 export const VxeAlert = Object.assign({}, VxeAlertComponent, {
-  install (app: VueConstructor) {
+  install(app: VueConstructor) {
     app.component(VxeAlertComponent.name as string, VxeAlertComponent)
   }
 })

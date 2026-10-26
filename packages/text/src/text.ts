@@ -1,16 +1,15 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { VxeUI, getConfig, getIcon, getI18n, createEvent, globalMixins } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 
 import type { VxeTextPropTypes, TextReactData, VxeTextEmits, VxeComponentSizeType, ValueOf } from '../../../types'
 
+const { getConfig, getIcon, getI18n, createEvent, globalMixins } = VxeUI
+
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeText',
-  mixins: [
-    globalMixins.sizeMixin,
-    globalMixins.permissionMixin
-  ],
+  mixins: [globalMixins.sizeMixin, globalMixins.permissionMixin],
   props: {
     status: String as PropType<VxeTextPropTypes.Status>,
     title: [String, Number] as PropType<VxeTextPropTypes.Title>,
@@ -29,9 +28,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().text.size || getConfig().size
     }
   },
-  data () {
-    const reactData: TextReactData = {
-    }
+  data() {
+    const reactData: TextReactData = {}
     return {
       xID: XEUtils.uniqueId(),
       reactData
@@ -41,7 +39,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeCopyOpts () {
+    computeCopyOpts() {
       const $xeText = this
       const props = $xeText
 
@@ -52,11 +50,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeTextEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeTextEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeText = this
       $xeText.$emit(type, createEvent(evnt, { $text: $xeText }, params))
     },
-    handleCopy (evnt: MouseEvent) {
+    handleCopy(evnt: MouseEvent) {
       const $xeText = this
       const props = $xeText
 
@@ -85,7 +83,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    clickIconEvent (evnt: MouseEvent) {
+    clickIconEvent(evnt: MouseEvent) {
       const $xeText = this
       const props = $xeText
 
@@ -95,7 +93,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeText.handleCopy(evnt)
       }
     },
-    dblclickIconEvent (evnt: MouseEvent) {
+    dblclickIconEvent(evnt: MouseEvent) {
       const $xeText = this
       const props = $xeText
 
@@ -105,7 +103,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeText.handleCopy(evnt)
       }
     },
-    clickEvent (evnt : MouseEvent) {
+    clickEvent(evnt: MouseEvent) {
       const $xeText = this
       const props = $xeText
 
@@ -114,7 +112,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeText.dispatchEvent('click', {}, evnt)
       }
     },
-    dblclickEvent (evnt : MouseEvent) {
+    dblclickEvent(evnt: MouseEvent) {
       const $xeText = this
       const props = $xeText
 
@@ -123,7 +121,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeText.dispatchEvent('dblclick', {}, evnt)
       }
     },
-    prefixEvent (evnt : MouseEvent) {
+    prefixEvent(evnt: MouseEvent) {
       const $xeText = this
       const props = $xeText
 
@@ -132,7 +130,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeText.dispatchEvent('prefix-click', {}, evnt)
       }
     },
-    suffixEvent (evnt : MouseEvent) {
+    suffixEvent(evnt: MouseEvent) {
       const $xeText = this
       const props = $xeText
 
@@ -145,27 +143,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderCopyIcon (h: CreateElement) {
+    renderCopyIcon(h: CreateElement) {
       const $xeText = this
 
       const copyOpts = $xeText.computeCopyOpts
       const { icon, status } = copyOpts
-      return h('span', {
-        key: 'ci',
-        class: ['vxe-text--copy-icon', {
-          [`theme--${status}`]: status
-        }],
-        on: {
-          click: $xeText.clickIconEvent,
-          dblclick: $xeText.dblclickIconEvent
-        }
-      }, [
-        h('i', {
-          class: icon || getIcon().TEXT_COPY
-        })
-      ])
+      return h(
+        'span',
+        {
+          key: 'ci',
+          class: [
+            'vxe-text--copy-icon',
+            {
+              [`theme--${status}`]: status
+            }
+          ],
+          on: {
+            click: $xeText.clickIconEvent,
+            dblclick: $xeText.dblclickIconEvent
+          }
+        },
+        [
+          h('i', {
+            class: icon || getIcon().TEXT_COPY
+          })
+        ]
+      )
     },
-    renderContent  (h: CreateElement): VNode[] {
+    renderContent(h: CreateElement): VNode[] {
       const $xeText = this
       const props = $xeText
       const slots = $xeText.$scopedSlots
@@ -179,61 +184,77 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const contVNs: VNode[] = []
       if (loading) {
         contVNs.push(
-          h('span', {
-            key: 'lg',
-            class: 'vxe-text--loading'
-          }, [
-            h('i', {
-              class: getIcon().TEXT_LOADING
-            })
-          ])
+          h(
+            'span',
+            {
+              key: 'lg',
+              class: 'vxe-text--loading'
+            },
+            [
+              h('i', {
+                class: getIcon().TEXT_LOADING
+              })
+            ]
+          )
         )
       } else if (clickToCopy && !copyToRight) {
         contVNs.push($xeText.renderCopyIcon(h))
       }
       if (prefixIcon || icon) {
         contVNs.push(
-          h('span', {
-            key: 'si',
-            class: 'vxe-text--prefix-icon',
-            on: {
-              click: $xeText.prefixEvent
-            }
-          }, prefixIconSlot
-            ? prefixIconSlot({})
-            : [
-                h('i', {
-                  class: prefixIcon || icon
-                })
-              ])
+          h(
+            'span',
+            {
+              key: 'si',
+              class: 'vxe-text--prefix-icon',
+              on: {
+                click: $xeText.prefixEvent
+              }
+            },
+            prefixIconSlot
+              ? prefixIconSlot({})
+              : [
+                  h('i', {
+                    class: prefixIcon || icon
+                  })
+                ]
+          )
         )
       }
       contVNs.push(
-        h('span', {
-          key: 'ct',
-          ref: 'refContentElem',
-          class: 'vxe-text--content',
-          on: {
-            click: $xeText.clickEvent,
-            dblclick: $xeText.dblclickEvent
-          }
-        }, defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content))
+        h(
+          'span',
+          {
+            key: 'ct',
+            ref: 'refContentElem',
+            class: 'vxe-text--content',
+            on: {
+              click: $xeText.clickEvent,
+              dblclick: $xeText.dblclickEvent
+            }
+          },
+          defaultSlot ? defaultSlot({}) : XEUtils.toValueString(content)
+        )
       )
       if (suffixIcon) {
         contVNs.push(
-          h('span', {
-            key: 'si',
-            class: 'vxe-text--suffix-icon',
-            on: {
-              click: $xeText.suffixEvent
-            }
-          }, suffixIconSlot
-            ? suffixIconSlot({})
-            : [
-                h('i', {
-                  class: suffixIcon
-                })
-              ])
+          h(
+            'span',
+            {
+              key: 'si',
+              class: 'vxe-text--suffix-icon',
+              on: {
+                click: $xeText.suffixEvent
+              }
+            },
+            suffixIconSlot
+              ? suffixIconSlot({})
+              : [
+                  h('i', {
+                    class: suffixIcon
+                  })
+                ]
+          )
         )
       }
       if (clickToCopy && copyToRight && !loading) {
@@ -241,27 +262,34 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return contVNs
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeText = this
       const props = $xeText
 
       const { loading, status, title, clickToCopy } = props
       const vSize = $xeText.computeSize
-      return h('span', {
-        ref: 'refElem',
-        class: ['vxe-text', {
-          [`size--${vSize}`]: vSize,
-          [`theme--${status}`]: status,
-          'is--copy': clickToCopy,
-          'is--loading': loading
-        }],
-        attrs: {
-          title
-        }
-      }, $xeText.renderContent(h))
+      return h(
+        'span',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-text',
+            {
+              [`size--${vSize}`]: vSize,
+              [`theme--${status}`]: status,
+              'is--copy': clickToCopy,
+              'is--loading': loading
+            }
+          ],
+          attrs: {
+            title
+          }
+        },
+        $xeText.renderContent(h)
+      )
     }
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */

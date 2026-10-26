@@ -6,15 +6,19 @@ import { VxeRadioPropTypes } from './radio'
 export declare const VxeRadioButton: DefineVxeComponentApp<VxeRadioButtonProps, VxeRadioButtonEventProps, VxeRadioButtonSlots, VxeRadioButtonMethods>
 export type VxeRadioButtonComponent = DefineVxeComponentOptions<VxeRadioButtonProps>
 
-export type VxeRadioButtonInstance = DefineVxeComponentInstance<{
-  reactData: RadioButtonReactData
-}, VxeRadioButtonProps, VxeRadioButtonPrivateComputed, VxeRadioButtonMethods>
+export type VxeRadioButtonInstance = DefineVxeComponentInstance<
+  {
+    reactData: RadioButtonReactData
+  },
+  VxeRadioButtonProps,
+  VxeRadioButtonPrivateComputed,
+  VxeRadioButtonMethods
+>
 
 export type VxeRadioButtonConstructor = VxeRadioButtonInstance
 
-export interface RadioButtonPrivateRef {
-}
-export interface VxeRadioButtonPrivateRef extends RadioButtonPrivateRef { }
+export interface RadioButtonPrivateRef {}
+export interface VxeRadioButtonPrivateRef extends RadioButtonPrivateRef {}
 
 export namespace VxeRadioButtonPropTypes {
   export type Size = VxeRadioPropTypes.Size
@@ -53,25 +57,20 @@ export interface VxeRadioButtonProps {
   label?: VxeRadioButtonPropTypes.Label
 }
 
-export interface RadioButtonPrivateComputed {
-}
-export interface VxeRadioButtonPrivateComputed extends RadioButtonPrivateComputed { }
+export interface RadioButtonPrivateComputed {}
+export interface VxeRadioButtonPrivateComputed extends RadioButtonPrivateComputed {}
 
-export interface RadioButtonReactData {
-}
+export interface RadioButtonReactData {}
 
 export interface RadioButtonMethods {
   dispatchEvent(type: ValueOf<VxeRadioButtonEmits>, params: Record<string, any>, evnt: Event | null): void
 }
-export interface VxeRadioButtonMethods extends RadioButtonMethods { }
+export interface VxeRadioButtonMethods extends RadioButtonMethods {}
 
-export interface RadioButtonPrivateMethods { }
-export interface VxeRadioButtonPrivateMethods extends RadioButtonPrivateMethods { }
+export interface RadioButtonPrivateMethods {}
+export interface VxeRadioButtonPrivateMethods extends RadioButtonPrivateMethods {}
 
-export type VxeRadioButtonEmits = [
-  'input',
-  'change'
-]
+export type VxeRadioButtonEmits = ['input', 'change']
 
 export namespace VxeRadioButtonDefines {
   interface RadioButtonEventParams extends VxeComponentEventParams {
@@ -81,7 +80,7 @@ export namespace VxeRadioButtonDefines {
   export interface ChangeParams {
     label: any
   }
-  export interface ChangeEventParams extends RadioButtonEventParams, ChangeParams { }
+  export interface ChangeEventParams extends RadioButtonEventParams, ChangeParams {}
 }
 
 export type VxeRadioButtonEventProps = {

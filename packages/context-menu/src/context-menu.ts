@@ -1,20 +1,22 @@
 import { PropType, CreateElement, VNode } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
-import { getConfig, getI18n, getIcon, createEvent, globalMixins, globalEvents, renderEmptyElement, GLOBAL_EVENT_KEYS } from '../../ui'
+import { VxeUI } from '@vxe-ui/core'
 import { getLastZIndex, nextSubZIndex, nextZIndex, getFuncText } from '../../ui/src/utils'
 import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs, handleEmitModelVal } from '../../ui/src/vn'
 
 import type { VxeContextMenuConstructor, VxeContextMenuPrivateMethods, ContextMenuInternalData, VxeContextMenuPropTypes, ContextMenuReactData, VxeContextMenuEmits, VxeComponentSizeType, ValueOf, VxeContextMenuDefines } from '../../../types'
 
-function createInternalData (): ContextMenuInternalData {
+const { getConfig, getI18n, getIcon, createEvent, globalMixins, globalEvents, renderEmptyElement, GLOBAL_EVENT_KEYS } = VxeUI
+
+function createInternalData(): ContextMenuInternalData {
   return {
     // leaveTime: null
   }
 }
 
-function createReactData (): ContextMenuReactData {
+function createReactData(): ContextMenuReactData {
   return {
     visible: false,
     activeOption: null,
@@ -28,16 +30,16 @@ function createReactData (): ContextMenuReactData {
   }
 }
 
-function hasChildMenu (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
+function hasChildMenu(item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
   const { children } = item as VxeContextMenuDefines.MenuFirstOption
   return children && children.some((child) => child.visible !== false)
 }
 
-function hasValidItem (item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
+function hasValidItem(item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
   return !item.loading && !item.disabled && item.visible !== false
 }
 
-function findNextFirstItem (allFirstList: VxeContextMenuDefines.MenuFirstOption[], firstItem: VxeContextMenuDefines.MenuFirstOption) {
+function findNextFirstItem(allFirstList: VxeContextMenuDefines.MenuFirstOption[], firstItem: VxeContextMenuDefines.MenuFirstOption) {
   for (let i = 0; i < allFirstList.length; i++) {
     const item = allFirstList[i]
     if (firstItem === item) {
@@ -50,7 +52,7 @@ function findNextFirstItem (allFirstList: VxeContextMenuDefines.MenuFirstOption[
   return XEUtils.first(allFirstList)
 }
 
-function findPrevFirstItem (allFirstList: VxeContextMenuDefines.MenuFirstOption[], firstItem: VxeContextMenuDefines.MenuFirstOption) {
+function findPrevFirstItem(allFirstList: VxeContextMenuDefines.MenuFirstOption[], firstItem: VxeContextMenuDefines.MenuFirstOption) {
   for (let i = 0; i < allFirstList.length; i++) {
     const item = allFirstList[i]
     if (firstItem === item) {
@@ -62,7 +64,7 @@ function findPrevFirstItem (allFirstList: VxeContextMenuDefines.MenuFirstOption[
   return XEUtils.last(allFirstList)
 }
 
-function findFirstChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption) {
+function findFirstChildItem(firstItem: VxeContextMenuDefines.MenuFirstOption) {
   const { children } = firstItem
   if (children) {
     for (let i = 0; i < children.length; i++) {
@@ -75,7 +77,7 @@ function findFirstChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption) {
   return null
 }
 
-function findPrevChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption, childItem: VxeContextMenuDefines.MenuChildOption) {
+function findPrevChildItem(firstItem: VxeContextMenuDefines.MenuFirstOption, childItem: VxeContextMenuDefines.MenuChildOption) {
   const { children } = firstItem
   let prevValidItem = null
   if (children) {
@@ -100,7 +102,7 @@ function findPrevChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption, ch
   return prevValidItem
 }
 
-function findNextChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption, childItem: VxeContextMenuDefines.MenuChildOption) {
+function findNextChildItem(firstItem: VxeContextMenuDefines.MenuFirstOption, childItem: VxeContextMenuDefines.MenuChildOption) {
   const { children } = firstItem
   let firstValidItem = null
   if (children) {
@@ -124,7 +126,7 @@ function findNextChildItem (firstItem: VxeContextMenuDefines.MenuFirstOption, ch
   return firstValidItem
 }
 
-function openMenu ($xeContextMenu: VxeContextMenuConstructor & VxeContextMenuPrivateMethods) {
+function openMenu($xeContextMenu: VxeContextMenuConstructor & VxeContextMenuPrivateMethods) {
   const props = $xeContextMenu
   const reactData = $xeContextMenu.reactData
 
@@ -146,7 +148,7 @@ function openMenu ($xeContextMenu: VxeContextMenuConstructor & VxeContextMenuPri
   })
 }
 
-function closeMenu ($xeContextMenu: VxeContextMenuConstructor & VxeContextMenuPrivateMethods) {
+function closeMenu($xeContextMenu: VxeContextMenuConstructor & VxeContextMenuPrivateMethods) {
   const props = $xeContextMenu
   const reactData = $xeContextMenu.reactData
 
@@ -166,9 +168,7 @@ function closeMenu ($xeContextMenu: VxeContextMenuConstructor & VxeContextMenuPr
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeContextMenu',
-  mixins: [
-    globalMixins.sizeMixin
-  ],
+  mixins: [globalMixins.sizeMixin],
   props: {
     value: Boolean as PropType<VxeContextMenuPropTypes.ModelValue>,
     className: String as PropType<VxeContextMenuPropTypes.ClassName>,
@@ -197,7 +197,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().contextMenu.transfer
     }
   },
-  data () {
+  data() {
     const reactData = createReactData()
     return {
       ...({} as {
@@ -211,14 +211,14 @@ export default /* define-vxe-component start */ defineVxeComponent({
     ...({} as {
       computeSize(): VxeComponentSizeType
     }),
-    computeMenuGroups () {
+    computeMenuGroups() {
       const $xeContextMenu = this
       const props = $xeContextMenu
 
       const { options } = props
       return options || []
     },
-    computeAllFirstMenuList () {
+    computeAllFirstMenuList() {
       const $xeContextMenu = this
 
       const menuGroups: VxeContextMenuDefines.MenuFirstOption[] = $xeContextMenu.computeMenuGroups
@@ -234,7 +234,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       return firstList
     },
-    computeTopAndLeft () {
+    computeTopAndLeft() {
       const $xeContextMenu = this
       const props = $xeContextMenu
 
@@ -246,27 +246,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Method
     //
-    dispatchEvent (type: ValueOf<VxeContextMenuEmits>, params: Record<string, any>, evnt: Event | null) {
+    dispatchEvent(type: ValueOf<VxeContextMenuEmits>, params: Record<string, any>, evnt: Event | null) {
       const $xeContextMenu = this
       $xeContextMenu.$emit(type, createEvent(evnt, { $contextMenu: $xeContextMenu }, params))
     },
-    emitModel  (value: any) {
+    emitModel(value: any) {
       const $xeContextMenu = this
 
       $xeContextMenu.$emit('input', value)
       handleEmitModelVal($xeContextMenu, value)
     },
-    open () {
+    open() {
       const $xeContextMenu = this
 
       return openMenu($xeContextMenu)
     },
-    close () {
+    close() {
       const $xeContextMenu = this
 
       return closeMenu($xeContextMenu)
     },
-    handleLocate () {
+    handleLocate() {
       const $xeContextMenu = this
       const props = $xeContextMenu
       const reactData = $xeContextMenu.reactData
@@ -277,7 +277,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       popupStyle.top = toCssUnit(y || 0)
       $xeContextMenu.updateLocate()
     },
-    updateZindex () {
+    updateZindex() {
       const $xeContextMenu = this
       const props = $xeContextMenu
       const reactData = $xeContextMenu.reactData
@@ -293,7 +293,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    updateLocate () {
+    updateLocate() {
       const $xeContextMenu = this
       const props = $xeContextMenu
       const reactData = $xeContextMenu.reactData
@@ -323,7 +323,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       $xeContextMenu.updateChildLocate()
     },
-    updateChildLocate () {
+    updateChildLocate() {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
 
@@ -338,7 +338,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const wrapperWidth = wrapperEl.offsetWidth
           const childEl = wrapperEl.querySelector<HTMLDivElement>('.vxe-context-menu--children-wrapper')
           const childWidth = childEl ? childEl.offsetWidth : wrapperWidth
-          if ((offsetLeft + wrapperWidth) > (visibleWidth - childWidth)) {
+          if (offsetLeft + wrapperWidth > visibleWidth - childWidth) {
             // 往左
             reactData.childOffsetX = -childWidth + owSize
           } else {
@@ -352,7 +352,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         })
       }
     },
-    handleVisible () {
+    handleVisible() {
       const $xeContextMenu = this
       const props = $xeContextMenu
 
@@ -363,7 +363,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         closeMenu($xeContextMenu)
       }
     },
-    handleItemClickEvent (evnt: MouseEvent | KeyboardEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
+    handleItemClickEvent(evnt: MouseEvent | KeyboardEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption) {
       const $xeContextMenu = this
 
       evnt.preventDefault()
@@ -373,7 +373,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         closeMenu($xeContextMenu)
       }
     },
-    handleItemMouseenterEvent (evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption | null) {
+    handleItemMouseenterEvent(evnt: MouseEvent, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentitem?: VxeContextMenuDefines.MenuFirstOption | null) {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
       const internalData = $xeContextMenu.internalData
@@ -398,7 +398,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleItemMouseleaveEvent () {
+    handleItemMouseleaveEvent() {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
       const internalData = $xeContextMenu.internalData
@@ -413,7 +413,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         reactData.activeChildOption = null
       }, 300)
     },
-    handleGlobalMousewheelEvent (evnt: MouseEvent) {
+    handleGlobalMousewheelEvent(evnt: MouseEvent) {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
 
@@ -425,7 +425,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalKeydownEvent (evnt: KeyboardEvent) {
+    handleGlobalKeydownEvent(evnt: KeyboardEvent) {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
 
@@ -490,7 +490,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalMousedownEvent (evnt: MouseEvent) {
+    handleGlobalMousedownEvent(evnt: MouseEvent) {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
 
@@ -502,7 +502,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
       }
     },
-    handleGlobalBlurEvent () {
+    handleGlobalBlurEvent() {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
 
@@ -515,7 +515,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     // Render
     //
-    renderMenuItem (h: CreateElement, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentItem: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption | null, hasChildMenus?: boolean) {
+    renderMenuItem(h: CreateElement, item: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption, parentItem: VxeContextMenuDefines.MenuFirstOption | VxeContextMenuDefines.MenuChildOption | null, hasChildMenus?: boolean) {
       const $xeContextMenu = this
 
       const { visible, disabled, loading } = item
@@ -527,88 +527,139 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const suffixOpts = Object.assign({}, item.suffixConfig)
       const suffixIcon = suffixOpts.icon || item.suffixIcon
       const menuContent = loading ? getI18n('vxe.contextMenu.loadingText') : getFuncText(item.name)
-      return h('div', {
-        class: ['vxe-context-menu--item-inner', {
-          'is--disabled': disabled,
-          'is--loading': loading
-        }],
-        on: {
-          click (evnt: MouseEvent) {
-            $xeContextMenu.handleItemClickEvent(evnt, item)
-          },
-          mouseenter (evnt: MouseEvent) {
-            $xeContextMenu.handleItemMouseenterEvent(evnt, item, parentItem)
-          },
-          mouseleave: $xeContextMenu.handleItemMouseleaveEvent
-        }
-      }, [
-        h('div', {
-          class: ['vxe-context-menu--item-prefix', prefixOpts.className || '']
-        }, loading
-          ? [
-              h('span', {
-                key: '1'
-              }, [
+      return h(
+        'div',
+        {
+          class: [
+            'vxe-context-menu--item-inner',
+            {
+              'is--disabled': disabled,
+              'is--loading': loading
+            }
+          ],
+          on: {
+            click(evnt: MouseEvent) {
+              $xeContextMenu.handleItemClickEvent(evnt, item)
+            },
+            mouseenter(evnt: MouseEvent) {
+              $xeContextMenu.handleItemMouseenterEvent(evnt, item, parentItem)
+            },
+            mouseleave: $xeContextMenu.handleItemMouseleaveEvent
+          }
+        },
+        [
+          h(
+            'div',
+            {
+              class: ['vxe-context-menu--item-prefix', prefixOpts.className || '']
+            },
+            loading
+              ? [
+                  h(
+                    'span',
+                    {
+                      key: '1'
+                    },
+                    [
+                      h('i', {
+                        class: getIcon().CONTEXT_MENU_OPTION_LOADING
+                      })
+                    ]
+                  )
+                ]
+              : [
+                  prefixIcon && XEUtils.isFunction(prefixIcon)
+                    ? h(
+                      'span',
+                      {
+                        key: '2'
+                      },
+                      getSlotVNs(prefixIcon({}))
+                    )
+                    : h(
+                      'span',
+                      {
+                        key: '3'
+                      },
+                      [
+                        h('i', {
+                          class: prefixIcon
+                        })
+                      ]
+                    ),
+                  prefixOpts.content
+                    ? h(
+                      'span',
+                      {
+                        key: '4'
+                      },
+                        `${prefixOpts.content || ''}`
+                    )
+                    : renderEmptyElement($xeContextMenu)
+                ]
+          ),
+          h(
+            'div',
+            {
+              class: 'vxe-context-menu--item-label'
+            },
+            menuContent
+          ),
+          !loading && (suffixIcon || suffixOpts.content)
+            ? h(
+              'div',
+              {
+                class: ['vxe-context-menu--item-suffix', suffixOpts.className || '']
+              },
+              [
+                suffixIcon && XEUtils.isFunction(suffixIcon)
+                  ? h(
+                    'span',
+                    {
+                      key: '2'
+                    },
+                    getSlotVNs(suffixIcon({}))
+                  )
+                  : h(
+                    'span',
+                    {
+                      key: '3'
+                    },
+                    [
+                      h('i', {
+                        class: suffixIcon
+                      })
+                    ]
+                  ),
+                suffixOpts.content
+                  ? h(
+                    'span',
+                    {
+                      key: '4'
+                    },
+                        `${suffixOpts.content || ''}`
+                  )
+                  : renderEmptyElement($xeContextMenu)
+              ]
+            )
+            : renderEmptyElement($xeContextMenu),
+          hasChildMenus
+            ? h(
+              'div',
+              {
+                class: 'vxe-context-menu--item-subicon'
+              },
+              [
                 h('i', {
-                  class: getIcon().CONTEXT_MENU_OPTION_LOADING
+                  class: getIcon().CONTEXT_MENU_CHILDREN
                 })
-              ])
-            ]
-          : [
-              prefixIcon && XEUtils.isFunction(prefixIcon)
-                ? h('span', {
-                  key: '2'
-                }, getSlotVNs(prefixIcon({})))
-                : h('span', {
-                  key: '3'
-                }, [
-                  h('i', {
-                    class: prefixIcon
-                  })
-                ]),
-              prefixOpts.content
-                ? h('span', {
-                  key: '4'
-                }, `${prefixOpts.content || ''}`)
-                : renderEmptyElement($xeContextMenu)
-            ]),
-        h('div', {
-          class: 'vxe-context-menu--item-label'
-        }, menuContent),
-        !loading && (suffixIcon || suffixOpts.content)
-          ? h('div', {
-            class: ['vxe-context-menu--item-suffix', suffixOpts.className || '']
-          }, [
-            suffixIcon && XEUtils.isFunction(suffixIcon)
-              ? h('span', {
-                key: '2'
-              }, getSlotVNs(suffixIcon({})))
-              : h('span', {
-                key: '3'
-              }, [
-                h('i', {
-                  class: suffixIcon
-                })
-              ]),
-            suffixOpts.content
-              ? h('span', {
-                key: '4'
-              }, `${suffixOpts.content || ''}`)
-              : renderEmptyElement($xeContextMenu)
-          ])
-          : renderEmptyElement($xeContextMenu),
-        hasChildMenus
-          ? h('div', {
-            class: 'vxe-context-menu--item-subicon'
-          }, [
-            h('i', {
-              class: getIcon().CONTEXT_MENU_CHILDREN
-            })
-          ])
-          : renderEmptyElement($xeContextMenu)
-      ])
+              ]
+            )
+            : renderEmptyElement($xeContextMenu)
+        ]
+      )
     },
-    renderMenus (h: CreateElement) {
+    renderMenus(h: CreateElement) {
       const $xeContextMenu = this
       const reactData = $xeContextMenu.reactData
 
@@ -623,43 +674,65 @@ export default /* define-vxe-component start */ defineVxeComponent({
           const isActiveFirst = activeOption === firstItem
           const showChild = isActiveFirst && !!activeChildOption
           moVNs.push(
-            h('div', {
-              key: `${gIndex}_${i}`,
-              class: ['vxe-context-menu--item-wrapper vxe-context-menu--first-item', firstItem.className || '', {
-                'is--active': isActiveFirst,
-                'is--subactive': isActiveFirst && !!activeChildOption
-              }]
-            }, [
-              hasChildMenus && showChild
-                ? h('div', {
-                  class: 'vxe-context-menu--children-wrapper',
-                  style: {
-                    transform: `translate(${childOffsetX}px, -2px)`
+            h(
+              'div',
+              {
+                key: `${gIndex}_${i}`,
+                class: [
+                  'vxe-context-menu--item-wrapper vxe-context-menu--first-item',
+                  firstItem.className || '',
+                  {
+                    'is--active': isActiveFirst,
+                    'is--subactive': isActiveFirst && !!activeChildOption
                   }
-                }, children.map(twoItem => {
-                  return h('div', {
-                    class: ['vxe-context-menu--item-wrapper vxe-context-menu--child-item', twoItem.className || '', {
-                      'is--active': activeChildOption === twoItem
-                    }]
-                  }, [
-                    $xeContextMenu.renderMenuItem(h, twoItem, firstItem)
-                  ])
-                }))
-                : renderEmptyElement($xeContextMenu),
-              $xeContextMenu.renderMenuItem(h, firstItem, null, hasChildMenus)
-            ])
+                ]
+              },
+              [
+                hasChildMenus && showChild
+                  ? h(
+                    'div',
+                    {
+                      class: 'vxe-context-menu--children-wrapper',
+                      style: {
+                        transform: `translate(${childOffsetX}px, -2px)`
+                      }
+                    },
+                    children.map((twoItem) => {
+                      return h(
+                        'div',
+                        {
+                          class: [
+                            'vxe-context-menu--item-wrapper vxe-context-menu--child-item',
+                            twoItem.className || '',
+                            {
+                              'is--active': activeChildOption === twoItem
+                            }
+                          ]
+                        },
+                        [$xeContextMenu.renderMenuItem(h, twoItem, firstItem)]
+                      )
+                    })
+                  )
+                  : renderEmptyElement($xeContextMenu),
+                $xeContextMenu.renderMenuItem(h, firstItem, null, hasChildMenus)
+              ]
+            )
           )
         })
         mgVNs.push(
-          h('div', {
-            key: gIndex,
-            class: 'vxe-context-menu--group-wrapper'
-          }, moVNs)
+          h(
+            'div',
+            {
+              key: gIndex,
+              class: 'vxe-context-menu--group-wrapper'
+            },
+            moVNs
+          )
         )
       })
       return mgVNs
     },
-    renderVN (h: CreateElement): VNode {
+    renderVN(h: CreateElement): VNode {
       const $xeContextMenu = this
       const props = $xeContextMenu
       const reactData = $xeContextMenu.reactData
@@ -667,18 +740,27 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const { className, position, destroyOnClose } = props
       const { visible, popupStyle } = reactData
       const vSize = $xeContextMenu.computeSize
-      return h('div', {
-        ref: 'refElem',
-        class: ['vxe-context-menu vxe-context-menu--wrapper', position === 'absolute' ? ('is--' + position) : 'is--fixed', className || '', {
-          [`size--${vSize}`]: vSize,
-          'is--visible': visible
-        }],
-        style: popupStyle
-      }, (destroyOnClose ? visible : true) ? $xeContextMenu.renderMenus(h) : [])
+      return h(
+        'div',
+        {
+          ref: 'refElem',
+          class: [
+            'vxe-context-menu vxe-context-menu--wrapper',
+            position === 'absolute' ? 'is--' + position : 'is--fixed',
+            className || '',
+            {
+              [`size--${vSize}`]: vSize,
+              'is--visible': visible
+            }
+          ],
+          style: popupStyle
+        },
+        (destroyOnClose ? visible : true) ? $xeContextMenu.renderMenus(h) : []
+      )
     }
   },
   watch: {
-    value () {
+    value() {
       const $xeContextMenu = this
 
       $xeContextMenu.handleVisible()
@@ -686,13 +768,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeContextMenu.updateLocate()
       })
     },
-    computeTopAndLeft () {
+    computeTopAndLeft() {
       const $xeContextMenu = this
 
       $xeContextMenu.handleLocate()
     }
   },
-  created () {
+  created() {
     const $xeContextMenu = this
 
     $xeContextMenu.internalData = createInternalData()
@@ -703,7 +785,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     globalEvents.on($xeContextMenu, 'mousedown', $xeContextMenu.handleGlobalMousedownEvent)
     globalEvents.on($xeContextMenu, 'blur', $xeContextMenu.handleGlobalBlurEvent)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const $xeContextMenu = this
     const reactData = $xeContextMenu.reactData
     const internalData = $xeContextMenu.internalData
@@ -719,7 +801,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     XEUtils.assign(reactData, createReactData())
     XEUtils.assign(internalData, createInternalData())
   },
-  render (this: any, h) {
+  render(this: any, h) {
     return this.renderVN(h)
   }
 }) /* define-vxe-component end */
