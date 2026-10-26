@@ -70,8 +70,8 @@
     "typescript": "~5.9.3",
     "vue": "3.4.27",
     "vue-router": "~4.5.1",
-    "vxe-table": "^4.23.6",
-    "vxe-gantt": "^4.9.2"
+    "vxe-table": "^4.23.7",
+    "vxe-gantt": "^4.9.3"
   },
   "vetur": {
     "tags": "helper/vetur/tags.json",
