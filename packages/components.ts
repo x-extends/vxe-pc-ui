@@ -251,7 +251,7 @@ export const saveFile = saveLocalFile
  */
 export const readFile = readLocalFile
 
-export { VxeUI }
+export * from '@vxe-ui/core'
 
 // 兼容老版本
 export * from './ui'
