@@ -116,6 +116,7 @@ export namespace VxeModalPropTypes {
   export type AppendTo = string | HTMLElement | ((params: {}) => string | HTMLElement)
   export type IsWithinAppendTo = boolean
   export type Storage = boolean
+  export type StoreDriver = 'indexedDB' | 'localStorage'
   export type StorageKey = string
   export type Animat = boolean
   export type Padding = boolean
@@ -196,6 +197,7 @@ export interface VxeModalProps {
    */
   isWithinAppendTo?: VxeModalPropTypes.IsWithinAppendTo
   storage?: VxeModalPropTypes.Storage
+  storeDriver?: VxeModalPropTypes.StoreDriver
   storageKey?: VxeModalPropTypes.StorageKey
   animat?: VxeModalPropTypes.Animat
   padding?: VxeModalPropTypes.Padding

@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "4.20.32",
+  "version": "4.20.33",
   "description": "A vue based PC component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -34,7 +34,7 @@
   "style": "lib/style.css",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "@vxe-ui/core": "^4.5.1"
+    "@vxe-ui/core": "^4.5.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.0",
