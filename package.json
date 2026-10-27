@@ -73,8 +73,15 @@
     "vue": "~2.6.14",
     "vue-i18n": "^8.15.1",
     "vue-router": "^3.5.1",
-    "vxe-table": "^3.25.11",
+    "vxe-table": "^3.25.12",
     "vxe-gantt": "^3.9.8"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "@parcel/watcher@2.5.6": true,
+    "yorkie@2.0.0": true,
+    "core-js@3.49.0": true,
+    "es5-ext@0.10.64": true
   },
   "vetur": {
     "tags": "helper/vetur/tags.json",
