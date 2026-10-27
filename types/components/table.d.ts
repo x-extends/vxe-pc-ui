@@ -836,9 +836,14 @@ export namespace VxeTablePropTypes {
      */
     enabled?: boolean
     /**
-     * 是否启用 localStorage 本地保存，会将列操作状态保留在本地（需要有 id）
+     * 是否启用本地保存，会将列操作状态保留在本地（需要有 id）
      */
     storage?: boolean | VxeTableDefines.VxeTableCustomStorageObj
+    /**
+     * 本地保存支持 indexedDB 和 localStorage
+     * 如果设置为 indexedDB，当运行环境不支持 indexedDB 时会自动降为 localStorage 模式
+     */
+    storeDriver?: 'indexedDB' | 'localStorage'
     /**
      * 只对 storage 有效，缓存项的配置
      */
