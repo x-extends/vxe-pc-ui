@@ -73,6 +73,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       reactData
     }
   },
+  inject: {
+    $xeImageGroup: {
+      default: null
+    }
+  },
   computed: {
     ...({} as {
       computeSize(): VxeComponentSizeType
