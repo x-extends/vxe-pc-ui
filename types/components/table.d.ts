@@ -1,23 +1,6 @@
 import { VNode, CreateElement } from 'vue'
 import { NormalizedScopedSlot } from 'vue/types/vnode'
-import {
-  DefineVxeComponentApp,
-  DefineVxeComponentOptions,
-  DefineVxeComponentInstance,
-  VxeComponentEventParams,
-  VxeComponentSizeType,
-  ValueOf,
-  VxeGlobalConfig,
-  VxeComponentStyleType,
-  VxeComponentSlotType,
-  VxeGlobalRendererOptions,
-  VxeComponentIsVScrollbar,
-  VxeUseSizeResult,
-  VxeUseVScrollbarResult,
-  VxeUseInitVScrollbarResult,
-  VxeUseInitVScrollbarReactData,
-  VxeUseInitVScrollbarInternalData
-} from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeGlobalRendererOptions, VxeComponentIsVScrollbar, VxeUseSizeResult, VxeUseVScrollbarResult, VxeUseInitVScrollbarResult, VxeUseInitVScrollbarReactData, VxeUseInitVScrollbarInternalData, VxeDBStore } from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
 import { VxeGridConstructor, VxeGridPrivateMethods } from './grid'
@@ -41,13 +24,21 @@ export type VxeTableInstance<D = any> = DefineVxeComponentInstance<
     /**
      * 内部属性，不能被使用
      * @deprecated
+     * @private
      */
     reactData: TableReactData<D>
     /**
      * 内部属性，不能被使用
      * @deprecated
+     * @private
      */
     internalData: TableInternalData<D>
+    /**
+     * 内部属性，不能被使用
+     * @private
+     */
+    customStoreDB: VxeDBStore<VxeTableDefines.CustomStoreData>
+
     $xeParentTable: (VxeTableConstructor<D> & VxeTablePrivateMethods) | null | undefined
     $xeGrid: (VxeGridConstructor<D> & VxeGridPrivateMethods) | null | undefined
     $xeGantt: VxeTableDefines.InjectGanttType | null | undefined
@@ -819,6 +810,10 @@ export namespace VxeTablePropTypes {
      * 是否启用 localStorage 本地保存，会将列操作状态保留在本地（需要有 id）
      */
     storage?: boolean | VxeTableDefines.VxeTableCustomStorageObj
+    /**
+     * 本地保存支持 indexedDB 和 localStorage
+     */
+    storeDriver?: 'indexedDB' | 'localStorage'
     /**
      * 只对 storage 有效，缓存项的配置
      */

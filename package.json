@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "3.20.31",
+  "version": "3.20.32",
   "description": "A vue based PC component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -32,7 +32,7 @@
   "style": "lib/style.css",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "@vxe-ui/core": "^3.5.0"
+    "@vxe-ui/core": "^3.5.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.21.0",

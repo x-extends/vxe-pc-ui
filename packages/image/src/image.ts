@@ -63,6 +63,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
     },
     getThumbnailUrlMethod: Function as PropType<VxeImagePropTypes.GetThumbnailUrlMethod>
   },
+  inject: {
+    $xeImageGroup: {
+      default: null
+    }
+  },
   data() {
     const reactData = createReactData()
     return {
@@ -71,11 +76,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }),
       xID: XEUtils.uniqueId(),
       reactData
-    }
-  },
-  inject: {
-    $xeImageGroup: {
-      default: null
     }
   },
   computed: {
