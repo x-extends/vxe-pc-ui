@@ -37,7 +37,7 @@ export type VxeTableInstance<D = any> = DefineVxeComponentInstance<
      * 内部属性，不能被使用
      * @private
      */
-    customStoreDB: VxeDBStore<VxeTableDefines.CustomStoreData>
+    customStoreDB: VxeDBStore<VxeTableDefines.CustomStoreData> | null | undefined
 
     $xeParentTable: (VxeTableConstructor<D> & VxeTablePrivateMethods) | null | undefined
     $xeGrid: (VxeGridConstructor<D> & VxeGridPrivateMethods) | null | undefined

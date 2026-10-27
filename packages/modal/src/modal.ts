@@ -11,27 +11,10 @@ import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type {
-  VxeModalConstructor,
-  VxeModalPropTypes,
-  ModalReactData,
-  ModalInternalData,
-  VxeModalMethods,
-  ModalEventTypes,
-  VxeModalEmits,
-  VxeComponentSizeType,
-  VxeComponentPermissionInfo,
-  ValueOf,
-  VxeButtonConstructor,
-  VxeDrawerConstructor,
-  VxeDrawerMethods,
-  VxeFormConstructor,
-  VxeFormPrivateMethods,
-  VxeComponentIsVScrollbar
-} from '../../../types'
+import type { VxeModalConstructor, VxeModalPropTypes, ModalReactData, ModalInternalData, VxeModalMethods, ModalEventTypes, VxeModalEmits, VxeComponentSizeType, VxeComponentPermissionInfo, ValueOf, VxeButtonConstructor, VxeDrawerConstructor, VxeDrawerMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentIsVScrollbar, VxeDBStore } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
-const { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } = VxeUI
+const { getConfig, getIcon, getI18n, dbUtils, globalEvents, GLOBAL_EVENT_KEYS, createEvent, globalMixins, renderEmptyElement } = VxeUI
 
 const { warnLog, errLog } = createComponentLog('modal')
 
@@ -230,6 +213,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeModalPropTypes.Storage>,
       default: () => getConfig().modal.storage
     },
+    storeDriver: {
+      type: String as PropType<VxeModalPropTypes.StoreDriver>,
+      default: () => getConfig().modal.storeDriver
+    },
     storageKey: {
       type: String as PropType<VxeModalPropTypes.StorageKey>,
       default: () => getConfig().modal.storageKey
@@ -293,7 +280,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
         internalData: ModalInternalData
       }),
       xID,
-      reactData
+      reactData,
+
+      posStoreDB: null as unknown as VxeDBStore<string>
     }
   },
   computed: {
@@ -721,50 +710,65 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeModal.closeModal(type)
       }
     },
-    getStorageMap(key: string) {
-      const version = getConfig().version
-      const rest = XEUtils.toStringJSON(localStorage.getItem(key) || '')
-      return rest && rest._v === version ? rest : { _v: version }
-    },
-    hasPosStorage() {
+    getStorageMap(key: string, id: string): Promise<string> {
       const $xeModal = this
-      const props = $xeModal
+      const posStoreDB = $xeModal.posStoreDB
 
-      const { id, storage, storageKey } = props
-      return !!(id && storage && $xeModal.getStorageMap(storageKey)[id])
+      // if (posStoreDB) {
+      return posStoreDB.getById(id).then(dbRest => dbRest ? dbRest.data : '')
+      // }
+      // // 已废弃，兼容旧版本
+      // return new Promise<string>(resolve => {
+      //   const version = getConfig().version
+      //   const rest = XEUtils.toStringJSON(localStorage.getItem(key) || '')
+      //   const maps = rest && rest._v === version ? rest : { _v: version }
+      //   resolve(maps[id] || '')
+      // })
     },
-    restorePosStorage() {
+    saveStorageMap (id: string, posStorage: any) {
       const $xeModal = this
-      const props = $xeModal
+      // const props = $xeModal
+      const posStoreDB = $xeModal.posStoreDB
+
+      // const { storageKey } = props
+      // if (posStoreDB) {
+      return posStoreDB.updateById(id, posStorage)
+      // }
+      // // 已废弃，兼容旧版本
+      // const version = getConfig().version
+      // const rest = XEUtils.toStringJSON(localStorage.getItem(storageKey) || '')
+      // const posStorageMap = rest && rest._v === version ? rest : { _v: version }
+      // posStorageMap[id] = posStorage
+      // localStorage.setItem(storageKey, XEUtils.toJSONString(posStorageMap))
+      // return Promise.resolve()
+    },
+    restorePosStorage(posStorage: string) {
+      const $xeModal = this
       const reactData = $xeModal.reactData
 
-      const { id, storage, storageKey } = props
-      if (id && storage) {
-        const posStorage = $xeModal.getStorageMap(storageKey)[id]
-        if (posStorage) {
-          const boxElem = $xeModal.getBox()
-          const [left, top, width, height, zoomLeft, zoomTop, zoomWidth, zoomHeight] = posStorage.split(',')
-          if (boxElem) {
-            if (left) {
-              boxElem.style.left = `${left}px`
-            }
-            if (top) {
-              boxElem.style.top = `${top}px`
-            }
-            if (width) {
-              boxElem.style.width = `${width}px`
-            }
-            if (height) {
-              boxElem.style.height = `${height}px`
-            }
+      if (posStorage) {
+        const boxElem = $xeModal.getBox()
+        const [left, top, width, height, zoomLeft, zoomTop, zoomWidth, zoomHeight] = posStorage.split(',')
+        if (boxElem) {
+          if (left) {
+            boxElem.style.left = `${left}px`
           }
-          if (zoomLeft && zoomTop) {
-            reactData.revertLocat = {
-              left: zoomLeft,
-              top: zoomTop,
-              width: zoomWidth,
-              height: zoomHeight
-            }
+          if (top) {
+            boxElem.style.top = `${top}px`
+          }
+          if (width) {
+            boxElem.style.width = `${width}px`
+          }
+          if (height) {
+            boxElem.style.height = `${height}px`
+          }
+        }
+        if (zoomLeft && zoomTop) {
+          reactData.revertLocat = {
+            left: XEUtils.toNumber(zoomLeft),
+            top: XEUtils.toNumber(zoomTop),
+            width: XEUtils.toNumber(zoomWidth),
+            height: XEUtils.toNumber(zoomHeight)
           }
         }
       }
@@ -785,7 +789,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeModal
       const reactData = $xeModal.reactData
 
-      const { id, storage, storageKey } = props
+      const { id, storage } = props
       const { zoomStatus, revertLocat } = reactData
       if (zoomStatus) {
         return
@@ -795,12 +799,23 @@ export default /* define-vxe-component start */ defineVxeComponent({
         if (!boxElem) {
           return
         }
-        const posStorageMap = $xeModal.getStorageMap(storageKey)
-        posStorageMap[id] = ([boxElem.style.left, boxElem.style.top, boxElem.clientWidth, boxElem.clientHeight] as (string | number)[])
-          .concat(revertLocat ? [revertLocat.left, revertLocat.top, revertLocat.width, revertLocat.height] : [])
-          .map((val) => (val ? XEUtils.toNumber(val) : ''))
-          .join(',')
-        localStorage.setItem(storageKey, XEUtils.toJSONString(posStorageMap))
+        const posStorage = [
+          boxElem.style.left,
+          boxElem.style.top,
+          boxElem.clientWidth,
+          boxElem.clientHeight,
+          ...(
+            revertLocat
+              ? [
+                  revertLocat.left,
+                  revertLocat.top,
+                  revertLocat.width,
+                  revertLocat.height
+                ]
+              : []
+          )
+        ].map((val) => (val ? XEUtils.toNumber(val) : '')).join(',')
+        $xeModal.saveStorageMap(id, posStorage)
       }
     },
     handleMinimize() {
@@ -1011,7 +1026,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeModal.reactData
       const internalData = $xeModal.internalData
 
-      const { remember, showFooter, fullscreen, appendTo } = props
+      const { storageKey, id, remember, showFooter, fullscreen, appendTo } = props
       const { initialized, visible } = reactData
       const isMsg = $xeModal.computeIsMsg
       const isModal = $xeModal.computeIsModal
@@ -1062,8 +1077,21 @@ export default /* define-vxe-component start */ defineVxeComponent({
             }
             if (firstOpen) {
               reactData.firstOpen = false
-              if ($xeModal.hasPosStorage()) {
-                $xeModal.restorePosStorage()
+              if (storageKey && id) {
+                $xeModal.getStorageMap(storageKey, id).then(posStorage => {
+                  if (posStorage) {
+                    $xeModal.restorePosStorage(posStorage)
+                  } else {
+                    if (isModal && fullscreen) {
+                      $xeModal.$nextTick(() => $xeModal.handleMaximize())
+                    } else {
+                      $xeModal.recalculate()
+                      $xeModal.updatePosition().then(() => {
+                        setTimeout(() => $xeModal.updatePosition(), 20)
+                      })
+                    }
+                  }
+                })
               } else {
                 if (isModal && fullscreen) {
                   $xeModal.$nextTick(() => $xeModal.handleMaximize())
@@ -1942,8 +1970,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   created() {
     const $xeModal = this
+    const props = $xeModal
 
     $xeModal.internalData = createInternalData()
+
+    $xeModal.posStoreDB = dbUtils.createStore<string>(props.storageKey, {
+      driver: props.storeDriver
+    })
   },
   mounted() {
     const $xeModal = this
