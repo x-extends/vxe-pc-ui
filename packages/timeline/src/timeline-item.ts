@@ -1,65 +1,40 @@
-import { ref, h, reactive } from 'vue'
+import { ref, h, inject, PropType, onMounted, onUnmounted } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
-import XEUtils from 'xe-utils'
-import { VxeUI } from '@vxe-ui/core'
+import { createTimelineItem, watchTimelineItem, assembleTimelineItem, destroyTimelineItem } from './util'
 
-import type { TimelineItemReactData, TimelineItemPrivateRef, VxeTimelineItemEmits, VxeTimelineItemPrivateComputed, TimelineItemMethods, TimelineItemPrivateMethods, VxeTimelineItemConstructor, VxeTimelineItemPrivateMethods, ValueOf } from '../../../types'
+import type { VxeTimelineConstructor, VxeTimelineItemPropTypes } from '../../../types'
 
-const { createEvent } = VxeUI
-
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTimelineItem',
-  props: {},
-  emits: [] as VxeTimelineItemEmits,
+  props: {
+    title: [String, Number] as PropType<VxeTimelineItemPropTypes.Title>,
+    content: [String, Number] as PropType<VxeTimelineItemPropTypes.Content>
+  },
   setup(props, context) {
-    const { emit } = context
-
-    const xID = XEUtils.uniqueId()
+    const { slots } = context
 
     const refElem = ref<HTMLDivElement>()
+    const $xeTimeline = inject('$xeTimeline', {} as VxeTimelineConstructor)
+    const itemConfig = createTimelineItem($xeTimeline, props)
+    itemConfig.slots = slots
 
-    const reactData = reactive<TimelineItemReactData>({})
+    watchTimelineItem(props, itemConfig)
 
-    const refMaps: TimelineItemPrivateRef = {
-      refElem
-    }
+    onMounted(() => {
+      const el = refElem.value
+      if (el) {
+        assembleTimelineItem($xeTimeline, el, itemConfig)
+      }
+    })
 
-    const computeMaps: VxeTimelineItemPrivateComputed = {}
+    onUnmounted(() => {
+      destroyTimelineItem($xeTimeline, itemConfig)
+    })
 
-    const $xeTimelineItem = {
-      xID,
-      props,
-      context,
-      reactData,
-
-      getRefMaps: () => refMaps,
-      getComputeMaps: () => computeMaps
-    } as unknown as VxeTimelineItemConstructor & VxeTimelineItemPrivateMethods
-
-    const dispatchEvent = (type: ValueOf<VxeTimelineItemEmits>, params: Record<string, any>, evnt: Event | null) => {
-      emit(type, createEvent(evnt, { $timelineItem: $xeTimelineItem }, params))
-    }
-
-    const tagMethods: TimelineItemMethods = {
-      dispatchEvent
-    }
-
-    const tagPrivateMethods: TimelineItemPrivateMethods = {}
-
-    Object.assign($xeTimelineItem, tagMethods, tagPrivateMethods)
-
-    const renderVN = () => {
+    return () => {
       return h('div', {
-        ref: refElem,
-        class: 'vxe-timeline-item'
+        ref: refElem
       })
     }
-
-    $xeTimelineItem.renderVN = renderVN
-
-    return $xeTimelineItem
-  },
-  render() {
-    return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

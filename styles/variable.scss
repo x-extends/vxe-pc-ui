@@ -44,6 +44,7 @@ $vxe-ui-status-error-disabled-color: #f5a8a8 !default;
 $vxe-ui-status-danger-disabled-color: $vxe-ui-status-error-disabled-color !default;
 
 /*base*/
+$vxe-ui-base-border-color: #dcdfe6 !default;
 $vxe-ui-base-popup-border-color: #DADCE0 !default;
 $vxe-ui-base-popup-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.16) !default;
 $vxe-ui-base-drag-background-color: #dde9fd !default;
@@ -54,7 +55,7 @@ $vxe-ui-base-hover-background-color: rgba(0, 0, 0, 0.06) !default;
 $vxe-ui-layout-background-color: #ffffff !default;
 
 /*input*/
-$vxe-ui-input-border-color: #dcdfe6 !default;
+$vxe-ui-input-border-color: $vxe-ui-base-border-color !default;
 $vxe-ui-input-placeholder-color: #C0C4CC !default;
 $vxe-ui-input-disabled-background-color: #f3f3f3 !default;
 

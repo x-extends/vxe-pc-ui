@@ -12,7 +12,6 @@ export type VxeOptionInstance = DefineVxeComponentInstance<VxeOptionProps, VxeOp
 export interface VxeOptionConstructor extends VxeComponentBaseOptions, VxeOptionMethods {
   props: VxeOptionProps
   context: SetupContext<VxeOptionEmits>
-  reactData: OptionReactData
   getRefMaps(): OptionPrivateRef
   getComputeMaps(): OptionPrivateComputed
   renderVN: RenderFunction

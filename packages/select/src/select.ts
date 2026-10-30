@@ -350,11 +350,11 @@ export default defineVxeComponent({
       return Object.assign({}, props.defaultConfig)
     })
     const computePropsOpts = computed(() => {
-      return Object.assign({}, props.optionProps)
+      return Object.assign({}, getConfig().select.optionProps, props.optionProps)
     })
 
     const computeGroupPropsOpts = computed(() => {
-      return Object.assign({}, props.optionGroupProps)
+      return Object.assign({}, getConfig().select.optionGroupProps, props.optionGroupProps)
     })
 
     const computeLabelField = computed(() => {
@@ -2285,26 +2285,31 @@ export default defineVxeComponent({
       )
     }
 
-    watch(
-      () => reactData.staticOptions,
-      (val) => {
-        loadData(val)
-      }
-    )
+    watch(() => reactData.staticOptions, (val) => {
+      loadData(val)
+    })
 
-    watch(
-      () => props.options,
-      (val) => {
-        loadData(val || [])
-      }
-    )
+    const refOptsFlag = ref(0)
+    watch(() => props.options, () => {
+      refOptsFlag.value++
+    })
+    watch(() => props.options ? props.options.length : -1, () => {
+      refOptsFlag.value++
+    })
+    watch(refOptsFlag, () => {
+      loadData(props.options || [])
+    })
 
-    watch(
-      () => props.optionGroups,
-      (val) => {
-        loadData(val || [])
-      }
-    )
+    const refOptGrpsFlag = ref(0)
+    watch(() => props.optionGroups, () => {
+      refOptGrpsFlag.value++
+    })
+    watch(() => props.optionGroups ? props.optionGroups.length : -1, () => {
+      refOptGrpsFlag.value++
+    })
+    watch(refOptGrpsFlag, () => {
+      loadData(props.optionGroups || [])
+    })
 
     const reScrollFlag = ref(0)
     const reLayoutFlag = ref(0)

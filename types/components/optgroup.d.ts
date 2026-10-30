@@ -12,7 +12,6 @@ export type VxeOptgroupInstance = DefineVxeComponentInstance<VxeOptgroupProps, V
 export interface VxeOptgroupConstructor extends VxeComponentBaseOptions, VxeOptgroupMethods {
   props: VxeOptgroupProps
   context: SetupContext<VxeOptgroupEmits>
-  reactData: OptgroupReactData
   getRefMaps(): OptgroupPrivateRef
   getComputeMaps(): OptgroupPrivateComputed
   renderVN: RenderFunction

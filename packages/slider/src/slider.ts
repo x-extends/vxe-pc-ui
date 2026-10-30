@@ -4,22 +4,7 @@ import XEUtils from 'xe-utils'
 import { VxeUI } from '@vxe-ui/core'
 import { getText } from '../../ui/src/utils'
 
-import type {
-  SliderReactData,
-  SliderInternalData,
-  VxeSliderEmits,
-  VxeSliderPropTypes,
-  SliderMethods,
-  VxeFormDefines,
-  VxeFormConstructor,
-  VxeFormPrivateMethods,
-  SliderPrivateMethods,
-  ValueOf,
-  SliderPrivateRef,
-  VxeSliderPrivateComputed,
-  VxeSliderConstructor,
-  VxeSliderPrivateMethods
-} from '../../../types'
+import type { SliderReactData, SliderInternalData, VxeSliderEmits, VxeSliderPropTypes, SliderMethods, VxeFormDefines, VxeFormConstructor, VxeFormPrivateMethods, SliderPrivateMethods, ValueOf, SliderPrivateRef, VxeSliderPrivateComputed, VxeSliderConstructor, VxeSliderPrivateMethods } from '../../../types'
 
 const { getConfig, createEvent, renderEmptyElement, useFns } = VxeUI
 

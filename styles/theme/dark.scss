@@ -49,6 +49,7 @@
   --vxe-ui-status-error-disabled-color: #f5a8a8;
   
   /*base*/
+  --vxe-ui-base-border-color: #424242;
   --vxe-ui-base-popup-border-color: #424242;
   --vxe-ui-base-popup-box-shadow: 0px 12px 30px 8px rgba(0, 0, 0, 0.5);
   --vxe-ui-base-drag-background-color: #2e3741;
@@ -59,7 +60,7 @@
   --vxe-ui-layout-background-color: #121212;
 
   /*input*/
-  --vxe-ui-input-border-color: #424242;
+  --vxe-ui-input-border-color: var(--vxe-ui-base-border-color);
   --vxe-ui-input-placeholder-color: #3c3d3e;
   --vxe-ui-input-disabled-background-color: #262727;
 

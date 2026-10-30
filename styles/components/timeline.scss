@@ -1,0 +1,133 @@
+// 局部变量
+.vxe-timeline {
+  --vxe-ui-timeline-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-timeline-current-padding: var(--vxe-ui-form-item-padding-default);
+  &.size--xlarge {
+    --vxe-ui-timeline-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-timeline-current-padding: var(--vxe-ui-form-item-padding-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-timeline-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-timeline-current-padding: var(--vxe-ui-form-item-padding-large);
+  }
+  &.size--medium {
+    --vxe-ui-timeline-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-timeline-current-padding: var(--vxe-ui-form-item-padding-medium);
+  }
+  &.size--small {
+    --vxe-ui-timeline-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-timeline-current-padding: var(--vxe-ui-form-item-padding-small);
+  }
+  &.size--mini {
+    --vxe-ui-timeline-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-timeline-current-padding: var(--vxe-ui-form-item-padding-mini);
+  }
+}
+
+.vxe-timeline {
+  display: flex;
+  flex-direction: column;
+  padding: var(--vxe-ui-timeline-current-padding) 0;
+  font-size: var(--vxe-ui-timeline-current-font-size);
+  color: var(--vxe-ui-font-color);
+  .vxe-timeline--body {
+    display: flex;
+    flex-direction: column;
+  }
+  .vxe-timeline--item {
+    position: relative;
+    display: flex;
+    padding-bottom: 1.25em;
+    &:last-child {
+      padding-bottom: 0;
+    }
+    &.is--last {
+      .vxe-timeline--item-line {
+        display: none;
+      }
+    }
+  }
+
+  // 竖线
+  .vxe-timeline--item-line {
+    position: absolute;
+    left: calc(0.5em - 0.0625em);
+    top: 1.125em;
+    bottom: 0;
+    width: 0.125em;
+    background-color: var(--vxe-ui-base-border-color);
+  }
+
+  // 节点圆点
+  .vxe-timeline--item-node {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.25em;
+    margin-right: 0.75em;
+    border: 0.125em solid var(--vxe-ui-font-primary-color);
+    border-radius: 50%;
+    background-color: var(--vxe-ui-layout-background-color);
+    box-sizing: border-box;
+  }
+  .vxe-timeline--item-wrapper {
+    flex: 1;
+    min-width: 0;
+    padding-top: 0.0625em;
+  }
+  .vxe-timeline--item-title {
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--vxe-ui-font-color);
+  }
+  .vxe-timeline--item-content {
+    margin-top: 0.25em;
+    line-height: 1.5;
+    color: var(--vxe-ui-font-lighten-color);
+    word-break: break-word;
+  }
+
+  // 横向
+  &.is--horizontal {
+    .vxe-timeline--body {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    .vxe-timeline--item {
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 0;
+      padding-right: 1.25em;
+      text-align: center;
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+    .vxe-timeline--item-line {
+      left: 50%;
+      top: calc(0.5em - 0.0625em);
+      right: -50%;
+      bottom: auto;
+      width: 100%;
+      height: 0.125em;
+    }
+    .vxe-timeline--item-node {
+      margin-top: 0;
+      margin-right: 0;
+      margin-bottom: 0.5em;
+    }
+    .vxe-timeline--item-wrapper {
+      padding-top: 0;
+    }
+    .vxe-timeline--item-content {
+      margin-top: 0.125em;
+    }
+  }
+}
+
+.vxe-timeline--slots {
+  display: none;
+}
