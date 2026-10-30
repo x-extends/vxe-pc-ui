@@ -1,0 +1,354 @@
+// 局部变量
+.vxe-steps {
+  --vxe-ui-steps-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-steps-current-padding: var(--vxe-ui-form-item-padding-default);
+
+  &.size--xlarge {
+    --vxe-ui-steps-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-steps-current-padding: var(--vxe-ui-form-item-padding-xlarge);
+  }
+  &.size--large {
+    --vxe-ui-steps-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-steps-current-padding: var(--vxe-ui-form-item-padding-large);
+  }
+  &.size--medium {
+    --vxe-ui-steps-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-steps-current-padding: var(--vxe-ui-form-item-padding-medium);
+  }
+  &.size--small {
+    --vxe-ui-steps-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-steps-current-padding: var(--vxe-ui-form-item-padding-small);
+  }
+  &.size--mini {
+    --vxe-ui-steps-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-steps-current-padding: var(--vxe-ui-form-item-padding-mini);
+  }
+}
+
+.vxe-steps {
+  --vxe-ui-steps-current-icon-size: var(--vxe-ui-steps-icon-dot-size);
+  &.is--number {
+    --vxe-ui-steps-current-icon-size: var(--vxe-ui-steps-icon-num-size);
+  }
+}
+
+.vxe-steps {
+  display: flex;
+  flex-direction: column;
+  padding: var(--vxe-ui-steps-current-padding) 0;
+  font-size: var(--vxe-ui-steps-current-font-size);
+  color: var(--vxe-ui-font-color);
+
+  .vxe-steps--body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vxe-steps--item {
+    position: relative;
+    display: flex;
+    padding-bottom: calc(var(--vxe-ui-steps-current-icon-size) + 0.5em);
+    &:last-child {
+      padding-bottom: 0;
+    }
+    &.is--last {
+      .vxe-steps--item-line {
+        display: none;
+      }
+    }
+  }
+
+  // ---- 连线 ----
+  .vxe-steps--item-line {
+    position: absolute;
+    left: calc(var(--vxe-ui-steps-current-icon-size) / 2 - var(--vxe-ui-steps-line-width) / 2);
+    top: var(--vxe-ui-steps-current-icon-size);
+    bottom: 0;
+    width: var(--vxe-ui-steps-line-width);
+    background-color: var(--vxe-ui-base-border-color);
+  }
+
+  // ---- 图标容器 ----
+  .vxe-steps--item-icon {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--vxe-ui-steps-current-icon-size);
+    height: var(--vxe-ui-steps-current-icon-size);
+    margin-right: 0.75em;
+  }
+
+  // 小圆点（默认空心，背景用布局色以遮挡连线穿过）
+  .vxe-steps--item-icon-dot {
+    width: var(--vxe-ui-steps-icon-dot-size);
+    height: var(--vxe-ui-steps-icon-dot-size);
+    border: var(--vxe-ui-steps-line-width) solid currentColor;
+    border-radius: 50%;
+    background-color: var(--vxe-ui-layout-background-color);
+    box-sizing: border-box;
+  }
+
+  // 序号（圆环）
+  .vxe-steps--item-icon-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--vxe-ui-steps-icon-num-size);
+    height: var(--vxe-ui-steps-icon-num-size);
+    border-radius: 50%;
+    border: var(--vxe-ui-steps-line-width) solid currentColor;
+    background-color: var(--vxe-ui-layout-background-color);
+    box-sizing: border-box;
+    font-size: 0.875em;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  // 状态图标
+  .vxe-steps--item-icon-status {
+    line-height: 1;
+    background-color: var(--vxe-ui-layout-background-color);
+    i {
+      font-size: var(--vxe-ui-steps-icon-num-size);
+    }
+  }
+
+  .vxe-steps--item-wrapper {
+    flex: 1;
+    min-width: 0;
+    padding-top: 0.125em;
+  }
+  .vxe-steps--item-title {
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .vxe-steps--item-content {
+    margin-top: 0.25em;
+    line-height: 1.5;
+    word-break: break-word;
+    color: var(--vxe-ui-font-lighten-color);
+  }
+
+  // ---- 横向 ----
+  &.is--horizontal {
+    .vxe-steps--body {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    .vxe-steps--item {
+      --vxe-ui-steps-item-padding-x: calc(var(--vxe-ui-steps-current-icon-size) + 0.5em);
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 0;
+      padding-right: var(--vxe-ui-steps-item-padding-x);
+      text-align: center;
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+    // 连线
+    .vxe-steps--item-line {
+      left: calc(50% - var(--vxe-ui-steps-item-padding-x) / 2);
+      right: calc(-50% + var(--vxe-ui-steps-item-padding-x) / 2);
+      top: calc(var(--vxe-ui-steps-current-icon-size) / 2 - var(--vxe-ui-steps-line-width) / 2);
+      bottom: auto;
+      width: auto;
+      height: var(--vxe-ui-steps-line-width);
+    }
+    .vxe-steps--item-icon {
+      margin-right: 0;
+      margin-bottom: 0.5em;
+    }
+    .vxe-steps--item-wrapper {
+      width: 100%;
+      padding-top: 0;
+    }
+    .vxe-steps--item-content {
+      margin-top: 0.125em;
+    }
+  }
+}
+
+// 序号 / 圆点尺寸切换
+.vxe-steps--item {
+  color: var(--vxe-ui-steps-status-default-color);
+  &.status--finish {
+    .vxe-steps--item-icon-num {
+      color: var(--vxe-ui-steps-status-finish-color);
+      border-color: var(--vxe-ui-steps-status-finish-color);
+    }
+    .vxe-steps--item-title {
+      color: var(--vxe-ui-steps-status-finish-color);
+    }
+    .vxe-steps--item-icon-status {
+      color: var(--vxe-ui-steps-status-finish-color);
+    }
+  }
+  // error：小圆点空心危险色
+  &.status--error {
+    .vxe-steps--item-icon-num {
+      color: var(--vxe-ui-steps-status-error-color);
+      border-color: var(--vxe-ui-steps-status-error-color);
+    }
+    .vxe-steps--item-title {
+      color: var(--vxe-ui-steps-status-error-color);
+    }
+    .vxe-steps--item-icon-status {
+      color: var(--vxe-ui-steps-status-error-color);
+    }
+  }
+  &.status--process {
+    .vxe-steps--item-icon-dot {
+      background-color: var(--vxe-ui-steps-status-process-color);
+    }
+  }
+
+  &.is--finish {
+    &.status--finish {
+      .vxe-steps--item-icon-num {
+        color: var(--vxe-ui-steps-status-finish-color);
+      }
+      .vxe-steps--item-icon-status {
+        color: var(--vxe-ui-steps-status-finish-color);
+      }
+      .vxe-steps--item-icon-dot {
+        border-color: var(--vxe-ui-steps-status-finish-color);
+      }
+    }
+    &.status--error {
+      .vxe-steps--item-icon-num {
+        color: var(--vxe-ui-steps-status-error-color);
+      }
+      .vxe-steps--item-icon-status {
+        color: var(--vxe-ui-steps-status-error-color);
+      }
+      .vxe-steps--item-icon-dot {
+        border-color: var(--vxe-ui-steps-status-error-color);
+      }
+    }
+    .vxe-steps--item-icon-num {
+      color: var(--vxe-ui-font-primary-color);
+    }
+    .vxe-steps--item-icon-dot {
+      border-color: var(--vxe-ui-font-primary-color);
+    } 
+    .vxe-steps--item-line {
+      background-color: var(--vxe-ui-font-primary-color);
+    }
+    .vxe-steps--item-icon-status {
+      color: var(--vxe-ui-font-primary-color);
+    }
+  }
+
+  // current：小圆点实心
+  &.is--current {
+    &.status--finish {
+      .vxe-steps--item-icon-num {
+        background-color: var(--vxe-ui-steps-status-finish-color);
+        color: var(--vxe-ui-layout-background-color);
+        border-color: var(--vxe-ui-steps-status-finish-color);
+      }
+      .vxe-steps--item-title {
+        color: var(--vxe-ui-steps-status-finish-color);
+      }
+      .vxe-steps--item-icon-status {
+        color: var(--vxe-ui-steps-status-finish-color);
+      }
+      .vxe-steps--item-icon-dot {
+        border-color: var(--vxe-ui-steps-status-finish-color);
+        background-color: var(--vxe-ui-steps-status-finish-color);
+      }
+    }
+    &.status--error {
+      .vxe-steps--item-icon-num {
+        background-color: var(--vxe-ui-steps-status-error-color);
+        color: var(--vxe-ui-layout-background-color);
+        border-color: var(--vxe-ui-steps-status-error-color);
+      }
+      .vxe-steps--item-title {
+        color: var(--vxe-ui-steps-status-error-color);
+      }
+      .vxe-steps--item-icon-status {
+        color: var(--vxe-ui-steps-status-error-color);
+      }
+      .vxe-steps--item-icon-dot {
+        border-color: var(--vxe-ui-steps-status-error-color);
+        background-color: var(--vxe-ui-steps-status-error-color);
+      }
+    }
+    .vxe-steps--item-icon-dot {
+      border-color: var(--vxe-ui-font-primary-color);
+      background-color: var(--vxe-ui-font-primary-color);
+    }
+    .vxe-steps--item-icon-num {
+      background-color: var(--vxe-ui-font-primary-color);
+      color: var(--vxe-ui-layout-background-color);
+      border-color: var(--vxe-ui-font-primary-color);
+    }
+    .vxe-steps--item-title {
+      color: var(--vxe-ui-font-primary-color);
+      font-weight: 700;
+    }
+  }
+}
+
+// 分隔符节点
+.vxe-steps--item-separator {
+  display: flex;
+  align-items: center;
+  flex: none;
+  margin: 0 0.5em;
+  color: var(--vxe-ui-font-placeholder-color);
+  white-space: nowrap;
+}
+
+// 简单类型
+.vxe-steps {
+  &.is--simple {
+    .vxe-steps--item-icon,
+    .vxe-steps--item-line,
+    .vxe-steps--item-content {
+      display: none;
+    }
+    .vxe-steps--item {
+      padding-bottom: 0;
+    }
+    .vxe-steps--item-wrapper {
+      padding-top: 0;
+    }
+
+    &.is--horizontal {
+      .vxe-steps--body {
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .vxe-steps--item {
+        flex: none;
+        flex-direction: row;
+        align-items: center;
+        padding-right: 0;
+        text-align: left;
+      }
+      .vxe-steps--item-wrapper {
+        width: auto;
+      }
+    }
+
+    &.is--vertical {
+      .vxe-steps--item {
+        padding-bottom: 0.5em;
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.vxe-steps--slots {
+  display: none;
+}

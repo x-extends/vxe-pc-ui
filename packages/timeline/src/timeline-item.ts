@@ -30,9 +30,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   computed: {
     ...({} as {
-        computeSize(): VxeComponentSizeType
-        $xeTimeline(): VxeTimelineInstance
-      })
+      computeSize(): VxeComponentSizeType
+      $xeTimeline(): VxeTimelineInstance
+    })
   },
   methods: {
     //
@@ -40,8 +40,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
     //
     renderVN(h: CreateElement): VNode {
       return h('div', {
-        ref: 'refElem',
-        class: 'vxe-timeline-item'
+        ref: 'refElem'
       })
     }
   },

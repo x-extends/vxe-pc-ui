@@ -1,7 +1,7 @@
 import { VueConstructor } from 'vue'
 import { VxeUI } from '@vxe-ui/core'
-import { dynamicApp } from '../dynamics'
 import VxeTimelineItemComponent from '../timeline/src/timeline-item'
+import { dynamicApp } from '../dynamics'
 
 export const VxeTimelineItem = Object.assign({}, VxeTimelineItemComponent, {
   install(app: VueConstructor) {

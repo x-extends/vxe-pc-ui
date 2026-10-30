@@ -333,4 +333,13 @@
   --vxe-ui-scrollbar-track-background-color: transparent;
   --vxe-ui-scrollbar-track-padding: 0;
   --vxe-ui-scrollbar-thumb-border-radius: var(--vxe-ui-base-border-radius);
+
+  /*steps*/
+  --vxe-ui-steps-line-width: 0.125em;
+  --vxe-ui-steps-icon-dot-size: 0.6em;
+  --vxe-ui-steps-icon-num-size: 1.5em;
+  --vxe-ui-steps-status-default-color: var(--vxe-ui-font-placeholder-color);
+  --vxe-ui-steps-status-process-color: var(--vxe-ui-font-primary-color);
+  --vxe-ui-steps-status-finish-color: var(--vxe-ui-status-success-color);
+  --vxe-ui-steps-status-error-color: var(--vxe-ui-status-error-color);
 }

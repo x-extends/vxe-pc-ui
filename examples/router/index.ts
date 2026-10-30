@@ -79,7 +79,8 @@ const routes: Array<RouteConfig> = [
   { path: '/component/space', name: 'SpaceTest', component: () => import('../views/space/SpaceTest.vue') },
   { path: '/component/divider', name: 'DividerTest', component: () => import('../views/divider/DividerTest.vue') },
   { path: '/component/scrollbar', name: 'ScrollbarTest', component: () => import('../views/scrollbar/ScrollbarTest.vue') },
-  { path: '/component/timeline', name: 'TimelineTest', component: () => import('../views/timeline/TimelineTest.vue') }
+  { path: '/component/timeline', name: 'TimelineTest', component: () => import('../views/timeline/TimelineTest.vue') },
+  { path: '/component/steps', name: 'StepsTest', component: () => import('../views/steps/StepsTest.vue') }
 ]
 
 const router = new VueRouter({

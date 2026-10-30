@@ -311,5 +311,12 @@ declare module '@vxe-ui/core' {
     LIST_DRAG?: string
     LIST_DRAG_STATUS_NODE?: string
     LIST_DRAG_DISABLED?: string
+
+    // steps
+    STEPS_SEPARATOR?: string
+    STEPS_STATUS_FINISH?: string
+    STEPS_STATUS_FINISH_CURRENT?: string
+    STEPS_STATUS_ERROR?: string
+    STEPS_STATUS_ERROR_CURRENT?: string
   }
 }

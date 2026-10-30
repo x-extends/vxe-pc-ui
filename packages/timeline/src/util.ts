@@ -21,7 +21,7 @@ export function watchTimelineItem(_vm: VxeTimelineItemConstructor, itemInfo: Tim
 }
 
 export function assembleTimelineItem($xeTimeline: VxeTimelineConstructor, el: HTMLDivElement, itemInfo: TimelineItemInfo) {
-  const { reactData } = $xeTimeline
+  const reactData = $xeTimeline.reactData
   const { staticItems } = reactData
   const parentElem = el.parentNode
   if (parentElem && staticItems) {
