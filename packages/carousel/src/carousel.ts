@@ -10,7 +10,7 @@ import type { CarouselReactData, CarouselPrivateRef, VxeCarouselPropTypes, Carou
 
 const { getConfig, getIcon, createEvent, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCarousel',
   props: {
     modelValue: [String, Number] as PropType<VxeCarouselPropTypes.ModelValue>,
@@ -472,4 +472,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

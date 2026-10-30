@@ -8,7 +8,7 @@ import type { VxeNoticeBarPropTypes, NoticeBarReactData, NoticeBarPrivateRef, No
 
 const { getConfig, useFns, createEvent, globalEvents, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeNoticeBar',
   props: {
     duration: [String, Number] as PropType<VxeNoticeBarPropTypes.Duration>,
@@ -204,4 +204,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

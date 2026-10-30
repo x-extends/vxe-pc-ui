@@ -7,7 +7,7 @@ import type { BadgeReactData, VxeBadgeEmits, VxeBadgePropTypes, BadgeMethods, Ba
 
 const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBadge',
   props: {
     count: [String, Number] as PropType<VxeBadgePropTypes.Count>,
@@ -128,4 +128,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

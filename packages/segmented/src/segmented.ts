@@ -19,7 +19,7 @@ function createReactData(): SegmentedReactData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSegmented',
   props: {
     modelValue: [String, Number] as PropType<VxeSegmentedPropTypes.ModelValue>,
@@ -294,4 +294,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

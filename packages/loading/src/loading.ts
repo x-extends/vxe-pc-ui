@@ -8,7 +8,7 @@ import type { VxeLoadingPropTypes, LoadingReactData, VxeLoadingPrivateComputed, 
 
 const { getConfig, getIcon, getI18n, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLoading',
   props: {
     modelValue: Boolean as PropType<VxeLoadingPropTypes.ModelValue>,
@@ -176,4 +176,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

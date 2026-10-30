@@ -20,7 +20,7 @@ function createReactData(): ImageReactData {
   return {}
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeImage',
   props: {
     src: [String, Array] as PropType<VxeImagePropTypes.Src>,
@@ -295,4 +295,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

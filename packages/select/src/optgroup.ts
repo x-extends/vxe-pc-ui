@@ -4,7 +4,7 @@ import { XEOptionProvide, createOption, watchOption, destroyOption, assembleOpti
 
 import type { VxeSelectConstructor, VxeOptgroupEmits, VxeOptgroupPropTypes } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeOptgroup',
   props: {
     label: {
@@ -50,4 +50,4 @@ export default defineVxeComponent({
       )
     }
   }
-})
+}) /* define-vxe-component end */

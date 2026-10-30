@@ -54,7 +54,7 @@ function createInternalData(): UploadInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeUpload',
   props: {
     modelValue: [Array, String, Object] as PropType<VxeUploadPropTypes.ModelValue>,
@@ -2268,4 +2268,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

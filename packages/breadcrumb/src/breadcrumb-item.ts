@@ -7,7 +7,7 @@ import type { VxeBreadcrumbItemPropTypes, VxeBreadcrumbItemEmits, BreadcrumbItem
 
 const { renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBreadcrumbItem',
   props: {
     title: String as PropType<VxeBreadcrumbItemPropTypes.Title>,
@@ -126,4 +126,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

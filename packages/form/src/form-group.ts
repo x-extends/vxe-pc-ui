@@ -11,7 +11,7 @@ import type { VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '
 
 const { renderer, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeFormGroup',
   props: formItemProps,
   setup(props, context) {
@@ -93,4 +93,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

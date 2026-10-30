@@ -22,7 +22,7 @@ import type {
 
 const { createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCollapsePane',
   props: {
     title: [String, Number] as PropType<VxeCollapsePanePropTypes.Title>,
@@ -139,4 +139,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

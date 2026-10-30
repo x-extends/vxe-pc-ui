@@ -106,7 +106,7 @@ let crossTreeDragNodeObj: {
   $newTree: (VxeTreeConstructor & VxeTreePrivateMethods) | null
 } | null = null
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTree',
   props: {
     data: Array as PropType<VxeTreePropTypes.Data>,
@@ -4074,4 +4074,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

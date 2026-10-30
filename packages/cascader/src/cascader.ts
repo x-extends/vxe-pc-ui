@@ -90,7 +90,7 @@ function createInternalData(): CascaderInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCascader',
   props: {
     modelValue: [String, Number, Array] as PropType<VxeCascaderPropTypes.ModelValue>,
@@ -2071,4 +2071,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

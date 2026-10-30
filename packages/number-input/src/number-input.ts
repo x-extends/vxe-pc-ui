@@ -8,27 +8,13 @@ import { hasClass, getEventTargetNode, hasControlKey, toCssUnit } from '../../ui
 import { getSlotVNs } from '../../ui/src/vn'
 import { handleNumber, toFloatValueFixed } from './util'
 
-import type {
-  VxeNumberInputConstructor,
-  NumberInputInternalData,
-  VxeNumberInputEmits,
-  VxeNumberInputPrivateComputed,
-  NumberInputReactData,
-  NumberInputMethods,
-  VxeNumberInputPropTypes,
-  InputPrivateRef,
-  VxeFormConstructor,
-  VxeFormPrivateMethods,
-  VxeFormDefines,
-  ValueOf,
-  VxeComponentStyleType
-} from '../../../types'
+import type { VxeNumberInputConstructor, NumberInputInternalData, VxeNumberInputEmits, VxeNumberInputPrivateComputed, NumberInputReactData, NumberInputMethods, VxeNumberInputPropTypes, InputPrivateRef, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf, VxeComponentStyleType } from '../../../types'
 
 const { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEvent, useFns, renderEmptyElement } = VxeUI
 
 const { errLog } = createComponentLog('number-input')
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeNumberInput',
   props: {
     modelValue: [String, Number] as PropType<VxeNumberInputPropTypes.ModelValue>,
@@ -1319,4 +1305,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

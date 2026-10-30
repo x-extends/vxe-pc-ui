@@ -26,7 +26,7 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 const { getConfig, globalEvents, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePulldown',
   props: {
     modelValue: Boolean as PropType<VxePulldownPropTypes.ModelValue>,
@@ -502,4 +502,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

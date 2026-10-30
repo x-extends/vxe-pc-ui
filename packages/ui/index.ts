@@ -830,7 +830,14 @@ setIcon({
   // list
   LIST_DRAG: iconPrefix + 'drag-handle',
   LIST_DRAG_STATUS_NODE: iconPrefix + 'sort',
-  LIST_DRAG_DISABLED: iconPrefix + 'no-drop'
+  LIST_DRAG_DISABLED: iconPrefix + 'no-drop',
+
+  // steps
+  STEPS_SEPARATOR: iconPrefix + 'arrow-right',
+  STEPS_STATUS_FINISH: iconPrefix + 'success-circle',
+  STEPS_STATUS_FINISH_CURRENT: iconPrefix + 'success-circle-fill',
+  STEPS_STATUS_ERROR: iconPrefix + 'error-circle',
+  STEPS_STATUS_ERROR_CURRENT: iconPrefix + 'error-circle-fill'
 })
 
 export default VxeUI

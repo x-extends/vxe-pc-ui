@@ -7,7 +7,7 @@ import type { VxeIconPropTypes, VxeIconEmits, IconMethods, IconPrivateMethods, V
 
 const { getConfig, createEvent, useFns } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeIcon',
   props: {
     name: String as PropType<VxeIconPropTypes.Name>,
@@ -75,4 +75,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

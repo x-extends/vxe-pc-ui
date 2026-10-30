@@ -72,7 +72,7 @@ function createInternalData(): DatePickerInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDatePicker',
   props: {
     modelValue: [String, Number, Date] as PropType<VxeDatePickerPropTypes.ModelValue>,
@@ -1881,4 +1881,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

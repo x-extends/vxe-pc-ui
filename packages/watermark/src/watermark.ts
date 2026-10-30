@@ -9,7 +9,7 @@ import type { WatermarkReactData, VxeWatermarkEmits, WatermarkMethods, VxeWaterm
 
 const { getConfig, createEvent, globalEvents } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeWatermark',
   props: {
     width: String as PropType<VxeWatermarkPropTypes.Width>,
@@ -193,4 +193,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

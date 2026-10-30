@@ -56,7 +56,7 @@ function createInternalData(): IconPickerInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeIconPicker',
   props: {
     modelValue: String as PropType<VxeIconPickerPropTypes.ModelValue>,
@@ -919,4 +919,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -28,7 +28,7 @@ const { getConfig, getIcon, createEvent, globalEvents, globalResize, useFns, ren
 
 const { warnLog, errLog } = createComponentLog('splitter')
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSplitter',
   props: {
     width: [Number, String] as PropType<VxeSplitterPropTypes.Width>,
@@ -1107,4 +1107,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -6,20 +6,7 @@ import { getLastZIndex, nextSubZIndex, nextZIndex, getFuncText } from '../../ui/
 import { getDomNode, getEventTargetNode, toCssUnit } from '../../ui/src/dom'
 import { getSlotVNs } from '../../ui/src/vn'
 
-import type {
-  ContextMenuInternalData,
-  ContextMenuReactData,
-  VxeContextMenuPropTypes,
-  VxeContextMenuDefines,
-  ContextMenuPrivateRef,
-  VxeContextMenuEmits,
-  VxeContextMenuPrivateComputed,
-  ContextMenuMethods,
-  ContextMenuPrivateMethods,
-  VxeContextMenuConstructor,
-  VxeContextMenuPrivateMethods,
-  ValueOf
-} from '../../../types'
+import type { ContextMenuInternalData, ContextMenuReactData, VxeContextMenuPropTypes, VxeContextMenuDefines, ContextMenuPrivateRef, VxeContextMenuEmits, VxeContextMenuPrivateComputed, ContextMenuMethods, ContextMenuPrivateMethods, VxeContextMenuConstructor, VxeContextMenuPrivateMethods, ValueOf } from '../../../types'
 
 const { getConfig, getIcon, getI18n, createEvent, useFns, globalEvents, renderEmptyElement, GLOBAL_EVENT_KEYS } = VxeUI
 
@@ -43,7 +30,7 @@ function createReactData(): ContextMenuReactData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeContextMenu',
   props: {
     modelValue: Boolean as PropType<VxeContextMenuPropTypes.ModelValue>,
@@ -770,4 +757,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

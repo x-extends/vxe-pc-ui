@@ -7,7 +7,7 @@ import type { TextEllipsisReactData, VxeTextEllipsisEmits, VxeTextEllipsisPropTy
 
 const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTextEllipsis',
   props: {
     href: String as PropType<VxeTextEllipsisPropTypes.Href>,
@@ -309,4 +309,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -32,7 +32,7 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 const { getIcon, getConfig, getI18n, useFns, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDrawer',
   props: {
     modelValue: Boolean as PropType<VxeDrawerPropTypes.ModelValue>,
@@ -917,4 +917,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

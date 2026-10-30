@@ -26,7 +26,7 @@ function createReactData(): BacktopReactData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBacktop',
   props: {
     target: String as PropType<VxeBacktopPropTypes.Target>,
@@ -334,4 +334,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

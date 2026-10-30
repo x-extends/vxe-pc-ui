@@ -11,7 +11,7 @@ const { getConfig, createEvent, useFns, getIcon, renderEmptyElement } = VxeUI
 
 const { warnLog } = createComponentLog('checkbox')
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCheckbox',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeCheckboxPropTypes.ModelValue>,
@@ -216,4 +216,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -1,17 +1,5 @@
 import { RenderFunction, SetupContext, Ref } from 'vue'
-import {
-  DefineVxeComponentApp,
-  DefineVxeComponentOptions,
-  DefineVxeComponentInstance,
-  VxeComponentBaseOptions,
-  VxeComponentEventParams,
-  VxeComponentSizeType,
-  VxeComponentStyleType,
-  ValueOf,
-  VxeComponentIsVScrollbar,
-  VxeUseInitVScrollbarReactData,
-  VxeUseInitVScrollbarInternalData
-} from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentBaseOptions, VxeComponentEventParams, VxeComponentSizeType, VxeComponentStyleType, ValueOf, VxeComponentIsVScrollbar, VxeUseInitVScrollbarReactData, VxeUseInitVScrollbarInternalData } from '@vxe-ui/core'
 import { VxeOptgroupProps } from './optgroup'
 import { VxeOptionProps, VxeOptionPropTypes } from './option'
 import { VxeScrollbarProps } from './scrollbar'

@@ -11,7 +11,7 @@ const { getConfig, createEvent, useFns, getIcon, renderEmptyElement } = VxeUI
 
 const { warnLog } = createComponentLog('radio')
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeRadio',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeRadioPropTypes.ModelValue>,
@@ -234,4 +234,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

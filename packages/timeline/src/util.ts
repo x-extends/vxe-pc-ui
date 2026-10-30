@@ -14,14 +14,17 @@ export function createTimelineItem($xeTimeline: VxeTimelineConstructor, _vm: any
 
 export function watchTimelineItem(props: any, itemInfo: TimelineItemInfo) {
   Object.keys(props).forEach((name) => {
-    watch(() => props[name], (value: any) => {
-      itemInfo.update(name, value)
-    })
+    watch(
+      () => props[name],
+      (value: any) => {
+        itemInfo.update(name, value)
+      }
+    )
   })
 }
 
 export function assembleTimelineItem($xeTimeline: VxeTimelineConstructor, el: HTMLDivElement, itemInfo: TimelineItemInfo) {
-  const { reactData } = $xeTimeline
+  const reactData = $xeTimeline.reactData
   const { staticItems } = reactData
   const parentElem = el.parentNode
   if (parentElem && staticItems) {

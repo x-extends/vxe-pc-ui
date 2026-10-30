@@ -23,7 +23,7 @@ import type {
 
 const { createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSplitterPanel',
   props: {
     name: [Number, String] as PropType<VxeSplitterPanelPropTypes.Name>,
@@ -196,4 +196,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

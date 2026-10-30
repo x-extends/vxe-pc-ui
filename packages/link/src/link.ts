@@ -8,7 +8,7 @@ import type { VxeLinkPropTypes, LinkReactData, LinkPrivateRef, LinkMethods, Link
 
 const { getConfig, useFns, createEvent, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLink',
   props: {
     href: String as PropType<VxeLinkPropTypes.Href>,
@@ -177,4 +177,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

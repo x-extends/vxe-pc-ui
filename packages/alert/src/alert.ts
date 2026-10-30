@@ -8,7 +8,7 @@ import type { VxeAlertPropTypes, AlertReactData, AlertPrivateRef, VxeAlertEmits,
 
 const { getConfig, getIcon, createEvent, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAlert',
   props: {
     title: {
@@ -145,4 +145,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

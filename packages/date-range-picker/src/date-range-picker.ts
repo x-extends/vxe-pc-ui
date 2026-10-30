@@ -65,7 +65,7 @@ function createInternalData(): DateRangePickerInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDateRangePicker',
   props: {
     modelValue: [String, Number, Date, Array] as PropType<VxeDateRangePickerPropTypes.ModelValue>,
@@ -1725,4 +1725,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -21,7 +21,7 @@ import type {
 
 const { createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePrintPageBreak',
   props: {},
   emits: [] as VxePrintPageBreakEmits,
@@ -101,4 +101,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -7,7 +7,7 @@ import type { VxeLayoutHeaderPropTypes, LayoutHeaderReactData, LayoutHeaderMetho
 
 const { createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutHeader',
   props: {
     fixed: Boolean as PropType<VxeLayoutHeaderPropTypes.Fixed>
@@ -76,4 +76,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

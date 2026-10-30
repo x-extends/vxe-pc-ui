@@ -42,7 +42,7 @@ function createInternalData(): CollapseInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCollapse',
   props: {
     modelValue: Array as PropType<VxeCollapsePropTypes.ModelValue>,
@@ -450,4 +450,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

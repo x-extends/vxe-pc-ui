@@ -56,7 +56,7 @@ function createReactData(): MenuReactData {
 
 let nemuUniqueKey = 100000000
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeMenu',
   props: {
     modelValue: [String, Number] as PropType<VxeMenuPropTypes.ModelValue>,
@@ -997,4 +997,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

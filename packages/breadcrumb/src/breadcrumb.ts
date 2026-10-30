@@ -8,7 +8,7 @@ import type { VxeBreadcrumbPropTypes, VxeBreadcrumbEmits, BreadcrumbReactData, B
 
 const { getConfig, createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeBreadcrumb',
   props: {
     separator: {
@@ -91,4 +91,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

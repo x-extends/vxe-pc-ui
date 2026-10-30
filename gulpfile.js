@@ -108,6 +108,7 @@ const componentList = [
   'slider',
   'space',
   'steps',
+  'step-item',
   'switch',
   'tab-pane',
   'table-select',

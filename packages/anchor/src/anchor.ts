@@ -9,7 +9,7 @@ import type { VxeAnchorPropTypes, AnchorReactData, VxeAnchorEmits, AnchorPrivate
 
 const { createEvent, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAnchor',
   props: {
     modelValue: String as PropType<VxeAnchorPropTypes.ModelValue>,
@@ -263,4 +263,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

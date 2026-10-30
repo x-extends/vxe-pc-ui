@@ -112,7 +112,7 @@ function createInternalData(): SelectInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSelect',
   props: {
     modelValue: [String, Number, Boolean, Array] as PropType<VxeSelectPropTypes.ModelValue>,
@@ -291,8 +291,7 @@ export default defineVxeComponent({
       getRefMaps: () => refMaps
     } as unknown as VxeSelectConstructor & VxeSelectMethods
 
-    const { refTrackXElem, refTrackYElem, refThumbXElem, refThumbYElem, updateThumbSize, updateThumbOffset, clickTrackXEvent, clickTrackYEvent, pointerdownThumbXEvent, pointermoveThumbXEvent, cleatPointerThumbEvent, pointerdownThumbYEvent, pointermoveThumbYEvent } =
-      useFns.useInitVScrollbar($xeSelect)
+    const { refTrackXElem, refTrackYElem, refThumbXElem, refThumbYElem, updateThumbSize, updateThumbOffset, clickTrackXEvent, clickTrackYEvent, pointerdownThumbXEvent, pointermoveThumbXEvent, cleatPointerThumbEvent, pointerdownThumbYEvent, pointermoveThumbYEvent } = useFns.useInitVScrollbar($xeSelect)
 
     const computeFormReadonly = computed(() => {
       const { readonly } = props
@@ -2285,28 +2284,43 @@ export default defineVxeComponent({
       )
     }
 
-    watch(() => reactData.staticOptions, (val) => {
-      loadData(val)
-    })
+    watch(
+      () => reactData.staticOptions,
+      (val) => {
+        loadData(val)
+      }
+    )
 
     const refOptsFlag = ref(0)
-    watch(() => props.options, () => {
-      refOptsFlag.value++
-    })
-    watch(() => props.options ? props.options.length : -1, () => {
-      refOptsFlag.value++
-    })
+    watch(
+      () => props.options,
+      () => {
+        refOptsFlag.value++
+      }
+    )
+    watch(
+      () => (props.options ? props.options.length : -1),
+      () => {
+        refOptsFlag.value++
+      }
+    )
     watch(refOptsFlag, () => {
       loadData(props.options || [])
     })
 
     const refOptGrpsFlag = ref(0)
-    watch(() => props.optionGroups, () => {
-      refOptGrpsFlag.value++
-    })
-    watch(() => props.optionGroups ? props.optionGroups.length : -1, () => {
-      refOptGrpsFlag.value++
-    })
+    watch(
+      () => props.optionGroups,
+      () => {
+        refOptGrpsFlag.value++
+      }
+    )
+    watch(
+      () => (props.optionGroups ? props.optionGroups.length : -1),
+      () => {
+        refOptGrpsFlag.value++
+      }
+    )
     watch(refOptGrpsFlag, () => {
       loadData(props.optionGroups || [])
     })
@@ -2392,4 +2406,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

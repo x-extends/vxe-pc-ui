@@ -171,7 +171,7 @@ function createInternalData(): FormInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeForm',
   props: {
     collapseStatus: {
@@ -1119,4 +1119,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

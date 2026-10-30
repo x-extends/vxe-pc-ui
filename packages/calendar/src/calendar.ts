@@ -14,7 +14,7 @@ const { errLog } = createComponentLog('calendar')
 
 const { createEvent, useFns, renderEmptyElement, menus, getConfig, getI18n } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCalendar',
   props: {
     modelValue: [String, Number, Date] as PropType<VxeCalendarPropTypes.ModelValue>,
@@ -1563,4 +1563,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

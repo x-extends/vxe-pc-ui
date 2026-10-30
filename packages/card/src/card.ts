@@ -12,7 +12,7 @@ import type { CardReactData, VxeCardEmits, VxeCardPropTypes, CardPrivateRef, Val
 
 const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCard',
   props: {
     title: String as PropType<VxeCardPropTypes.Title>,
@@ -282,4 +282,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

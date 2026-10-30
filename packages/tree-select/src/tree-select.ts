@@ -73,7 +73,7 @@ function createInternalData(): TreeSelectInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTreeSelect',
   props: {
     modelValue: [String, Number, Array] as PropType<VxeTreeSelectPropTypes.ModelValue>,
@@ -1214,4 +1214,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -68,7 +68,7 @@ function createInternalData(): TableSelectInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTableSelect',
   props: {
     modelValue: [String, Number, Array] as PropType<VxeTableSelectPropTypes.ModelValue>,
@@ -1100,4 +1100,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

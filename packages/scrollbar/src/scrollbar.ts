@@ -29,7 +29,7 @@ function createInternalData(): ScrollbarInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeScrollbar',
   props: {
     id: [String, Number] as PropType<VxeScrollbarPropTypes.Id>,
@@ -263,8 +263,7 @@ export default defineVxeComponent({
       getComputeMaps: () => computeMaps
     } as unknown as VxeScrollbarConstructor & VxeScrollbarPrivateMethods
 
-    const { refTrackXElem, refTrackYElem, refThumbXElem, refThumbYElem, updateThumbSize, updateThumbOffset, clickTrackXEvent, clickTrackYEvent, pointerdownThumbXEvent, pointermoveThumbXEvent, cleatPointerThumbEvent, pointerdownThumbYEvent, pointermoveThumbYEvent } =
-      useFns.useInitVScrollbar($xeScrollbar)
+    const { refTrackXElem, refTrackYElem, refThumbXElem, refThumbYElem, updateThumbSize, updateThumbOffset, clickTrackXEvent, clickTrackYEvent, pointerdownThumbXEvent, pointermoveThumbXEvent, cleatPointerThumbEvent, pointerdownThumbYEvent, pointermoveThumbYEvent } = useFns.useInitVScrollbar($xeScrollbar)
 
     const dispatchEvent = (type: ValueOf<VxeScrollbarEmits>, params: Record<string, any>, evnt: Event | null) => {
       emit(type, createEvent(evnt, { $scrollbar: $xeScrollbar }, params))
@@ -623,4 +622,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

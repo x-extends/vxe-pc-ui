@@ -7,7 +7,7 @@ import VxeImageComponent from './image'
 
 import type { VxeImageGroupPropTypes, VxeImageGroupEmits, VxeImageGroupConstructor, VxeImageGroupPrivateMethods, ImageGroupMethods, ButtonPrivateComputed, ImageGroupPrivateMethods } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeImageGroup',
   props: {
     urlList: [Array, String] as PropType<VxeImageGroupPropTypes.UrlList>,
@@ -156,4 +156,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

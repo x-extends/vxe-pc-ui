@@ -75,6 +75,7 @@ import { VxeSplitPaneProps } from '../components/split-pane'
 import { VxeSliderProps } from '../components/slider'
 import { VxeSpaceProps } from '../components/space'
 import { VxeStepsProps } from '../components/steps'
+import { VxeStepItemProps } from '../components/step-item'
 import { VxeSwitchProps } from '../components/switch'
 import { VxeTabPaneProps } from '../components/tab-pane'
 import { VxeTableSelectProps } from '../components/table-select'
@@ -191,6 +192,7 @@ declare module '@vxe-ui/core' {
     slider?: VxeSliderProps
     space?: VxeSpaceProps
     steps?: VxeStepsProps
+    stepItem?: VxeStepItemProps
     switch?: VxeSwitchProps
     tabPane?: VxeTabPaneProps
     tableSelect?: VxeTableSelectProps

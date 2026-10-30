@@ -7,7 +7,7 @@ import type { VxeTagPropTypes, TagReactData, TagPrivateRef, VxeTagEmits, VxeTagP
 
 const { getConfig, getIcon, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTag',
   props: {
     border: {
@@ -201,4 +201,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

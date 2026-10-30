@@ -5,26 +5,13 @@ import { getFuncText } from '../../ui/src/utils'
 import { VxeUI } from '@vxe-ui/core'
 import { createComponentLog } from '../../ui/src/log'
 
-import type {
-  VxeRadioButtonPropTypes,
-  VxeRadioGroupConstructor,
-  RadioButtonReactData,
-  RadioButtonPrivateMethods,
-  VxeRadioButtonConstructor,
-  VxeRadioButtonEmits,
-  VxeRadioGroupPrivateMethods,
-  RadioButtonMethods,
-  VxeFormConstructor,
-  VxeFormPrivateMethods,
-  VxeFormDefines,
-  ValueOf
-} from '../../../types'
+import type { VxeRadioButtonPropTypes, VxeRadioGroupConstructor, RadioButtonReactData, RadioButtonPrivateMethods, VxeRadioButtonConstructor, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, RadioButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
 const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
 const { warnLog } = createComponentLog('radio-button')
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeRadioButton',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeRadioButtonPropTypes.ModelValue>,
@@ -287,4 +274,4 @@ export default defineVxeComponent({
 
     return renderVN
   }
-})
+}) /* define-vxe-component end */

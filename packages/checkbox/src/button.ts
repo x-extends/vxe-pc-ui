@@ -5,25 +5,13 @@ import { getFuncText } from '../../ui/src/utils'
 import { VxeUI } from '@vxe-ui/core'
 import { createComponentLog } from '../../ui/src/log'
 
-import type {
-  VxeCheckboxButtonPropTypes,
-  VxeCheckboxGroupConstructor,
-  CheckboxButtonReactData,
-  CheckboxButtonPrivateMethods,
-  VxeCheckboxButtonConstructor,
-  VxeCheckboxButtonEmits,
-  VxeCheckboxGroupPrivateMethods,
-  CheckboxButtonMethods,
-  VxeFormConstructor,
-  VxeFormPrivateMethods,
-  VxeFormDefines
-} from '../../../types'
+import type { VxeCheckboxButtonPropTypes, VxeCheckboxGroupConstructor, CheckboxButtonReactData, CheckboxButtonPrivateMethods, VxeCheckboxButtonConstructor, VxeCheckboxButtonEmits, VxeCheckboxGroupPrivateMethods, CheckboxButtonMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 const { warnLog } = createComponentLog('checkbox-button')
 
 const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCheckboxButton',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeCheckboxButtonPropTypes.ModelValue>,
@@ -264,4 +252,4 @@ export default defineVxeComponent({
 
     return renderVN
   }
-})
+}) /* define-vxe-component end */

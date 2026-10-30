@@ -8,7 +8,7 @@ import type { VxeButtonGroupPropTypes, VxeButtonGroupEmits, ButtonGroupReactData
 
 const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeButtonGroup',
   props: {
     options: Array as PropType<VxeButtonGroupPropTypes.Options>,
@@ -113,4 +113,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

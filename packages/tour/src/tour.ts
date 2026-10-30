@@ -7,7 +7,7 @@ import type { TourReactData, VxeTourPropTypes, TourPrivateRef, VxeTourEmits, Vxe
 
 const { getConfig, createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTour',
   props: {
     size: {
@@ -67,4 +67,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

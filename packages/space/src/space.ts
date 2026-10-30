@@ -9,7 +9,7 @@ import type { SpaceReactData, VxeSpaceEmits, SpaceMethods, VxeSpacePropTypes, Sp
 
 const { getConfig, createEvent, useFns } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSpace',
   props: {
     size: {
@@ -222,4 +222,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

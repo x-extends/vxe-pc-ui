@@ -9,7 +9,7 @@ import type { VxeCountdownPropTypes, CountdownReactData, CountdownInternalData, 
 
 const { getConfig, getI18n, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCountdown',
   props: {
     modelValue: [Number, String] as PropType<VxeCountdownPropTypes.ModelValue>,
@@ -292,4 +292,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

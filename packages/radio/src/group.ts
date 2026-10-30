@@ -5,21 +5,7 @@ import { VxeUI } from '@vxe-ui/core'
 import VxeRadioComponent from '../../radio'
 import VxeRadioButtonComponent from '../../radio-button'
 
-import type {
-  VxeRadioGroupPropTypes,
-  RadioGroupInternalData,
-  VxeRadioGroupConstructor,
-  RadioGroupReactData,
-  VxeRadioGroupEmits,
-  VxeRadioGroupPrivateMethods,
-  RadioGroupPrivateMethods,
-  RadioGroupPrivateComputed,
-  RadioGroupMethods,
-  VxeFormConstructor,
-  VxeFormPrivateMethods,
-  VxeFormDefines,
-  ValueOf
-} from '../../../types'
+import type { VxeRadioGroupPropTypes, RadioGroupInternalData, VxeRadioGroupConstructor, RadioGroupReactData, VxeRadioGroupEmits, VxeRadioGroupPrivateMethods, RadioGroupPrivateMethods, RadioGroupPrivateComputed, RadioGroupMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeFormDefines, ValueOf } from '../../../types'
 
 const { getConfig, createEvent, useFns } = VxeUI
 
@@ -33,7 +19,7 @@ function createInternalData(): RadioGroupInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeRadioGroup',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeRadioGroupPropTypes.ModelValue>,
@@ -272,4 +258,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

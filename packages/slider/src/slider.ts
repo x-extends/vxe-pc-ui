@@ -23,7 +23,7 @@ function createReactData(): SliderReactData {
   return {}
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSlider',
   props: {
     modelValue: [String, Number, Array] as PropType<VxeSliderPropTypes.ModelValue>,
@@ -529,4 +529,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

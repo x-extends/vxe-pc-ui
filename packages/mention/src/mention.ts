@@ -6,7 +6,7 @@ import { VxeUI } from '@vxe-ui/core'
 import type { MentionReactData, VxeMentionPropTypes, MentionPrivateRef, VxeMentionEmits, VxeMentionPrivateComputed, MentionMethods, MentionPrivateMethods, VxeMentionConstructor, VxeMentionPrivateMethods, ValueOf } from '../../../types'
 const { getConfig, createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeMention',
   props: {
     size: {
@@ -66,4 +66,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

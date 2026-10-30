@@ -3,19 +3,7 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI } from '@vxe-ui/core'
 
-import type {
-  TableTransferReactData,
-  TableTransferInternalData,
-  VxeTableTransferEmits,
-  VxeTableTransferPropTypes,
-  TableTransferMethods,
-  TableTransferPrivateMethods,
-  ValueOf,
-  TableTransferPrivateRef,
-  VxeTableTransferPrivateComputed,
-  VxeTableTransferConstructor,
-  VxeTableTransferPrivateMethods
-} from '../../../types'
+import type { TableTransferReactData, TableTransferInternalData, VxeTableTransferEmits, VxeTableTransferPropTypes, TableTransferMethods, TableTransferPrivateMethods, ValueOf, TableTransferPrivateRef, VxeTableTransferPrivateComputed, VxeTableTransferConstructor, VxeTableTransferPrivateMethods } from '../../../types'
 
 const { getConfig, createEvent } = VxeUI
 
@@ -27,7 +15,7 @@ function createInternalData(): TableTransferInternalData {
   return {}
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTableTransfer',
   props: {
     modelValue: Array as PropType<VxeTableTransferPropTypes.ModelValue>,
@@ -101,4 +89,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

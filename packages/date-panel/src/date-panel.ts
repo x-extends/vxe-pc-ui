@@ -12,7 +12,7 @@ const { getConfig, getI18n, createEvent, useFns, renderEmptyElement } = VxeUI
 
 const { errLog } = createComponentLog('date-panel')
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDatePanel',
   props: {
     modelValue: [String, Number, Date, Array] as PropType<VxeDatePanelPropTypes.ModelValue>,
@@ -2211,4 +2211,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

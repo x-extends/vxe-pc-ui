@@ -18,7 +18,7 @@ const { warnLog, errLog } = createComponentLog('tabs')
 
 const scrollbarOffsetSize = 20
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTabs',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeTabsPropTypes.ModelValue>,
@@ -1134,4 +1134,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -13,7 +13,7 @@ const { getIcon, getConfig, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEven
 
 const { warnLog, errLog } = createComponentLog('pager')
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePager',
   props: {
     size: {
@@ -916,4 +916,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

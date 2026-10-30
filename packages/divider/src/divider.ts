@@ -7,7 +7,7 @@ import type { VxeDividerEmits, VxeDividerPropTypes, DividerMethods, DividerPriva
 
 const { getConfig, createEvent, useFns } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeDivider',
   props: {
     vertical: {
@@ -102,4 +102,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

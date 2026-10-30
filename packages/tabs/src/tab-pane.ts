@@ -8,7 +8,7 @@ import type { VxeTabPanePropTypes, TabPaneReactData, TabPaneMethods, TabPanePriv
 
 const { createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTabPane',
   props: {
     title: [String, Number] as PropType<VxeTabPanePropTypes.Title>,
@@ -129,4 +129,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

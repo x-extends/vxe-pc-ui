@@ -36,7 +36,7 @@ import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types
 
 const { getIcon, getConfig, getI18n, globalEvents, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeColorPicker',
   props: {
     modelValue: String as PropType<VxeColorPickerPropTypes.ModelValue>,
@@ -1307,4 +1307,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

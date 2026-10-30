@@ -13,7 +13,7 @@ const { warnLog } = createComponentLog('textarea')
 
 let autoTxtElem: HTMLDivElement
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTextarea',
   props: {
     modelValue: [String, Number] as PropType<VxeTextareaPropTypes.ModelValue>,
@@ -523,4 +523,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

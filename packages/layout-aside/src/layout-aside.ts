@@ -11,7 +11,7 @@ import type { VxeLayoutAsidePropTypes, LayoutAsideReactData, VxeLayoutAsideEmits
 
 const { getConfig, useFns, createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutAside',
   props: {
     width: [String, Number] as PropType<VxeLayoutAsidePropTypes.Width>,
@@ -169,4 +169,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

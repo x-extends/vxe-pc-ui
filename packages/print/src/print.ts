@@ -9,7 +9,7 @@ import type { VxePrintPropTypes, PrintReactData, PrintPrivateRef, VxePrintEmits,
 
 const { getConfig, createEvent, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePrint',
   props: {
     align: {
@@ -363,4 +363,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

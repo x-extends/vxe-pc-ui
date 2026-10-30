@@ -7,7 +7,7 @@ import type { VxeLayoutFooterPropTypes, LayoutFooterReactData, LayoutFooterPriva
 
 const { createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutFooter',
   props: {
     fixed: Boolean as PropType<VxeLayoutFooterPropTypes.Fixed>,
@@ -78,4 +78,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

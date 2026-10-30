@@ -8,7 +8,7 @@ import type { AvatarReactData, VxeAvatarEmits, AvatarMethods, VxeAvatarPropTypes
 
 const { getConfig, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAvatar',
   props: {
     count: [String, Number] as PropType<VxeAvatarPropTypes.Count>,
@@ -163,4 +163,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

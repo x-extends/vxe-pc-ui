@@ -8,7 +8,7 @@ import type { VxeAnchorLinkDefines, VxeAnchorLinkPropTypes, VxeAnchorLinkEmits, 
 
 const { renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeAnchorLink',
   props: {
     content: [String, Number] as PropType<VxeAnchorLinkPropTypes.Content>,
@@ -136,4 +136,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

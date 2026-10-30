@@ -4,24 +4,11 @@ import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 import { getDomNode, addClass, removeClass, hasControlKey } from '../../ui/src/dom'
 
-import type {
-  VxeImagePreviewConstructor,
-  ImagePreviewReactData,
-  ImagePreviewPrivateRef,
-  VxeGlobalIcon,
-  VxeImagePreviewEmits,
-  VxeImagePreviewPrivateMethods,
-  ImagePreviewPrivateMethods,
-  ImagePreviewPrivateComputed,
-  ImagePreviewMethods,
-  VxeImagePreviewPropTypes,
-  ValueOf,
-  VxeImagePreviewDefines
-} from '../../../types'
+import type { VxeImagePreviewConstructor, ImagePreviewReactData, ImagePreviewPrivateRef, VxeGlobalIcon, VxeImagePreviewEmits, VxeImagePreviewPrivateMethods, ImagePreviewPrivateMethods, ImagePreviewPrivateComputed, ImagePreviewMethods, VxeImagePreviewPropTypes, ValueOf, VxeImagePreviewDefines } from '../../../types'
 
 const { getConfig, createEvent, getIcon, globalEvents, GLOBAL_EVENT_KEYS, getI18n, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeImagePreview',
   props: {
     modelValue: Number as PropType<VxeImagePreviewPropTypes.ModelValue>,
@@ -746,4 +733,4 @@ export default defineVxeComponent({
 
     return renderVN
   }
-})
+}) /* define-vxe-component end */

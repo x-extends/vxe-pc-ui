@@ -7,7 +7,7 @@ import type { ResultReactData, VxeResultEmits, ResultMethods, ResultPrivateMetho
 
 const { getIcon, createEvent, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeResult',
   props: {
     imageUrl: String as PropType<VxeResultPropTypes.ImageUrl>,
@@ -138,4 +138,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

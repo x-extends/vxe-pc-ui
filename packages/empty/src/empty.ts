@@ -7,7 +7,7 @@ import type { EmptyReactData, VxeEmptyEmits, VxeEmptyPropTypes, EmptyMethods, Em
 
 const { getConfig, getI18n, getIcon, createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeEmpty',
   props: {
     imageUrl: String as PropType<VxeEmptyPropTypes.ImageUrl>,
@@ -121,4 +121,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

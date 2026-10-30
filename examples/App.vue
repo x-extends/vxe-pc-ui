@@ -158,7 +158,8 @@ const navList = ref<VxeMenuPropTypes.Options>([
   { name: 'SpaceTest', routerLink: { name: 'SpaceTest' } },
   { name: 'DividerTest', routerLink: { name: 'DividerTest' } },
   { name: 'ScrollbarTest', routerLink: { name: 'ScrollbarTest' } },
-  { name: 'TimelineTest', routerLink: { name: 'TimelineTest' } }
+  { name: 'TimelineTest', routerLink: { name: 'TimelineTest' } },
+  { name: 'StepsTest', routerLink: { name: 'StepsTest' } }
 ])
 
 const isScrollbar = ref(false)

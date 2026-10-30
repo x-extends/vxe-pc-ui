@@ -3,24 +3,13 @@ import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI } from '@vxe-ui/core'
 import XEUtils from 'xe-utils'
 
-import type {
-  VxeLayoutContainerPropTypes,
-  LayoutContainerReactData,
-  LayoutContainerPrivateMethods,
-  VxeLayoutContainerEmits,
-  LayoutContainerMethods,
-  LayoutContainerPrivateRef,
-  VxeLayoutContainerPrivateComputed,
-  VxeLayoutContainerConstructor,
-  VxeLayoutContainerPrivateMethods,
-  ValueOf
-} from '../../../types'
+import type { VxeLayoutContainerPropTypes, LayoutContainerReactData, LayoutContainerPrivateMethods, VxeLayoutContainerEmits, LayoutContainerMethods, LayoutContainerPrivateRef, VxeLayoutContainerPrivateComputed, VxeLayoutContainerConstructor, VxeLayoutContainerPrivateMethods, ValueOf } from '../../../types'
 
 const { getConfig, baseUtils, useFns, createEvent } = VxeUI
 
 const { getDefVal } = baseUtils
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutContainer',
   props: {
     vertical: Boolean as PropType<VxeLayoutContainerPropTypes.Vertical>,
@@ -105,4 +94,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

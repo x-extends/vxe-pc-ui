@@ -11,7 +11,7 @@ const { getConfig, createEvent, useFns } = VxeUI
 
 const { errLog } = createComponentLog('col')
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCol',
   props: {
     span: [Number, String] as PropType<VxeColPropTypes.Span>,
@@ -168,4 +168,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

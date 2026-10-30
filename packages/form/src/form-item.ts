@@ -90,7 +90,7 @@ export const formItemProps = {
   params: Object as PropType<VxeFormItemPropTypes.Params>
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeFormItem',
   props: formItemProps,
   setup(props, { slots }) {
@@ -178,4 +178,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

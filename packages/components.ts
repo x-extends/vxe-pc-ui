@@ -79,6 +79,7 @@ import VxeSplitPane from './split-pane'
 import VxeSlider from './slider'
 import VxeSpace from './space'
 import VxeSteps from './steps'
+import VxeStepItem from './step-item'
 import VxeSwitch from './switch'
 import VxeTabPane from './tab-pane'
 import VxeTableSelect from './table-select'
@@ -182,6 +183,7 @@ const components = [
   VxeSlider,
   VxeSpace,
   VxeSteps,
+  VxeStepItem,
   VxeSwitch,
   VxeTabPane,
   VxeTableSelect,
@@ -336,6 +338,7 @@ export * from './split-pane'
 export * from './slider'
 export * from './space'
 export * from './steps'
+export * from './step-item'
 export * from './switch'
 export * from './tab-pane'
 export * from './table-select'

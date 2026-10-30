@@ -15,7 +15,7 @@ function createInternalData(): TransferInternalData {
   return {}
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTransfer',
   props: {
     modelValue: Array as PropType<VxeTransferPropTypes.ModelValue>,
@@ -127,4 +127,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

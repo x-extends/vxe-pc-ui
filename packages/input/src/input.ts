@@ -38,7 +38,7 @@ const { getConfig, getIcon, getI18n, globalEvents, GLOBAL_EVENT_KEYS, createEven
 
 const { warnLog } = createComponentLog('input')
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeInput',
   props: {
     modelValue: [String, Number, Date] as PropType<VxeInputPropTypes.ModelValue>,
@@ -3198,4 +3198,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

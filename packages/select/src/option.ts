@@ -4,7 +4,7 @@ import { XEOptionProvide, createOption, watchOption, destroyOption, assembleOpti
 
 import type { VxeSelectConstructor, VxeOptionEmits, VxeOptionPropTypes } from '../../../types'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeOption',
   props: {
     value: [String, Number, Boolean] as PropType<VxeOptionPropTypes.Value>,
@@ -46,4 +46,4 @@ export default defineVxeComponent({
       })
     }
   }
-})
+}) /* define-vxe-component end */

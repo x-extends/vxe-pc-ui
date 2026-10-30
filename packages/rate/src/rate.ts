@@ -7,7 +7,7 @@ import type { RateReactData, VxeRateEmits, RateMethods, VxeRatePropTypes, RatePr
 
 const { getConfig, getIcon, createEvent, useFns } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeRate',
   props: {
     modelValue: [Number, String] as PropType<VxeRatePropTypes.ModelValue>,
@@ -200,4 +200,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

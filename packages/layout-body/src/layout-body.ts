@@ -19,7 +19,7 @@ function createReactData(): LayoutBodyReactData {
   return {}
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeLayoutBody',
   props: {
     loading: Boolean as PropType<VxeLayoutBodyPropTypes.Loading>,
@@ -188,4 +188,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

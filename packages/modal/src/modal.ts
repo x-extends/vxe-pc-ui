@@ -64,7 +64,7 @@ const notifyQueue: VxeModalConstructor[] = []
 const lockScrollAttrKey = 'data-vxe-lock-scroll'
 const lockScrollCssWidthKey = '--vxe-ui-modal-lock-scroll-view-width'
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeModal',
   props: {
     modelValue: Boolean as PropType<VxeModalPropTypes.ModelValue>,
@@ -542,7 +542,7 @@ export default defineVxeComponent({
 
     const getStorageMap = (key: string, id: string) => {
       // if (posStoreDB) {
-      return posStoreDB.getById(id).then(dbRest => dbRest ? dbRest.data : '')
+      return posStoreDB.getById(id).then((dbRest) => (dbRest ? dbRest.data : ''))
       // }
       // // 已废弃，兼容旧版本
       // return new Promise<string>(resolve => {
@@ -617,22 +617,7 @@ export default defineVxeComponent({
         if (!boxElem) {
           return
         }
-        const posStorage = [
-          boxElem.style.left,
-          boxElem.style.top,
-          boxElem.clientWidth,
-          boxElem.clientHeight,
-          ...(
-            revertLocat
-              ? [
-                  revertLocat.left,
-                  revertLocat.top,
-                  revertLocat.width,
-                  revertLocat.height
-                ]
-              : []
-          )
-        ].map((val) => (val ? XEUtils.toNumber(val) : '')).join(',')
+        const posStorage = [boxElem.style.left, boxElem.style.top, boxElem.clientWidth, boxElem.clientHeight, ...(revertLocat ? [revertLocat.left, revertLocat.top, revertLocat.width, revertLocat.height] : [])].map((val) => (val ? XEUtils.toNumber(val) : '')).join(',')
         saveStorageMap(id, posStorage)
       }
     }
@@ -876,7 +861,7 @@ export default defineVxeComponent({
             if (firstOpen) {
               reactData.firstOpen = false
               if (storageKey && id) {
-                getStorageMap(storageKey, id).then(posStorage => {
+                getStorageMap(storageKey, id).then((posStorage) => {
                   if (posStorage) {
                     restorePosStorage(posStorage)
                   } else {
@@ -1843,4 +1828,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

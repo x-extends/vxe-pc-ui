@@ -77,6 +77,7 @@ import VxeSlider from './components/slider'
 import VxeSpace from './components/space'
 import VxeRate from './components/rate'
 import VxeSteps from './components/steps'
+import VxeStepItem from './components/step-item'
 import VxeSwitch from './components/switch'
 import VxeTabPane from './components/tab-pane'
 import VxeTableSelect from './components/table-select'
@@ -354,6 +355,7 @@ interface UIComponents {
   VxeSlider: typeof VxeSlider
   VxeSpace: typeof VxeSpace
   VxeSteps: typeof VxeSteps
+  VxeStepItem: typeof VxeStepItem
   VxeSwitch: typeof VxeSwitch
   VxeTabPane: typeof VxeTabPane
   VxeTableSelect: typeof VxeTableSelect
@@ -531,6 +533,7 @@ export * from './components/split-pane'
 export * from './components/slider'
 export * from './components/space'
 export * from './components/steps'
+export * from './components/step-item'
 export * from './components/switch'
 export * from './components/tab-pane'
 export * from './components/table-select'

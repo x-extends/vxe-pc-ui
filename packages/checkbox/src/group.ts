@@ -33,7 +33,7 @@ function createInternalData(): CheckboxGroupInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCheckboxGroup',
   props: {
     modelValue: Array as PropType<VxeCheckboxGroupPropTypes.ModelValue>,
@@ -289,4 +289,4 @@ export default defineVxeComponent({
 
     return renderVN
   }
-})
+}) /* define-vxe-component end */

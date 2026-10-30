@@ -22,7 +22,7 @@ function createInternalData(): SwitchInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeSwitch',
   props: {
     modelValue: [String, Number, Boolean] as PropType<VxeSwitchPropTypes.ModelValue>,
@@ -297,4 +297,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

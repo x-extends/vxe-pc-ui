@@ -22,7 +22,7 @@ import type {
 
 const { createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeCarouselItem',
   props: {
     name: [String, Number] as PropType<VxeCarouselItemPropTypes.Name>,
@@ -117,4 +117,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -7,7 +7,7 @@ import type { VxeTextPropTypes, TextReactData, TextPrivateRef, VxeTextPrivateCom
 
 const { getConfig, getIcon, getI18n, useFns, createEvent } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeText',
   props: {
     status: String as PropType<VxeTextPropTypes.Status>,
@@ -279,4 +279,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

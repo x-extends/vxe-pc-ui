@@ -96,7 +96,7 @@ let crossListDragRowObj: {
   $newList: (VxeListConstructor & VxeListPrivateMethods) | null
 } | null = null
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeList',
   props: {
     data: Array as PropType<VxeListPropTypes.Data>,
@@ -2687,4 +2687,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

@@ -37,7 +37,7 @@ function createInternalData(): TooltipInternalData {
   }
 }
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTooltip',
   props: {
     modelValue: Boolean,
@@ -666,4 +666,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */

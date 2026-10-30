@@ -10,7 +10,7 @@ import type { VxePasswordInputConstructor, VxePasswordInputEmits, PasswordInputR
 
 const { getConfig, getIcon, getI18n, createEvent, useFns, renderEmptyElement } = VxeUI
 
-export default defineVxeComponent({
+export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxePasswordInput',
   props: {
     modelValue: String as PropType<VxePasswordInputPropTypes.ModelValue>,
@@ -520,4 +520,4 @@ export default defineVxeComponent({
   render() {
     return this.renderVN()
   }
-})
+}) /* define-vxe-component end */
