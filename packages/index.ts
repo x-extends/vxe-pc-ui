@@ -5,10 +5,10 @@ if (typeof window !== 'undefined') {
   if ((window as any).Vue) {
     // 兼容旧版本
     if (!(window as any).VxeUIAll) {
-      (window as any).VxeUIAll = VxeUIExport
+      ;(window as any).VxeUIAll = VxeUIExport
     }
     if (!(window as any).VxeUIBase) {
-      (window as any).VxeUIBase = VxeUIExport
+      ;(window as any).VxeUIBase = VxeUIExport
     }
     window.Vue.use(VxeUIExport)
   }

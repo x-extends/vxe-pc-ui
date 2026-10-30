@@ -8,9 +8,7 @@ export declare const VxeOption: DefineVxeComponentApp<VxeOptionProps, VxeOptionE
 export type VxeOptionComponent = DefineVxeComponentOptions<VxeOptionProps>
 
 export type VxeOptionInstance = DefineVxeComponentInstance<
-  {
-    reactData: OptionReactData
-  },
+  {},
   VxeOptionProps,
   VxeOptionPrivateComputed,
   VxeOptionMethods

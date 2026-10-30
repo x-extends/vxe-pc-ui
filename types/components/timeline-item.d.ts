@@ -1,4 +1,4 @@
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, ValueOf } from '@vxe-ui/core'
+import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams } from '@vxe-ui/core'
 
 /* eslint-disable @typescript-eslint/no-empty-interface,no-use-before-define,@typescript-eslint/ban-types */
 
@@ -6,9 +6,7 @@ export declare const VxeTimelineItem: DefineVxeComponentApp<VxeTimelineItemProps
 export type VxeTimelineItemComponent = DefineVxeComponentOptions<VxeTimelineItemProps>
 
 export type VxeTimelineItemInstance = DefineVxeComponentInstance<
-  {
-    reactData: TimelineItemReactData
-  },
+  {},
   VxeTimelineItemProps,
   VxeTimelineItemPrivateComputed,
   VxeTimelineItemMethods
@@ -19,18 +17,22 @@ export type VxeTimelineItemConstructor = VxeTimelineItemInstance
 export interface TimelineItemPrivateRef {}
 export interface VxeTimelineItemPrivateRef extends TimelineItemPrivateRef {}
 
-export namespace VxeTimelineItemPropTypes {}
+export namespace VxeTimelineItemPropTypes {
+  export type Title = string | number
+  export type Content = string | number
+}
 
-export type VxeTimelineItemProps = {}
+export interface VxeTimelineItemProps {
+  title?: VxeTimelineItemPropTypes.Title
+  content?: VxeTimelineItemPropTypes.Content
+}
 
 export interface TimelineItemPrivateComputed {}
 export interface VxeTimelineItemPrivateComputed extends TimelineItemPrivateComputed {}
 
 export interface TimelineItemReactData {}
 
-export interface TimelineItemMethods {
-  dispatchEvent(type: ValueOf<VxeTimelineItemEmits>, params: Record<string, any>, evnt: Event | null): void
-}
+export interface TimelineItemMethods {}
 export interface VxeTimelineItemMethods extends TimelineItemMethods {}
 
 export interface TimelineItemPrivateMethods {}
@@ -54,10 +56,18 @@ export interface VxeTimelineItemListeners {}
 export namespace VxeTimelineItemEvents {}
 
 export namespace VxeTimelineItemSlotTypes {
-  export interface DefaultSlotParams {}
+  export interface DefaultSlotParams {
+    item: any
+  }
+  export interface TitleSlotParams {
+    item: any
+  }
 }
 
-export interface VxeTimelineItemSlots {}
+export interface VxeTimelineItemSlots {
+  default?: (params: VxeTimelineItemSlotTypes.DefaultSlotParams) => any
+  title?: (params: VxeTimelineItemSlotTypes.TitleSlotParams) => any
+}
 
 export const TimelineItem: typeof VxeTimelineItem
 export default VxeTimelineItem

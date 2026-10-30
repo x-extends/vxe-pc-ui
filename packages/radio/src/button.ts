@@ -6,20 +6,7 @@ import { VxeUI } from '@vxe-ui/core'
 import { createComponentLog } from '../../ui/src/log'
 import { handleEmitModelVal } from '../../ui/src/vn'
 
-import type {
-  VxeRadioButtonPropTypes,
-  RadioButtonReactData,
-  RadioGroupPrivateComputed,
-  VxeRadioGroupConstructor,
-  ValueOf,
-  VxeRadioButtonEmits,
-  VxeRadioGroupPrivateMethods,
-  VxeFormConstructor,
-  VxeComponentPermissionInfo,
-  VxeComponentSizeType,
-  VxeFormPrivateMethods,
-  VxeFormDefines
-} from '../../../types'
+import type { VxeRadioButtonPropTypes, RadioButtonReactData, RadioGroupPrivateComputed, VxeRadioGroupConstructor, ValueOf, VxeRadioButtonEmits, VxeRadioGroupPrivateMethods, VxeFormConstructor, VxeComponentPermissionInfo, VxeComponentSizeType, VxeFormPrivateMethods, VxeFormDefines } from '../../../types'
 
 const { getConfig, createEvent, globalMixins, renderEmptyElement } = VxeUI
 

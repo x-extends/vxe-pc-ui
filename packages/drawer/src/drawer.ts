@@ -10,22 +10,7 @@ import VxeButtonComponent from '../../button'
 import VxeLoadingComponent from '../../loading'
 import VxeScrollbarComponent from '../../scrollbar'
 
-import type {
-  VxeDrawerPropTypes,
-  DrawerReactData,
-  VxeDrawerEmits,
-  VxeDrawerMethods,
-  ValueOf,
-  VxeDrawerConstructor,
-  VxeButtonConstructor,
-  DrawerEventTypes,
-  VxeModalConstructor,
-  VxeModalMethods,
-  VxeFormConstructor,
-  VxeFormPrivateMethods,
-  VxeComponentSizeType,
-  VxeComponentIsVScrollbar
-} from '../../../types'
+import type { VxeDrawerPropTypes, DrawerReactData, VxeDrawerEmits, VxeDrawerMethods, ValueOf, VxeDrawerConstructor, VxeButtonConstructor, DrawerEventTypes, VxeModalConstructor, VxeModalMethods, VxeFormConstructor, VxeFormPrivateMethods, VxeComponentSizeType, VxeComponentIsVScrollbar } from '../../../types'
 import type { VxeTableConstructor, VxeTablePrivateMethods } from '../../../types/components/table'
 
 const { getIcon, getConfig, getI18n, globalMixins, globalEvents, GLOBAL_EVENT_KEYS, createEvent, renderEmptyElement } = VxeUI

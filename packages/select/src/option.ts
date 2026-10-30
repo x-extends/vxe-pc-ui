@@ -5,7 +5,7 @@ import XEUtils from 'xe-utils'
 import { XEOptionProvide, createOption, watchOption, destroyOption, assembleOption } from './util'
 import { OptionInfo } from './option-info'
 
-import type { VxeSelectConstructor, VxeOptionEmits, VxeOptionPropTypes, OptionReactData, VxeComponentSizeType, ValueOf } from '../../../types'
+import type { VxeSelectConstructor, VxeOptionEmits, VxeOptionPropTypes, VxeComponentSizeType, ValueOf } from '../../../types'
 
 const { createEvent, globalMixins } = VxeUI
 
@@ -35,11 +35,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
   },
   data() {
     const xID = XEUtils.uniqueId()
-    const reactData: OptionReactData = {}
     const optionConfig = {} as OptionInfo
     return {
       xID,
-      reactData,
       optionConfig
     }
   },

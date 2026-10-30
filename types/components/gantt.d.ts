@@ -333,9 +333,7 @@ export namespace VxeGanttPropTypes {
     /**
      * 任务条样式
      */
-    barStyle?:
-      | VxeGanttDefines.DefaultBarStyleConfig
-      | ((params: { source: string; type: string; scaleType: VxeGanttDefines.ColumnScaleType; $gantt: VxeGanttConstructor<D>; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number }) => void | null | undefined | VxeGanttDefines.DefaultBarStyleConfig)
+    barStyle?: VxeGanttDefines.DefaultBarStyleConfig | ((params: { source: string; type: string; scaleType: VxeGanttDefines.ColumnScaleType; $gantt: VxeGanttConstructor<D>; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number }) => void | null | undefined | VxeGanttDefines.DefaultBarStyleConfig)
     /**
      * 是否启用拖拽移动日期
      */

@@ -1,6 +1,24 @@
 import { VNode, CreateElement } from 'vue'
 import { NormalizedScopedSlot } from 'vue/types/vnode'
-import { DefineVxeComponentApp, DefineVxeComponentOptions, DefineVxeComponentInstance, VxeComponentEventParams, VxeComponentSizeType, ValueOf, VxeGlobalConfig, VxeComponentStyleType, VxeComponentSlotType, VxeGlobalRendererOptions, VxeComponentIsVScrollbar, VxeUseSizeResult, VxeUseVScrollbarResult, VxeUseInitVScrollbarResult, VxeUseInitVScrollbarReactData, VxeUseInitVScrollbarInternalData, VxeDBStore } from '@vxe-ui/core'
+import {
+  DefineVxeComponentApp,
+  DefineVxeComponentOptions,
+  DefineVxeComponentInstance,
+  VxeComponentEventParams,
+  VxeComponentSizeType,
+  ValueOf,
+  VxeGlobalConfig,
+  VxeComponentStyleType,
+  VxeComponentSlotType,
+  VxeGlobalRendererOptions,
+  VxeComponentIsVScrollbar,
+  VxeUseSizeResult,
+  VxeUseVScrollbarResult,
+  VxeUseInitVScrollbarResult,
+  VxeUseInitVScrollbarReactData,
+  VxeUseInitVScrollbarInternalData,
+  VxeDBStore
+} from '@vxe-ui/core'
 import { VxeColumnPropTypes, VxeColumnProps, VxeColumnSlotTypes } from './column'
 import { VxeTableExtendCellAreaDefines, VxeTableExtendCellAreaEmits } from './table-plugins'
 import { VxeGridConstructor, VxeGridPrivateMethods } from './grid'
@@ -122,13 +140,9 @@ export namespace VxeTablePropTypes {
     | Partial<CSSStyleDeclaration>
     | ((params: { row: D; rowIndex: number; $rowIndex: number; _rowIndex: number; column: VxeTableDefines.ColumnInfo; columnIndex: number; $columnIndex: number; _columnIndex: number }) => void | null | Partial<CSSStyleDeclaration> | VxeComponentStyleType)
 
-  export type HeaderCellStyle<D = VxeTablePropTypes.Row> =
-    | Partial<CSSStyleDeclaration>
-    | ((params: { $table: VxeTableConstructor<D>; $rowIndex: number; column: VxeTableDefines.ColumnInfo; columnIndex: number; _columnIndex: number }) => void | null | Partial<CSSStyleDeclaration> | VxeComponentStyleType)
+  export type HeaderCellStyle<D = VxeTablePropTypes.Row> = Partial<CSSStyleDeclaration> | ((params: { $table: VxeTableConstructor<D>; $rowIndex: number; column: VxeTableDefines.ColumnInfo; columnIndex: number; _columnIndex: number }) => void | null | Partial<CSSStyleDeclaration> | VxeComponentStyleType)
 
-  export type FooterCellStyle<D = any> =
-    | VxeComponentStyleType
-    | ((params: { $table: VxeTableConstructor<D>; row: D; $rowIndex: number; column: VxeTableDefines.ColumnInfo; columnIndex: number; $columnIndex: number; _columnIndex: number }) => void | null | Partial<CSSStyleDeclaration> | VxeComponentStyleType)
+  export type FooterCellStyle<D = any> = VxeComponentStyleType | ((params: { $table: VxeTableConstructor<D>; row: D; $rowIndex: number; column: VxeTableDefines.ColumnInfo; columnIndex: number; $columnIndex: number; _columnIndex: number }) => void | null | Partial<CSSStyleDeclaration> | VxeComponentStyleType)
 
   export type RowStyle<D = VxeTablePropTypes.Row> = Partial<CSSStyleDeclaration> | ((params: { $table: VxeTableConstructor<D>; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number }) => void | null | Partial<CSSStyleDeclaration> | VxeComponentStyleType)
 
@@ -171,18 +185,7 @@ export namespace VxeTablePropTypes {
     visibleData: D[]
   }) => void | { rowspan: number; colspan: number }
 
-  export type FooterSpanMethod<D = any> = (params: {
-    $table: VxeTableConstructor<D>
-    column: VxeTableDefines.ColumnInfo
-    columnIndex: number
-    _columnIndex: number
-    $columnIndex: number
-    row: D
-    $rowIndex: number
-    _rowIndex: number
-    items: any[]
-    data: D[][]
-  }) => void | { rowspan: number; colspan: number }
+  export type FooterSpanMethod<D = any> = (params: { $table: VxeTableConstructor<D>; column: VxeTableDefines.ColumnInfo; columnIndex: number; _columnIndex: number; $columnIndex: number; row: D; $rowIndex: number; _rowIndex: number; items: any[]; data: D[][] }) => void | { rowspan: number; colspan: number }
 
   export type ShowOverflow = boolean | 'ellipsis' | 'title' | 'tooltip' | '' | null
   export type ShowHeaderOverflow = ShowOverflow
@@ -1321,21 +1324,7 @@ export namespace VxeTablePropTypes {
     /**
      * 该方法可以通过返回值来重写默认的提示内容，可以返回 null 使用默认的提示内容，可以返回空内容去掉指定单元格的提示内容
      */
-    contentMethod?(params: {
-      $table: VxeTableConstructor<D>
-      items: any[]
-      row: D
-      rowIndex: number
-      $rowIndex: number
-      _rowIndex: number
-      column: VxeTableDefines.ColumnInfo
-      columnIndex: number
-      $columnIndex: number
-      _columnIndex: number
-      type: 'body'
-      cell: HTMLElement
-      $event: any
-    }): string | boolean | null | void
+    contentMethod?(params: { $table: VxeTableConstructor<D>; items: any[]; row: D; rowIndex: number; $rowIndex: number; _rowIndex: number; column: VxeTableDefines.ColumnInfo; columnIndex: number; $columnIndex: number; _columnIndex: number; type: 'body'; cell: HTMLElement; $event: any }): string | boolean | null | void
     /**
      * 请使用 useHtml
      * @deprecated
@@ -1352,20 +1341,7 @@ export namespace VxeTablePropTypes {
     /**
      * 该方法可以通过返回值来重写默认的提示内容，可以返回 null 使用默认的提示内容，可以返回空内容去掉指定单元格的提示内容
      */
-    contentMethod?(params: {
-      $table: VxeTableConstructor<D>
-      items: any[]
-      row: D
-      rowIndex: number
-      $rowIndex: number
-      column: VxeTableDefines.ColumnInfo
-      columnIndex: number
-      $columnIndex: number
-      _columnIndex: number
-      type: 'footer'
-      cell: HTMLElement
-      $event: any
-    }): string | boolean | null | void
+    contentMethod?(params: { $table: VxeTableConstructor<D>; items: any[]; row: D; rowIndex: number; $rowIndex: number; column: VxeTableDefines.ColumnInfo; columnIndex: number; $columnIndex: number; _columnIndex: number; type: 'footer'; cell: HTMLElement; $event: any }): string | boolean | null | void
   }
 
   /**
@@ -2042,18 +2018,7 @@ export namespace VxeTablePropTypes {
     /**
      * 自定义单元格查找方法
      */
-    findMethod?(params: {
-      $table: VxeTableConstructor<DT> & VxeTablePrivateMethods
-      $grid: VxeGridConstructor<DT> | null | undefined
-      cellValue: any
-      row: DT
-      column: VxeTableDefines.ColumnInfo
-      isWhole: boolean
-      isRE: boolean
-      isSensitive: boolean
-      findValue: string | null
-      findRE: RegExp | null
-    }): boolean
+    findMethod?(params: { $table: VxeTableConstructor<DT> & VxeTablePrivateMethods; $grid: VxeGridConstructor<DT> | null | undefined; cellValue: any; row: DT; column: VxeTableDefines.ColumnInfo; isWhole: boolean; isRE: boolean; isSensitive: boolean; findValue: string | null; findRE: RegExp | null }): boolean
     /**
      * 自定义单元格查找之前的方法，可以通过返回 false 阻止查找行为
      */
@@ -6335,13 +6300,7 @@ export namespace VxeTableDefines {
     /**
      * @private
      */
-    renderAggFormat:
-      | 'round'
-      | 'ceil'
-      | 'floor'
-      | ''
-      | null
-      | ((params: { $table: VxeTableConstructor<D>; groupField: VxeColumnPropTypes.Field; groupColumn: VxeTableDefines.ColumnInfo; column: VxeTableDefines.ColumnInfo; groupValue: any; childCount: number; children: D[]; aggValue: number }) => number)
+    renderAggFormat: 'round' | 'ceil' | 'floor' | '' | null | ((params: { $table: VxeTableConstructor<D>; groupField: VxeColumnPropTypes.Field; groupColumn: VxeTableDefines.ColumnInfo; column: VxeTableDefines.ColumnInfo; groupValue: any; childCount: number; children: D[]; aggValue: number }) => number)
 
     /**
      * @private

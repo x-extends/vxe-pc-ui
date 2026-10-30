@@ -304,7 +304,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
         $xeCard(): (VxeCardConstructor & VxeCardPrivateMethods) | null
         $xeForm(): (VxeFormConstructor & VxeFormPrivateMethods) | null
         formItemInfo(): VxeFormDefines.ProvideItemInfo | null
-      }),
+      }
+    ),
     computeFormReadonly() {
       const $xeSelect = this
       const props = $xeSelect
@@ -382,13 +383,13 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const $xeSelect = this
       const props = $xeSelect
 
-      return Object.assign({}, props.optionProps)
+      return Object.assign({}, getConfig().select.optionProps, props.optionProps)
     },
     computeGroupPropsOpts() {
       const $xeSelect = this
       const props = $xeSelect
 
-      return Object.assign({}, props.optionGroupProps)
+      return Object.assign({}, getConfig().select.optionGroupProps, props.optionGroupProps)
     },
     computeLabelField() {
       const $xeSelect = this

@@ -165,7 +165,8 @@ export default Vue.extend({
         { name: 'GanttTest', routerLink: { name: 'GanttTest' } },
         { name: 'SpaceTest', routerLink: { name: 'SpaceTest' } },
         { name: 'DividerTest', routerLink: { name: 'DividerTest' } },
-        { name: 'ScrollbarTest', routerLink: { name: 'ScrollbarTest' } }
+        { name: 'ScrollbarTest', routerLink: { name: 'ScrollbarTest' } },
+        { name: 'TimelineTest', routerLink: { name: 'TimelineTest' } }
       ],
       isScrollbar: false
     }

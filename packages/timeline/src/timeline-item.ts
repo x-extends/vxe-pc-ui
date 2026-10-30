@@ -1,31 +1,40 @@
-import { CreateElement, VNode } from 'vue'
+import { CreateElement, VNode, PropType } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import XEUtils from 'xe-utils'
 import { VxeUI } from '@vxe-ui/core'
+import { createTimelineItem, watchTimelineItem, assembleTimelineItem, destroyTimelineItem } from './util'
+import { TimelineItemInfo } from './timeline-info'
 
-import type { TimelineItemReactData, VxeTimelineItemEmits, ValueOf } from '../../../types'
+import type { VxeTimelineInstance, VxeTimelineItemPropTypes, VxeComponentSizeType } from '../../../types'
 
-const { createEvent } = VxeUI
+const { globalMixins } = VxeUI
 
 export default /* define-vxe-component start */ defineVxeComponent({
   name: 'VxeTimelineItem',
-  props: {},
-  data() {
-    const reactData: TimelineItemReactData = {}
-    return {
-      xID: XEUtils.uniqueId(),
-      reactData
+  mixins: [globalMixins.sizeMixin],
+  props: {
+    title: [String, Number] as PropType<VxeTimelineItemPropTypes.Title>,
+    content: [String, Number] as PropType<VxeTimelineItemPropTypes.Content>
+  },
+  inject: {
+    $xeTimeline: {
+      default: null
     }
   },
+  data() {
+    const itemConfig = {} as TimelineItemInfo
+    return {
+      xID: XEUtils.uniqueId(),
+      itemConfig
+    }
+  },
+  computed: {
+    ...({} as {
+        computeSize(): VxeComponentSizeType
+        $xeTimeline(): VxeTimelineInstance
+      })
+  },
   methods: {
-    //
-    // Method
-    //
-    dispatchEvent(type: ValueOf<VxeTimelineItemEmits>, params: Record<string, any>, evnt: Event | null) {
-      const $xeTimelineItem = this
-      $xeTimelineItem.$emit(type, createEvent(evnt, { $timelineItem: $xeTimelineItem }, params))
-    },
-
     //
     // Render
     //
@@ -35,6 +44,33 @@ export default /* define-vxe-component start */ defineVxeComponent({
         class: 'vxe-timeline-item'
       })
     }
+  },
+  created() {
+    const $xeTimelineItem = this
+    const props = $xeTimelineItem
+    const $xeTimeline = $xeTimelineItem.$xeTimeline
+
+    const itemConfig = createTimelineItem($xeTimeline, props)
+    $xeTimelineItem.itemConfig = itemConfig
+
+    watchTimelineItem($xeTimelineItem, itemConfig)
+  },
+  mounted() {
+    const $xeTimelineItem = this
+    const slots = $xeTimelineItem.$scopedSlots
+    const itemConfig = $xeTimelineItem.itemConfig
+    const $xeTimeline = $xeTimelineItem.$xeTimeline
+
+    itemConfig.slots = slots
+    const el = $xeTimelineItem.$refs.refElem as HTMLDivElement
+    assembleTimelineItem($xeTimeline, el, itemConfig)
+  },
+  beforeDestroy() {
+    const $xeTimelineItem = this
+    const itemConfig = $xeTimelineItem.itemConfig
+    const $xeTimeline = $xeTimelineItem.$xeTimeline
+
+    destroyTimelineItem($xeTimeline, itemConfig)
   },
   render(this: any, h) {
     return this.renderVN(h)

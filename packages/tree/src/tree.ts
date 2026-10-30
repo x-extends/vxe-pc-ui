@@ -12,22 +12,7 @@ import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 import VxeTooltipComponent from '../../tooltip'
 
-import type {
-  TreeReactData,
-  VxeTreeEmits,
-  VxeTreeConstructor,
-  VxeTreePropTypes,
-  TreeInternalData,
-  VxeTreeDefines,
-  VxeTreePrivateMethods,
-  ValueOf,
-  VxeTooltipInstance,
-  VxeComponentStyleType,
-  VxeScrollbarPropTypes,
-  VxeUseSizeComputed,
-  VxeUseVScrollbarComputed,
-  VxeUseInitVScrollbarComputed
-} from '../../../types'
+import type { TreeReactData, VxeTreeEmits, VxeTreeConstructor, VxeTreePropTypes, TreeInternalData, VxeTreeDefines, VxeTreePrivateMethods, ValueOf, VxeTooltipInstance, VxeComponentStyleType, VxeScrollbarPropTypes, VxeUseSizeComputed, VxeUseVScrollbarComputed, VxeUseInitVScrollbarComputed } from '../../../types'
 
 const { warnLog, errLog } = createComponentLog('tree')
 
