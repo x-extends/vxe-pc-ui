@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: '写真',
           VxeRate: 'スコア',
           VxeSlider: 'スライダー'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: '写真の数を制限します',
           limitImgSize: '画像サイズの制限',
           multiImg: '複数の写真をアップロードしてください'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },

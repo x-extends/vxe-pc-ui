@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: '그림',
           VxeRate: '점수',
           VxeSlider: '슬라이더'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: '사진의 수를 제한합니다',
           limitImgSize: '이미지 크기 제한',
           multiImg: '여러 사진을 업로드 할 수 있습니다'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },

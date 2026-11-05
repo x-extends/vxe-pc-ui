@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: 'Bild',
           VxeRate: 'Punktzahl',
           VxeSlider: 'Schieberegler'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: 'Begrenzung der Anzahl der Bilder',
           limitImgSize: 'Bildgrößengrenze',
           multiImg: 'Lassen Sie mehrere Bilder hochladen'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },

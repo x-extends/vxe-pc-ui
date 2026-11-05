@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: 'gambar',
           VxeRate: 'skor',
           VxeSlider: 'slider'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: 'Hadkan bilangan gambar',
           limitImgSize: 'Had saiz imej',
           multiImg: 'Benarkan pelbagai gambar dimuat naik'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },

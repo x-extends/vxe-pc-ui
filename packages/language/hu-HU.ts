@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: 'kép',
           VxeRate: 'pontszám',
           VxeSlider: 'csúszó'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: 'Korlátok száma a képek számának',
           limitImgSize: 'Képméret korlátozás',
           multiImg: 'Hagyja több kép feltöltését'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },
