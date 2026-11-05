@@ -1,6 +1,6 @@
 {
   "name": "vxe-pc-ui",
-  "version": "4.20.36",
+  "version": "4.20.37",
   "description": "A vue based PC component library",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -76,7 +76,7 @@
     "typescript": "~5.9.3",
     "vue": "3.4.27",
     "vue-router": "~4.5.1",
-    "vxe-table": "^4.23.14",
+    "vxe-table": "^4.23.15",
     "vxe-gantt": "^4.9.9"
   },
   "allowScripts": {
