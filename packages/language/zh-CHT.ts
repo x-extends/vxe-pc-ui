@@ -61,7 +61,8 @@ export default {
       reqPlugin: '擴充外掛未安裝 "{1}" https://vxeui.com/other{0}/#/{1}/start/npmInstall',
       errMaxRow: '超過支援的最大資料量 {0} 列，這可能會導致出現錯誤',
       useNew: '不建議使用 {0}，請使用 {1}',
-      errorVersion: '版本不匹配，當前版本 {0}，最低支援版本為 {1}'
+      errorVersion: '版本不匹配，當前版本 {0}，最低支援版本為 {1}',
+      errMaxVersion: '版本不匹配，当前版本 {0}，最高支持版本为 {1}'
     },
     table: {
       emptyText: '暫無資料',

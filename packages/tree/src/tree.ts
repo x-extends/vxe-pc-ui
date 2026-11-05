@@ -7,7 +7,7 @@ import { createComponentLog } from '../../ui/src/log'
 import { getSlotVNs } from '../../ui/src/vn'
 import { crossTreeDragNodeGlobal, getCrossTreeDragNodeInfo } from './store'
 import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode, hasClass } from '../../ui/src/dom'
-import { isEnableConf, enModelValue, deModelValue, getText } from '../../ui/src/utils'
+import { isEnableConf, enModelValue, deModelValue, getText, hasEnableConf } from '../../ui/src/utils'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 import VxeTooltipComponent from '../../tooltip'
@@ -686,9 +686,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().tree.mapChildrenField
     },
     transform: Boolean as PropType<VxeTreePropTypes.Transform>,
-    // 已废弃
+    /**
+     * 已废弃，请使用 node-config.isCurrent
+     * @deprecated
+     */
     isCurrent: Boolean as PropType<VxeTreePropTypes.IsCurrent>,
-    // 已废弃
+    /**
+     * 已废弃，请使用 node-config.isHover
+     * @deprecated
+     */
     isHover: Boolean as PropType<VxeTreePropTypes.IsHover>,
     expandAll: Boolean as PropType<VxeTreePropTypes.ExpandAll>,
     expandNodeKeys: Array as PropType<VxeTreePropTypes.ExpandNodeKeys>,
@@ -723,6 +729,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().tree.showOverflow
     },
     tooltipConfig: Object as PropType<VxeTreePropTypes.TooltipConfig>,
+    sortConfig: Object as PropType<VxeTreePropTypes.SortConfig>,
     drag: {
       type: Boolean as PropType<VxeTreePropTypes.Drag>,
       default: () => getConfig().tree.drag
@@ -896,6 +903,18 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const props = $xeTree
 
       return Object.assign({}, getConfig().tree.tooltipConfig, props.tooltipConfig)
+    },
+    computeSortOpts() {
+      const $xeTree = this
+      const props = $xeTree
+
+      return Object.assign({}, getConfig().tree.sortConfig, props.sortConfig)
+    },
+    computeSortDefaultSort () {
+      const $xeTree = this
+
+      const sortOpts = $xeTree.computeSortOpts as VxeTreePropTypes.SortConfig
+      return sortOpts.defaultSort || null
     },
     computeMenuOpts() {
       const $xeTree = this
@@ -1552,22 +1571,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
       const reactData = $xeTree.reactData
       const internalData = $xeTree.internalData
 
-      const { expandAll, expandNodeKeys, transform, rootParentValue, rootValues } = props
+      const { expandAll, expandNodeKeys, transform, rootParentValue, rootValues, sortConfig } = props
       const { initialized, scrollYStore } = internalData
       const keyField = $xeTree.computeKeyField
       const parentField = $xeTree.computeParentField
       const childrenField = $xeTree.computeChildrenField
-      const fullData = transform
-        ? XEUtils.toArrayTree(list, {
+      const sortOpts = $xeTree.computeSortOpts
+      let fullData = list.slice(0)
+      if (transform) {
+        if (hasEnableConf(sortConfig, sortOpts)) {
+          const { defaultSort, sortMethod } = sortOpts
+          if (sortMethod) {
+            fullData = sortMethod({ $tree: $xeTree, data: fullData }) || []
+          } else if (defaultSort) {
+            fullData = XEUtils.orderBy(fullData, defaultSort)
+          }
+        }
+        fullData = XEUtils.toArrayTree(fullData, {
           key: keyField,
           parentKey: parentField,
           mapChildren: childrenField,
           rootParentValue,
           rootValues
         })
-        : list
-          ? list.slice(0)
-          : []
+      }
       internalData.treeFullData = fullData
       internalData.insertNodeMaps = {}
       reactData.insertNodeFlag++
@@ -4270,6 +4297,11 @@ export default /* define-vxe-component start */ defineVxeComponent({
       $xeTree.dataFlag++
     },
     rootValues() {
+      const $xeTree = this
+
+      $xeTree.dataFlag++
+    },
+    computeSortDefaultSort() {
       const $xeTree = this
 
       $xeTree.dataFlag++

@@ -156,6 +156,36 @@ export namespace VxeTreePropTypes {
   export type IconLoaded = string
   export type Size = VxeComponentSizeType
 
+  interface SortConfigDefaultSort {
+    /**
+     * 字段
+     */
+    field: string
+    /**
+     * 排序方式
+     */
+    order: 'asc' | 'desc' | null
+  }
+
+  export interface SortConfig<D = any> {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 指定单字段或多字段组合排序
+     */
+    defaultSort?: SortConfigDefaultSort | SortConfigDefaultSort[]
+    /**
+     * 自定义排序方法，返回排序的列表
+     * @param params
+     */
+    sortMethod?(params: {
+      $tree: VxeTreeConstructor<D>
+      data: D[]
+    }): any[]
+  }
+
   export type Drag = boolean
   export interface DragConfig<D = any> {
     /**
@@ -374,6 +404,7 @@ export interface VxeTreeProps<D = any> {
    * 该方法用于异步加载子节点
    */
   loadMethod?: VxeTreePropTypes.LoadMethod<D>
+  sortConfig?: VxeTreePropTypes.SortConfig<D>
   drag?: VxeTreePropTypes.Drag
   dragConfig?: VxeTreePropTypes.DragConfig
   showIcon?: VxeTreePropTypes.ShowIcon
