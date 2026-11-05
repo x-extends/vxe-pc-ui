@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: 'bilde',
           VxeRate: 'poengsum',
           VxeSlider: 'glidebryteren'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: 'Begrens antall bilder',
           limitImgSize: 'Bildestørrelsesgrense',
           multiImg: 'La flere bilder laste opp'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },

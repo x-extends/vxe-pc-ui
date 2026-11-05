@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: '图片',
           VxeRate: '评分',
           VxeSlider: '滑块'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: '图片数量限制',
           limitImgSize: '图片大小限制',
           multiImg: '允许上传多张图片'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },

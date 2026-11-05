@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: 'картина',
           VxeRate: 'счет',
           VxeSlider: 'слайдер'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: 'Ограничение количества изображений',
           limitImgSize: 'Предел размера изображения',
           multiImg: 'Разрешить загрузку нескольких изображений'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },

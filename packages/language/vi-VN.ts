@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: 'hình ảnh',
           VxeRate: 'điểm',
           VxeSlider: 'trượt'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: 'Giới hạn số lượng hình ảnh',
           limitImgSize: 'Giới hạn kích thước hình ảnh',
           multiImg: 'Cho phép tải nhiều hình ảnh lên'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },

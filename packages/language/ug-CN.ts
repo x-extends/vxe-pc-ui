@@ -501,6 +501,9 @@ export default {
           VxeUploadImage: 'رەسىم',
           VxeRate: 'باھا نۇمۇرى',
           VxeSlider: 'سېيرىلما'
+        },
+        row: {
+          placeholder: '控件位置'
         }
       },
       widgetProp: {
@@ -558,6 +561,9 @@ export default {
           limitImgCount: 'رەسىم سانى چېكى',
           limitImgSize: 'رەسىم چوڭ-كىچىكلىكى چېكى',
           multiImg: 'كۆپ رەسىم چىقىرىشقا بولىدۇ'
+        },
+        rules: {
+          required: '必填字段'
         }
       }
     },
