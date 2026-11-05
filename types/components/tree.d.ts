@@ -24,7 +24,7 @@ export interface VxeTreeConstructor<D = any> extends VxeComponentBaseOptions, Vx
 export interface TreePrivateRef {
   refElem: Ref<HTMLDivElement | undefined>
 }
-export interface VxeTreePrivateRef extends TreePrivateRef {}
+export interface VxeTreePrivateRef extends TreePrivateRef { }
 
 export namespace VxeTreePropTypes {
   export type Data<D = any> = D[]
@@ -158,6 +158,36 @@ export namespace VxeTreePropTypes {
   export type IconClose = string
   export type IconLoaded = string
   export type Size = VxeComponentSizeType
+
+  interface SortConfigDefaultSort {
+    /**
+     * 字段
+     */
+    field: string
+    /**
+     * 排序方式
+     */
+    order: 'asc' | 'desc' | null
+  }
+
+  export interface SortConfig<D = any> {
+    /**
+     * 是否启用
+     */
+    enabled?: boolean
+    /**
+     * 指定单字段或多字段组合排序
+     */
+    defaultSort?: SortConfigDefaultSort | SortConfigDefaultSort[]
+    /**
+     * 自定义排序方法，返回排序的列表
+     * @param params
+     */
+    sortMethod?(params: {
+      $tree: VxeTreeConstructor<D>
+      data: D[]
+    }): any[]
+  }
 
   export type Drag = boolean
   export interface DragConfig<D = any> {
@@ -377,6 +407,7 @@ export interface VxeTreeProps<D = any> {
    * 该方法用于异步加载子节点
    */
   loadMethod?: VxeTreePropTypes.LoadMethod<D>
+  sortConfig?: VxeTreePropTypes.SortConfig<D>
   drag?: VxeTreePropTypes.Drag
   dragConfig?: VxeTreePropTypes.DragConfig
   showIcon?: VxeTreePropTypes.ShowIcon
@@ -405,7 +436,7 @@ export interface TreePrivateComputed<D = any> {
   computeNodeOpts: ComputedRef<VxeTreePropTypes.NodeConfig<D>>
   computeDragOpts: ComputedRef<VxeTreePropTypes.DragConfig<D>>
 }
-export interface VxeTreePrivateComputed extends TreePrivateComputed {}
+export interface VxeTreePrivateComputed extends TreePrivateComputed { }
 
 export interface TreeReactData extends VxeUseInitVScrollbarReactData {
   parentHeight: number
@@ -654,9 +685,9 @@ export interface TreeMethods<D = any> {
   scrollTo(
     x:
       | {
-          top?: number | null
-          left?: number | null
-        }
+        top?: number | null
+        left?: number | null
+      }
       | number
       | null
       | undefined,
@@ -739,7 +770,7 @@ export interface TreeMethods<D = any> {
     removeRecords: D[]
   }
 }
-export interface VxeTreeMethods<D = any> extends TreeMethods<D> {}
+export interface VxeTreeMethods<D = any> extends TreeMethods<D> { }
 
 export interface TreePrivateMethods {
   /**
@@ -791,7 +822,7 @@ export interface TreePrivateMethods {
    */
   hideCrossTreeNodeDropClearStatus(): void
 }
-export interface VxeTreePrivateMethods extends TreePrivateMethods {}
+export interface VxeTreePrivateMethods extends TreePrivateMethods { }
 
 export type VxeTreeEmits = [
   'update:modelValue',
@@ -859,14 +890,14 @@ export namespace VxeTreeDefines {
     }
   }
 
-  export interface NodeDragToChildMethod<D = any> extends NodeDragendEventParams<D> {}
+  export interface NodeDragToChildMethod<D = any> extends NodeDragendEventParams<D> { }
 
   export interface NodeClickParams<D = any> {
     node: D
   }
-  export interface NodeClickEventParams<D = any> extends TreeEventParams<D>, NodeClickParams<D> {}
+  export interface NodeClickEventParams<D = any> extends TreeEventParams<D>, NodeClickParams<D> { }
 
-  export interface NodeDblclickEventParams<D = any> extends NodeClickEventParams<D> {}
+  export interface NodeDblclickEventParams<D = any> extends NodeClickEventParams<D> { }
 
   export interface CurrentChangeEventParams<D = any> extends TreeEventParams<D> {
     node: D
@@ -967,16 +998,16 @@ export namespace VxeTreeSlotTypes {
     node: any
     isExpand: boolean
   }
-  export interface TitleSlotParams extends DefaultSlotParams {}
-  export interface ExtraSlotParams extends DefaultSlotParams {}
+  export interface TitleSlotParams extends DefaultSlotParams { }
+  export interface ExtraSlotParams extends DefaultSlotParams { }
 
-  export interface HeaderSlotParams {}
-  export interface FooterSlotParams {}
-  export interface LoadingSlotParams {}
+  export interface HeaderSlotParams { }
+  export interface FooterSlotParams { }
+  export interface LoadingSlotParams { }
   export interface TooltipSlotParams {
     node: any
   }
-  export interface EmptySlotParams {}
+  export interface EmptySlotParams { }
 }
 
 export interface VxeTreeSlots {

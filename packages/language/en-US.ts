@@ -61,7 +61,8 @@ export default {
       reqPlugin: 'Extension plugin "{1}" is not installed. https://vxeui.com/other{0}/#/{1}/start/npmInstall',
       errMaxRow: 'Exceeds the maximum supported data volume of {0} rows, which may cause errors',
       useNew: '{0} is not recommended. Please use {1}',
-      errorVersion: 'Version mismatch. Current version is {0}, minimum supported version is {1}'
+      errorVersion: 'Version mismatch. Current version is {0}, minimum supported version is {1}',
+      errMaxVersion: 'Version mismatch. Current version is {0}, maximum supported version is {1}'
     },
     table: {
       emptyText: 'No data',
@@ -615,7 +616,7 @@ export default {
         quarter: 'Q{q} {yyyy}',
         month: '{MM}/{yyyy}',
         week: 'Week {W}, {yyyy}',
-        day: '{MM}/{dd}/{yyyy} {E}',
+        day: '{MM}/{dd}/{yyyy} {eLabel}',
         date: '{MM}/{dd}/{yyyy}',
         hour: '{MM}/{dd}/{yyyy} {HH}:00',
         minute: '{MM}/{dd}/{yyyy} {HH}:{mm}',
@@ -626,7 +627,7 @@ export default {
         quarter: 'Q{q}',
         month: '{M}',
         week: 'W{W}',
-        day: '{d}',
+        day: '{eLabel}',
         date: '{d}',
         hour: '{HH}',
         minute: '{mm}',

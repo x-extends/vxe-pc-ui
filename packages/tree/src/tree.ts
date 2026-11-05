@@ -7,7 +7,7 @@ import { getCrossTreeDragNodeInfo } from './store'
 import XEUtils from 'xe-utils'
 import { getSlotVNs } from '../../ui/src/vn'
 import { toCssUnit, isScale, getPaddingTopBottomSize, addClass, removeClass, getTpImg, hasControlKey, getEventTargetNode, hasClass } from '../../ui/src/dom'
-import { isEnableConf, enModelValue, deModelValue, getText } from '../../ui/src/utils'
+import { isEnableConf, enModelValue, deModelValue, getText, hasEnableConf } from '../../ui/src/utils'
 import { moveRowAnimateToTb, clearRowAnimate } from '../../ui/src/anime'
 import VxeLoadingComponent from '../../loading'
 import VxeTooltipComponent from '../../tooltip'
@@ -162,9 +162,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().tree.mapChildrenField
     },
     transform: Boolean as PropType<VxeTreePropTypes.Transform>,
-    // 已废弃
+    /**
+     * 已废弃，请使用 node-config.isCurrent
+     * @deprecated
+     */
     isCurrent: Boolean as PropType<VxeTreePropTypes.IsCurrent>,
-    // 已废弃
+    /**
+     * 已废弃，请使用 node-config.isHover
+     * @deprecated
+     */
     isHover: Boolean as PropType<VxeTreePropTypes.IsHover>,
     expandAll: Boolean as PropType<VxeTreePropTypes.ExpandAll>,
     expandNodeKeys: Array as PropType<VxeTreePropTypes.ExpandNodeKeys>,
@@ -199,6 +205,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       default: () => getConfig().tree.showOverflow
     },
     tooltipConfig: Object as PropType<VxeTreePropTypes.TooltipConfig>,
+    sortConfig: Object as PropType<VxeTreePropTypes.SortConfig>,
     drag: {
       type: Boolean as PropType<VxeTreePropTypes.Drag>,
       default: () => getConfig().tree.drag
@@ -365,6 +372,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
 
     const computeTooltipOpts = computed(() => {
       return Object.assign({}, getConfig().tree.tooltipConfig, props.tooltipConfig)
+    })
+
+    const computeSortOpts = computed(() => {
+      return Object.assign({}, getConfig().tree.sortConfig, props.sortConfig)
+    })
+
+    const computeSortDefaultSort = computed(() => {
+      const sortOpts = computeSortOpts.value
+      return sortOpts.defaultSort || null
     })
 
     const computeMenuOpts = computed(() => {
@@ -911,22 +927,30 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const triggerSearchEvent = XEUtils.debounce(() => handleData(true), 350, { trailing: true })
 
     const loadData = (list: any[]) => {
-      const { expandAll, expandNodeKeys, transform, rootParentValue, rootValues } = props
+      const { expandAll, expandNodeKeys, transform, rootParentValue, rootValues, sortConfig } = props
       const { initialized, scrollYStore } = internalData
       const keyField = computeKeyField.value
       const parentField = computeParentField.value
       const childrenField = computeChildrenField.value
-      const fullData = transform
-        ? XEUtils.toArrayTree(list, {
+      const sortOpts = computeSortOpts.value
+      let fullData = list.slice(0)
+      if (transform) {
+        if (hasEnableConf(sortConfig, sortOpts)) {
+          const { defaultSort, sortMethod } = sortOpts
+          if (sortMethod) {
+            fullData = sortMethod({ $tree: $xeTree, data: fullData }) || []
+          } else if (defaultSort) {
+            fullData = XEUtils.orderBy(fullData, defaultSort)
+          }
+        }
+        fullData = XEUtils.toArrayTree(fullData, {
           key: keyField,
           parentKey: parentField,
           mapChildren: childrenField,
           rootParentValue,
           rootValues
         })
-        : list
-          ? list.slice(0)
-          : []
+      }
       internalData.treeFullData = fullData
       internalData.insertNodeMaps = {}
       reactData.insertNodeFlag++
@@ -3882,36 +3906,24 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
 
     const dataFlag = ref(0)
-    watch(
-      () => (props.data ? props.data.length : 0),
-      () => {
-        dataFlag.value++
-      }
-    )
-    watch(
-      () => props.data,
-      () => {
-        dataFlag.value++
-      }
-    )
-    watch(
-      () => props.rootParentValue,
-      () => {
-        dataFlag.value++
-      }
-    )
-    watch(
-      () => (props.rootValues ? props.rootValues.length : 0),
-      () => {
-        dataFlag.value++
-      }
-    )
-    watch(
-      () => props.rootValues,
-      () => {
-        dataFlag.value++
-      }
-    )
+    watch(() => (props.data ? props.data.length : 0), () => {
+      dataFlag.value++
+    })
+    watch(() => props.data, () => {
+      dataFlag.value++
+    })
+    watch(() => props.rootParentValue, () => {
+      dataFlag.value++
+    })
+    watch(() => (props.rootValues ? props.rootValues.length : 0), () => {
+      dataFlag.value++
+    })
+    watch(() => props.rootValues, () => {
+      dataFlag.value++
+    })
+    watch(computeSortDefaultSort, () => {
+      dataFlag.value++
+    })
     watch(dataFlag, () => {
       loadData(props.data || [])
     })
