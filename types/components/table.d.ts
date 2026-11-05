@@ -1172,6 +1172,10 @@ export namespace VxeTablePropTypes {
      * 是否启用浮动筛选
      */
     floatingFilters?: VxeColumnPropTypes.FloatingFilters
+    /**
+     * 显示位置，支持显示表头的上方或下方
+     */
+    position?: 'top' | 'bottom' | ''
     rowClassName?: string
     cellClassName?: string
   }
