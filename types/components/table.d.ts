@@ -2167,9 +2167,13 @@ export namespace VxeTablePropTypes {
      */
     isReuseKeep?: boolean
     /**
-     * 自定义编辑之前逻辑，该方法的返回值用来决定该单元格是否允许编辑
+     * 自定义编辑之前逻辑，该方法的返回值用来决定该单元格是否允许编辑，不支持异步，支持按键编辑功能
      */
     beforeEditMethod?(params: { $table: VxeTableConstructor<DT> & VxeTablePrivateMethods; $grid: VxeGridConstructor<DT> | null | undefined; $gantt: VxeGanttConstructor<DT> | null | undefined; row: DT; rowIndex: number; column: VxeTableDefines.ColumnInfo; columnIndex: number }): boolean
+    /**
+     * 自定义编辑之前逻辑，该方法的返回值用来决定该单元格是否允许编辑，支持异步，不支持按键编辑功能
+     */
+    beforeEditAsyncMethod?(params: { $table: VxeTableConstructor<DT> & VxeTablePrivateMethods; $grid: VxeGridConstructor<DT> | null | undefined; $gantt: VxeGanttConstructor<DT> | null | undefined; row: DT; rowIndex: number; column: VxeTableDefines.ColumnInfo; columnIndex: number }): boolean | Promise<boolean>
     /**
      * 自定义编辑之后逻辑
      */
