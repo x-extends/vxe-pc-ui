@@ -840,4 +840,8 @@ setIcon({
   STEPS_STATUS_ERROR_CURRENT: iconPrefix + 'error-circle-fill'
 })
 
+export {
+  VxeUI
+}
+
 export default VxeUI

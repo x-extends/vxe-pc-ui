@@ -2658,6 +2658,7 @@ export namespace VxeTablePropTypes {
      */
     modelOptions?: {
       title?: VxeModalPropTypes.Title
+      className?: VxeModalPropTypes.ClassName
       width?: VxeModalPropTypes.Width
       height?: VxeModalPropTypes.Height
       minWidth?: VxeModalPropTypes.MinWidth
@@ -2666,6 +2667,9 @@ export namespace VxeTablePropTypes {
       lockView?: VxeModalPropTypes.LockView
       fullscreen?: VxeModalPropTypes.Fullscreen
       remember?: VxeModalPropTypes.Remember
+      showFooter?: VxeModalPropTypes.ShowFooter
+      escClosable?: VxeModalPropTypes.EscClosable
+      maskClosable?: VxeModalPropTypes.MaskClosable
       position?: VxeModalPropTypes.Position
       showMaximize?: VxeModalPropTypes.ShowMaximize
       showMinimize?: VxeModalPropTypes.ShowMinimize
@@ -2810,6 +2814,7 @@ export namespace VxeTablePropTypes {
      */
     modelOptions?: {
       title?: VxeModalPropTypes.Title
+      className?: VxeModalPropTypes.ClassName
       width?: VxeModalPropTypes.Width
       height?: VxeModalPropTypes.Height
       minWidth?: VxeModalPropTypes.MinWidth
@@ -2818,6 +2823,9 @@ export namespace VxeTablePropTypes {
       lockView?: VxeModalPropTypes.LockView
       fullscreen?: VxeModalPropTypes.Fullscreen
       remember?: VxeModalPropTypes.Remember
+      showFooter?: VxeModalPropTypes.ShowFooter
+      escClosable?: VxeModalPropTypes.EscClosable
+      maskClosable?: VxeModalPropTypes.MaskClosable
       position?: VxeModalPropTypes.Position
       showMaximize?: VxeModalPropTypes.ShowMaximize
       showMinimize?: VxeModalPropTypes.ShowMinimize
