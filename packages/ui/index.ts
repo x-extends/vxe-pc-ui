@@ -1,27 +1,11 @@
 import { VxeUI, setConfig, setIcon } from '@vxe-ui/core'
 import { dynamicApp } from '../dynamics'
-import { warnLog } from './src/log'
-
-import { VxeGlobalConfig } from '../../types'
 
 export const version = process.env.VUE_APP_VXE_VERSION as string
 
 VxeUI.uiVersion = version
 
 VxeUI.dynamicApp = dynamicApp
-
-export function config(options?: VxeGlobalConfig) {
-  warnLog('vxe.error.delFunc', ['config', 'setConfig'])
-  return setConfig(options)
-}
-
-export function setup(options?: VxeGlobalConfig) {
-  warnLog('vxe.error.delFunc', ['setup', 'setConfig'])
-  return setConfig(options)
-}
-
-VxeUI.config = config
-VxeUI.setup = setup
 
 setConfig({
   alert: {},
@@ -843,5 +827,8 @@ setIcon({
 export {
   VxeUI
 }
+
+// 兼容老版本
+export * from './abandon'
 
 export default VxeUI
