@@ -89,7 +89,7 @@ export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  handleHeaderCellAreaMouseDnEvent(evnt: MouseEvent, params: VxeTableDefines.HeaderCellClickEventParams<D>): void
+  handleHeadCellAreaMouseDnEvent(evnt: MouseEvent, params: VxeTableDefines.HeaderCellClickEventParams<D>): void
   /**
    * 内部方法
    * @private

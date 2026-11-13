@@ -49,7 +49,7 @@ export interface VxeGanttExtendChartPrivateMethods<D = any> {
    * 内部方法
    * @private
    */
-  renderGanttTaskBarContent(
+  renderGanttTkBarCont(
     params: {
       $gantt: VxeGanttConstructor<D> & VxeGanttPrivateMethods<D>
       source: string

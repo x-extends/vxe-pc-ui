@@ -1442,9 +1442,25 @@ export namespace VxeTablePropTypes {
      */
     indent?: number
     /**
-     * 树节点的连接线（启用连接线会降低渲染性能）
+     * 展开按钮（图标）与节点内容之间的间距
+     */
+    iconIndent?: number
+    /**
+     * 树节点的连接线
      */
     showLine?: boolean
+    /**
+     * 只对 showLine 有效，连接线的样式（实线、虚线、点线）
+     */
+    lineType?: 'solid' | 'dashed' | 'dotted' | '' | null
+    /**
+     * 只对 showLine 有效，连接线的宽度（单位 px）
+     */
+    lineWidth?: number | string
+    /**
+     * 只对 showLine 有效，连接线的颜色
+     */
+    lineColor?: string
     /**
      * 只对 showLine 有效，显示树的根节点连接线
      */
@@ -3534,6 +3550,7 @@ export interface TablePrivateComputed<D = any> {
   computePrintOpts: ComputedRef<VxeTablePropTypes.PrintOpts>
   computeExpandOpts: ComputedRef<VxeTablePropTypes.ExpandOpts<D>>
   computeTreeOpts: ComputedRef<VxeTablePropTypes.TreeOpts<D>>
+  computeShowTreeLine: ComputedRef<boolean>
   computeEmptyOpts: ComputedRef<VxeTablePropTypes.EmptyOpts>
   computeLoadingOpts: ComputedRef<VxeTablePropTypes.LoadingOpts>
   computeCellOffsetWidth: ComputedRef<number>
@@ -5957,6 +5974,11 @@ export namespace VxeTableDefines {
     right?: boolean
   }
 
+  export interface RowCacheTreeLineData {
+    type: string; // 'v', 'h', 'v cut-full', 'v cut-top', 'v cut-bottom'
+    style: Record<string, string>;
+  }
+
   export interface RowCacheItem<D = any> {
     row: D
     rowid: string
@@ -5970,6 +5992,8 @@ export namespace VxeTableDefines {
     items: any[]
     parent: any
     level: number
+    linesMask: number
+    treeLines?: RowCacheTreeLineData[]
     height: number
     resizeHeight: number
     oTop: number
