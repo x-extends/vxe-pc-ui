@@ -497,9 +497,12 @@ setConfig({
   transfer: {},
   tree: {
     // autoResize: false,
-    indent: 20,
+    // indent: 20,
     minHeight: 60,
     showOverflow: true,
+    lineConfig: {
+      showRootLine: true
+    },
     radioConfig: {
       strict: true
     },
@@ -579,23 +582,23 @@ setIcon({
   LOADING: iconPrefix + 'spinner roll vxe-loading--default-icon',
 
   // button
-  BUTTON_DROPDOWN_OPEN: iconPrefix + 'arrow-down rotate180',
+  BUTTON_DROPDOWN_OPEN: iconPrefix + 'arrow-down rotate-180',
   BUTTON_DROPDOWN_CLOSE: iconPrefix + 'arrow-down',
   BUTTON_LOADING: iconPrefix + 'spinner roll',
   BUTTON_TOOLTIP_ICON: iconPrefix + 'question-circle-fill',
 
   // menu
-  MENU_ITEM_EXPAND_OPEN: iconPrefix + 'arrow-right rotate90',
+  MENU_ITEM_EXPAND_OPEN: iconPrefix + 'arrow-right rotate-90',
   MENU_ITEM_EXPAND_CLOSE: iconPrefix + 'arrow-right',
 
   // select
   SELECT_LOADED: iconPrefix + 'spinner roll',
-  SELECT_OPEN: iconPrefix + 'caret-down rotate180',
+  SELECT_OPEN: iconPrefix + 'caret-down rotate-180',
   SELECT_CLOSE: iconPrefix + 'caret-down',
   SELECT_ADD_OPTION: iconPrefix + 'add',
 
   // icon-picker
-  ICON_PICKER_OPEN: iconPrefix + 'caret-down rotate180',
+  ICON_PICKER_OPEN: iconPrefix + 'caret-down rotate-180',
   ICON_PICKER_CLOSE: iconPrefix + 'caret-down',
 
   // pager
@@ -657,7 +660,7 @@ setIcon({
   // form
   FORM_PREFIX: iconPrefix + 'question-circle-fill',
   FORM_SUFFIX: iconPrefix + 'question-circle-fill',
-  FORM_FOLDING: iconPrefix + 'arrow-up rotate180',
+  FORM_FOLDING: iconPrefix + 'arrow-up rotate-180',
   FORM_UNFOLDING: iconPrefix + 'arrow-up',
   FORM_VALID_ERROR_ICON: iconPrefix + 'warning-circle-fill',
 
@@ -727,7 +730,7 @@ setIcon({
   ALERT_ERROR: iconPrefix + 'error-circle-fill',
 
   // tree
-  TREE_NODE_OPEN: iconPrefix + 'caret-right rotate90',
+  TREE_NODE_OPEN: iconPrefix + 'caret-right rotate-90',
   TREE_NODE_CLOSE: iconPrefix + 'caret-right',
   TREE_NODE_LOADED: iconPrefix + 'spinner roll',
   TREE_DRAG: iconPrefix + 'drag-handle',
@@ -737,12 +740,12 @@ setIcon({
 
   // tree-select
   TREE_SELECT_LOADED: iconPrefix + 'spinner roll',
-  TREE_SELECT_OPEN: iconPrefix + 'caret-down rotate180',
+  TREE_SELECT_OPEN: iconPrefix + 'caret-down rotate-180',
   TREE_SELECT_CLOSE: iconPrefix + 'caret-down',
 
   // table-select
   TABLE_SELECT_LOADED: iconPrefix + 'spinner roll',
-  TABLE_SELECT_OPEN: iconPrefix + 'caret-down rotate180',
+  TABLE_SELECT_OPEN: iconPrefix + 'caret-down rotate-180',
   TABLE_SELECT_CLOSE: iconPrefix + 'caret-down',
 
   // tabs
@@ -769,7 +772,7 @@ setIcon({
   CAROUSEL_VERTICAL_NEXT: iconPrefix + 'arrow-down',
 
   // collapse
-  COLLAPSE_OPEN: iconPrefix + 'arrow-right rotate90',
+  COLLAPSE_OPEN: iconPrefix + 'arrow-right rotate-90',
   COLLAPSE_CLOSE: iconPrefix + 'arrow-right',
 
   // empty
@@ -790,7 +793,7 @@ setIcon({
   // color-picker
   COLOR_PICKER_COLOR_COPY: iconPrefix + 'copy',
   COLOR_PICKER_EYE_DROPPER: iconPrefix + 'dropper',
-  COLOR_PICKER_TPTY_OPEN: iconPrefix + 'arrow-down rotate180',
+  COLOR_PICKER_TPTY_OPEN: iconPrefix + 'arrow-down rotate-180',
   COLOR_PICKER_TPTY_CLOSE: iconPrefix + 'arrow-down',
 
   // split

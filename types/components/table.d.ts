@@ -3551,6 +3551,7 @@ export interface TablePrivateComputed<D = any> {
   computeExpandOpts: ComputedRef<VxeTablePropTypes.ExpandOpts<D>>
   computeTreeOpts: ComputedRef<VxeTablePropTypes.TreeOpts<D>>
   computeShowTreeLine: ComputedRef<boolean>
+  computeShowTreeRootLine: ComputedRef<boolean>
   computeEmptyOpts: ComputedRef<VxeTablePropTypes.EmptyOpts>
   computeLoadingOpts: ComputedRef<VxeTablePropTypes.LoadingOpts>
   computeCellOffsetWidth: ComputedRef<number>

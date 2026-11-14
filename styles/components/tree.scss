@@ -112,6 +112,7 @@
 }
 
 .vxe-tree--node-wrapper {
+  position: relative;
   &.row--drag-move {
     transition: transform 0.5s ease;
   }
@@ -121,7 +122,7 @@
   @for $i from 0 to 10 {
     &.node--level-#{$i} {
       & > .vxe-tree--node-item {
-        padding-left: calc(var(--vxe-ui-tree-node-indent) * $i + var(--vxe-ui-tree-node-root-indent) + var(--vxe-ui-tree-node-padding));
+        padding-left: calc(var(--vxe-ui-tree-node-indent) * $i + var(--vxe-ui-tree-node-padding));
       }
     }
   }
@@ -217,20 +218,142 @@
   white-space: nowrap;
 }
 
-.vxe-tree--node-line-wrapper {
-  position: relative;
-  display: block;
-  height: 0;
+// 虚线
+@mixin dashed-vertical {
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, var(--vxe-ui-tree-node-line-color) 50%, transparent 50%);
+  background-size: var(--vxe-ui-tree-node-line-width) calc(var(--vxe-ui-tree-node-line-width) * 4);
+}
+@mixin dashed-horizontal {
+  background-color: transparent;
+  background-image: linear-gradient(to right, var(--vxe-ui-tree-node-line-color) 50%, transparent 50%);
+  background-size: calc(var(--vxe-ui-tree-node-line-width) * 4) var(--vxe-ui-tree-node-line-width);
+}
+
+// 点线
+@mixin dotted-vertical {
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, var(--vxe-ui-tree-node-line-color) 50%, transparent 50%);
+  background-size: var(--vxe-ui-tree-node-line-width) calc(var(--vxe-ui-tree-node-line-width) * 2);
+}
+@mixin dotted-horizontal {
+  background-color: transparent;
+  background-image: linear-gradient(to right, var(--vxe-ui-tree-node-line-color) 50%, transparent 50%);
+  background-size: calc(var(--vxe-ui-tree-node-line-width) * 2) var(--vxe-ui-tree-node-line-width);
+}
+/*树形节点*/
+.vxe-tree--node-line {
+  --vxe-ui-tree-current-line-gap: calc((var(--vxe-ui-tree-node-height) - var(--vxe-ui-tree-node-btn-width)) / 2);
 }
 .vxe-tree--node-line {
   position: absolute;
-  bottom: calc(var(--vxe-ui-tree-node-height) / 2 * -1);
-  left: 0.6em;
-  width: 0.6em;
-  border-width: 0 0 var(--vxe-ui-tree-node-line-width) var(--vxe-ui-tree-node-line-width);
-  border-style: var(--vxe-ui-tree-node-line-style);
-  border-color: var(--vxe-ui-tree-node-line-color);
   pointer-events: none;
+
+  &.v {
+    width: var(--vxe-ui-tree-node-line-width);
+    transform: translateX(-50%);
+
+    /* 伪元素基础尺寸和位置，不含背景 */
+    &.cut-full::before,
+    &.cut-top::before,
+    &.cut-full::after,
+    &.cut-bottom::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: var(--vxe-ui-tree-node-line-width);
+    }
+
+    &.cut-full::before,
+    &.cut-top::before {
+      top: 0;
+      height: var(--vxe-ui-tree-current-line-gap);
+    }
+
+    &.cut-full::after,
+    &.cut-bottom::after {
+      top: calc(100% - var(--vxe-ui-tree-current-line-gap));
+      height: var(--vxe-ui-tree-current-line-gap);
+    }
+  }
+
+  &.h {
+    height: var(--vxe-ui-tree-node-line-width);
+    transform: translateY(-50%);
+  }
+}
+.vxe-tree--node-line {
+  // 实线
+  &.type--solid {
+    &.v {
+      background-color: var(--vxe-ui-tree-node-line-color);
+
+      &.cut-full,
+      &.cut-top,
+      &.cut-bottom {
+        background: none;
+      }
+
+      &.cut-full::before,
+      &.cut-top::before,
+      &.cut-full::after,
+      &.cut-bottom::after {
+        background-color: var(--vxe-ui-tree-node-line-color);
+      }
+    }
+
+    &.h {
+      background-color: var(--vxe-ui-tree-node-line-color);
+    }
+  }
+
+  // 虚线
+  &.type--dashed {
+    &.v {
+      @include dashed-vertical;
+
+      &.cut-full,
+      &.cut-top,
+      &.cut-bottom {
+        background: none;
+      }
+
+      &.cut-full::before,
+      &.cut-top::before,
+      &.cut-full::after,
+      &.cut-bottom::after {
+        @include dashed-vertical;
+      }
+    }
+
+    &.h {
+      @include dashed-horizontal;
+    }
+  }
+
+  // 点线
+  &.type--dotted {
+    &.v {
+      @include dotted-vertical;
+
+      &.cut-full,
+      &.cut-top,
+      &.cut-bottom {
+        background: none;
+      }
+
+      &.cut-full::before,
+      &.cut-top::before,
+      &.cut-full::after,
+      &.cut-bottom::after {
+        @include dotted-vertical;
+      }
+    }
+
+    &.h {
+      @include dotted-horizontal;
+    }
+  }
 }
 
 .vxe-tree--node-list-wrapper {
@@ -259,7 +382,8 @@
 }
 .vxe-tree--node-item-switcher {
   position: relative;
-  width: 1.4em;
+  width: var(--vxe-ui-tree-node-btn-width);
+  padding-right: var(--vxe-ui-tree-node-indent);
   flex-shrink: 0;
   user-select: none;
 }
@@ -267,8 +391,8 @@
   position: absolute;
   display: inline-flex;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  left: 0;
+  transform: translateY(-50%);
   cursor: pointer;
   text-align: center;
   z-index: 7;

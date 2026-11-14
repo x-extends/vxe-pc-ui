@@ -1,7 +1,7 @@
 import { ref, h, reactive, PropType, computed, VNode, watch, onBeforeUnmount, nextTick, onMounted, provide } from 'vue'
 import { defineVxeComponent } from '../../ui/src/comp'
 import { VxeUI } from '@vxe-ui/core'
-import { calcTreeLine, getItemCacheObj } from './util'
+import { getTreeNodeLines, getItemCacheObj } from './util'
 import { createComponentLog } from '../../ui/src/log'
 import { getCrossTreeDragNodeInfo } from './store'
 import XEUtils from 'xe-utils'
@@ -178,6 +178,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
       type: Boolean as PropType<VxeTreePropTypes.ShowLine>,
       default: () => getConfig().tree.showLine
     },
+    lineConfig: Object as PropType<VxeTreePropTypes.LineConfig>,
     trigger: String as PropType<VxeTreePropTypes.Trigger>,
     indent: {
       type: Number as PropType<VxeTreePropTypes.Indent>,
@@ -350,6 +351,15 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return props.isHover
     })
 
+    const computeLineOpts = computed(() => {
+      return Object.assign({}, getConfig().tree.lineConfig, props.lineConfig)
+    })
+
+    const computeShowTreeRootLine = computed(() => {
+      const lineOpts = computeLineOpts.value
+      return lineOpts.showRootLine
+    })
+
     const computeRadioOpts = computed(() => {
       return Object.assign({ showIcon: true }, getConfig().tree.radioConfig, props.radioConfig)
     })
@@ -401,6 +411,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
     const computeTreeStyle = computed(() => {
       const { indent } = props
       const { customHeight, customMinHeight, customMaxHeight } = reactData
+      const lineOpts = computeLineOpts.value
+      const { lineWidth, lineColor } = lineOpts
       const checkboxOpts = computeCheckboxOpts.value
       const { nodeStyle } = checkboxOpts
       const stys: VxeComponentStyleType = {}
@@ -415,6 +427,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
       }
       if (indent) {
         stys['--vxe-ui-tree-node-indent'] = toCssUnit(indent)
+      }
+      if (lineWidth) {
+        stys['--vxe-ui-tree-node-line-width'] = toCssUnit(lineWidth)
+      }
+      if (lineColor) {
+        stys['--vxe-ui-tree-node-line-color'] = toCssUnit(lineColor)
       }
       if (nodeStyle) {
         const { indeterminateColor, checkedColor } = nodeStyle
@@ -736,7 +754,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
             level: nodes.length - 1,
             treeIndex: index,
             lineCount: 0,
-            treeLoaded: false
+            treeLoaded: false,
+            linesMask: 0
           }
         },
         { children: childrenField }
@@ -745,40 +764,83 @@ export default /* define-vxe-component start */ defineVxeComponent({
     }
 
     const updateAfterDataIndex = () => {
-      const { transform } = props
+      const { lazy, showLine, transform } = props
       const { afterTreeList, nodeMaps } = internalData
       const childrenField = computeChildrenField.value
       const mapChildrenField = computeMapChildrenField.value
+      const hasChildField = computeHasChildField.value
+      const showTreeRootLine = computeShowTreeRootLine.value
+      const treeFullSize = afterTreeList.length
       let vtIndex = 0
-      XEUtils.eachTree(
-        afterTreeList,
-        (item, index, items, path, parenItem, nodes) => {
-          const nodeid = getNodeId(item)
-          const nodeItem = nodeMaps[nodeid]
-          if (nodeItem) {
-            nodeItem.items = items
-            nodeItem.treeIndex = index
-            nodeItem._index = vtIndex
-          } else {
-            const rest = {
-              item,
-              index,
-              $index: -1,
-              _index: vtIndex,
-              items,
-              parent: parenItem,
-              nodes,
-              level: nodes.length - 1,
-              treeIndex: index,
-              lineCount: 0,
-              treeLoaded: false
-            }
-            nodeMaps[nodeid] = rest
+
+      function handleTreeDFS(item: any, index: number, items: any[], parenItem: any, depth: number, isFirstRow: boolean, isLastRow: boolean, isLastChild: boolean, stackMask: number, seq: string) {
+        const nodeid = getNodeId(item)
+        let nodeItem = nodeMaps[nodeid]
+        const nodeChilds = item[transform ? mapChildrenField : childrenField]
+        const childList: any[] = XEUtils.get(item, childrenField)
+        const isExistChild = childList && childList.length > 0
+
+        if (nodeItem) {
+          nodeItem.items = items
+          nodeItem.treeIndex = index
+          nodeItem._index = vtIndex
+        } else {
+          nodeItem = {
+            item,
+            index,
+            $index: -1,
+            _index: vtIndex,
+            items,
+            parent: parenItem,
+            nodes: [],
+            level: 0,
+            treeIndex: index,
+            lineCount: 0,
+            treeLoaded: false,
+            linesMask: 0
           }
-          vtIndex++
-        },
-        { children: transform ? mapChildrenField : childrenField }
-      )
+          nodeMaps[nodeid] = nodeItem
+        }
+
+        // 计算当前节点的线条标记
+        let linesMask = (stackMask >> 1)
+        if (!isLastChild) {
+          linesMask |= (1 << (depth - 1))
+        }
+
+        nodeItem.level = depth - 1
+        nodeItem.linesMask = linesMask
+
+        let hasLazyChilds = false
+        let isLazyLoaded = false
+        if (lazy) {
+          hasLazyChilds = item[hasChildField]
+          isLazyLoaded = !!nodeItem.treeLoaded
+        }
+        const isExpandable = lazy ? (isLazyLoaded ? isExistChild : hasLazyChilds) : isExistChild
+
+        nodeItem.treeLines = showLine && treeFullSize > 1 ? getTreeNodeLines(isExpandable, depth, linesMask, isFirstRow, isLastRow, showTreeRootLine) : []
+
+        // 计算传给子节点的状态
+        let nextStackMask = stackMask
+        if (!isLastChild) {
+          nextStackMask |= (1 << depth)
+        }
+
+        vtIndex++
+
+        // 递归子节点
+        if (nodeChilds) {
+          for (let i = 0; i < nodeChilds.length; i++) {
+            handleTreeDFS(nodeChilds[i], i, nodeChilds, item, depth + 1, false, false, i === nodeChilds.length - 1, nextStackMask, `${seq}.${i + 1}`)
+          }
+        }
+      }
+
+      // 根节点 depth 从 1 开始
+      for (let i = 0; i < treeFullSize; i++) {
+        handleTreeDFS(afterTreeList[i], i, afterTreeList, null, 1, !i, i === treeFullSize - 1, i === treeFullSize - 1, 0, '' + i)
+      }
     }
 
     const updateAfterFullData = () => {
@@ -2255,7 +2317,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                 level: parentLevel + nodes.length,
                 treeIndex: -1,
                 lineCount: 0,
-                treeLoaded: false
+                treeLoaded: false,
+                linesMask: 0
               }
             },
             { children: childrenField }
@@ -3370,10 +3433,29 @@ export default /* define-vxe-component start */ defineVxeComponent({
       return renderEmptyElement($xeTree)
     }
 
+    const renderLine = (nodeItem: VxeTreeDefines.NodeCacheItem) => {
+      const treeLines = nodeItem.treeLines
+      const lineVNs: VNode[] = []
+      if (treeLines) {
+        const lineOpts = computeLineOpts.value
+        const { lineType } = lineOpts
+        treeLines.forEach((item, i) => {
+          lineVNs.push(
+            h('span', {
+              key: 'le' + i,
+              class: ['vxe-tree--node-line', `type--${lineType || 'solid'}`, item.type],
+              style: item.style
+            })
+          )
+        })
+      }
+      return lineVNs
+    }
+
     const renderNode = (node: any, nodeid: string) => {
       const { lazy, drag, transform, showRadio, showCheckbox, showLine, visibleMethod, iconOpen, iconClose, iconLoaded, showIcon } = props
       const { currentNode, selectRadioKey, updateExpandedFlag } = reactData
-      const { afterTreeList, nodeMaps, treeExpandedMaps, treeExpandLazyLoadedMaps } = internalData
+      const { nodeMaps, treeExpandedMaps, treeExpandLazyLoadedMaps } = internalData
       const tooltipOpts = computeTooltipOpts.value
       const { mode: tipMode } = tooltipOpts
       const radioOpts = computeRadioOpts.value
@@ -3415,7 +3497,6 @@ export default /* define-vxe-component start */ defineVxeComponent({
         hasLazyChilds = node[hasChildField]
         isLazyLoaded = !!nodeItem.treeLoaded
       }
-      const prevNode = nodeItem.items[nodeItem.treeIndex - 1]
       const nParams = { node, isExpand, $tree: $xeTree }
 
       const itemOns: {
@@ -3483,20 +3564,9 @@ export default /* define-vxe-component start */ defineVxeComponent({
             },
             [
               showLine
-                ? h(
-                  'div',
-                  {
-                    class: 'vxe-tree--node-line-wrapper'
-                  },
-                  [
-                    h('div', {
-                      class: 'vxe-tree--node-line',
-                      style: {
-                        height: `${getNodeId(afterTreeList[0]) === nodeid ? 1 : calcTreeLine($xeTree, node, prevNode)}px`
-                      }
-                    })
-                  ]
-                )
+                ? h('div', {
+                  class: 'vxe-tree--node-line-wrapper'
+                }, renderLine(nodeItem))
                 : renderEmptyElement($xeTree),
               h(
                 'div',
@@ -4007,6 +4077,17 @@ export default /* define-vxe-component start */ defineVxeComponent({
       recalculate().then(() => {
         recalculate()
       })
+    })
+
+    const lineFlag = ref(0)
+    watch(() => props.showLine, () => {
+      lineFlag.value++
+    })
+    watch(computeShowTreeRootLine, () => {
+      lineFlag.value++
+    })
+    watch(lineFlag, () => {
+      updateAfterDataIndex()
     })
 
     watch(reScrollFlag, () => {

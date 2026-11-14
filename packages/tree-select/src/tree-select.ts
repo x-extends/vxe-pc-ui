@@ -577,10 +577,10 @@ export default /* define-vxe-component start */ defineVxeComponent({
           reactData.searchValue = ''
         }
       }
-      reactData.visiblePanel = false
-      internalData.hpTimeout = setTimeout(() => {
-        reactData.isAniVisible = false
-      }, 350)
+      // reactData.visiblePanel = false
+      // internalData.hpTimeout = setTimeout(() => {
+      //   reactData.isAniVisible = false
+      // }, 350)
       dispatchEvent('visible-change', { visible: false }, evnt || null)
     }
 
