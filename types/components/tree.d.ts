@@ -108,6 +108,26 @@ export namespace VxeTreePropTypes {
    */
   export type IsHover = boolean
   export type ShowLine = boolean
+
+  export interface LineConfig {
+    /**
+     * 只对 showLine 有效，连接线的样式（实线、虚线、点线）
+     */
+    lineType?: 'solid' | 'dashed' | 'dotted' | '' | null
+    /**
+     * 只对 showLine 有效，连接线的宽度（单位 px）
+     */
+    lineWidth?: number | string
+    /**
+     * 只对 showLine 有效，连接线的颜色
+     */
+    lineColor?: string
+    /**
+     * 只对 showLine 有效，显示树的根节点连接线
+     */
+    showRootLine?: boolean
+  }
+
   export type Indent = number
   export type ExpandAll = boolean
   export type ExpandNodeKeys = string[] | number[]
@@ -385,7 +405,14 @@ export interface VxeTreeProps<D = any> {
    * @deprecated
    */
   isHover?: VxeTreePropTypes.IsHover
+  /**
+   * 是否显示连接线
+   */
   showLine?: VxeTreePropTypes.ShowLine
+  /**
+   * 连接线配置项
+   */
+  lineConfig?: VxeTreePropTypes.LineConfig
   indent?: VxeTreePropTypes.Indent
   showRadio?: VxeTreePropTypes.ShowRadio
   checkNodeKey?: VxeTreePropTypes.CheckNodeKey
@@ -848,6 +875,11 @@ export namespace VxeTreeDefines {
     $tree: VxeTreeConstructor<D>
   }
 
+  export interface NodeCacheTreeLineData {
+    type: string; // 'v', 'h', 'v cut-full', 'v cut-top', 'v cut-bottom'
+    style: Record<string, string>;
+  }
+
   export interface NodeCacheItem {
     item: any
     index: number
@@ -860,6 +892,8 @@ export namespace VxeTreeDefines {
     treeIndex: number
     lineCount: number
     treeLoaded: boolean
+    linesMask: number
+    treeLines?: NodeCacheTreeLineData[]
   }
 
   export interface NodeDragstartEventParams<D = any> {
