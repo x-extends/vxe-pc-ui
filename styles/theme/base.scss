@@ -229,7 +229,12 @@
   /*tree*/
   --vxe-ui-tree-node-height: 2em;
   --vxe-ui-tree-node-padding: 0px;
-  --vxe-ui-tree-node-indent: 1.5em;
+  --vxe-ui-tree-node-indent-xlarge: 28px;
+  --vxe-ui-tree-node-indent-large: 26px;
+  --vxe-ui-tree-node-indent-default: 24px;
+  --vxe-ui-tree-node-indent-medium: 22px;
+  --vxe-ui-tree-node-indent-small: 20px;
+  --vxe-ui-tree-node-indent-mini: 18px;
   --vxe-ui-tree-node-btn-width: 1em;
   --vxe-ui-tree-node-line-color:#909399;
   --vxe-ui-tree-node-line-style: dotted;
