@@ -3,24 +3,31 @@
 // 局部变量
 .vxe-tree {
   --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-default);
+  --vxe-ui-tree-current-node-indent: var(--vxe-ui-tree-node-indent-default);
   &.size--xlarge {
     --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-xlarge);
+    --vxe-ui-tree-current-node-indent: var(--vxe-ui-tree-node-indent-xlarge);
   }
   &.size--large {
     --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-large);
+    --vxe-ui-tree-current-node-indent: var(--vxe-ui-tree-node-indent-large);
   }
   &.size--medium {
     --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-medium);
+    --vxe-ui-tree-current-node-indent: var(--vxe-ui-tree-node-indent-medium);
   }
   &.size--small {
     --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-small);
+    --vxe-ui-tree-current-node-indent: var(--vxe-ui-tree-node-indent-small);
   }
   &.size--mini {
     --vxe-ui-tree-current-font-size: var(--vxe-ui-font-size-mini);
+    --vxe-ui-tree-current-node-indent: var(--vxe-ui-tree-node-indent-mini);
   }
 }
 
 .vxe-tree {
+  --vxe-ui-tree-node-indent: var(--vxe-ui-tree-current-node-indent);
   position: relative;
   font-size: var(--vxe-ui-tree-current-font-size);
   color: var(--vxe-ui-font-color);
