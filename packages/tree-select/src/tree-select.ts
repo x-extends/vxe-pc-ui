@@ -1075,6 +1075,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                                       trigger: treeOpts.trigger,
                                       showIcon: treeOpts.showIcon,
                                       showLine: treeOpts.showLine,
+                                      lineConfig: treeOpts.lineConfig,
                                       iconOpen: treeOpts.iconOpen,
                                       iconLoaded: treeOpts.iconLoaded,
                                       iconClose: treeOpts.iconClose,
