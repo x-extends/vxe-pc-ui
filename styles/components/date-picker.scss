@@ -84,10 +84,6 @@
     .vxe-date-picker--control-icon {
       cursor: not-allowed;
     }
-    .vxe-date-picker--prefix,
-    .vxe-date-picker--suffix {
-      background-color: var(--vxe-ui-input-disabled-background-color);
-    }
   }
 }
 
@@ -116,7 +112,6 @@
   flex-direction: row;
   align-items: center;
   flex-shrink: 0;
-  background-color: var(--vxe-ui-layout-background-color);
 }
 .vxe-date-picker--prefix-icon {
   padding-left: 0.5em;
