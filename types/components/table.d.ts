@@ -1643,36 +1643,42 @@ export namespace VxeTablePropTypes {
      */
     isFillByCopy?: boolean
     /**
-     * 只对 mouse-config.extension 启用后有效，将被选取区域的值复制到扩展区域中
+     * 只对 mouse-config.extension 启用后有效，将被选取区域的值进行填充
      */
     extendByCopy?: boolean
     /**
-     * 只对 mouse-config.extension 启用后有效，扩展区域时将自动识别数字规则进行计算
+     * 只对 mouse-config.extension 启用后有效，将被选取区域的值进行填充，如果是数字会自动识别数字规则进行计算（同时按住 ctrl 键可取消值自动识别数字功能）
      */
     extendByCalc?: boolean
     /**
+     * 只对 mouse-config.extension 启用后有效，双击填充柄后自动根据两侧相邻列中连续数据最长的那一列得数据为基准进行向下填充
+     */
+    extendByDblclickCopy?: boolean
+    /**
+     * 只对 mouse-config.extension 启用后有效，双击填充柄后自动根据两侧相邻列中连续数据最长的那一列得数据为基准进行向下填充，如果是数字会自动识别数字规则进行计算
+     */
+    extendByDblclickCalc?: boolean
+    /**
      * 只对 mouse-config.extension 启用后有效，扩展区域的方向控制
      */
-    extendDirection?:
-      | boolean
-      | {
-          /**
-           * 是否允许向上扩展
-           */
-          top?: boolean
-          /**
-           * 是否允许向下扩展
-           */
-          bottom?: boolean
-          /**
-           * 是否允许向左扩展
-           */
-          left?: boolean
-          /**
-           * 是否允许向右扩展
-           */
-          right?: boolean
-        }
+    extendDirection?: | boolean | {
+      /**
+       * 是否允许向上扩展
+       */
+      top?: boolean
+      /**
+       * 是否允许向下扩展
+       */
+      bottom?: boolean
+      /**
+       * 是否允许向左扩展
+       */
+      left?: boolean
+      /**
+       * 是否允许向右扩展
+       */
+      right?: boolean
+    }
     /**
      * 只对 mouse-config.extension 启用后有效，扩展区域之前的方法，可以通过返回 false 阻止扩展行为
      * @param params
@@ -4553,15 +4559,36 @@ export interface TableMethods<DT = any> {
    * @param rows 指定行
    * @param checked 是否选中
    */
-  setCheckboxRow(rows: any | any[], checked: boolean): Promise<any>
-  // 后续可能废弃
+  setCheckboxRow(rows: any | any[], checked: boolean | {
+    /**
+     * 是否勾选
+     */
+    checked: boolean
+    /**
+     * 如果存在子级，是否同步强制勾选
+     */
+    force: boolean
+  }): Promise<any>
+  /**
+   * 已废弃，请使用 setCheckboxRowByKey
+   * @deprecated
+   */
   setCheckboxRowKey(keys: string | number | (string | number)[] | null | undefined, checked: boolean): Promise<any>
   /**
    * 用于 type=checkbox，设置行为选中状态，第二个参数为选中与否
    * @param keys 指定主键
    * @param checked 是否选中
    */
-  setCheckboxRowByKey(keys: string | number | (string | number)[] | null | undefined, checked: boolean): Promise<any>
+  setCheckboxRowByKey(keys: string | number | (string | number)[] | null | undefined, checked: boolean | {
+    /**
+     * 是否勾选
+     */
+    checked?: boolean
+    /**
+     * 如果存在子级，是否同步强制勾选
+     */
+    force?: boolean
+  }): Promise<any>
   /**
    * 用于 type=checkbox，判断列头复选框是否被选中
    */
@@ -4594,12 +4621,26 @@ export interface TableMethods<DT = any> {
    * 用于 type=checkbox，切换某一行的选中状态
    * @param row 指定行
    */
-  toggleCheckboxRow(row: any): Promise<any>
+  toggleCheckboxRow(row: any, options?: {
+    /**
+     * 如果存在子级，是否同步强制勾选
+     */
+    force?: boolean
+  }): Promise<any>
   /**
    * 用于 type=checkbox，设置所有行的选中状态
    * @param checked 是否选中
    */
-  setAllCheckboxRow(checked: boolean): Promise<any>
+  setAllCheckboxRow(checked: boolean | {
+    /**
+     * 是否勾选
+     */
+    checked?: boolean
+    /**
+     * 如果存在子级，是否同步强制勾选
+     */
+    force?: boolean
+  }): Promise<any>
   /**
    * 用于 radio-config.reserve，获取已保留选中的行数据
    */
@@ -4623,7 +4664,12 @@ export interface TableMethods<DT = any> {
   /**
    * 用于 type=checkbox，切换所有行的选中状态
    */
-  toggleAllCheckboxRow(): Promise<any>
+  toggleAllCheckboxRow(options?: {
+    /**
+     * 如果存在子级，是否同步强制勾选
+     */
+    force?: boolean
+  }): Promise<any>
   /**
    * 用于 type=checkbox，手动清空用户的选择
    */
@@ -6416,6 +6462,7 @@ export namespace VxeTableDefines {
 
     checked?: boolean
     indeterminate?: boolean
+    disabled?: boolean
   }
 
   export interface CellRenderBodyParams<D = any> {

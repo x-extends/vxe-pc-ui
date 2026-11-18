@@ -738,9 +738,11 @@ export namespace VxeColumnSlotTypes {
   export interface CheckboxSlotParams<D = any> extends DefaultSlotParams<D> {
     checked: boolean
     indeterminate: boolean
+    disabled: boolean
   }
   export interface RadioSlotParams<D = any> extends DefaultSlotParams<D> {
     checked: boolean
+    disabled: boolean
   }
   export interface IconSlotParams<D = any> extends DefaultSlotParams<D> {}
 
