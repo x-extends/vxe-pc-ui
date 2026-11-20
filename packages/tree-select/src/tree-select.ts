@@ -1190,6 +1190,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
                                 class: 'vxe-tree-select--tree',
                                 props: {
                                   data: options,
+                                  loading: treeOpts.loading,
                                   height: popupOpts.height ? '100%' : treeOpts.height,
                                   minHeight: treeOpts.minHeight,
                                   maxHeight: popupOpts.height ? '' : treeOpts.maxHeight,

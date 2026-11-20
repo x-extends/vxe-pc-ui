@@ -4,7 +4,7 @@ import XEUtils from 'xe-utils'
 import { VxeUI } from '@vxe-ui/core'
 import { getEventTargetNode, updatePanelPlacement, toCssUnit, getPopupAppendElement } from '../../ui/src/dom'
 import { getOnName, handleEmitModelVal } from '../../ui/src/vn'
-import { getLastZIndex, nextZIndex } from '../../ui/src/utils'
+import { getLastZIndex, nextZIndex, getDefaultConfig } from '../../ui/src/utils'
 import { createComponentLog } from '../../ui/src/log'
 import VxeInputComponent from '../../input'
 
@@ -1085,7 +1085,8 @@ export default /* define-vxe-component start */ defineVxeComponent({
                                   props: {
                                     ...selectGridOpts,
                                     rowConfig: rowOpts,
-                                    loading: remote && searchLoading,
+                                    // 如果使用自定义 loading，则组件不再控制，完全由自定义决定
+                                    loading: getDefaultConfig(selectGridOpts.loading, remote && searchLoading),
                                     data: tableData,
                                     columns: tableColumns.length ? tableColumns : selectGridOpts.columns,
                                     height: '100%',
