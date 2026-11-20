@@ -49,9 +49,9 @@ export interface VxeTableExtendCellAreaMethods<D = any> {
    * @param areaConfigs 指定区域
    */
   setCellAreas(
-    areaConfigs: VxeTableExtendCellAreaDefines.CellAreaConfig[],
+    areaConfigs: (VxeTableExtendCellAreaDefines.CellAreaConfig | VxeTableExtendCellAreaDefines.CellAreaIndexConfig)[],
     activeArea?: {
-      area?: number | VxeTableExtendCellAreaDefines.CellAreaConfig<D>
+      area?: number | (VxeTableExtendCellAreaDefines.CellAreaConfig<D> | VxeTableExtendCellAreaDefines.CellAreaIndexConfig)
       column?: number | VxeTableDefines.ColumnInfo
       row?: D | number
     }
@@ -150,6 +150,11 @@ export interface VxeTableExtendCellAreaPrivateMethods<D = any> {
    * @private
    */
   triggerCellAreaExtendMousedownEvent(evnt: MouseEvent, params: any): void
+  /**
+   * 内部方法
+   * @private
+   */
+  triggerCellAreaExtendDblclickEvent(evnt: MouseEvent, params: any): void
   /**
    * 内部方法
    * @private
@@ -287,6 +292,14 @@ export namespace VxeTableExtendCellAreaDefines {
     endColumn: VxeTableDefines.ColumnInfo | VxeColumnPropTypes.Field | number
     startRow: D | number
     endRow: D | number
+  }
+
+  export interface CellAreaIndexConfig {
+    type?: CELL_AREA_TYPE
+    startColumn:number
+    endColumn: number
+    startRow: number
+    endRow: number
   }
 
   export interface ActiveCellAreaConfig<D = any> {

@@ -1044,11 +1044,12 @@ export default /* define-vxe-component start */ defineVxeComponent({
                                     {
                                       ref: refTree,
                                       class: 'vxe-tree-select--tree',
+                                      data: options,
+                                      loading: treeOpts.loading,
                                       height: popupOpts.height ? '100%' : treeOpts.height,
                                       minHeight: treeOpts.minHeight,
                                       maxHeight: popupOpts.height ? '' : treeOpts.maxHeight,
                                       autoResize: true,
-                                      data: options,
                                       indent: treeOpts.indent,
                                       showRadio: !multiple,
                                       radioConfig: treeRadioOpts,

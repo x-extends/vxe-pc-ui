@@ -1634,6 +1634,10 @@ export namespace VxeTablePropTypes {
      */
     multiple?: boolean
     /**
+     * 只对 multiple 启用后有效，多区域选取模式（stack 叠加模式，subtract 扣除模式）
+     */
+    overlapMode?: 'stack' | 'subtract'
+    /**
      * 用于指定哪些列允许被选取
      */
     includeFields?: string[]
