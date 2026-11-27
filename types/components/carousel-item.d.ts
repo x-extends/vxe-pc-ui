@@ -23,7 +23,7 @@ export interface CarouselItemPrivateRef {
 export interface VxeCarouselItemPrivateRef extends CarouselItemPrivateRef {}
 
 export namespace VxeCarouselItemPropTypes {
-  export type Name = string | number | null
+  export type Name = string | number | null | undefined
   export type ClassName = string
   export type Url = string
 }

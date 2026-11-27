@@ -819,7 +819,7 @@ export default /* define-vxe-component start */ defineVxeComponent({
         }
         const isExpandable = lazy ? (isLazyLoaded ? isExistChild : hasLazyChilds) : isExistChild
 
-        nodeItem.treeLines = showLine && treeFullSize > 1 ? getTreeNodeLines(isExpandable, depth, linesMask, isFirstRow, isLastRow, showTreeRootLine) : []
+        nodeItem.treeLines = showLine ? getTreeNodeLines(isExpandable, depth, linesMask, isFirstRow, isLastRow, showTreeRootLine) : []
 
         // 计算传给子节点的状态
         let nextStackMask = stackMask
