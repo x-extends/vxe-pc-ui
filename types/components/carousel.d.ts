@@ -34,6 +34,9 @@ export namespace VxeCarouselPropTypes {
   export type Loop = boolean
   export type Vertical = boolean
   export type ShowIndicators = boolean
+  export type ShowPreview = boolean
+  export type ShowPrintButton = boolean
+  export type ShowDownloadButton = boolean
 }
 
 export interface VxeCarouselProps {
@@ -47,6 +50,9 @@ export interface VxeCarouselProps {
   interval?: VxeCarouselPropTypes.Interval
   vertical?: VxeCarouselPropTypes.Vertical
   showIndicators?: VxeCarouselPropTypes.ShowIndicators
+  showPreview?: VxeCarouselPropTypes.ShowPreview
+  showPrintButton?: VxeCarouselPropTypes.ShowPrintButton
+  showDownloadButton?: VxeCarouselPropTypes.ShowDownloadButton
 }
 
 export interface CarouselPrivateComputed {}
@@ -57,11 +63,13 @@ export interface CarouselReactData {
   staticItems: VxeCarouselDefines.ItemConfig[]
   itemWidth: number
   itemHeight: number
+  isTransition: boolean
 }
 
 export interface CarouselInternalData {
-  apTimeout: undefined | number
-  stopFlag: boolean
+  apTimeout?: number
+  stopFlag?: boolean
+  animating?: boolean
 }
 
 export interface CarouselMethods {
@@ -80,7 +88,13 @@ export interface VxeCarouselMethods extends CarouselMethods {}
 export interface CarouselPrivateMethods {}
 export interface VxeCarouselPrivateMethods extends CarouselPrivateMethods {}
 
-export type VxeCarouselEmits = ['model-value', 'modelValue', 'input', 'change']
+export type VxeCarouselEmits = [
+  'model-value',
+  'modelValue',
+  'input',
+  'click',
+  'change'
+]
 
 export namespace VxeCarouselDefines {
   export interface CarouselEventParams extends VxeComponentEventParams {
@@ -93,6 +107,10 @@ export namespace VxeCarouselDefines {
     url: VxeCarouselItemPropTypes.Url | undefined
     className: VxeCarouselItemPropTypes.ClassName | undefined
     slots: VxeCarouselItemSlots
+  }
+
+  export interface ItemObj extends ItemConfig {
+    _value?: number
   }
 
   export interface ChangeEventParams extends CarouselEventParams {
